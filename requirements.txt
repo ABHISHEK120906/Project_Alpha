@@ -1,0 +1,10 @@
+Django==6.0.7
+djangorestframework==3.17.1
+asgiref==3.12.1
+sqlparse==0.5.5
+# psycopg2-binary==2.9.9  # Uncomment for PostgreSQL
+python-decouple==3.8
+django-cors-headers==4.6.0
+# Pillow==11.1.0  # Not compatible with Python 3.14
+reportlab==4.2.5
+openpyxl==3.1.5

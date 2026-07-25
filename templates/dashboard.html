@@ -1,0 +1,291 @@
+{% load static %}
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    <p class="text-muted">Welcome back, {{ user.username }}!</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-users"></i> Total Clients
+                </h5>
+                <h2 class="text-primary">{{ total_clients }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-project-diagram"></i> Total Projects
+                </h5>
+                <h2 class="text-success">{{ total_projects }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-check-circle"></i> Completed Projects
+                </h5>
+                <h2 class="text-warning">{{ completed_projects }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card info">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-clock"></i> Pending Projects
+                </h5>
+                <h2 class="text-info">{{ pending_projects }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Financial Summary -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-dollar-sign"></i> Total Earnings
+                </h5>
+                <h2 class="text-success">${{ total_earnings|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card stat-card danger">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-hourglass-half"></i> Pending Payments
+                </h5>
+                <h2 class="text-danger">${{ pending_payments|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Project Status Distribution
+            </div>
+            <div class="card-body">
+                <canvas id="projectStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-bar"></i> Monthly Earnings
+            </div>
+            <div class="card-body">
+                <canvas id="earningsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Deadlines -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-calendar-alt"></i> Upcoming Deadlines (Next 7 Days)
+            </div>
+            <div class="card-body">
+                {% if upcoming_deadlines %}
+                <ul class="list-group list-group-flush">
+                    {% for project in upcoming_deadlines %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ project.name }}</strong>
+                            <br>
+                            <small class="text-muted">{{ project.client.name }}</small>
+                        </div>
+                        <span class="badge {% if project.is_overdue %}bg-danger{% else %}bg-warning{% endif %}">
+                            {{ project.deadline|date:"M d, Y" }}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No upcoming deadlines in the next 7 days.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activities -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history"></i> Recent Activities
+            </div>
+            <div class="card-body">
+                {% if recent_activities %}
+                <ul class="list-group list-group-flush">
+                    {% for activity in recent_activities %}
+                    <li class="list-group-item">
+                        <small class="text-muted">{{ activity.timestamp|date:"M d, Y H:i" }}</small>
+                        <br>
+                        <strong>{{ activity.user.username }}</strong> {{ activity.action }} {{ activity.model_type }}
+                        <br>
+                        <small>{{ activity.description }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No recent activities.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Projects -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-project-diagram"></i> Recent Projects
+            </div>
+            <div class="card-body">
+                {% if recent_projects %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Client</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Deadline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in recent_projects %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'core:project_detail' project.id %}">
+                                        {{ project.name }}
+                                    </a>
+                                </td>
+                                <td>{{ project.client.name }}</td>
+                                <td>
+                                    <span class="status-badge status-{{ project.status }}">
+                                        {{ project.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ project.progress }}%"
+                                             aria-valuenow="{{ project.progress }}" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                            {{ project.progress }}%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if project.deadline %}
+                                    <span class="{% if project.is_overdue %}overdue{% endif %}">
+                                        {{ project.deadline|date:"M d, Y" }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">Not set</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No projects yet. <a href="{% url 'core:project_create' %}">Create your first project</a>.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Project Status Pie Chart
+    const projectStatusCtx = document.getElementById('projectStatusChart').getContext('2d');
+    new Chart(projectStatusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Completed', 'Pending', 'In Progress', 'On Hold', 'Cancelled'],
+            datasets: [{
+                data: [{{ completed_projects }}, {{ pending_projects }}, 0, 0, 0],
+                backgroundColor: [
+                    '#28a745',
+                    '#ffc107',
+                    '#17a2b8',
+                    '#6c757d',
+                    '#dc3545'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Monthly Earnings Bar Chart
+    const earningsCtx = document.getElementById('earningsChart').getContext('2d');
+    new Chart(earningsCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Earnings ($)',
+                data: [0, 0, 0, 0, 0, {{ total_earnings|floatformat:2 }}],
+                backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                borderColor: 'rgba(40, 167, 69, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

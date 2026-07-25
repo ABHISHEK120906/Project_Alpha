@@ -1,0 +1,24 @@
+{% extends 'auth_base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block subtitle %}Freelancer Project Tracker System{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <p class="lead">Manage your clients, projects, payments, and tasks efficiently.</p>
+</div>
+
+<div class="d-grid gap-2">
+    <a href="{% url 'core:login' %}" class="btn btn-primary btn-lg">
+        <i class="fas fa-sign-in-alt"></i> Login
+    </a>
+    <a href="{% url 'core:register' %}" class="btn btn-outline-primary btn-lg">
+        <i class="fas fa-user-plus"></i> Register
+    </a>
+</div>
+{% endblock %}
+
+{% block footer %}
+© 2026 Freelancer Project Tracker
+{% endblock %}

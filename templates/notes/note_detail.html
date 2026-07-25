@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ note.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="fas fa-sticky-note"></i> {{ note.title }}
+        {% if note.is_private %}
+        <i class="fas fa-lock" title="Private"></i>
+        {% endif %}
+    </h1>
+    <div>
+        <a href="{% url 'core:note_update' note.id %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'core:note_delete' note.id %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        <a href="{% url 'core:note_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<!-- Note Information -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-align-left"></i> Note Content
+            </div>
+            <div class="card-body">
+                <div class="note-content" style="white-space: pre-wrap; line-height: 1.6;">
+                    {{ note.content }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-info-circle"></i> Note Details
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Author:</th>
+                        <td>{{ note.user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Privacy:</th>
+                        <td>
+                            {% if note.is_private %}
+                            <span class="badge bg-warning">Private</span>
+                            {% else %}
+                            <span class="badge bg-success">Public</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Created:</th>
+                        <td>{{ note.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Updated:</th>
+                        <td>{{ note.updated_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <i class="fas fa-link"></i> Related To
+            </div>
+            <div class="card-body">
+                {% if note.project %}
+                <p>
+                    <strong>Project:</strong><br>
+                    <a href="{% url 'core:project_detail' note.project.id %}">
+                        {{ note.project.name }}
+                    </a>
+                </p>
+                {% elif note.client %}
+                <p>
+                    <strong>Client:</strong><br>
+                    <a href="{% url 'core:client_detail' note.client.id %}">
+                        {{ note.client.name }}
+                    </a>
+                </p>
+                {% else %}
+                <p class="text-muted">Not linked to any project or client</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

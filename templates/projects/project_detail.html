@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-project-diagram"></i> {{ project.name }}</h1>
+    <div>
+        <a href="{% url 'core:project_update' project.id %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'core:project_delete' project.id %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+        <a href="{% url 'core:project_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<!-- Project Information -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-info-circle"></i> Project Information
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Project Name:</th>
+                        <td>{{ project.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Client:</th>
+                        <td>
+                            <a href="{% url 'core:client_detail' project.client.id %}">
+                                {{ project.client.name }}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            <span class="status-badge status-{{ project.status }}">
+                                {{ project.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Priority:</th>
+                        <td>
+                            <span class="priority-{{ project.priority }}">
+                                {{ project.get_priority_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Progress:</th>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ project.progress }}%">
+                                    {{ project.progress }}%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Budget:</th>
+                        <td>${{ project.budget|floatformat:2|default:"-" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-calendar"></i> Timeline
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Start Date:</th>
+                        <td>{{ project.start_date|date:"M d, Y"|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Deadline:</th>
+                        <td>
+                            {% if project.deadline %}
+                            <span class="{% if project.is_overdue %}overdue{% endif %}">
+                                {{ project.deadline|date:"M d, Y" }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Created:</th>
+                        <td>{{ project.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Updated:</th>
+                        <td>{{ project.updated_at|date:"M d, Y" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <i class="fas fa-align-left"></i> Description
+            </div>
+            <div class="card-body">
+                {{ project.description|default:"No description provided" }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">Total Tasks</h5>
+                <h2 class="text-primary">{{ project.get_total_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h5 class="card-title">Completed Tasks</h5>
+                <h2 class="text-success">{{ project.get_completed_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h5 class="card-title">Total Payments</h5>
+                <h2 class="text-success">${{ project.get_total_payments|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card danger">
+            <div class="card-body">
+                <h5 class="card-title">Pending Payments</h5>
+                <h2 class="text-danger">${{ project.get_pending_payments|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Tasks -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-tasks"></i> Tasks
+                <a href="{% url 'core:task_create' %}" class="btn btn-sm btn-primary float-end">
+                    <i class="fas fa-plus"></i> Add Task
+                </a>
+            </div>
+            <div class="card-body">
+                {% if tasks %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Task Title</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Due Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'core:task_detail' task.id %}">
+                                        {{ task.title }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-{{ task.status }}">
+                                        {{ task.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="priority-{{ task.priority }}">
+                                        {{ task.get_priority_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if task.due_date %}
+                                    <span class="{% if task.is_overdue %}overdue{% endif %}">
+                                        {{ task.due_date|date:"M d, Y" }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">Not set</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'core:task_detail' task.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No tasks yet for this project.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Payments -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-dollar-sign"></i> Payments
+                <a href="{% url 'core:payment_create' %}" class="btn btn-sm btn-primary float-end">
+                    <i class="fas fa-plus"></i> Add Payment
+                </a>
+            </div>
+            <div class="card-body">
+                {% if payments %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Method</th>
+                                <th>Due Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td>
+                                    <strong>${{ payment.amount|floatformat:2 }}</strong>
+                                    {% if payment.invoice_number %}
+                                    <br><small class="text-muted">Invoice: {{ payment.invoice_number }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="status-badge status-{{ payment.status }}">
+                                        {{ payment.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ payment.get_payment_method_display }}</td>
+                                <td>
+                                    {% if payment.due_date %}
+                                    <span class="{% if payment.is_overdue %}overdue{% endif %}">
+                                        {{ payment.due_date|date:"M d, Y" }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">Not set</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'core:payment_detail' payment.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No payments yet for this project.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Notes -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-sticky-note"></i> Notes
+                <a href="{% url 'core:note_create' %}" class="btn btn-sm btn-primary float-end">
+                    <i class="fas fa-plus"></i> Add Note
+                </a>
+            </div>
+            <div class="card-body">
+                {% if notes %}
+                <div class="row">
+                    {% for note in notes %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ note.title }}
+                                    {% if note.is_private %}
+                                    <i class="fas fa-lock" title="Private"></i>
+                                    {% endif %}
+                                </h5>
+                                <p class="card-text">{{ note.content|truncatewords:30 }}</p>
+                                <a href="{% url 'core:note_detail' note.id %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No notes yet for this project.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

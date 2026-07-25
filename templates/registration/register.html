@@ -1,0 +1,66 @@
+{% extends 'auth_base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block subtitle %}Create your account{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+            <input type="text" class="form-control" id="username" name="username" required autofocus>
+        </div>
+        {% if form.username.errors %}
+        <div class="text-danger small mt-1">
+            {% for error in form.username.errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="mb-3">
+        <label for="password1" class="form-label">Password</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            <input type="password" class="form-control" id="password1" name="password1" required>
+        </div>
+        {% if form.password1.errors %}
+        <div class="text-danger small mt-1">
+            {% for error in form.password1.errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="mb-3">
+        <label for="password2" class="form-label">Confirm Password</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            <input type="password" class="form-control" id="password2" name="password2" required>
+        </div>
+        {% if form.password2.errors %}
+        <div class="text-danger small mt-1">
+            {% for error in form.password2.errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Register
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block footer %}
+Already have an account? <a href="{% url 'core:login' %}">Login here</a>
+{% endblock %}
