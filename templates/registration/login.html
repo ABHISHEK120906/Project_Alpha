@@ -1,37 +1,75 @@
 {% extends 'auth_base.html' %}
-
-{% block title %}Login{% endblock %}
-
-{% block subtitle %}Sign in to your account{% endblock %}
+{% block title %}Sign In — FreelanceTrack{% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-user"></i></span>
-            <input type="text" class="form-control" id="username" name="username" required autofocus>
-        </div>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <i class="fas fa-rocket"></i>
     </div>
-    
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-    </div>
-    
-    <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-sign-in-alt"></i> Login
-        </button>
-    </div>
-</form>
-{% endblock %}
+    <h1 class="auth-title">Welcome Back</h1>
+    <p class="auth-subtitle">Sign in to your FreelanceTrack account</p>
 
-{% block footer %}
-Don't have an account? <a href="{% url 'core:register' %}">Register here</a>
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} py-2 mb-3" style="font-size:13px;">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'core:login' %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="id_username" class="form-label">Username</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5);">
+            <i class="fas fa-user"></i>
+          </span>
+          <input type="text" name="username" id="id_username" class="form-control"
+                 placeholder="Enter your username" required autofocus>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="id_password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5);">
+            <i class="fas fa-lock"></i>
+          </span>
+          <input type="password" name="password" id="id_password" class="form-control"
+                 placeholder="Enter your password" required>
+          <button type="button" class="input-group-text" id="togglePassword"
+                  style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5);cursor:pointer;"
+                  onclick="togglePwd()">
+            <i class="fas fa-eye" id="pwdEye"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+      </button>
+    </form>
+
+    <p class="text-center mt-4" style="font-size:13px;color:rgba(255,255,255,.4);">
+      Don't have an account?
+      <a href="{% url 'core:register' %}" class="auth-link">Create one free</a>
+    </p>
+  </div>
+</div>
+
+<script>
+function togglePwd() {
+  const input = document.getElementById('id_password');
+  const eye = document.getElementById('pwdEye');
+  if (input.type === 'password') {
+    input.type = 'text';
+    eye.classList.replace('fa-eye', 'fa-eye-slash');
+  } else {
+    input.type = 'password';
+    eye.classList.replace('fa-eye-slash', 'fa-eye');
+  }
+}
+</script>
 {% endblock %}

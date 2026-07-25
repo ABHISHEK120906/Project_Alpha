@@ -1,66 +1,70 @@
 {% extends 'auth_base.html' %}
-
-{% block title %}Register{% endblock %}
-
-{% block subtitle %}Create your account{% endblock %}
+{% block title %}Create Account — FreelanceTrack{% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-user"></i></span>
-            <input type="text" class="form-control" id="username" name="username" required autofocus>
-        </div>
-        {% if form.username.errors %}
-        <div class="text-danger small mt-1">
-            {% for error in form.username.errors %}
-            {{ error }}
-            {% endfor %}
-        </div>
-        {% endif %}
+<div class="auth-page">
+  <div class="auth-card" style="max-width:480px;">
+    <div class="auth-logo">
+      <i class="fas fa-rocket"></i>
     </div>
-    
-    <div class="mb-3">
-        <label for="password1" class="form-label">Password</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            <input type="password" class="form-control" id="password1" name="password1" required>
-        </div>
-        {% if form.password1.errors %}
-        <div class="text-danger small mt-1">
-            {% for error in form.password1.errors %}
-            {{ error }}
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="mb-3">
-        <label for="password2" class="form-label">Confirm Password</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            <input type="password" class="form-control" id="password2" name="password2" required>
-        </div>
-        {% if form.password2.errors %}
-        <div class="text-danger small mt-1">
-            {% for error in form.password2.errors %}
-            {{ error }}
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-user-plus"></i> Register
-        </button>
-    </div>
-</form>
-{% endblock %}
+    <h1 class="auth-title">Create Account</h1>
+    <p class="auth-subtitle">Start managing your freelance business today</p>
 
-{% block footer %}
-Already have an account? <a href="{% url 'core:login' %}">Login here</a>
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} py-2 mb-3" style="font-size:13px;">
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'core:register' %}">
+      {% csrf_token %}
+
+      {% for field in form %}
+      <div class="mb-3">
+        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+        <div class="input-group">
+          {% if field.name == 'username' %}
+          <span class="input-group-text" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5);"><i class="fas fa-user"></i></span>
+          {% elif 'password' in field.name %}
+          <span class="input-group-text" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5);"><i class="fas fa-lock"></i></span>
+          {% endif %}
+          {{ field }}
+        </div>
+        {% if field.errors %}
+        <div class="mt-1">
+          {% for error in field.errors %}
+          <small class="text-danger" style="font-size:12px;"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if field.help_text %}
+        <small style="font-size:11px;color:rgba(255,255,255,.3);">{{ field.help_text }}</small>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary mt-2">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+    </form>
+
+    <p class="text-center mt-4" style="font-size:13px;color:rgba(255,255,255,.4);">
+      Already have an account?
+      <a href="{% url 'core:login' %}" class="auth-link">Sign in</a>
+    </p>
+  </div>
+</div>
+
+<style>
+/* Style the Django form fields inside auth card */
+.auth-card input[type=text],
+.auth-card input[type=password] {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.1);
+  color: #fff;
+}
+.auth-card input::placeholder { color: rgba(255,255,255,.3); }
+</style>
 {% endblock %}

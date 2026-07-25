@@ -1,123 +1,38 @@
 {% extends 'base.html' %}
-
-{% block title %}{{ task.title }}{% endblock %}
+{% block title %}{{ task.title }} — FreelanceTrack{% endblock %}
+{% block page_title %}<i class="fas fa-check-square"></i> Task Detail{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-tasks"></i> {{ task.title }}</h1>
-    <div>
-        <a href="{% url 'core:task_update' task.id %}" class="btn btn-warning">
-            <i class="fas fa-edit"></i> Edit
-        </a>
-        <a href="{% url 'core:task_delete' task.id %}" class="btn btn-danger">
-            <i class="fas fa-trash"></i> Delete
-        </a>
-        <a href="{% url 'core:task_list' %}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back
-        </a>
-    </div>
+<div class="page-header">
+  <div><h1>{{ task.title }}</h1><p class="page-subtitle">{{ task.project.name }}</p></div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'core:task_update' task.id %}" class="btn btn-outline-primary"><i class="fas fa-edit"></i> Edit</a>
+    <a href="{% url 'core:task_delete' task.id %}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> Delete</a>
+    <a href="{% url 'core:task_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+  </div>
 </div>
-
-<!-- Task Information -->
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <i class="fas fa-info-circle"></i> Task Information
-            </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <th width="30%">Task Title:</th>
-                        <td>{{ task.title }}</td>
-                    </tr>
-                    <tr>
-                        <th>Project:</th>
-                        <td>
-                            <a href="{% url 'core:project_detail' task.project.id %}">
-                                {{ task.project.name }}
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Status:</th>
-                        <td>
-                            <span class="status-badge status-{{ task.status }}">
-                                {{ task.get_status_display }}
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Priority:</th>
-                        <td>
-                            <span class="priority-{{ task.priority }}">
-                                {{ task.get_priority_display }}
-                            </span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header"><i class="fas fa-info-circle"></i> Task Information</div>
+      <div class="card-body">
+        <div class="detail-grid">
+          <span class="detail-label">Project</span><span class="detail-value"><a href="{% url 'core:project_detail' task.project.id %}">{{ task.project.name }}</a></span>
+          <span class="detail-label">Status</span><span class="detail-value"><span class="badge-status status-{{ task.status }}">{{ task.get_status_display }}</span></span>
+          <span class="detail-label">Priority</span><span class="detail-value"><span class="priority-{{ task.priority }}">{{ task.get_priority_display }}</span></span>
+          {% if task.due_date %}<span class="detail-label">Due Date</span><span class="detail-value {% if task.is_overdue %}overdue{% endif %}">{{ task.due_date|date:"M d, Y" }}</span>{% endif %}
+          {% if task.estimated_hours %}<span class="detail-label">Est. Hours</span><span class="detail-value">{{ task.estimated_hours }}h</span>{% endif %}
+          {% if task.actual_hours %}<span class="detail-label">Actual Hours</span><span class="detail-value">{{ task.actual_hours }}h</span>{% endif %}
+          <span class="detail-label">Created</span><span class="detail-value">{{ task.created_at|date:"M d, Y" }}</span>
         </div>
+        {% if task.description %}
+        <div class="mt-3 pt-3" style="border-top:1px solid var(--border-color);">
+          <label class="detail-label">Description</label>
+          <p style="color:var(--text-secondary);margin-top:6px;">{{ task.description }}</p>
+        </div>
+        {% endif %}
+      </div>
     </div>
-    
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <i class="fas fa-clock"></i> Time Tracking
-            </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <th width="30%">Estimated Hours:</th>
-                        <td>{{ task.estimated_hours|floatformat:2|default:"-" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Actual Hours:</th>
-                        <td>{{ task.actual_hours|floatformat:2|default:"-" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Due Date:</th>
-                        <td>
-                            {% if task.due_date %}
-                            <span class="{% if task.is_overdue %}overdue{% endif %}">
-                                {{ task.due_date|date:"M d, Y" }}
-                            </span>
-                            {% else %}
-                            <span class="text-muted">Not set</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Created:</th>
-                        <td>{{ task.created_at|date:"M d, Y" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Last Updated:</th>
-                        <td>{{ task.updated_at|date:"M d, Y" }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <div class="card mt-3">
-            <div class="card-header">
-                <i class="fas fa-align-left"></i> Description
-            </div>
-            <div class="card-body">
-                {{ task.description|default:"No description provided" }}
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
-
-{% if task.is_overdue %}
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="alert alert-danger">
-            <i class="fas fa-exclamation-triangle"></i>
-            <strong>Overdue:</strong> This task is overdue by {{ task.due_date|timesince }}.
-        </div>
-    </div>
-</div>
-{% endif %}
 {% endblock %}

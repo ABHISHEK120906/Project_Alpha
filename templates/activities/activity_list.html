@@ -1,85 +1,49 @@
 {% extends 'base.html' %}
-
-{% block title %}Activity Log{% endblock %}
-
+{% block title %}Activity Log — FreelanceTrack{% endblock %}
+{% block page_title %}<i class="fas fa-history"></i> Activity Log{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-history"></i> Activity Log</h1>
-    <a href="{% url 'core:dashboard' %}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Back to Dashboard
-    </a>
+<div class="page-header">
+  <div><h1><i class="fas fa-history"></i> Activity Log</h1><p class="page-subtitle">Complete audit trail of all your actions</p></div>
 </div>
-
-<!-- Activities Table -->
 <div class="card">
-    <div class="card-body">
-        {% if page_obj %}
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>User</th>
-                        <th>Action</th>
-                        <th>Model Type</th>
-                        <th>Description</th>
-                        <th>IP Address</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for activity in page_obj %}
-                    <tr>
-                        <td>{{ activity.timestamp|date:"M d, Y H:i" }}</td>
-                        <td>{{ activity.user.username }}</td>
-                        <td>
-                            <span class="badge bg-{{ activity.action|default:'secondary' }}">
-                                {{ activity.get_action_display }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge bg-info">
-                                {{ activity.get_model_type_display }}
-                            </span>
-                        </td>
-                        <td>{{ activity.description }}</td>
-                        <td>{{ activity.ip_address|default:"-" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Pagination -->
-        {% if page_obj.has_other_pages %}
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1">First</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                </li>
-                {% endif %}
-                
-                <li class="page-item active">
-                    <span class="page-link">{{ page_obj.number }}</span>
-                </li>
-                
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
-        {% else %}
-        <p class="text-muted">No activities recorded yet.</p>
-        {% endif %}
+  <div class="card-header"><i class="fas fa-history"></i> All Activities <span class="ms-2" style="font-size:12px;color:var(--text-muted);">{{ page_obj.paginator.count }} total</span></div>
+  <div class="card-body p-0">
+    {% if page_obj.object_list %}
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead><tr><th>Action</th><th>Type</th><th>Description</th><th>IP Address</th><th>Timestamp</th></tr></thead>
+        <tbody>
+          {% for activity in page_obj %}
+          <tr>
+            <td>
+              {% if activity.action == 'create' %}<span class="badge-status status-active"><i class="fas fa-plus me-1"></i>{{ activity.get_action_display }}</span>
+              {% elif activity.action == 'update' or activity.action == 'status_change' %}<span class="badge-status status-in_progress"><i class="fas fa-edit me-1"></i>{{ activity.get_action_display }}</span>
+              {% elif activity.action == 'delete' %}<span class="badge-status status-overdue"><i class="fas fa-trash me-1"></i>{{ activity.get_action_display }}</span>
+              {% elif activity.action == 'login' %}<span class="badge-status status-pending"><i class="fas fa-sign-in-alt me-1"></i>{{ activity.get_action_display }}</span>
+              {% else %}<span class="badge-status status-on_hold">{{ activity.get_action_display }}</span>
+              {% endif %}
+            </td>
+            <td style="color:var(--text-secondary);font-size:13px;">{{ activity.get_model_type_display }}</td>
+            <td style="font-size:13px;">{{ activity.description|truncatechars:60 }}</td>
+            <td style="font-size:12px;color:var(--text-muted);">{{ activity.ip_address|default:'—' }}</td>
+            <td style="font-size:12px;color:var(--text-muted);white-space:nowrap;">{{ activity.timestamp|date:"M d, Y H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-center p-3">
+      <nav><ul class="pagination mb-0">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-chevron-left"></i></a></li>{% endif %}
+        {% for num in page_obj.paginator.page_range %}{% if page_obj.number == num %}<li class="page-item active"><span class="page-link">{{ num }}</span></li>{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}<li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>{% endif %}{% endfor %}
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-chevron-right"></i></a></li>{% endif %}
+      </ul></nav>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="empty-state"><div class="empty-state-icon"><i class="fas fa-history"></i></div><h5>No activities yet</h5><p>Your actions will appear here.</p></div>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

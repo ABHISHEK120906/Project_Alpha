@@ -1,145 +1,36 @@
 {% extends 'base.html' %}
-
-{% block title %}{{ action }} Payment{% endblock %}
+{% block title %}{{ action }} Payment — FreelanceTrack{% endblock %}
+{% block page_title %}<i class="fas fa-dollar-sign"></i> {{ action }} Payment{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-dollar-sign"></i> {{ action }} Payment</h1>
-    <a href="{% if payment %}{% url 'core:payment_detail' payment.id %}{% else %}{% url 'core:payment_list' %}{% endif %}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Back
-    </a>
+<div class="page-header">
+  <div><h1>{{ action }} Payment</h1></div>
+  <a href="{% url 'core:payment_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a>
 </div>
-
-<div class="card">
-    <div class="card-body">
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header"><i class="fas fa-edit"></i> Payment Details</div>
+      <div class="card-body">
         <form method="post">
-            {% csrf_token %}
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="{{ form.project.id_for_label }}" class="form-label">Project *</label>
-                        {{ form.project }}
-                        {% if form.project.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.project.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="{{ form.amount.id_for_label }}" class="form-label">Amount ($) *</label>
-                        {{ form.amount }}
-                        {% if form.amount.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.amount.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
-                        {{ form.status }}
-                        {% if form.status.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.status.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="{{ form.payment_method.id_for_label }}" class="form-label">Payment Method</label>
-                        {{ form.payment_method }}
-                        {% if form.payment_method.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.payment_method.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="{{ form.invoice_number.id_for_label }}" class="form-label">Invoice Number</label>
-                        {{ form.invoice_number }}
-                        {% if form.invoice_number.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.invoice_number.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="{{ form.due_date.id_for_label }}" class="form-label">Due Date</label>
-                        {{ form.due_date }}
-                        {% if form.due_date.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.due_date.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="{{ form.paid_date.id_for_label }}" class="form-label">Paid Date</label>
-                        {{ form.paid_date }}
-                        {% if form.paid_date.errors %}
-                        <div class="text-danger small">
-                            {% for error in form.paid_date.errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
-                {{ form.description }}
-                {% if form.description.errors %}
-                <div class="text-danger small">
-                    {% for error in form.description.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> {{ action }} Payment
-                </button>
-                <a href="{% if payment %}{% url 'core:payment_detail' payment.id %}{% else %}{% url 'core:payment_list' %}{% endif %}" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Cancel
-                </a>
-            </div>
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Project *</label>{{ form.project }}{% if form.project.errors %}<small class="text-danger">{{ form.project.errors.0 }}</small>{% endif %}</div>
+            <div class="col-md-6"><label class="form-label">Amount ($) *</label>{{ form.amount }}{% if form.amount.errors %}<small class="text-danger">{{ form.amount.errors.0 }}</small>{% endif %}</div>
+            <div class="col-md-6"><label class="form-label">Status</label>{{ form.status }}</div>
+            <div class="col-md-6"><label class="form-label">Payment Method</label>{{ form.payment_method }}</div>
+            <div class="col-md-6"><label class="form-label">Invoice Number</label>{{ form.invoice_number }}</div>
+            <div class="col-md-6"><label class="form-label">Due Date</label>{{ form.due_date }}</div>
+            <div class="col-md-6"><label class="form-label">Paid Date</label>{{ form.paid_date }}</div>
+            <div class="col-12"><label class="form-label">Description / Notes</label>{{ form.description }}</div>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{% url 'core:payment_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ action }} Payment</button>
+          </div>
         </form>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

@@ -1,24 +1,123 @@
 {% extends 'auth_base.html' %}
-
-{% block title %}Welcome{% endblock %}
-
-{% block subtitle %}Freelancer Project Tracker System{% endblock %}
+{% load static %}
+{% block title %}Welcome — FreelanceTrack{% endblock %}
 
 {% block content %}
-<div class="text-center mb-4">
-    <p class="lead">Manage your clients, projects, payments, and tasks efficiently.</p>
+<div class="landing-page">
+  <!-- Floating orbs for visual depth -->
+  <div style="position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(6,182,212,.25) 0%,transparent 70%);top:30%;left:5%;border-radius:50%;pointer-events:none;"></div>
+
+  <div class="container" style="position:relative;z-index:2;">
+    <div class="row align-items-center min-vh-100 py-5">
+
+      <!-- Left: Hero Text -->
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <div class="mb-4" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:8px 18px;">
+          <span style="width:8px;height:8px;background:#10b981;border-radius:50%;animation:pulse 2s infinite;display:block;"></span>
+          <span style="font-size:13px;color:rgba(255,255,255,.7);font-weight:500;">Production-Ready System</span>
+        </div>
+
+        <h1 style="font-size:clamp(36px,5vw,58px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:20px;">
+          Manage Your<br>
+          <span style="background:linear-gradient(135deg,#818cf8,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Freelance Business</span><br>
+          Like a Pro
+        </h1>
+
+        <p style="font-size:16px;color:rgba(255,255,255,.55);line-height:1.7;max-width:480px;margin-bottom:32px;">
+          Track clients, projects, payments, and tasks all in one place.
+          Generate detailed reports and never miss a deadline again.
+        </p>
+
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{% url 'core:register' %}" class="btn btn-primary" style="padding:13px 28px;font-size:15px;font-weight:600;background:linear-gradient(135deg,#4f46e5,#06b6d4);border:none;box-shadow:0 8px 24px rgba(79,70,229,.5);">
+            <i class="fas fa-rocket me-2"></i>Get Started Free
+          </a>
+          <a href="{% url 'core:login' %}" class="btn" style="padding:13px 28px;font-size:15px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;">
+            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+          </a>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="d-flex gap-4 mt-5 flex-wrap">
+          {% for stat in features_stats %}
+          <div>
+            <div style="font-size:24px;font-weight:800;color:#fff;">{{ stat.value }}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.4);">{{ stat.label }}</div>
+          </div>
+          {% empty %}
+          <div>
+            <div style="font-size:24px;font-weight:800;color:#fff;">6+</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.4);">Modules</div>
+          </div>
+          <div style="border-left:1px solid rgba(255,255,255,.1);padding-left:24px;">
+            <div style="font-size:24px;font-weight:800;color:#fff;">PDF</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.4);">& Excel Reports</div>
+          </div>
+          <div style="border-left:1px solid rgba(255,255,255,.1);padding-left:24px;">
+            <div style="font-size:24px;font-weight:800;color:#fff;">100%</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.4);">Free & Open Source</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Right: Feature Cards -->
+      <div class="col-lg-6">
+        <div class="row g-3">
+          {% for feature in feature_list %}
+          {% empty %}
+          <!-- Clients Card -->
+          <div class="col-6">
+            <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px;backdrop-filter:blur(10px);">
+              <div style="width:44px;height:44px;background:rgba(79,70,229,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <i class="fas fa-users" style="color:#818cf8;font-size:20px;"></i>
+              </div>
+              <h5 style="color:#fff;font-size:15px;font-weight:700;margin-bottom:6px;">Client Management</h5>
+              <p style="color:rgba(255,255,255,.45);font-size:12px;margin:0;">Track all your clients, contacts, and project history.</p>
+            </div>
+          </div>
+          <!-- Projects Card -->
+          <div class="col-6">
+            <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px;backdrop-filter:blur(10px);">
+              <div style="width:44px;height:44px;background:rgba(16,185,129,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <i class="fas fa-layer-group" style="color:#6ee7b7;font-size:20px;"></i>
+              </div>
+              <h5 style="color:#fff;font-size:15px;font-weight:700;margin-bottom:6px;">Project Tracking</h5>
+              <p style="color:rgba(255,255,255,.45);font-size:12px;margin:0;">Monitor deadlines, progress, and project health.</p>
+            </div>
+          </div>
+          <!-- Payments Card -->
+          <div class="col-6">
+            <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px;backdrop-filter:blur(10px);">
+              <div style="width:44px;height:44px;background:rgba(245,158,11,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <i class="fas fa-dollar-sign" style="color:#fcd34d;font-size:20px;"></i>
+              </div>
+              <h5 style="color:#fff;font-size:15px;font-weight:700;margin-bottom:6px;">Payment Tracking</h5>
+              <p style="color:rgba(255,255,255,.45);font-size:12px;margin:0;">Invoice tracking, payment status, and earnings.</p>
+            </div>
+          </div>
+          <!-- Reports Card -->
+          <div class="col-6">
+            <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px;backdrop-filter:blur(10px);">
+              <div style="width:44px;height:44px;background:rgba(59,130,246,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <i class="fas fa-chart-bar" style="color:#93c5fd;font-size:20px;"></i>
+              </div>
+              <h5 style="color:#fff;font-size:15px;font-weight:700;margin-bottom:6px;">PDF & Excel Reports</h5>
+              <p style="color:rgba(255,255,255,.45);font-size:12px;margin:0;">Export professional reports in PDF or Excel.</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<div class="d-grid gap-2">
-    <a href="{% url 'core:login' %}" class="btn btn-primary btn-lg">
-        <i class="fas fa-sign-in-alt"></i> Login
-    </a>
-    <a href="{% url 'core:register' %}" class="btn btn-outline-primary btn-lg">
-        <i class="fas fa-user-plus"></i> Register
-    </a>
-</div>
-{% endblock %}
-
-{% block footer %}
-© 2026 Freelancer Project Tracker
+<style>
+@keyframes pulse {
+  0%, 100% { opacity:1; transform:scale(1); }
+  50%       { opacity:.5; transform:scale(1.2); }
+}
+</style>
 {% endblock %}

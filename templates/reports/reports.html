@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block title %}Reports — FreelanceTrack{% endblock %}
+{% block page_title %}<i class="fas fa-chart-bar"></i> Reports{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div><h1><i class="fas fa-chart-bar"></i> Reports</h1><p class="page-subtitle">Generate and export business reports</p></div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card stat-card success">
+      <div class="card-body"><div class="stat-value">${{ total_paid|floatformat:2 }}</div><div class="stat-label">Total Received</div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stat-card warning">
+      <div class="card-body"><div class="stat-value">${{ total_pending|floatformat:2 }}</div><div class="stat-label">Pending</div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stat-card danger">
+      <div class="card-body"><div class="stat-value">${{ total_overdue|floatformat:2 }}</div><div class="stat-label">Overdue</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly Earnings Chart -->
+<div class="card mb-4">
+  <div class="card-header"><i class="fas fa-chart-bar"></i> Monthly Earnings (Last 12 Months)</div>
+  <div class="card-body">
+    <div style="height:280px;"><canvas id="monthlyChart"></canvas></div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Export Reports -->
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header"><i class="fas fa-download"></i> Export Reports</div>
+      <div class="card-body">
+        <div class="row g-3">
+          {% for report in report_types %}
+          {% empty %}
+          <!-- Monthly Report -->
+          <div class="col-md-6">
+            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div style="width:44px;height:44px;background:rgba(79,70,229,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-calendar-alt" style="color:#4f46e5;font-size:20px;"></i></div>
+                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Monthly Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">Earnings for the last 12 months</p></div>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'monthly' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'monthly' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel"></i> Excel</a>
+              </div>
+            </div>
+          </div>
+          <!-- Payment Report -->
+          <div class="col-md-6">
+            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div style="width:44px;height:44px;background:rgba(16,185,129,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-dollar-sign" style="color:#10b981;font-size:20px;"></i></div>
+                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Payment Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">All invoices and payments</p></div>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'payment' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'payment' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel"></i> Excel</a>
+              </div>
+            </div>
+          </div>
+          <!-- Project Report -->
+          <div class="col-md-6">
+            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div style="width:44px;height:44px;background:rgba(59,130,246,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-layer-group" style="color:#3b82f6;font-size:20px;"></i></div>
+                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Project Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">All projects with details</p></div>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'project' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'project' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel"></i> Excel</a>
+              </div>
+            </div>
+          </div>
+          <!-- Client Report -->
+          <div class="col-md-6">
+            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div style="width:44px;height:44px;background:rgba(245,158,11,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-users" style="color:#f59e0b;font-size:20px;"></i></div>
+                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Client Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">All clients with project counts</p></div>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'client' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'client' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel"></i> Excel</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Status Breakdown -->
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header"><i class="fas fa-tasks"></i> Project Status</div>
+      <div class="card-body">
+        {% for status, count in projects_by_status.items %}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span style="font-size:13px;font-weight:500;text-transform:capitalize;">{{ status|title|replace:'_',' ' }}</span>
+          <span class="badge-status {% if status == 'completed' %}status-completed{% elif status == 'in_progress' %}status-in_progress{% elif status == 'cancelled' %}status-cancelled{% elif status == 'on_hold' %}status-on_hold{% else %}status-pending{% endif %}">{{ count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Top Clients -->
+    <div class="card mt-3">
+      <div class="card-header"><i class="fas fa-users"></i> Top Clients by Projects</div>
+      <div class="card-body p-0">
+        {% if top_clients %}
+        <ul class="list-group list-group-flush">
+          {% for client in top_clients|slice:':5' %}
+          <li class="list-group-item" style="background:transparent;border-color:var(--border-color);padding:12px 16px;">
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="{% url 'core:client_detail' client.id %}" style="font-weight:600;font-size:13px;color:var(--text-primary);">{{ client.name }}</a>
+              <span style="font-size:12px;color:var(--text-muted);">{{ client.project_count }} projects</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="p-4 text-center" style="color:var(--text-muted);">No clients yet.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
+const textColor = isDark ? '#94a3b8' : '#64748b';
+const labels = {{ monthly_labels_json|safe }};
+const values = {{ monthly_values_json|safe }};
+
+new Chart(document.getElementById('monthlyChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'Earnings ($)',
+      data: values,
+      backgroundColor: 'rgba(79,70,229,0.8)',
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.y.toFixed(2) } } },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: textColor } },
+      y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v } }
+    }
+  }
+});
+</script>
+{% endblock %}

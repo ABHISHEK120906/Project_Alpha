@@ -1,121 +1,46 @@
 {% extends 'base.html' %}
-
-{% block title %}Payment Details{% endblock %}
+{% block title %}Payment Detail — FreelanceTrack{% endblock %}
+{% block page_title %}<i class="fas fa-dollar-sign"></i> Payment Detail{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="fas fa-dollar-sign"></i> Payment Details</h1>
-    <div>
-        <a href="{% url 'core:payment_update' payment.id %}" class="btn btn-warning">
-            <i class="fas fa-edit"></i> Edit
-        </a>
-        <a href="{% url 'core:payment_delete' payment.id %}" class="btn btn-danger">
-            <i class="fas fa-trash"></i> Delete
-        </a>
-        <a href="{% url 'core:payment_list' %}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back
-        </a>
-    </div>
+<div class="page-header">
+  <div>
+    <h1>Payment #{{ payment.invoice_number|default:"No Invoice" }}</h1>
+    <p class="page-subtitle">{{ payment.project.name }} &middot; {{ payment.project.client.name }}</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'core:payment_update' payment.id %}" class="btn btn-outline-primary"><i class="fas fa-edit"></i> Edit</a>
+    <a href="{% url 'core:payment_delete' payment.id %}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> Delete</a>
+    <a href="{% url 'core:payment_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+  </div>
 </div>
 
-<!-- Payment Information -->
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <i class="fas fa-info-circle"></i> Payment Information
-            </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <th width="30%">Project:</th>
-                        <td>
-                            <a href="{% url 'core:project_detail' payment.project.id %}">
-                                {{ payment.project.name }}
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Amount:</th>
-                        <td>
-                            <strong class="text-success">${{ payment.amount|floatformat:2 }}</strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Status:</th>
-                        <td>
-                            <span class="status-badge status-{{ payment.status }}">
-                                {{ payment.get_status_display }}
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Payment Method:</th>
-                        <td>{{ payment.get_payment_method_display }}</td>
-                    </tr>
-                    <tr>
-                        <th>Invoice Number:</th>
-                        <td>{{ payment.invoice_number|default:"-" }}</td>
-                    </tr>
-                </table>
-            </div>
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header"><i class="fas fa-receipt"></i> Payment Information</div>
+      <div class="card-body">
+        <div class="text-center mb-4">
+          <div style="font-size:48px;font-weight:800;color:#10b981;">${{ payment.amount|floatformat:2 }}</div>
+          <span class="badge-status status-{{ payment.status }}" style="font-size:14px;padding:6px 16px;">{{ payment.get_status_display }}</span>
         </div>
+        <div class="detail-grid">
+          <span class="detail-label">Project</span><span class="detail-value"><a href="{% url 'core:project_detail' payment.project.id %}">{{ payment.project.name }}</a></span>
+          <span class="detail-label">Client</span><span class="detail-value"><a href="{% url 'core:client_detail' payment.project.client.id %}">{{ payment.project.client.name }}</a></span>
+          <span class="detail-label">Invoice #</span><span class="detail-value">{{ payment.invoice_number|default:'—' }}</span>
+          <span class="detail-label">Method</span><span class="detail-value">{{ payment.get_payment_method_display }}</span>
+          <span class="detail-label">Due Date</span><span class="detail-value {% if payment.is_overdue %}overdue{% endif %}">{{ payment.due_date|date:"M d, Y"|default:'—' }}</span>
+          {% if payment.paid_date %}<span class="detail-label">Paid Date</span><span class="detail-value">{{ payment.paid_date|date:"M d, Y" }}</span>{% endif %}
+          <span class="detail-label">Created</span><span class="detail-value">{{ payment.created_at|date:"M d, Y" }}</span>
+        </div>
+        {% if payment.description %}
+        <div class="mt-3 pt-3" style="border-top:1px solid var(--border-color);">
+          <label class="detail-label">Notes</label>
+          <p style="color:var(--text-secondary);font-size:13px;margin-top:6px;">{{ payment.description }}</p>
+        </div>
+        {% endif %}
+      </div>
     </div>
-    
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <i class="fas fa-calendar"></i> Dates
-            </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <th width="30%">Due Date:</th>
-                        <td>
-                            {% if payment.due_date %}
-                            <span class="{% if payment.is_overdue %}overdue{% endif %}">
-                                {{ payment.due_date|date:"M d, Y" }}
-                            </span>
-                            {% else %}
-                            <span class="text-muted">Not set</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Paid Date:</th>
-                        <td>{{ payment.paid_date|date:"M d, Y"|default:"-" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Created:</th>
-                        <td>{{ payment.created_at|date:"M d, Y" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Last Updated:</th>
-                        <td>{{ payment.updated_at|date:"M d, Y" }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <div class="card mt-3">
-            <div class="card-header">
-                <i class="fas fa-align-left"></i> Description
-            </div>
-            <div class="card-body">
-                {{ payment.description|default:"No description provided" }}
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
-
-{% if payment.is_overdue %}
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="alert alert-danger">
-            <i class="fas fa-exclamation-triangle"></i>
-            <strong>Overdue:</strong> This payment is overdue by {{ payment.due_date|timesince }}.
-        </div>
-    </div>
-</div>
-{% endif %}
 {% endblock %}

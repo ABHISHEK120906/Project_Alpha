@@ -1,248 +1,198 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Freelancer Project Tracker{% endblock %}</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-    
-    {% block extra_css %}{% endblock %}
-    
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-        }
-        
-        .navbar-brand {
-            font-weight: bold;
-            color: var(--primary-color) !important;
-        }
-        
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        
-        .card-header {
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: #357abd;
-            border-color: #357abd;
-        }
-        
-        .stat-card {
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .stat-card.success {
-            border-left-color: var(--success-color);
-        }
-        
-        .stat-card.warning {
-            border-left-color: var(--warning-color);
-        }
-        
-        .stat-card.danger {
-            border-left-color: var(--danger-color);
-        }
-        
-        .stat-card.info {
-            border-left-color: var(--info-color);
-        }
-        
-        .table-hover tbody tr:hover {
-            background-color: rgba(74, 144, 226, 0.1);
-        }
-        
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-        
-        .status-active, .status-completed, .status-paid {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .status-pending, .status-todo, .status-in_progress {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-inactive, .status-cancelled, .status-overdue {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .status-prospective, .status-on_hold {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-        
-        .priority-high, .priority-urgent {
-            color: var(--danger-color);
-            font-weight: bold;
-        }
-        
-        .priority-medium {
-            color: var(--warning-color);
-            font-weight: bold;
-        }
-        
-        .priority-low {
-            color: var(--success-color);
-            font-weight: bold;
-        }
-        
-        .overdue {
-            color: var(--danger-color);
-            font-weight: bold;
-        }
-        
-        .sidebar {
-            background-color: var(--dark-color);
-            min-height: 100vh;
-            color: white;
-        }
-        
-        .sidebar a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            padding: 10px 15px;
-            display: block;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-        
-        .sidebar a:hover, .sidebar a.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .sidebar a i {
-            margin-right: 10px;
-            width: 20px;
-        }
-        
-        .content-wrapper {
-            padding: 20px;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                min-height: auto;
-                margin-bottom: 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Freelancer Project Tracker — Manage clients, projects, payments and tasks in one place.">
+  <title>{% block title %}Freelancer Project Tracker{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+  {% block extra_css %}{% endblock %}
 </head>
+
 <body>
-    {% if user.is_authenticated %}
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-3">
-                <h4 class="mb-4">
-                    <i class="fas fa-briefcase"></i> Tracker
-                </h4>
-                
-                <a href="{% url 'core:dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-                
-                <a href="{% url 'core:client_list' %}" class="{% if 'client' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-users"></i> Clients
-                </a>
-                
-                <a href="{% url 'core:project_list' %}" class="{% if 'project' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-project-diagram"></i> Projects
-                </a>
-                
-                <a href="{% url 'core:payment_list' %}" class="{% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-dollar-sign"></i> Payments
-                </a>
-                
-                <a href="{% url 'core:task_list' %}" class="{% if 'task' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-tasks"></i> Tasks
-                </a>
-                
-                <a href="{% url 'core:note_list' %}" class="{% if 'note' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-sticky-note"></i> Notes
-                </a>
-                
-                <a href="{% url 'core:activity_list' %}" class="{% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-history"></i> Activity Log
-                </a>
-                
-                <hr>
-                
-                <a href="{% url 'core:logout' %}">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
-            
-            <!-- Main Content -->
-            <div class="col-md-10 content-wrapper">
-                {% block content %}{% endblock %}
-            </div>
-        </div>
+
+{% if user.is_authenticated %}
+<!-- ════════════════════════════════════════════════
+     AUTHENTICATED LAYOUT
+     ════════════════════════════════════════════════ -->
+
+<!-- Sidebar Overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="mainSidebar">
+
+  <!-- Brand -->
+  <a href="{% url 'core:dashboard' %}" class="sidebar-brand">
+    <div class="sidebar-brand-icon">
+      <i class="fas fa-rocket"></i>
     </div>
-    {% else %}
-    <div class="container">
-        {% block content %}{% endblock %}
+    <div>
+      <div class="sidebar-brand-text">FreelanceTrack</div>
+      <div class="sidebar-brand-sub">Project Manager</div>
     </div>
-    {% endif %}
-    
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    {% block extra_js %}{% endblock %}
-    
-    <!-- Messages -->
-    {% if messages %}
-    <div class="container mt-3">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        {% endfor %}
+  </a>
+
+  <!-- Main Navigation -->
+  <nav class="sidebar-nav" aria-label="Main navigation">
+    <p class="sidebar-section-label">Main</p>
+
+    <a href="{% url 'core:dashboard' %}"
+       class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i class="fas fa-th-large nav-icon"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a href="{% url 'core:client_list' %}"
+       class="sidebar-link {% if 'client' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-users nav-icon"></i>
+      <span>Clients</span>
+    </a>
+
+    <a href="{% url 'core:project_list' %}"
+       class="sidebar-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-layer-group nav-icon"></i>
+      <span>Projects</span>
+    </a>
+
+    <a href="{% url 'core:task_list' %}"
+       class="sidebar-link {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-check-square nav-icon"></i>
+      <span>Tasks</span>
+    </a>
+
+    <p class="sidebar-section-label">Finance</p>
+
+    <a href="{% url 'core:payment_list' %}"
+       class="sidebar-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-dollar-sign nav-icon"></i>
+      <span>Payments</span>
+    </a>
+
+    <a href="{% url 'core:reports_dashboard' %}"
+       class="sidebar-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-chart-bar nav-icon"></i>
+      <span>Reports</span>
+    </a>
+
+    <p class="sidebar-section-label">Other</p>
+
+    <a href="{% url 'core:note_list' %}"
+       class="sidebar-link {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-sticky-note nav-icon"></i>
+      <span>Notes</span>
+    </a>
+
+    <a href="{% url 'core:activity_list' %}"
+       class="sidebar-link {% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-history nav-icon"></i>
+      <span>Activity Log</span>
+    </a>
+
+    <a href="{% url 'core:settings' %}"
+       class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-cog nav-icon"></i>
+      <span>Settings</span>
+    </a>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
+      <div>
+        <div class="sidebar-username">{{ user.get_full_name|default:user.username }}</div>
+        <div class="sidebar-role">Freelancer</div>
+      </div>
     </div>
-    {% endif %}
+    <a href="{% url 'core:logout' %}" class="sidebar-link" style="color:rgba(239,68,68,.8);">
+      <i class="fas fa-sign-out-alt nav-icon"></i>
+      <span>Log Out</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Main Content Area -->
+<div class="main-content">
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="d-flex align-items-center gap-3">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+    </div>
+    <div class="topbar-actions">
+      <!-- Dark Mode Toggle -->
+      <label class="dark-mode-toggle d-flex align-items-center" title="Toggle dark mode">
+        <input type="checkbox" id="themeToggle" aria-label="Dark mode">
+        <span class="dark-mode-slider"></span>
+      </label>
+      <button class="topbar-btn" title="Toggle dark mode label">
+        <i class="fas fa-moon" id="themeIcon"></i>
+      </button>
+
+      <!-- Quick Actions -->
+      <a href="{% url 'core:project_create' %}" class="topbar-btn" title="New Project">
+        <i class="fas fa-plus"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="page-content animate-in">
+    {% block content %}{% endblock %}
+  </main>
+
+</div><!-- /.main-content -->
+
+{% else %}
+<!-- ════════════════════════════════════════════════
+     UNAUTHENTICATED LAYOUT
+     ════════════════════════════════════════════════ -->
+{% block auth_content %}{% endblock %}
+{% if not block.super %}
+<div class="auth-page">
+  {% block content %}{% endblock %}
+</div>
+{% endif %}
+{% endif %}
+
+<!-- Toast Container for Notifications -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Hidden Django Message Carriers -->
+{% if messages %}
+  {% for message in messages %}
+    <div data-toast="{{ message }}" data-toast-type="{{ message.tags }}" style="display:none;"></div>
+  {% endfor %}
+{% endif %}
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Main Application JS -->
+<script src="{% static 'js/main.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
 </body>
 </html>
