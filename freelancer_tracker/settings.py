@@ -29,7 +29,7 @@ try:
     SECRET_KEY     = config('SECRET_KEY',
                             default='django-insecure-change-this-to-a-very-long-random-string-in-production-min-50-characters-for-security')
     DEBUG          = config('DEBUG', default=True, cast=bool)
-    ALLOWED_HOSTS  = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0', cast=Csv())
+    ALLOWED_HOSTS  = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,.vercel.app', cast=Csv())
     DATABASE_URL   = config('DATABASE_URL', default='')
 
 except ImportError:
@@ -57,7 +57,7 @@ INSTALLED_APPS = [
 # ── Middleware ──────────────────────────────────────────────────
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',        # serve static in prod - comment out for now
+    'whitenoise.middleware.WhiteNoiseMiddleware',        # serve static files in production
     'corsheaders.middleware.CorsMiddleware',             # must be before CommonMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -91,7 +91,7 @@ TEMPLATES = [
 
 
 # ── Database ─────────────────────────────────────────────────────
-# Default to SQLite for development (works without additional dependencies)
+# Default to SQLite for development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -99,15 +99,16 @@ DATABASES = {
     }
 }
 
-# PostgreSQL support (commented out due to Python 3.14 compatibility issues)
-# To use PostgreSQL, uncomment below and ensure psycopg2-binary is installed
-# if DATABASE_URL and dj_database_url:
-#     try:
-#         DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-#         print(f"Using PostgreSQL database: {DATABASE_URL}")
-#     except Exception as e:
-#         print(f"Error parsing DATABASE_URL, falling back to SQLite: {e}")
-#         print("To use PostgreSQL, ensure psycopg2-binary is properly installed.")
+# PostgreSQL support — enabled for production via DATABASE_URL env var
+if DATABASE_URL and dj_database_url:
+    try:
+        DATABASES['default'] = dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
+    except Exception as e:
+        print(f"Error parsing DATABASE_URL, falling back to SQLite: {e}")
 
 
 # ── Password Validation ─────────────────────────────────────────
@@ -131,17 +132,15 @@ STATIC_URL  = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Django 4.2+ uses STORAGES dict instead of deprecated STATICFILES_STORAGE
-# Commented out for now - will enable when WhiteNoise is properly configured
-# STORAGES = {
-#     'default': {
-#         'BACKEND': 'django.core.files.storage.FileSystemStorage',
-#     },
-#     'staticfiles': {
-#         # WhiteNoise: compressed static files (works seamlessly in dev, test, and prod)
-#         'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
-#     },
-# }
+# WhiteNoise: serve compressed static files in production
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -177,8 +176,10 @@ REST_FRAMEWORK = {
 
 # ── Security (Production only — gated by DEBUG=False) ───────────
 if not DEBUG:
-    # Force HTTPS
-    SECURE_SSL_REDIRECT           = True
+    # NOTE: SECURE_SSL_REDIRECT = True breaks Vercel/Render proxy setups.
+    # Vercel handles HTTPS termination at the edge — do NOT redirect here.
+    SECURE_SSL_REDIRECT           = False
+    SECURE_PROXY_SSL_HEADER       = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_HSTS_SECONDS           = 31536000   # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD           = True
