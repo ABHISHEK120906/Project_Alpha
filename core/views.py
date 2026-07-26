@@ -95,14 +95,14 @@ def custom_login(request):
     return render(request, 'registration/login.html')
 
 
-@login_required
 def custom_logout(request):
     """Logout view — logs the action then clears the session."""
-    username = request.user.username
-    log_activity(request.user, 'logout', 'user', request.user.id,
-                 f'User {username} logged out', request)
-    logout(request)
-    messages.success(request, 'You have been logged out successfully.')
+    if request.user.is_authenticated:
+        username = request.user.username
+        log_activity(request.user, 'logout', 'user', request.user.id,
+                     f'User {username} logged out', request)
+        logout(request)
+        messages.success(request, 'You have been logged out successfully.')
     return redirect('core:login')
 
 
@@ -896,7 +896,8 @@ def export_pdf_report(request, report_type):
     normal_style = styles['Normal']
 
     elements = []
-    report_date = timezone.now().strftime('%B %d, %Y')
+    today = timezone.now().date()
+    report_date = today.strftime('%B %d, %Y')
 
     # Report Title
     elements.append(Paragraph(f'Freelancer Project Tracker', title_style))

@@ -1,125 +1,117 @@
-# Freelancer Project Tracker System
+# FreelanceTrack — Project Tracker
 
-A production-ready project management system for freelancers to track clients, projects, payments, tasks, and generate reports.
+A production-ready freelance project management system built with Django.
 
-## Tech Stack
+---
 
-### Frontend
-- HTML5
-- CSS3
-- JavaScript (ES6)
-- Bootstrap 5
-- Chart.js
-- Font Awesome
+## Requirements
 
-### Backend
-- Python
-- Django
-- Django REST Framework
+- Python **3.14+**
+- pip
 
-### Database
-- SQLite (Development)
-- PostgreSQL (Production - Easy migration support)
+---
 
-### Authentication
-- Django Authentication (Login, Logout, Registration, Password Hashing)
+## Setup & Run
 
-### Deployment
-- Frontend: Vercel
-- Backend: Render
-- Database: SQLite (later PostgreSQL)
+### 1. Clone the repository
 
-## Project Structure
-
-```
-freelancer_tracker/
-├── core/                      # Main Django app
-│   ├── migrations/           # Database migrations
-│   ├── static/               # Static files (CSS, JS, images)
-│   ├── templates/            # HTML templates
-│   ├── admin.py              # Admin configuration
-│   ├── apps.py               # App configuration
-│   ├── models.py             # Database models
-│   ├── views.py              # View functions
-│   ├── urls.py               # URL routing
-│   └── tests.py              # Unit tests
-├── freelancer_tracker/       # Django project settings
-│   ├── settings.py           # Project settings
-│   ├── urls.py               # Main URL configuration
-│   └── wsgi.py               # WSGI configuration
-├── static/                   # Global static files
-│   ├── css/                  # Custom CSS
-│   ├── js/                   # Custom JavaScript
-│   └── images/               # Images and assets
-├── templates/                # Global templates
-├── venv/                     # Virtual environment
-├── manage.py                 # Django management script
-├── requirements.txt          # Python dependencies
-└── README.md                 # Project documentation
+```bash
+git clone <your-repo-url>
+cd Project_Alpha
 ```
 
-## Installation
+### 2. Create and activate virtual environment
 
-1. Create a virtual environment:
 ```bash
 python -m venv venv
-```
 
-2. Activate the virtual environment:
-```bash
 # Windows
 venv\Scripts\activate
 
-# Linux/Mac
+# macOS / Linux
 source venv/bin/activate
 ```
 
-3. Install dependencies:
+### 3. Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Run migrations:
+### 4. Apply database migrations
+
 ```bash
 python manage.py migrate
 ```
 
-5. Create a superuser:
+### 5. Create a superuser (admin account)
+
 ```bash
 python manage.py createsuperuser
 ```
 
-6. Run the development server:
+### 6. Run the development server
+
 ```bash
 python manage.py runserver
 ```
 
-## Development Phases
+Open your browser and go to: **http://127.0.0.1:8000**
 
-- **Phase 1**: Project Setup ✓
-- **Phase 2**: Database Design
-- **Phase 3**: Backend Development
-- **Phase 4**: Frontend Development
-- **Phase 5**: Dashboard
-- **Phase 6**: Project Features
-- **Phase 7**: Reports
-- **Phase 8**: Security
-- **Phase 9**: Deployment
+---
 
-## Features
+## Common Commands
 
-- Client Management
-- Project Tracking
-- Deadline Management
-- Payment Tracking
-- Task Management
-- Notes & Activity Logging
-- Interactive Dashboard with Charts
-- Advanced Reports (PDF/Excel export)
-- Search, Filter, Sorting, Pagination
-- Dark Mode
-- Responsive Design
+| Task | Command |
+|---|---|
+| Start server | `python manage.py runserver` |
+| Make migrations | `python manage.py makemigrations` |
+| Apply migrations | `python manage.py migrate` |
+| Create superuser | `python manage.py createsuperuser` |
+| Collect static files | `python manage.py collectstatic` |
+| Open Django shell | `python manage.py shell` |
 
-## License
+---
 
-MIT License
+## Access Points
+
+| URL | Description |
+|---|---|
+| `http://127.0.0.1:8000/` | Landing page |
+| `http://127.0.0.1:8000/login/` | Login |
+| `http://127.0.0.1:8000/register/` | Register |
+| `http://127.0.0.1:8000/dashboard/` | Main dashboard (login required) |
+| `http://127.0.0.1:8000/admin/` | Django admin panel |
+
+---
+
+## Environment Variables (Optional)
+
+Create a `.env` file in the project root to override defaults:
+
+```env
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_URL=                        # Leave blank to use SQLite (default)
+```
+
+---
+
+## Resetting the Database
+
+```bash
+# Delete the SQLite file and re-migrate
+del db.sqlite3          # Windows
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+---
+
+## Tech Stack
+
+- **Backend** — Django 6 + Django REST Framework
+- **Database** — SQLite (dev) / PostgreSQL (prod)
+- **Frontend** — Bootstrap 5, Chart.js, Font Awesome
+- **Reports** — ReportLab (PDF), openpyxl (Excel)

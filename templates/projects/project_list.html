@@ -95,10 +95,13 @@
             </td>
             <td>
               {% if project.deadline %}
-              <span class="{% if project.is_overdue %}overdue{% else %}"style="color:var(--text-secondary);font-size:13px;"{% endif %}">
-                {% if project.is_overdue %}<i class="fas fa-exclamation-circle me-1"></i>{% endif %}
-                {{ project.deadline|date:"M d, Y" }}
+              {% if project.is_overdue %}
+              <span class="overdue">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ project.deadline|date:"M d, Y" }}
               </span>
+              {% else %}
+              <span style="color:var(--text-secondary);font-size:13px;">{{ project.deadline|date:"M d, Y" }}</span>
+              {% endif %}
               {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
             </td>
             <td>

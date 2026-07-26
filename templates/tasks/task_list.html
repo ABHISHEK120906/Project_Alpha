@@ -66,7 +66,7 @@
             <td><a href="{% url 'core:project_detail' task.project.id %}" style="font-size:13px;color:var(--text-secondary);">{{ task.project.name }}</a></td>
             <td><span class="badge-status status-{{ task.status }}">{{ task.get_status_display }}</span></td>
             <td><span class="priority-{{ task.priority }}">{{ task.get_priority_display }}</span></td>
-            <td><span class="{% if task.is_overdue %}overdue{% else %}" style="color:var(--text-secondary);font-size:13px;"{% endif %}">{{ task.due_date|date:"M d, Y"|default:"—" }}</span></td>
+            <td>{% if task.due_date %}{% if task.is_overdue %}<span class="overdue"><i class="fas fa-exclamation-circle me-1"></i>{{ task.due_date|date:"M d, Y" }}</span>{% else %}<span style="color:var(--text-secondary);font-size:13px;">{{ task.due_date|date:"M d, Y" }}</span>{% endif %}{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}</td>
             <td style="font-size:13px;color:var(--text-muted);">{% if task.actual_hours %}{{ task.actual_hours }}h{% elif task.estimated_hours %}~{{ task.estimated_hours }}h{% else %}—{% endif %}</td>
             <td>
               <div class="d-flex gap-1" onclick="event.stopPropagation();">

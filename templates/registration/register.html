@@ -2,69 +2,153 @@
 {% block title %}Create Account — FreelanceTrack{% endblock %}
 
 {% block content %}
-<div class="auth-page">
-  <div class="auth-card" style="max-width:480px;">
-    <div class="auth-logo">
-      <i class="fas fa-rocket"></i>
-    </div>
-    <h1 class="auth-title">Create Account</h1>
-    <p class="auth-subtitle">Start managing your freelance business today</p>
 
-    {% if messages %}
-      {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} py-2 mb-3" style="font-size:13px;">
-        {{ message }}
+<h1 class="auth-heading">Create account</h1>
+<p class="auth-subheading">Start managing your freelance business today — free</p>
+
+{% if messages %}
+  {% for message in messages %}
+  <div class="auth-alert auth-alert-{{ message.tags }}">
+    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'danger' or message.tags == 'error' %}fa-times-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}" style="flex-shrink:0;margin-top:1px;"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" action="{% url 'core:register' %}" id="registerForm" novalidate>
+  {% csrf_token %}
+
+  {% for field in form %}
+  <div class="auth-form-group">
+    <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    <div class="auth-input-wrapper">
+      <!-- Icon per field -->
+      {% if field.name == 'username' %}
+        <span class="auth-input-icon"><i class="fas fa-user"></i></span>
+      {% elif field.name == 'email' %}
+        <span class="auth-input-icon"><i class="fas fa-envelope"></i></span>
+      {% elif 'password' in field.name %}
+        <span class="auth-input-icon"><i class="fas fa-lock"></i></span>
+      {% else %}
+        <span class="auth-input-icon"><i class="fas fa-pen"></i></span>
+      {% endif %}
+
+      <!-- Render widget with our class applied via JS below -->
+      <div class="field-widget-container" data-field="{{ field.name }}">
+        {{ field }}
       </div>
+
+      <!-- Password toggle buttons -->
+      {% if 'password' in field.name %}
+      <div class="auth-input-suffix">
+        <button type="button" class="toggle-pwd-btn" data-target="{{ field.html_name }}" aria-label="Toggle password">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if field.errors %}
+    <div class="mt-1">
+      {% for error in field.errors %}
+      <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
       {% endfor %}
+    </div>
     {% endif %}
 
-    <form method="post" action="{% url 'core:register' %}">
-      {% csrf_token %}
-
-      {% for field in form %}
-      <div class="mb-3">
-        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-        <div class="input-group">
-          {% if field.name == 'username' %}
-          <span class="input-group-text" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5);"><i class="fas fa-user"></i></span>
-          {% elif 'password' in field.name %}
-          <span class="input-group-text" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.5);"><i class="fas fa-lock"></i></span>
-          {% endif %}
-          {{ field }}
-        </div>
-        {% if field.errors %}
-        <div class="mt-1">
-          {% for error in field.errors %}
-          <small class="text-danger" style="font-size:12px;"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
-          {% endfor %}
-        </div>
-        {% endif %}
-        {% if field.help_text %}
-        <small style="font-size:11px;color:rgba(255,255,255,.3);">{{ field.help_text }}</small>
-        {% endif %}
-      </div>
-      {% endfor %}
-
-      <button type="submit" class="btn btn-primary mt-2">
-        <i class="fas fa-user-plus"></i> Create Account
-      </button>
-    </form>
-
-    <p class="text-center mt-4" style="font-size:13px;color:rgba(255,255,255,.4);">
-      Already have an account?
-      <a href="{% url 'core:login' %}" class="auth-link">Sign in</a>
-    </p>
+    {% if field.help_text %}
+    <div class="field-help">{{ field.help_text|safe }}</div>
+    {% endif %}
   </div>
+  {% endfor %}
+
+  <button type="submit" class="auth-btn" id="registerSubmitBtn">
+    <i class="fas fa-user-plus"></i>
+    Create Account
+  </button>
+</form>
+
+<div class="auth-footer-text">
+  Already have an account? <a href="{% url 'core:login' %}">Sign in</a>
 </div>
 
 <style>
-/* Style the Django form fields inside auth card */
-.auth-card input[type=text],
-.auth-card input[type=password] {
-  background: rgba(255,255,255,.07);
-  border-color: rgba(255,255,255,.1);
+/* Override Django's auto-generated widget to match our auth style */
+.field-widget-container input[type="text"],
+.field-widget-container input[type="password"],
+.field-widget-container input[type="email"] {
+  width: 100%;
+  padding: 13px 14px 13px 42px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
   color: #fff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+  outline: none;
+  -webkit-appearance: none;
 }
-.auth-card input::placeholder { color: rgba(255,255,255,.3); }
+.field-widget-container input:focus {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(79,70,229,0.7);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.18);
+}
+.field-widget-container input::placeholder { color: rgba(255,255,255,0.22); }
+/* Password field — make room for toggle btn */
+.field-widget-container input[type="password"],
+.field-widget-container input[type="text"][id$="password1"],
+.field-widget-container input[type="text"][id$="password2"] {
+  padding-right: 46px;
+}
 </style>
+
+<script>
+(function() {
+  // Apply placeholder text to Django-rendered inputs
+  const placeholders = {
+    'username': 'Choose a username',
+    'password1': 'Create a strong password',
+    'password2': 'Confirm your password',
+    'email': 'your@email.com',
+  };
+  document.querySelectorAll('.field-widget-container input').forEach(function(inp) {
+    const fieldName = inp.closest('[data-field]').dataset.field;
+    if (placeholders[fieldName]) inp.placeholder = placeholders[fieldName];
+    inp.autocomplete = fieldName === 'password1' ? 'new-password' :
+                       fieldName === 'password2' ? 'new-password' :
+                       fieldName === 'username'  ? 'username' : 'off';
+  });
+
+  // Password toggle buttons
+  document.querySelectorAll('.toggle-pwd-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const targetName = this.dataset.target;
+      const input = document.querySelector('[name="' + targetName + '"]');
+      const eye = this.querySelector('i');
+      if (input) {
+        if (input.type === 'password') {
+          input.type = 'text';
+          eye.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+          input.type = 'password';
+          eye.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+        input.focus();
+      }
+    });
+  });
+
+  // Submit loading state
+  document.getElementById('registerForm').addEventListener('submit', function() {
+    const btn = document.getElementById('registerSubmitBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
+    btn.disabled = true;
+    setTimeout(function() {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+    }, 8000);
+  });
+})();
+</script>
 {% endblock %}

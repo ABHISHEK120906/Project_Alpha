@@ -9,6 +9,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls', namespace='core')),
+    # Include Django's built-in authentication URLs
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 if settings.DEBUG:

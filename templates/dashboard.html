@@ -303,9 +303,9 @@ const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
 const textColor = isDark ? '#94a3b8' : '#64748b';
 
-const monthlyLabels = {{ monthly_labels_json|safe }};
-const monthlyEarnings = {{ monthly_earnings_json|safe }};
-const projectStatus = {{ project_status_json|safe }};
+const monthlyLabels = JSON.parse('{{ monthly_labels_json|escapejs }}' || '[]');
+const monthlyEarnings = JSON.parse('{{ monthly_earnings_json|escapejs }}' || '[]');
+const projectStatus = JSON.parse('{{ project_status_json|escapejs }}' || '[]');
 
 // Line Chart — Monthly Earnings
 const earningsCtx = document.getElementById('earningsChart').getContext('2d');

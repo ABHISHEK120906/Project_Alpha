@@ -170,11 +170,6 @@
      UNAUTHENTICATED LAYOUT
      ════════════════════════════════════════════════ -->
 {% block auth_content %}{% endblock %}
-{% if not block.super %}
-<div class="auth-page">
-  {% block content %}{% endblock %}
-</div>
-{% endif %}
 {% endif %}
 
 <!-- Toast Container for Notifications -->
