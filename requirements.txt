@@ -14,7 +14,8 @@ reportlab==5.0.0
 openpyxl==3.1.5
 
 # PostgreSQL (Neon DB — required for Vercel production)
-psycopg2-binary==2.9.10
+# psycopg2-binary does not work on Vercel Lambda — use psycopg3 instead
+psycopg[binary]==3.2.9
 dj-database-url==2.3.0
 
 # Note: Pillow excluded due to Python 3.14 compatibility issues.

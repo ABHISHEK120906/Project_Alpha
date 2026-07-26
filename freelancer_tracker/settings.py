@@ -106,6 +106,7 @@ if DATABASE_URL and dj_database_url:
             DATABASE_URL,
             conn_max_age=600,
             ssl_require=True,
+            engine='django.db.backends.postgresql',  # uses psycopg3
         )
     except Exception as e:
         print(f"Error parsing DATABASE_URL, falling back to SQLite: {e}")
@@ -138,7 +139,8 @@ STORAGES = {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        # Use non-manifest version — Vercel serverless doesn't run collectstatic
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
 }
 
