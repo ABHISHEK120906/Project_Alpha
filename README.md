@@ -1,117 +1,82 @@
-# FreelanceTrack — Project Tracker
+# FreelanceTrack — Freelancer Project Management System
 
-A production-ready freelance project management system built with Django.
-
----
-
-## Requirements
-
-- Python **3.14+**
-- pip
-
----
-
-## Setup & Run
-
-### 1. Clone the repository
-
-```bash
-git clone <your-repo-url>
-cd Project_Alpha
-```
-
-### 2. Create and activate virtual environment
-
-```bash
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# macOS / Linux
-source venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Apply database migrations
-
-```bash
-python manage.py migrate
-```
-
-### 5. Create a superuser (admin account)
-
-```bash
-python manage.py createsuperuser
-```
-
-### 6. Run the development server
-
-```bash
-python manage.py runserver
-```
-
-Open your browser and go to: **http://127.0.0.1:8000**
-
----
-
-## Common Commands
-
-| Task | Command |
-|---|---|
-| Start server | `python manage.py runserver` |
-| Make migrations | `python manage.py makemigrations` |
-| Apply migrations | `python manage.py migrate` |
-| Create superuser | `python manage.py createsuperuser` |
-| Collect static files | `python manage.py collectstatic` |
-| Open Django shell | `python manage.py shell` |
-
----
-
-## Access Points
-
-| URL | Description |
-|---|---|
-| `http://127.0.0.1:8000/` | Landing page |
-| `http://127.0.0.1:8000/login/` | Login |
-| `http://127.0.0.1:8000/register/` | Register |
-| `http://127.0.0.1:8000/dashboard/` | Main dashboard (login required) |
-| `http://127.0.0.1:8000/admin/` | Django admin panel |
-
----
-
-## Environment Variables (Optional)
-
-Create a `.env` file in the project root to override defaults:
-
-```env
-SECRET_KEY=your-secret-key-here
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-DATABASE_URL=                        # Leave blank to use SQLite (default)
-```
-
----
-
-## Resetting the Database
-
-```bash
-# Delete the SQLite file and re-migrate
-del db.sqlite3          # Windows
-python manage.py migrate
-python manage.py createsuperuser
-```
-
----
+A production-ready project management system built for freelancers.
+Track clients, projects, payments, tasks, and generate reports — all in one place.
 
 ## Tech Stack
 
-- **Backend** — Django 6 + Django REST Framework
-- **Database** — SQLite (dev) / PostgreSQL (prod)
-- **Frontend** — Bootstrap 5, Chart.js, Font Awesome
-- **Reports** — ReportLab (PDF), openpyxl (Excel)
+- **Backend**: Django 6.0.7 + Django REST Framework
+- **Database**: PostgreSQL (Neon) via `dj-database-url`
+- **Static Files**: WhiteNoise
+- **Deployment**: Vercel (Serverless Python)
+- **Reports**: ReportLab (PDF) + openpyxl (Excel)
+
+## Features
+
+- 🔐 User authentication with full data isolation
+- 👥 Client management (CRUD)
+- 📁 Project tracking with status, priority & deadlines
+- 💳 Payment tracking with invoice numbers
+- ✅ Task management with time tracking
+- 📝 Notes system for projects & clients
+- 📊 Dashboard with Chart.js analytics
+- 📄 PDF & Excel report exports
+- 🌙 Dark mode support
+- 🔍 Activity audit log
+
+## Local Development
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/ABHISHEK120906/Project_Alpha.git
+cd Project_Alpha
+
+# 2. Create and activate virtual environment
+python -m venv venv
+venv\Scripts\activate   # Windows
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Create .env file
+# Copy the values below and fill in your own:
+#   SECRET_KEY=your-secret-key
+#   DEBUG=True
+#   ALLOWED_HOSTS=localhost,127.0.0.1
+#   DATABASE_URL=postgresql://...  (Neon DB connection string)
+
+# 5. Run migrations
+python manage.py migrate
+
+# 6. Create superuser
+python manage.py createsuperuser
+
+# 7. Start development server
+python manage.py runserver
+```
+
+Open http://127.0.0.1:8000
+
+## Vercel Deployment
+
+1. Push to GitHub
+2. Go to [vercel.com](https://vercel.com) → New Project → Import repo
+3. Add these **Environment Variables** in Vercel dashboard:
+
+| Variable | Value |
+|---|---|
+| `SECRET_KEY` | Your Django secret key |
+| `DEBUG` | `False` |
+| `ALLOWED_HOSTS` | `your-app.vercel.app` |
+| `DATABASE_URL` | Neon PostgreSQL connection string |
+
+4. Vercel auto-deploys on every push to `main`
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `SECRET_KEY` | Django secret key (keep private!) |
+| `DEBUG` | `True` for dev, `False` for production |
+| `ALLOWED_HOSTS` | Comma-separated list of allowed domains |
+| `DATABASE_URL` | Neon PostgreSQL connection URL |
