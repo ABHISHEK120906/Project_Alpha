@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Freelancer Project Tracker — Manage clients, projects, payments and tasks in one place.">
-  <title>{% block title %}Freelancer Project Tracker{% endblock %}</title>
+  <meta name="description" content="Freelancer Project Tracker — Modern project, client, payment and task management.">
+  <title>{% block title %}FreelanceTrack — Dashboard{% endblock %}</title>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <!-- Custom CSS -->
+  <!-- Custom Purple/Violet UI CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
   {% block extra_css %}{% endblock %}
@@ -40,10 +40,10 @@
 <!-- Sidebar -->
 <aside class="sidebar" id="mainSidebar">
 
-  <!-- Brand -->
+  <!-- Brand Header -->
   <a href="{% url 'core:dashboard' %}" class="sidebar-brand">
     <div class="sidebar-brand-icon">
-      <i class="fas fa-rocket"></i>
+      <i class="fas fa-wallet"></i>
     </div>
     <div>
       <div class="sidebar-brand-text">FreelanceTrack</div>
@@ -51,13 +51,13 @@
     </div>
   </a>
 
-  <!-- Main Navigation -->
+  <!-- Navigation Links -->
   <nav class="sidebar-nav" aria-label="Main navigation">
-    <p class="sidebar-section-label">Main</p>
+    <p class="sidebar-section-label">Main Menu</p>
 
     <a href="{% url 'core:dashboard' %}"
        class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <i class="fas fa-th-large nav-icon"></i>
+      <i class="fas fa-home nav-icon"></i>
       <span>Dashboard</span>
     </a>
 
@@ -69,17 +69,17 @@
 
     <a href="{% url 'core:project_list' %}"
        class="sidebar-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-layer-group nav-icon"></i>
+      <i class="fas fa-folder nav-icon"></i>
       <span>Projects</span>
     </a>
 
     <a href="{% url 'core:task_list' %}"
        class="sidebar-link {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-check-square nav-icon"></i>
+      <i class="fas fa-check-circle nav-icon"></i>
       <span>Tasks</span>
     </a>
 
-    <p class="sidebar-section-label">Finance</p>
+    <p class="sidebar-section-label">Finance & Analytics</p>
 
     <a href="{% url 'core:payment_list' %}"
        class="sidebar-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
@@ -89,11 +89,11 @@
 
     <a href="{% url 'core:reports_dashboard' %}"
        class="sidebar-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-chart-bar nav-icon"></i>
+      <i class="fas fa-chart-line nav-icon"></i>
       <span>Reports</span>
     </a>
 
-    <p class="sidebar-section-label">Other</p>
+    <p class="sidebar-section-label">Preferences</p>
 
     <a href="{% url 'core:note_list' %}"
        class="sidebar-link {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
@@ -114,16 +114,23 @@
     </a>
   </nav>
 
-  <!-- Sidebar Footer -->
+  <!-- Sidebar Promo Card (Matching Reference UI) -->
+  <div class="sidebar-promo">
+    <h6>Become a Pro User</h6>
+    <p>Unlock advanced reports & unlimited exports</p>
+    <button class="btn-promo">Upgrade Plan</button>
+  </div>
+
+  <!-- Sidebar User Profile Footer -->
   <div class="sidebar-footer">
     <div class="sidebar-user">
       <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
       <div>
-        <div class="sidebar-username">{{ user.get_full_name|default:user.username }}</div>
-        <div class="sidebar-role">Freelancer</div>
+        <div style="font-size:13px;font-weight:700;color:#fff;">{{ user.get_full_name|default:user.username }}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);">Freelancer</div>
       </div>
     </div>
-    <a href="{% url 'core:logout' %}" class="sidebar-link" style="color:rgba(239,68,68,.8);">
+    <a href="{% url 'core:logout' %}" class="sidebar-link mt-2" style="color:rgba(255,255,255,0.7);">
       <i class="fas fa-sign-out-alt nav-icon"></i>
       <span>Log Out</span>
     </a>
@@ -139,27 +146,33 @@
       <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
         <i class="fas fa-bars"></i>
       </button>
-      <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+      <div>
+        <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+      </div>
     </div>
+
+    <!-- Search Pill (Matching Reference UI) -->
+    <div class="topbar-search d-none d-md-block">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" placeholder="Search projects, clients..." aria-label="Search">
+    </div>
+
     <div class="topbar-actions">
       <!-- Dark Mode Toggle -->
-      <label class="dark-mode-toggle d-flex align-items-center" title="Toggle dark mode">
+      <label class="dark-mode-toggle d-flex align-items-center" title="Toggle theme">
         <input type="checkbox" id="themeToggle" aria-label="Dark mode">
         <span class="dark-mode-slider"></span>
       </label>
-      <button class="topbar-btn" title="Toggle dark mode label">
-        <i class="fas fa-moon" id="themeIcon"></i>
-      </button>
 
-      <!-- Quick Actions -->
-      <a href="{% url 'core:project_create' %}" class="topbar-btn" title="New Project">
+      <!-- Quick New Project Action Button -->
+      <a href="{% url 'core:project_create' %}" class="topbar-btn" title="Create New Project">
         <i class="fas fa-plus"></i>
       </a>
     </div>
   </header>
 
-  <!-- Page Content -->
-  <main class="page-content animate-in">
+  <!-- Page Content Area -->
+  <main class="page-content">
     {% block content %}{% endblock %}
   </main>
 
@@ -175,7 +188,7 @@
 <!-- Toast Container for Notifications -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Hidden Django Message Carriers -->
+<!-- Hidden Message Carriers -->
 {% if messages %}
   {% for message in messages %}
     <div data-toast="{{ message }}" data-toast-type="{{ message.tags }}" style="display:none;"></div>
@@ -185,7 +198,7 @@
 <!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Main Application JS -->
+<!-- Application JS -->
 <script src="{% static 'js/main.js' %}"></script>
 
 {% block extra_js %}{% endblock %}

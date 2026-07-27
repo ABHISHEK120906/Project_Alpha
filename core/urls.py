@@ -54,10 +54,10 @@ urlpatterns = [
     path('activities/', views.activity_list, name='activity_list'),
 
     # ── Reports ───────────────────────────────────────────
-    # path('reports/', views.reports_dashboard, name='reports_dashboard'),
-    # path('reports/export/pdf/<str:report_type>/', views.export_pdf_report, name='export_pdf_report'),
-    # path('reports/export/excel/<str:report_type>/', views.export_excel_report, name='export_excel_report'),
+    path('reports/', views.reports_dashboard, name='reports_dashboard'),
+    path('reports/export/pdf/<str:report_type>/', views.export_pdf_report, name='export_pdf_report'),
+    path('reports/export/excel/<str:report_type>/', views.export_excel_report, name='export_excel_report'),
 
     # ── Settings ──────────────────────────────────────────
-    # path('settings/', views.user_settings, name='settings'),
+    path('settings/', views.user_settings, name='settings'),
 ]
