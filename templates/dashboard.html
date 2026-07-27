@@ -3,6 +3,28 @@
 {% block page_title %}Dashboard Overview{% endblock %}
 
 {% block content %}
+
+<!-- ── Dynamic Welcome Banner ── -->
+<div class="welcome-banner">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div>
+      <h2 class="welcome-banner-title">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
+      <p class="welcome-banner-sub">Here is your freelance business performance and active revenue summary.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <a href="{% url 'core:project_create' %}" class="welcome-banner-btn">
+        <i class="fas fa-plus"></i> New Project
+      </a>
+      <a href="{% url 'core:payment_create' %}" class="welcome-banner-btn">
+        <i class="fas fa-dollar-sign"></i> Log Payment
+      </a>
+      <a href="{% url 'core:reports_dashboard' %}" class="welcome-banner-btn" style="background:rgba(255,255,255,0.2);color:#fff;">
+        <i class="fas fa-chart-bar"></i> Reports
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- ── Top Metric Cards (Matching Purple-Violet Dashboard Theme) ── -->
 <div class="row g-3 mb-4">
 

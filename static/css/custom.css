@@ -547,9 +547,174 @@ body {
   background: var(--primary-soft) !important;
 }
 
-/* ── Overdue & Helpers ─────────────────────────────────────── */
-.overdue { color: var(--danger) !important; font-weight: 700; }
-.chart-container { position: relative; height: 260px; }
+/* ── Welcome Banner ────────────────────────────────────────── */
+.welcome-banner {
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 60%, #5B21B6 100%);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  color: #ffffff;
+  box-shadow: 0 10px 30px -5px rgba(124, 58, 237, 0.3);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.welcome-banner-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.welcome-banner-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0;
+}
+
+.welcome-banner-btn {
+  background: #ffffff;
+  color: #5B21B6;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 20px;
+  padding: 8px 18px;
+  border: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.welcome-banner-btn:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  color: #7C3AED;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Floating Speed-Dial Button (FAB) ─────────────────────── */
+.fab-wrapper {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 1050;
+}
+
+.fab-main-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fab-main-btn:hover {
+  transform: scale(1.08) rotate(45deg);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6);
+}
+
+.fab-menu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.fab-wrapper.active .fab-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.fab-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  justify-content: flex-end;
+}
+
+.fab-label {
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+}
+
+.fab-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #7C3AED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transition: var(--transition);
+  border: 1px solid #e2e8f0;
+}
+
+.fab-item:hover .fab-icon-btn {
+  background: #7C3AED;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+/* ── Filter Pills for Tables ───────────────────────────────── */
+.filter-pill-btn {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-pill-btn:hover, .filter-pill-btn.active {
+  background: #7C3AED;
+  color: #ffffff;
+  border-color: #7C3AED;
+}
 
 /* Responsive adjustments */
 @media (max-width: 992px) {

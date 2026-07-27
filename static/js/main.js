@@ -218,6 +218,25 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // ============================================================
+  // FLOATING SPEED-DIAL (FAB) TOGGLE
+  // ============================================================
+  const fabWrapper = document.getElementById('fabWrapper');
+  const fabToggleBtn = document.getElementById('fabToggleBtn');
+
+  if (fabWrapper && fabToggleBtn) {
+    fabToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fabWrapper.classList.toggle('active');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (fabWrapper.classList.contains('active') && !fabWrapper.contains(e.target)) {
+        fabWrapper.classList.remove('active');
+      }
+    });
+  }
+
+  // ============================================================
   // ANIMATE PAGE CONTENT ON LOAD
   // ============================================================
   const pageContent = document.querySelector('.page-content');

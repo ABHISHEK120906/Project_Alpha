@@ -176,6 +176,35 @@
     {% block content %}{% endblock %}
   </main>
 
+  <!-- Floating Speed-Dial Quick Action Button (FAB) -->
+  <div class="fab-wrapper" id="fabWrapper">
+    <div class="fab-menu">
+      <a href="{% url 'core:project_create' %}" class="fab-item" title="New Project">
+        <span class="fab-label">New Project</span>
+        <div class="fab-icon-btn"><i class="fas fa-folder-plus"></i></div>
+      </a>
+      <a href="{% url 'core:client_create' %}" class="fab-item" title="New Client">
+        <span class="fab-label">New Client</span>
+        <div class="fab-icon-btn"><i class="fas fa-user-plus"></i></div>
+      </a>
+      <a href="{% url 'core:payment_create' %}" class="fab-item" title="Record Payment">
+        <span class="fab-label">Log Payment</span>
+        <div class="fab-icon-btn"><i class="fas fa-dollar-sign"></i></div>
+      </a>
+      <a href="{% url 'core:task_create' %}" class="fab-item" title="New Task">
+        <span class="fab-label">New Task</span>
+        <div class="fab-icon-btn"><i class="fas fa-check"></i></div>
+      </a>
+      <a href="{% url 'core:note_create' %}" class="fab-item" title="New Note">
+        <span class="fab-label">New Note</span>
+        <div class="fab-icon-btn"><i class="fas fa-sticky-note"></i></div>
+      </a>
+    </div>
+    <button class="fab-main-btn" id="fabToggleBtn" aria-label="Quick Actions">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
 </div><!-- /.main-content -->
 
 {% else %}
