@@ -549,11 +549,11 @@ body {
 
 /* ── Welcome Banner ────────────────────────────────────────── */
 .welcome-banner {
-  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 60%, #5B21B6 100%);
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 60%, #5B21B6 100%) !important;
   border-radius: var(--radius);
-  padding: 28px 32px;
-  color: #ffffff;
-  box-shadow: 0 10px 30px -5px rgba(124, 58, 237, 0.3);
+  padding: 26px 30px;
+  color: #ffffff !important;
+  box-shadow: 0 10px 30px -5px rgba(124, 58, 237, 0.35);
   position: relative;
   overflow: hidden;
   margin-bottom: 24px;
@@ -564,37 +564,38 @@ body {
   position: absolute;
   top: -40px;
   right: -40px;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   pointer-events: none;
 }
 
 .welcome-banner-title {
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
   margin-bottom: 6px;
   letter-spacing: -0.5px;
 }
 
 .welcome-banner-sub {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   margin-bottom: 0;
 }
 
 .welcome-banner-btn {
-  background: #ffffff;
-  color: #5B21B6;
-  font-weight: 700;
-  font-size: 13px;
-  border-radius: 20px;
-  padding: 8px 18px;
-  border: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  transition: var(--transition);
-  text-decoration: none;
+  background: #ffffff !important;
+  color: #5B21B6 !important;
+  font-weight: 700 !important;
+  font-size: 12.5px !important;
+  border-radius: 20px !important;
+  padding: 8px 18px !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+  transition: var(--transition) !important;
+  text-decoration: none !important;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -602,9 +603,9 @@ body {
 
 .welcome-banner-btn:hover {
   transform: translateY(-2px);
-  background: #ffffff;
-  color: #7C3AED;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  background: #ffffff !important;
+  color: #7C3AED !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* ── Floating Speed-Dial Button (FAB) ─────────────────────── */
