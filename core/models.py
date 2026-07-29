@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.core.validators import EmailValidator, RegexValidator
+from django.core.validators import EmailValidator, MinValueValidator, MaxValueValidator
 import uuid
 
 
@@ -73,7 +73,7 @@ class Project(models.Model):
     start_date = models.DateField(blank=True, null=True)
     deadline = models.DateField(blank=True, null=True)
     budget = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    progress = models.IntegerField(default=0, validators=[RegexValidator(r'^\d+$', 'Progress must be a number')])
+    progress = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

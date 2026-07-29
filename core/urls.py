@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, api_views
 
 app_name = 'core'
 
@@ -60,4 +60,11 @@ urlpatterns = [
 
     # ── Settings ──────────────────────────────────────────
     path('settings/', views.user_settings, name='settings'),
+
+    # ── Backend Proxy API Endpoints (/api/v1/) ───────────
+    path('api/v1/health/', api_views.api_health, name='api_health'),
+    path('api/v1/dashboard/stats/', api_views.api_dashboard_stats, name='api_dashboard_stats'),
+    path('api/v1/dashboard/activity/', api_views.api_activity_log, name='api_activity_log'),
+    path('api/v1/tasks/<uuid:pk>/toggle/', api_views.api_toggle_task, name='api_toggle_task'),
+    path('api/v1/projects/<uuid:pk>/quick-status/', api_views.api_update_project_status, name='api_update_project_status'),
 ]

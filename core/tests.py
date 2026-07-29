@@ -159,7 +159,8 @@ class AuthViewTest(TestCase):
 
     def test_logout_redirects(self):
         self.client.login(username='viewuser', password='viewpass123')
-        resp = self.client.get(reverse('core:logout'))
+        # POST request executes logout securely
+        resp = self.client.post(reverse('core:logout'))
         self.assertRedirects(resp, reverse('core:login'))
 
 
@@ -297,7 +298,6 @@ class DashboardViewTest(TestCase):
         self.assertIn('total_projects', resp.context)
         self.assertIn('total_earnings', resp.context)
         self.assertIn('pending_payments', resp.context)
-        self.assertIn('monthly_earnings_json', resp.context)
 
     def test_dashboard_shows_correct_counts(self):
         client_obj = Client.objects.create(user=self.user, name='Dash Client', email='d@test.com')
@@ -392,3 +392,33 @@ class ActivityLogTest(TestCase):
     def test_activity_list_loads(self):
         resp = self.client.get(reverse('core:activity_list'))
         self.assertEqual(resp.status_code, 200)
+
+
+# ============================================================
+# API PROXY ENDPOINTS TEST (/api/v1/)
+# ============================================================
+
+class APIProxyEndpointTest(TestCase):
+    def setUp(self):
+        self.client = TestClient()
+        self.user = User.objects.create_user(username='apiuser', password='apipassword123')
+        self.client.login(username='apiuser', password='apipassword123')
+
+    def test_api_health(self):
+        resp = self.client.get(reverse('core:api_health'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['status'], 'ok')
+
+    def test_api_dashboard_stats_authenticated(self):
+        resp = self.client.get(reverse('core:api_dashboard_stats'))
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn('total_revenue', data)
+        self.assertIn('monthly_chart', data)
+        self.assertIn('status_chart', data)
+
+    def test_api_dashboard_stats_requires_login(self):
+        self.client.logout()
+        resp = self.client.get(reverse('core:api_dashboard_stats'))
+        self.assertEqual(resp.status_code, 302)
+

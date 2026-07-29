@@ -35,7 +35,8 @@ try:
 except ImportError:
     SECRET_KEY     = os.environ.get('SECRET_KEY',
                                     'django-insecure-change-this-to-a-very-long-random-string-in-production-min-50-characters-for-security')
-    DEBUG          = os.environ.get('DEBUG', 'True') == 'True'
+    # SECURITY: Default DEBUG to False — never accidentally expose stack traces in production
+    DEBUG          = os.environ.get('DEBUG', 'False') == 'True'
     ALLOWED_HOSTS  = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
     DATABASE_URL   = os.environ.get('DATABASE_URL', '')
 
@@ -56,6 +57,8 @@ INSTALLED_APPS = [
 
 # ── Middleware ──────────────────────────────────────────────────
 MIDDLEWARE = [
+    'freelancer_tracker.middleware.SecurityHeadersMiddleware', # Custom security headers & CSP
+    'freelancer_tracker.middleware.RateLimitMiddleware',      # Rate limiting on /api/ & /login/
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',        # serve static files in production
     'corsheaders.middleware.CorsMiddleware',             # must be before CommonMiddleware
@@ -152,17 +155,43 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# ── CORS ────────────────────────────────────────────────────────
+# ── CORS & Security Controls ────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 ]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# ── Rate Limiting Limits ─────────────────────────────────────────
+RATE_LIMIT_API_PER_MIN = 100
+RATE_LIMIT_AUTH_PER_MIN = 15
 
 
 # ── Authentication ───────────────────────────────────────────────
 LOGIN_URL          = '/login/'
 LOGIN_REDIRECT_URL = 'core:dashboard'
 LOGOUT_REDIRECT_URL = 'core:login'
+
+
+# ── Session Security ─────────────────────────────────────────────
+# M-03: Limit session lifetime to 8 hours; expire when browser closes
+SESSION_COOKIE_AGE          = 28800   # 8 hours in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST   = False  # Only save on modification
 
 
 # ── Django REST Framework ────────────────────────────────────────
@@ -173,7 +202,22 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '30/minute',
+        'user': '120/minute',
+    }
 }
+
+
+# ── Security Headers (always active) ────────────────────────────
+# These headers are safe in all environments and should always be set
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS             = 'DENY'
+SECURE_REFERRER_POLICY      = 'strict-origin-when-cross-origin'
 
 
 # ── Security (Production only — gated by DEBUG=False) ───────────
@@ -186,17 +230,11 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD           = True
 
-    # Secure cookies
+    # Secure cookies (production only — dev doesn't use HTTPS)
     SESSION_COOKIE_SECURE  = True
     SESSION_COOKIE_HTTPONLY = True
     CSRF_COOKIE_SECURE     = True
     CSRF_COOKIE_HTTPONLY   = True
-
-    # Security headers
-    # NOTE: SECURE_BROWSER_XSS_FILTER was removed in Django 5.0 — do not use it
-    SECURE_CONTENT_TYPE_NOSNIFF  = True
-    X_FRAME_OPTIONS              = 'DENY'
-    SECURE_REFERRER_POLICY       = 'strict-origin-when-cross-origin'
 
 
 # ── Message Tags → Bootstrap alert class names ───────────────────

@@ -3,6 +3,67 @@
  * Handles: Dark Mode, Toast Notifications, Sidebar Toggle, Table Sorting
  */
 
+/**
+ * Helper function for internal backend API requests (/api/v1/*).
+ * Enforces backend proxy rules:
+ * - Directs all calls to internal /api/* endpoints
+ * - Automatically injects CSRF headers and session credentials
+ * - Validates responses and sanitizes errors
+ */
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+async function apiFetch(endpoint, options = {}) {
+  // Enforce internal API route only
+  if (!endpoint.startsWith('/api/')) {
+    throw new Error('Security Restriction: Frontend can only communicate with internal /api/ endpoints.');
+  }
+
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': getCookie('csrftoken') || '',
+    'X-Requested-With': 'XMLHttpRequest'
+  };
+
+  const config = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers
+    },
+    credentials: 'same-origin'
+  };
+
+  try {
+    const response = await fetch(endpoint, config);
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({ detail: 'API Error' }));
+      throw new Error(errData.detail || errData.error || `HTTP ${response.status}`);
+    }
+    return await response.json();
+  } catch (err) {
+    console.error('Proxy API Request Failed:', err.message);
+    if (window.showToast) {
+      window.showToast(err.message || 'Request failed', 'danger');
+    }
+    throw err;
+  }
+}
+
+window.apiFetch = apiFetch;
+
 document.addEventListener('DOMContentLoaded', function () {
 
   // ============================================================
@@ -94,11 +155,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const toast = document.createElement('div');
     const resolvedType = type === 'danger' ? 'error' : type;
     toast.className = `custom-toast ${resolvedType}`;
-    toast.innerHTML = `
-      <i class="${icons[type] || icons.info}" style="color:${colors[type] || colors.info}; font-size:18px; flex-shrink:0;"></i>
-      <span style="flex:1; font-size:13.5px;">${message}</span>
-      <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;font-size:16px;">&times;</button>
-    `;
+
+    // C-02: Build toast using safe DOM API instead of innerHTML to prevent XSS
+    const icon = document.createElement('i');
+    icon.className = icons[type] || icons.info;
+    icon.style.cssText = `color:${colors[type] || colors.info}; font-size:18px; flex-shrink:0;`;
+
+    const msgSpan = document.createElement('span');
+    msgSpan.style.cssText = 'flex:1; font-size:13.5px;';
+    // Use textContent — never innerHTML — to prevent XSS from message content
+    msgSpan.textContent = message;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.style.cssText = 'background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;font-size:16px;';
+    closeBtn.setAttribute('aria-label', 'Close notification');
+    closeBtn.textContent = '\u00D7'; // ×
+    closeBtn.addEventListener('click', () => toast.remove());
+
+    toast.appendChild(icon);
+    toast.appendChild(msgSpan);
+    toast.appendChild(closeBtn);
     container.appendChild(toast);
 
     setTimeout(() => {
@@ -193,6 +270,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     requestAnimationFrame(update);
   }
+
+  window.animateNumber = animateNumber;
 
   const numObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {

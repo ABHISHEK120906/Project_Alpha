@@ -2,14 +2,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.contrib import messages
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
 from datetime import timedelta, date
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 import json
+import re
 from .models import Client, Project, Payment, Task, Note, ActivityLog
 from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
                     NoteForm, SearchForm)
@@ -95,14 +99,19 @@ def custom_login(request):
     return render(request, 'registration/login.html')
 
 
+@require_http_methods(['GET', 'POST'])
 def custom_logout(request):
-    """Logout view — logs the action then clears the session."""
-    if request.user.is_authenticated:
+    """Logout view — POST only to prevent CSRF-logout attacks."""
+    # H-02: Only process logout on POST to prevent logout via embedded GET requests
+    if request.method == 'POST' and request.user.is_authenticated:
         username = request.user.username
         log_activity(request.user, 'logout', 'user', request.user.id,
-                     f'User {username} logged out', request)
+                     f'User logged out', request)
         logout(request)
         messages.success(request, 'You have been logged out successfully.')
+    elif request.method == 'GET' and request.user.is_authenticated:
+        # For GET requests, redirect to a confirmation page instead of logging out
+        return redirect('core:dashboard')
     return redirect('core:login')
 
 
@@ -185,13 +194,6 @@ def dashboard(request):
         'recent_projects': recent_projects,
         'total_tasks': total_tasks,
         'completed_tasks': completed_tasks,
-        # Chart data as JSON-safe strings
-        'monthly_earnings_json': json.dumps(monthly_earnings),
-        'monthly_labels_json': json.dumps(monthly_labels),
-        'project_status_json': json.dumps([
-            completed_projects, pending_projects,
-            in_progress_projects, on_hold_projects, cancelled_projects
-        ]),
     }
 
     return render(request, 'dashboard.html', context)
@@ -868,16 +870,22 @@ def reports_dashboard(request):
     return render(request, 'reports/reports.html', context)
 
 
+_VALID_REPORT_TYPES = frozenset(['payment', 'project', 'client', 'monthly'])
+
+
 @login_required
 def export_pdf_report(request, report_type):
     """Generate and stream a PDF report using ReportLab."""
+    if report_type not in _VALID_REPORT_TYPES:
+        messages.error(request, 'Invalid report type requested.')
+        return redirect('core:reports_dashboard')
+
     try:
         from reportlab.lib.pagesizes import letter, A4
         from reportlab.lib import colors
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib.units import inch
         from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-        from reportlab.lib.enums import TA_CENTER, TA_LEFT
         import io
     except ImportError:
         messages.error(request, 'ReportLab is not installed. Cannot generate PDF.')
@@ -1008,13 +1016,18 @@ def export_pdf_report(request, report_type):
     doc.build(elements)
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{report_type}_report_{today}.pdf"'
+    safe_filename = f'{report_type}_report_{today.strftime("%Y-%m-%d")}.pdf'
+    response['Content-Disposition'] = f'attachment; filename="{safe_filename}"'
     return response
 
 
 @login_required
 def export_excel_report(request, report_type):
     """Generate and stream an Excel report using openpyxl."""
+    if report_type not in _VALID_REPORT_TYPES:
+        messages.error(request, 'Invalid report type requested.')
+        return redirect('core:reports_dashboard')
+
     try:
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -1164,7 +1177,8 @@ def export_excel_report(request, report_type):
         buffer,
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    response['Content-Disposition'] = f'attachment; filename="{report_type}_report_{today}.xlsx"'
+    safe_filename = f'{report_type}_report_{today.strftime("%Y-%m-%d")}.xlsx'
+    response['Content-Disposition'] = f'attachment; filename="{safe_filename}"'
     return response
 
 
@@ -1172,19 +1186,38 @@ def export_excel_report(request, report_type):
 # SETTINGS VIEW
 # ============================================================
 
+_VALID_SETTINGS_ACTIONS = frozenset(['profile', 'password'])
+
+
 @login_required
 def user_settings(request):
     """User settings page — profile update and password change."""
     password_form = PasswordChangeForm(user=request.user)
 
     if request.method == 'POST':
-        action = request.POST.get('action')
+        action = request.POST.get('action', '').strip()
+
+        if action not in _VALID_SETTINGS_ACTIONS:
+            messages.error(request, 'Invalid settings action.')
+            return redirect('core:settings')
+
         if action == 'profile':
             # Update basic profile fields
             user = request.user
-            user.first_name = request.POST.get('first_name', '').strip()
-            user.last_name = request.POST.get('last_name', '').strip()
-            user.email = request.POST.get('email', '').strip()
+            user.first_name = request.POST.get('first_name', '').strip()[:150]
+            user.last_name = request.POST.get('last_name', '').strip()[:150]
+            
+            new_email = request.POST.get('email', '').strip()
+            if new_email:
+                try:
+                    validate_email(new_email)
+                    user.email = new_email
+                except ValidationError:
+                    messages.error(request, 'Please enter a valid email address.')
+                    return render(request, 'settings.html', {'password_form': password_form})
+            else:
+                user.email = ''
+                
             user.save()
             log_activity(request.user, 'update', 'user', request.user.id,
                          'Updated profile settings', request)
