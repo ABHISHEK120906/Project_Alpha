@@ -884,8 +884,8 @@ def export_pdf_report(request, report_type):
         from reportlab.lib.pagesizes import letter, A4
         from reportlab.lib import colors
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.lib.units import inch
         from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+        from reportlab.lib.enums import TA_CENTER, TA_LEFT
         import io
     except ImportError:
         messages.error(request, 'ReportLab is not installed. Cannot generate PDF.')
