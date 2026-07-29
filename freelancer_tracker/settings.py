@@ -96,11 +96,16 @@ TEMPLATES = [
 
 
 # ── Database ─────────────────────────────────────────────────────
-# Default to SQLite for development
+# Default to SQLite (using /tmp on serverless read-only filesystem if needed)
+if os.environ.get('VERCEL'):
+    db_path = Path('/tmp') / 'db.sqlite3'
+else:
+    db_path = BASE_DIR / 'db.sqlite3'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': db_path,
     }
 }
 
@@ -109,7 +114,7 @@ if DATABASE_URL and dj_database_url:
     try:
         DATABASES['default'] = dj_database_url.parse(
             DATABASE_URL,
-            conn_max_age=600,
+            conn_max_age=0 if os.environ.get('VERCEL') else 600,
             ssl_require=True,
             engine='django.db.backends.postgresql',  # uses psycopg3
         )
@@ -248,3 +253,32 @@ MESSAGE_TAGS = {
     message_constants.WARNING: 'warning',
     message_constants.ERROR:   'danger',
 }
+
+
+# ── Logging Configuration ─────────────────────────────────────────
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
+
