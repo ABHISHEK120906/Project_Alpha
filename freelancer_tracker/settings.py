@@ -29,7 +29,8 @@ try:
     SECRET_KEY     = config('SECRET_KEY',
                             default='django-insecure-change-this-to-a-very-long-random-string-in-production-min-50-characters-for-security')
     DEBUG          = config('DEBUG', default=True, cast=bool)
-    ALLOWED_HOSTS  = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,.vercel.app', cast=Csv())
+    ALLOWED_HOSTS  = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,.vercel.app,.now.sh,*', cast=Csv())
+    CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.vercel.app,https://*.now.sh,http://localhost:8000,http://127.0.0.1:8000', cast=Csv())
     DATABASE_URL   = config('DATABASE_URL', default='')
 
 except ImportError:
@@ -37,7 +38,8 @@ except ImportError:
                                     'django-insecure-change-this-to-a-very-long-random-string-in-production-min-50-characters-for-security')
     # SECURITY: Default DEBUG to False — never accidentally expose stack traces in production
     DEBUG          = os.environ.get('DEBUG', 'False') == 'True'
-    ALLOWED_HOSTS  = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+    ALLOWED_HOSTS  = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,.vercel.app,.now.sh,*').split(',')
+    CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app,https://*.now.sh,http://localhost:8000,http://127.0.0.1:8000').split(',')
     DATABASE_URL   = os.environ.get('DATABASE_URL', '')
 
 
@@ -213,11 +215,12 @@ REST_FRAMEWORK = {
 }
 
 
-# ── Security Headers (always active) ────────────────────────────
-# These headers are safe in all environments and should always be set
+# ── Security Headers & Proxy Configuration ───────────────────────
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS             = 'DENY'
 SECURE_REFERRER_POLICY      = 'strict-origin-when-cross-origin'
+SECURE_PROXY_SSL_HEADER     = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST        = True
 
 
 # ── Security (Production only — gated by DEBUG=False) ───────────
