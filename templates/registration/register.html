@@ -73,16 +73,16 @@
 </div>
 
 <style>
-/* Override Django's auto-generated widget to match our auth style */
+/* Override Django's auto-generated widget to match our light card theme */
 .field-widget-container input[type="text"],
 .field-widget-container input[type="password"],
 .field-widget-container input[type="email"] {
   width: 100%;
-  padding: 13px 14px 13px 42px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  color: #fff;
+  padding: 12px 14px 12px 42px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  color: #0f172a;
   font-size: 14px;
   font-family: 'Inter', sans-serif;
   transition: all 0.2s ease;
@@ -90,11 +90,26 @@
   -webkit-appearance: none;
 }
 .field-widget-container input:focus {
-  background: rgba(255,255,255,0.09);
-  border-color: rgba(79,70,229,0.7);
-  box-shadow: 0 0 0 3px rgba(79,70,229,0.18);
+  background: #ffffff;
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
 }
-.field-widget-container input::placeholder { color: rgba(255,255,255,0.22); }
+.field-widget-container input::placeholder { color: #94a3b8; }
+.field-error {
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.field-help {
+  color: #64748b;
+  font-size: 11.5px;
+  margin-top: 4px;
+}
+.field-help ul { margin: 4px 0 0 16px; padding: 0; }
 /* Password field — make room for toggle btn */
 .field-widget-container input[type="password"],
 .field-widget-container input[type="text"][id$="password1"],
@@ -143,11 +158,7 @@
   document.getElementById('registerForm').addEventListener('submit', function() {
     const btn = document.getElementById('registerSubmitBtn');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
-    btn.disabled = true;
-    setTimeout(function() {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
-    }, 8000);
+    btn.style.pointerEvents = 'none';
   });
 })();
 </script>

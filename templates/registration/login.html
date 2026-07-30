@@ -92,9 +92,7 @@
   document.getElementById('loginForm').addEventListener('submit', function() {
     const btn = document.getElementById('loginSubmitBtn');
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
-    btn.disabled = true;
-    // Re-enable after 6s in case of error
-    setTimeout(() => { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In'; }, 6000);
+    btn.style.pointerEvents = 'none';
   });
 })();
 </script>
