@@ -1,22 +1,19 @@
 # Web Framework
-Django==6.0.7
-djangorestframework==3.17.1
-django-cors-headers==4.9.0
+Django>=5.0,<6.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.0.0
 
 # Environment Variables
-python-decouple==3.8
+python-decouple>=3.8
 
 # Static Files (production)
-whitenoise==6.12.0
+whitenoise>=6.5.0
 
 # Reports
-reportlab==5.0.0
-openpyxl==3.1.5
+reportlab>=4.0.0
+openpyxl>=3.1.0
 
 # PostgreSQL (Neon DB — required for Vercel production)
-# psycopg2-binary does not work on Vercel Lambda — use psycopg3 instead
-psycopg[binary]==3.2.9
-dj-database-url==2.3.0
+psycopg[binary]>=3.1.0
+dj-database-url>=2.1.0
 
-# Note: Pillow excluded due to Python 3.14 compatibility issues.
-# Note: gunicorn removed — not needed for Vercel serverless deployment.

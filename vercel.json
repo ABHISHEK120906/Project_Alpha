@@ -3,10 +3,7 @@
   "builds": [
     {
       "src": "freelancer_tracker/wsgi.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
@@ -20,3 +17,4 @@
     }
   ]
 }
+
