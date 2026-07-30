@@ -12,8 +12,9 @@ urlpatterns = [
     path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
 
-    # ── Dashboard ─────────────────────────────────────────
+    # ── Dashboard & Sample Data ───────────────────────────
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('seed-sample-data/', views.load_sample_data, name='load_sample_data'),
 
     # ── Clients ───────────────────────────────────────────
     path('clients/', views.client_list, name='client_list'),

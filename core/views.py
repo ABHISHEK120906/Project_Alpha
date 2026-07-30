@@ -115,6 +115,19 @@ def custom_logout(request):
     return redirect('core:login')
 
 
+@login_required
+@require_POST
+def load_sample_data(request):
+    """Seed sample data for request.user."""
+    from .management.commands.seed_demo_data import seed_user_data
+    try:
+        seed_user_data(request.user)
+        messages.success(request, '⚡ Sample clients, projects, tasks, and payments loaded successfully!')
+    except Exception as e:
+        messages.error(request, f'Failed to load sample data: {e}')
+    return redirect('core:dashboard')
+
+
 # ============================================================
 # DASHBOARD VIEW
 # ============================================================
@@ -886,6 +899,7 @@ def export_pdf_report(request, report_type):
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
         from reportlab.lib.enums import TA_CENTER, TA_LEFT
+        from reportlab.lib.units import inch
         import io
     except ImportError:
         messages.error(request, 'ReportLab is not installed. Cannot generate PDF.')
