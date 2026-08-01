@@ -72,19 +72,19 @@
       display: flex;
     }
 
-    /* Left decorative panel (matching Dashboard Purple Sidebar theme) */
+    /* Left decorative panel (Dark split UI matching screenshot) */
     .auth-panel-left {
       display: none;
       flex: 1;
       align-items: center;
       justify-content: center;
       padding: 60px 50px;
-      background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 50%, #5B21B6 100%);
+      background: linear-gradient(135deg, #131022 0%, #0d0a17 100%);
       color: #ffffff;
       flex-direction: column;
       position: relative;
       overflow: hidden;
-      box-shadow: 10px 0 30px rgba(124, 58, 237, 0.18);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
     }
     @media (min-width: 1024px) {
       .auth-panel-left { display: flex; }
@@ -94,24 +94,24 @@
     .auth-panel-left::before {
       content: '';
       position: absolute;
-      width: 400px;
-      height: 400px;
+      width: 450px;
+      height: 450px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      top: -100px;
-      right: -100px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+      top: -120px;
+      left: -120px;
       pointer-events: none;
     }
 
     .auth-panel-left::after {
       content: '';
       position: absolute;
-      width: 300px;
-      height: 300px;
+      width: 380px;
+      height: 380px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
-      bottom: -80px;
-      left: -80px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
       pointer-events: none;
     }
 
@@ -122,17 +122,16 @@
       margin-bottom: 48px;
     }
     .auth-panel-left .brand-icon {
-      width: 52px;
-      height: 52px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border-radius: 14px;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 22px;
       color: #ffffff;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
     .auth-panel-left .brand-name {
       font-size: 26px;
@@ -141,64 +140,64 @@
       letter-spacing: -0.5px;
     }
     .auth-panel-left .brand-tagline {
-      font-size: 13.5px;
-      color: #ffffff;
+      font-size: 13px;
+      color: #94a3b8;
       font-weight: 500;
     }
 
     .auth-panel-left .hero-text {
       text-align: left;
-      max-width: 440px;
+      max-width: 460px;
       position: relative;
       z-index: 2;
     }
     .auth-panel-left .hero-text h1 {
-      font-size: clamp(32px, 3.2vw, 48px);
+      font-size: clamp(32px, 3.2vw, 46px);
       font-weight: 900;
       color: #ffffff;
       line-height: 1.15;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       letter-spacing: -1.2px;
     }
     .auth-panel-left .hero-text p {
-      font-size: 15.5px;
-      color: #ffffff;
-      font-weight: 500;
-      line-height: 1.7;
+      font-size: 15px;
+      color: #94a3b8;
+      font-weight: 400;
+      line-height: 1.6;
       margin-bottom: 36px;
     }
 
-    /* Feature pills matching Dashboard cards */
-    .feature-pills { display: flex; flex-direction: column; gap: 14px; }
+    /* Feature pills matching screenshot dark cards */
+    .feature-pills { display: flex; flex-direction: column; gap: 12px; }
     .feature-pill {
       display: flex;
       align-items: center;
       gap: 14px;
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
       padding: 14px 20px;
       transition: all 0.25s ease;
     }
     .feature-pill:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
       transform: translateX(4px);
     }
     .feature-pill .pill-icon {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 10px;
-      background: #ffffff;
-      color: #4f46e5;
+      background: rgba(255, 255, 255, 0.1);
+      color: #a78bfa;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 15px;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .feature-pill .pill-text { color: #ffffff; font-size: 14px; font-weight: 600; }
+    .feature-pill .pill-text { color: #e2e8f0; font-size: 14px; font-weight: 600; }
 
     /* Right auth form panel */
     .auth-panel-right {
@@ -208,11 +207,11 @@
       padding: 40px 24px;
       flex: 0 0 100%;
       min-height: 100vh;
+      background: linear-gradient(135deg, #0e1b20 0%, #071216 100%);
     }
     @media (min-width: 1024px) {
       .auth-panel-right {
-        flex: 0 0 520px;
-        background: transparent;
+        flex: 0 0 540px;
       }
     }
 
