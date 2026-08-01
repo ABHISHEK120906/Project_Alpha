@@ -250,6 +250,23 @@ def dashboard(request):
 
     announcements = Announcement.objects.filter(Q(target_type='all') | Q(target_users=user)).distinct()[:5]
 
+    # ── Cloud Storage Metrics (Image 1 UI Integration) ──────
+    all_files = ProjectFile.objects.filter(user=user).select_related('project')
+    recent_user_files = all_files.order_by('-uploaded_at')[:6]
+
+    pictures_count = all_files.filter(file_type__in=['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']).count()
+    documents_count = all_files.filter(file_type__in=['pdf', 'doc', 'docx', 'txt', 'csv', 'xlsx', 'ppt', 'pptx']).count()
+    videos_count = all_files.filter(file_type__in=['mp4', 'mkv', 'avi', 'mov', 'wmv']).count()
+    audio_count = all_files.filter(file_type__in=['mp3', 'wav', 'ogg', 'aac', 'flac']).count()
+
+    total_bytes = all_files.aggregate(Sum('file_size'))['file_size__sum'] or 0
+    total_mb = round(total_bytes / (1024 * 1024), 2)
+    max_mb = 500.0
+    storage_percentage = min(100, round((total_mb / max_mb) * 100, 1))
+
+    file_form = ProjectFileForm()
+    file_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
+
     context = {
         'total_clients': total_clients,
         'total_projects': total_projects,
@@ -270,6 +287,17 @@ def dashboard(request):
         'recent_projects': recent_projects,
         'total_earnings': total_income,
         'announcements': announcements,
+
+        # Cloud Storage Data
+        'user_files': recent_user_files,
+        'pictures_count': pictures_count,
+        'documents_count': documents_count,
+        'videos_count': videos_count,
+        'audio_count': audio_count,
+        'total_mb': total_mb,
+        'max_mb': max_mb,
+        'storage_percentage': storage_percentage,
+        'file_form': file_form,
     }
 
     return render(request, 'dashboard.html', context)

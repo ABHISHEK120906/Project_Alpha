@@ -1,31 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Dashboard — FreelanceTrack{% endblock %}
-{% block page_title %}Dashboard Overview{% endblock %}
+{% block page_title %}Workspace & Cloud Dashboard{% endblock %}
 
 {% block content %}
 
-<div class="welcome-banner">
+<!-- Welcome Banner -->
+<div class="welcome-banner mb-4">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
       <h2 class="welcome-banner-title">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
-      <p class="welcome-banner-sub">Here is your freelance business performance and active revenue summary.</p>
+      <p class="welcome-banner-sub">Here is your freelance business performance, cloud storage, and active project summary.</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
       <a href="{% url 'core:project_create' %}" class="welcome-banner-btn" title="Create Project">
         <i class="fas fa-plus"></i> New Project
       </a>
-      <a href="{% url 'core:client_create' %}" class="welcome-banner-btn" style="background:rgba(255,255,255,0.2);color:#fff;" title="Create Client">
-        <i class="fas fa-user-plus"></i> New Client
-      </a>
+      <button class="welcome-banner-btn" style="background:rgba(255,255,255,0.25);color:#fff;border:none;" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
+        <i class="fas fa-cloud-upload-alt me-1"></i> Upload File
+      </button>
       <a href="{% url 'core:payment_create' %}" class="welcome-banner-btn" title="Record Payment">
         <i class="fas fa-dollar-sign"></i> Log Payment
-      </a>
-      <a href="{% url 'core:task_create' %}" class="welcome-banner-btn" style="background:rgba(255,255,255,0.2);color:#fff;" title="Create Task">
-        <i class="fas fa-check"></i> New Task
-      </a>
-      <a href="{% url 'core:note_create' %}" class="welcome-banner-btn" style="background:rgba(255,255,255,0.2);color:#fff;" title="Create Note">
-        <i class="fas fa-sticky-note"></i> New Note
       </a>
       {% if total_projects == 0 %}
       <form method="post" action="{% url 'core:load_sample_data' %}" style="display:inline;margin:0;">
@@ -39,7 +34,7 @@
   </div>
 </div>
 
-<!-- FEATURE 8: Super Admin Announcement Banner -->
+<!-- Super Admin Announcement Banner -->
 {% if announcements %}
   {% for ann in announcements %}
   <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-start gap-3" style="background: rgba(111, 66, 193, 0.15); border-left: 4px solid #6f42c1 !important;">
@@ -52,80 +47,89 @@
   {% endfor %}
 {% endif %}
 
-<div class="card mb-4" id="revenueGoalCard" style="background: linear-gradient(135deg, rgba(124,58,237,0.06) 0%, rgba(91,33,182,0.02) 100%); border: 1px solid rgba(124,58,237,0.18);">
-
-  <div class="card-body py-3">
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <div style="width:48px;height:48px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">
-          <i class="fas fa-bullseye"></i>
-        </div>
-        <div>
-          <div class="d-flex align-items-center gap-2">
-            <h6 style="margin:0;font-weight:700;color:var(--text-primary);">Monthly Revenue Goal</h6>
-            <button id="editGoalBtn" class="btn btn-sm py-0 px-2 text-primary" style="font-size:11px;" title="Edit Target">
-              <i class="fas fa-pen"></i> Edit
-            </button>
+<!-- ── Category Summaries (Image 1 UI - Cloud & Workspace Categories) ── -->
+<h6 class="text-uppercase text-muted fw-bold mb-3 small"><i class="fas fa-th-large me-1"></i> Cloud & Asset Categories</h6>
+<div class="row g-3 mb-4">
+  <!-- Pictures -->
+  <div class="col-6 col-md-3">
+    <a href="{% url 'core:file_manager' %}?category=pictures" class="text-decoration-none">
+      <div class="card p-3 h-100 position-relative border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-images"></i>
           </div>
-          <p style="margin:0;font-size:12px;color:var(--text-muted);" id="goalTargetText">Targeting monthly business milestone</p>
+          <span class="badge" style="background:rgba(255,255,255,0.25);color:#fff;"><i class="fas fa-star text-warning"></i> Main</span>
         </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Pictures</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ pictures_count }} Files</div>
       </div>
+    </a>
+  </div>
 
-      <div class="flex-grow-1 mx-md-4" style="max-width:400px;">
-        <div class="d-flex justify-content-between align-items-center mb-1" style="font-size:12px;font-weight:700;">
-          <span style="color:var(--text-secondary);">Goal Progress</span>
-          <span style="color:var(--primary);" id="goalPercentage">0%</span>
+  <!-- Documents -->
+  <div class="col-6 col-md-3">
+    <a href="{% url 'core:file_manager' %}?category=documents" class="text-decoration-none">
+      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-file-alt"></i>
+          </div>
         </div>
-        <div class="progress" style="height:10px;border-radius:6px;background:var(--bg-tertiary);">
-          <div class="progress-bar" id="goalProgressBar" role="progressbar" style="width: 0%; background: linear-gradient(90deg, #7C3AED 0%, #10b981 100%); transition: width 0.6s ease;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Documents</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ documents_count }} Files</div>
       </div>
-    </div>
+    </a>
+  </div>
+
+  <!-- Videos -->
+  <div class="col-6 col-md-3">
+    <a href="{% url 'core:file_manager' %}?category=videos" class="text-decoration-none">
+      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-film"></i>
+          </div>
+        </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Videos</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ videos_count }} Files</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Audio -->
+  <div class="col-6 col-md-3">
+    <a href="{% url 'core:file_manager' %}?category=audio" class="text-decoration-none">
+      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-music"></i>
+          </div>
+        </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Audio</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ audio_count }} Files</div>
+      </div>
+    </a>
   </div>
 </div>
 
-<!-- ── Interactive Analytics Filter Bar (Feature 17) ── -->
-<div class="card p-3 mb-4" style="background:var(--bg-secondary);border:1px solid var(--border-color);">
-  <form id="analyticsFilterForm" class="row g-2 align-items-center">
-    <div class="col-6 col-md-3">
-      <label class="form-label mb-1 small fw-bold"><i class="fas fa-calendar-alt text-primary me-1"></i> Date Range</label>
-      <select name="range" class="form-select form-select-sm">
-        <option value="7d">Last 7 Days</option>
-        <option value="30d" selected>Last 30 Days</option>
-        <option value="90d">Last 90 Days</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-      </select>
-    </div>
-    <div class="col-6 col-md-3">
-      <label class="form-label mb-1 small fw-bold"><i class="fas fa-filter text-primary me-1"></i> Status</label>
-      <select name="status" class="form-select form-select-sm">
-        <option value="">All Statuses</option>
-        <option value="in_progress">In Progress</option>
-        <option value="completed">Completed</option>
-        <option value="pending">Pending</option>
-        <option value="cancelled">Cancelled</option>
-      </select>
-    </div>
-    <div class="col-6 col-md-3">
-      <label class="form-label mb-1 small fw-bold"><i class="fas fa-flag text-primary me-1"></i> Priority</label>
-      <select name="priority" class="form-select form-select-sm">
-        <option value="">All Priorities</option>
-        <option value="urgent">Urgent</option>
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
-    </div>
-    <div class="col-6 col-md-3 d-flex align-items-end">
-      <button type="button" onclick="VisualizationStudio.loadDashboardAnalytics()" class="btn btn-sm btn-primary w-100 mt-3">
-        <i class="fas fa-sync-alt me-1"></i> Update Analytics
-      </button>
-    </div>
-  </form>
+<!-- ── Tag Pills (Image 1 Filter Pills) ── -->
+<div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+  <span class="small fw-bold text-muted me-2">Files Filter:</span>
+  <a href="{% url 'core:project_list' %}" class="btn btn-sm btn-primary" style="border-radius:20px;padding:5px 16px;">
+    <i class="fas fa-briefcase me-1"></i> Work
+  </a>
+  <a href="{% url 'core:client_list' %}" class="btn btn-sm btn-outline-secondary" style="border-radius:20px;padding:5px 16px;">
+    <i class="fas fa-user me-1"></i> Personal
+  </a>
+  <a href="{% url 'core:file_manager' %}" class="btn btn-sm btn-outline-secondary" style="border-radius:20px;padding:5px 16px;">
+    <i class="fas fa-graduation-cap me-1"></i> School / Assets
+  </a>
+  <a href="{% url 'core:project_list' %}?status=completed" class="btn btn-sm btn-outline-secondary" style="border-radius:20px;padding:5px 16px;">
+    <i class="fas fa-archive me-1"></i> Archive
+  </a>
 </div>
 
-<!-- ── Core KPI Metric Cards (8 Core Metrics) ── -->
+<!-- ── 8 Core Business KPI Cards ── -->
 <div class="row g-3 mb-4">
   <!-- 1. Total Projects -->
   <div class="col-6 col-md-3">
@@ -196,16 +200,165 @@
   </div>
 </div>
 
-<!-- ── Core Visualizations Grid (Exactly 5 High-Impact Business Visualizations) ── -->
+<!-- ── Main Workspace Grid (Matching Image 1: Recent Files/Projects Left, Upload & Storage Right) ── -->
+<div class="row g-4 mb-4">
+  <!-- Left Side: Recent Files & Projects -->
+  <div class="col-lg-8">
+    <!-- Recent Projects Table -->
+    <div class="card border-0 shadow-sm p-3 mb-4" style="border-radius:18px;">
+      <div class="d-flex align-items-center justify-content-between mb-3 px-2">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-list-alt text-primary me-2"></i> Recent Projects</h6>
+        <a href="{% url 'core:project_create' %}" class="btn btn-primary btn-sm">
+          <i class="fas fa-plus me-1"></i> New Project
+        </a>
+      </div>
+      {% if recent_projects %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr class="text-muted small">
+              <th>Project Name</th>
+              <th>Client</th>
+              <th>Status</th>
+              <th>Progress</th>
+              <th>Deadline</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in recent_projects %}
+            <tr data-href="{% url 'core:project_detail' project.id %}">
+              <td>
+                <a href="{% url 'core:project_detail' project.id %}" style="font-weight:700;color:var(--text-primary);text-decoration:none;">
+                  {{ project.name }}
+                </a>
+              </td>
+              <td style="color:var(--text-secondary);">{{ project.client.name }}</td>
+              <td>
+                <span class="badge-status status-{{ project.status }}">
+                  {{ project.get_status_display }}
+                </span>
+              </td>
+              <td style="min-width:130px;">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="progress flex-grow-1" style="height:8px;">
+                    <div class="progress-bar" role="progressbar" style="width:{{ project.progress }}%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span style="font-size:11px;font-weight:700;color:var(--text-secondary);">{{ project.progress }}%</span>
+                </div>
+              </td>
+              <td class="small text-muted">
+                {% if project.deadline %}{{ project.deadline|date:"M d, Y" }}{% else %}—{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-4 text-muted small">No active projects yet.</div>
+      {% endif %}
+    </div>
+
+    <!-- Recent Cloud Files Table (Image 1 Files Table) -->
+    <div class="card border-0 shadow-sm p-3" style="border-radius:18px;">
+      <div class="d-flex align-items-center justify-content-between mb-3 px-2">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-file-alt text-info me-2"></i> Recent Cloud Files</h6>
+        <a href="{% url 'core:file_manager' %}" class="btn btn-sm btn-link text-primary text-decoration-none">View Storage</a>
+      </div>
+      {% if user_files %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr class="text-muted small">
+              <th>File</th>
+              <th>Project</th>
+              <th>Uploaded</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for file in user_files %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fas fa-file text-primary"></i>
+                  <a href="{{ file.file.url }}" target="_blank" class="fw-semibold text-decoration-none text-truncate" style="max-width:180px;color:var(--text-primary);">
+                    {{ file.file_name }}
+                  </a>
+                </div>
+              </td>
+              <td class="small text-muted">{{ file.project.name|default:"General Asset" }}</td>
+              <td class="small text-muted">{{ file.uploaded_at|date:"M d" }}</td>
+              <td class="small fw-semibold text-secondary">
+                {% widthratio file.file_size 1024 1 %} KB
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-3 text-muted small">No files uploaded recently.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Right Side: Storage Indicator & Upload Dropzone Box (Image 1 Right Column) -->
+  <div class="col-lg-4">
+    <!-- Upload Dropzone Box (Image 1 Upload Box) -->
+    <div class="card p-4 text-center border-2 mb-4 shadow-sm" style="border:2px dashed var(--primary);border-radius:18px;background:var(--bg-secondary);">
+      <div style="width:54px;height:54px;border-radius:16px;background:var(--primary-soft);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;">
+        <i class="fas fa-cloud-upload-alt"></i>
+      </div>
+      <h6 class="fw-bold mb-1" style="color:var(--text-primary);">Add new Files</h6>
+      <p class="text-muted small mb-3">Upload media, invoices, and documents to cloud storage.</p>
+      <button class="btn btn-primary w-100 shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
+        <i class="fas fa-plus me-1"></i> Select File
+      </button>
+    </div>
+
+    <!-- Your Storage Usage Card (Image 1 Storage Card) -->
+    <div class="card p-3 mb-4 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-hdd text-info me-2"></i> Your Storage</h6>
+        <span class="badge bg-success-soft text-success" style="font-size:11px;"><i class="fas fa-shield-alt"></i> 100% Safe</span>
+      </div>
+      <p class="text-muted small mb-2">{{ total_mb }} MB of {{ max_mb }} MB used</p>
+      <div class="progress mb-2" style="height:10px;border-radius:6px;background:var(--bg-tertiary);">
+        <div class="progress-bar" role="progressbar" style="width: {{ storage_percentage }}%; background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);" aria-valuenow="{{ storage_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+
+    <!-- Shared Folders / Active Accounts -->
+    <div class="card p-3 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
+      <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-folder text-warning me-2"></i> Your Shared Folders</h6>
+      <div class="list-group list-group-flush">
+        {% for p in recent_projects|slice:":4" %}
+        <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-2 py-2 mb-1" style="border-radius:10px;background:rgba(99,102,241,0.06);">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-folder text-primary"></i>
+            <span class="small fw-semibold text-truncate" style="max-width:140px;color:var(--text-primary);">{{ p.name }}</span>
+          </div>
+          <span class="badge-status status-{{ p.status }}" style="font-size:10px;">{{ p.get_status_display }}</span>
+        </div>
+        {% empty %}
+        <p class="text-muted small mb-0">No active shared folders.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Core Visualizations Grid (5 Clean Business Analytics Charts) ── -->
 <div class="row g-4 mb-4">
   <!-- Visualization 1: Revenue Trend (Line Chart) -->
   <div class="col-lg-8">
     <div class="card p-3 h-100">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="fw-bold mb-0"><i class="fas fa-chart-line text-primary me-2"></i> 1. Revenue Trend</h6>
-        <span class="badge bg-primary-soft text-primary small">Monthly Revenue Trajectory</span>
+        <span class="badge bg-primary-soft text-primary small">Monthly Trajectory</span>
       </div>
-      <div style="height:300px;position:relative;">
+      <div style="height:260px;position:relative;">
         <canvas id="financialTrendChart"></canvas>
       </div>
     </div>
@@ -215,9 +368,9 @@
   <div class="col-lg-4">
     <div class="card p-3 h-100">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie text-success me-2"></i> 2. Project Status Distribution</h6>
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie text-success me-2"></i> 2. Project Status</h6>
       </div>
-      <div style="height:300px;position:relative;">
+      <div style="height:260px;position:relative;">
         <canvas id="statusDistChart"></canvas>
       </div>
     </div>
@@ -227,103 +380,59 @@
   <div class="col-lg-6">
     <div class="card p-3 h-100">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-bar text-warning me-2"></i> 3. Monthly Income vs Expenses</h6>
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-bar text-warning me-2"></i> 3. Income vs Expenses</h6>
       </div>
-      <div style="height:260px;position:relative;">
+      <div style="height:240px;position:relative;">
         <canvas id="incomeVsExpenseChart"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Visualization 4: Project Progress / Client Revenue (Horizontal Bar Chart) -->
+  <!-- Visualization 4: Client Revenue Contribution (Horizontal Bar Chart) -->
   <div class="col-lg-6">
     <div class="card p-3 h-100">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-tasks text-info me-2"></i> 4. Project Progress & Account Contribution</h6>
+        <h6 class="fw-bold mb-0"><i class="fas fa-tasks text-info me-2"></i> 4. Account Contribution</h6>
       </div>
-      <div style="height:260px;position:relative;">
+      <div style="height:240px;position:relative;">
         <canvas id="clientRevenueChart"></canvas>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── Visualization 5: Recent Projects & Payments (Simple Table) ── -->
-<div class="card mb-4">
-  <div class="card-header d-flex align-items-center justify-content-between">
-    <span><i class="fas fa-list-alt text-primary me-2"></i> 5. Recent Projects & Milestones</span>
-    <a href="{% url 'core:project_create' %}" class="btn btn-primary btn-sm">
-      <i class="fas fa-plus me-1"></i> New Project
-    </a>
-  </div>
-  <div class="card-body p-0">
-    {% if recent_projects %}
-    <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead>
-          <tr>
-            <th>Project Name</th>
-            <th>Client</th>
-            <th>Status</th>
-            <th>Progress</th>
-            <th>Deadline</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for project in recent_projects %}
-          <tr data-href="{% url 'core:project_detail' project.id %}">
-            <td>
-              <a href="{% url 'core:project_detail' project.id %}" style="font-weight:700;color:var(--text-primary);text-decoration:none;">
-                {{ project.name }}
-              </a>
-            </td>
-            <td style="color:var(--text-secondary);">{{ project.client.name }}</td>
-            <td>
-              <span class="badge-status status-{{ project.status }}">
-                {{ project.get_status_display }}
-              </span>
-            </td>
-            <td style="min-width:140px;">
-              <div class="d-flex align-items-center gap-2">
-                <div class="progress flex-grow-1">
-                  <div class="progress-bar" role="progressbar"
-                       style="width:{{ project.progress }}%;"
-                       aria-valuenow="{{ project.progress }}"
-                       aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span style="font-size:12px;font-weight:700;color:var(--text-secondary);width:32px;">{{ project.progress }}%</span>
-              </div>
-            </td>
-            <td>
-              {% if project.deadline %}
-              <span class="{% if project.is_overdue %}overdue{% else %}text-secondary{% endif %}" style="font-size:13px;">
-                {% if project.is_overdue %}<i class="fas fa-exclamation-circle me-1"></i>{% endif %}
-                {{ project.deadline|date:"M d, Y" }}
-              </span>
-              {% else %}
-              <span style="color:var(--text-muted);">—</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+<!-- Upload File Modal -->
+<div class="modal fade" id="uploadFileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow" style="border-radius:18px;">
+      <form method="post" action="{% url 'core:file_upload' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="fas fa-cloud-upload-alt text-primary me-2"></i> Upload File</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body py-4">
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-secondary">Project (Optional)</label>
+            {{ file_form.project }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-secondary">Choose File</label>
+            {{ file_form.file }}
+            <div class="form-text">Supports Images, Documents, Videos, Audio, and Zip archives.</div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4"><i class="fas fa-upload me-1"></i> Upload Now</button>
+        </div>
+      </form>
     </div>
-    {% else %}
-    <div class="empty-state">
-      <div class="empty-state-icon"><i class="fas fa-folder-open"></i></div>
-      <h5>No projects yet</h5>
-      <p>Create your first project to get started.</p>
-      <a href="{% url 'core:project_create' %}" class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i> New Project
-      </a>
-    </div>
-    {% endif %}
   </div>
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/visualization_studio.js' %}"></script>
 <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
