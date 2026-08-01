@@ -4,26 +4,50 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Command(BaseCommand):
-    help = 'Create a default demo user and superuser for testing'
+    help = 'Create default superusers for testing'
 
     def handle(self, *args, **options):
-        username = 'admin'
-        password = 'admin123'
-        email = 'admin@example.com'
+        users_to_create = [
+            {
+                'username': 'abhishek1234',
+                'email': 'abhishekmutthalkar123@example.com',
+                'password': 'team@1234',
+            },
+            {
+                'username': 'abhishekmutthalkar',
+                'email': 'abhishekmutthalkar@example.com',
+                'password': 'team@1234',
+            },
+            {
+                'username': 'abhishekmutthalkar@123',
+                'email': 'abhishekmutthalkar@example.com',
+                'password': 'team@1234',
+            },
+            {
+                'username': 'admin',
+                'email': 'admin@example.com',
+                'password': 'team@1234',
+            }
+        ]
 
-        user, created = User.objects.get_or_create(
-            username=username,
-            defaults={'email': email, 'is_staff': True, 'is_superuser': True}
-        )
+        for udata in users_to_create:
+            username = udata['username']
+            password = udata['password']
+            email = udata['email']
 
-        if created:
+            user, created = User.objects.get_or_create(
+                username=username,
+                defaults={'email': email, 'is_staff': True, 'is_superuser': True}
+            )
+
             user.set_password(password)
-            user.save()
-            self.stdout.write(self.style.SUCCESS(f"Successfully created demo user '{username}' with password '{password}'"))
-        else:
-            # Ensure password is reset to admin123 if user exists
-            user.set_password(password)
+            user.email = email
             user.is_staff = True
             user.is_superuser = True
             user.save()
-            self.stdout.write(self.style.SUCCESS(f"Demo user '{username}' already exists. Password updated to '{password}'"))
+
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Successfully created superuser '{username}'"))
+            else:
+                self.stdout.write(self.style.SUCCESS(f"Updated superuser '{username}' password"))
+

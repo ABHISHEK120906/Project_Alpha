@@ -1,7 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('theme') || (localStorage.getItem('darkMode') === '1' ? 'dark' : (localStorage.getItem('darkMode') === '0' ? 'light' : null));
+        var theme = saved;
+        if (!theme) {
+          theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ page_title|default:"Super Admin Dashboard" }} — FreelanceTrack{% endblock %}</title>

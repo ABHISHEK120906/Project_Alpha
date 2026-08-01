@@ -67,20 +67,50 @@ window.apiFetch = apiFetch;
 document.addEventListener('DOMContentLoaded', function () {
 
   // ============================================================
-  // DARK MODE
+  // THEME ENGINE (Light & Dark Mode)
   // ============================================================
-  const themeToggle = document.getElementById('themeToggle');
   const htmlEl = document.documentElement;
 
-  function applyTheme(dark) {
-    htmlEl.setAttribute('data-theme', dark ? 'dark' : 'light');
-    if (themeToggle) themeToggle.checked = dark;
-    localStorage.setItem('darkMode', dark ? '1' : '0');
-    // Update Chart.js charts if they exist
-    if (window.dashboardCharts) {
+  function getPreferredTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
+
+    const legacyDark = localStorage.getItem('darkMode');
+    if (legacyDark === '1') return 'dark';
+    if (legacyDark === '0') return 'light';
+
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  }
+
+  function applyChartJsTheme(theme) {
+    const isDark = theme === 'dark';
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+    const textColor = isDark ? '#CBD5E1' : '#334155';
+    const mutedColor = isDark ? '#94A3B8' : '#64748B';
+
+    if (window.Chart && window.Chart.instances) {
+      Object.values(window.Chart.instances).forEach(chart => {
+        if (chart.options.scales) {
+          Object.values(chart.options.scales).forEach(scale => {
+            if (scale.grid) scale.grid.color = gridColor;
+            if (scale.ticks) scale.ticks.color = textColor;
+          });
+        }
+        if (chart.options.plugins && chart.options.plugins.legend) {
+          chart.options.plugins.legend.labels = {
+            ...(chart.options.plugins.legend.labels || {}),
+            color: textColor
+          };
+        }
+        chart.update();
+      });
+    }
+
+    if (window.dashboardCharts && Array.isArray(window.dashboardCharts)) {
       window.dashboardCharts.forEach(chart => {
-        const gridColor = dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
-        const textColor = dark ? '#94a3b8' : '#64748b';
         if (chart.options.scales) {
           Object.values(chart.options.scales).forEach(scale => {
             if (scale.grid) scale.grid.color = gridColor;
@@ -95,13 +125,66 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  const savedDark = localStorage.getItem('darkMode');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(savedDark !== null ? savedDark === '1' : prefersDark);
+  function setTheme(theme, save = true) {
+    const isDark = theme === 'dark';
+    htmlEl.setAttribute('data-theme', theme);
 
-  if (themeToggle) {
-    themeToggle.addEventListener('change', () => applyTheme(themeToggle.checked));
+    if (save) {
+      localStorage.setItem('theme', theme);
+      localStorage.setItem('darkMode', isDark ? '1' : '0');
+    }
+
+    // Sync all toggle checkboxes on page
+    document.querySelectorAll('#themeToggle, #themeToggleSettings').forEach(cb => {
+      cb.checked = isDark;
+    });
+
+    // Update charts dynamically
+    applyChartJsTheme(theme);
+
+    // Dispatch event for any custom components
+    document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme, isDark } }));
   }
+
+  // Initial Theme Setup
+  const currentTheme = getPreferredTheme();
+  setTheme(currentTheme, false);
+
+  // Bind Click Event to Theme Toggle Buttons
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('#themeToggleBtn, #themeToggleAuthBtn, .theme-toggle-btn');
+    if (btn) {
+      e.preventDefault();
+      const activeTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
+      setTheme(nextTheme, true);
+    }
+  });
+
+  // Bind Change Event for traditional input switches
+  document.addEventListener('change', function(e) {
+    if (e.target.matches('#themeToggle, #themeToggleSettings')) {
+      const nextTheme = e.target.checked ? 'dark' : 'light';
+      setTheme(nextTheme, true);
+    }
+  });
+
+  // Listen to OS System Color Scheme changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      const savedTheme = localStorage.getItem('theme');
+      const savedLegacy = localStorage.getItem('darkMode');
+      if (!savedTheme && savedLegacy === null) {
+        setTheme(e.matches ? 'dark' : 'light', false);
+      }
+    });
+  }
+
+  window.getCurrentTheme = function() {
+    return htmlEl.getAttribute('data-theme') || 'light';
+  };
+
+  window.setTheme = setTheme;
 
   // ============================================================
   // SIDEBAR TOGGLE (Mobile)

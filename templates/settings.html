@@ -60,13 +60,15 @@
       <div class="card-body">
         <div class="d-flex align-items-center justify-content-between">
           <div>
-            <div style="font-weight:600;">Dark Mode</div>
-            <div style="font-size:13px;color:var(--text-muted);">Toggle between light and dark theme</div>
+            <div style="font-weight:600;color:var(--text-primary);">Theme Preference</div>
+            <div style="font-size:13px;color:var(--text-muted);">Switch between Light Mode and Dark Mode instantly</div>
           </div>
-          <label class="dark-mode-toggle">
-            <input type="checkbox" id="themeToggleSettings" onchange="document.getElementById('themeToggle') && (document.getElementById('themeToggle').checked = this.checked, document.getElementById('themeToggle').dispatchEvent(new Event('change')))">
-            <span class="dark-mode-slider"></span>
-          </label>
+          <button type="button" class="theme-toggle-btn" id="themeToggleSettingsBtn" aria-label="Toggle light and dark theme" title="Toggle Light / Dark Mode">
+            <span class="theme-toggle-icon sun"><i class="fas fa-sun"></i></span>
+            <span class="theme-toggle-icon moon"><i class="fas fa-moon"></i></span>
+            <span class="theme-toggle-thumb"></span>
+            <input type="checkbox" id="themeToggleSettings" aria-label="Theme toggle settings" style="display:none;">
+          </button>
         </div>
       </div>
     </div>

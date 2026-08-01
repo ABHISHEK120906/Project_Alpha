@@ -10,7 +10,8 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta, date
 from decimal import Decimal
-from .models import Client, Project, Payment, Task, Note, ActivityLog
+from .models import (Client, Project, Payment, Task, Note, ActivityLog,
+                     UserProfile, LoginHistory, BlockedIP, SystemSetting, RefundRequest, Announcement)
 
 
 # ============================================================
