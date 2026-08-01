@@ -20,10 +20,6 @@ from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
 from .email_service import send_welcome_email, send_login_alert_email
 
 
-# ============================================================
-# UTILITY FUNCTIONS
-# ============================================================
-
 def log_activity(user, action, model_type, model_id, description, request=None):
     """Helper function to log user activities to the ActivityLog."""
     ip_address = None
@@ -50,14 +46,11 @@ def get_client_ip(request):
     return ip
 
 
-# ============================================================
-# AUTHENTICATION VIEWS
-# ============================================================
-
 def home(request):
     """Landing page — redirects authenticated users to dashboard."""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
+
     return render(request, 'home.html')
 
 

@@ -1,8 +1,3 @@
-"""
-FreelanceTrack — Email Notification Service
-Sends responsive HTML emails for Registration Welcome and Security Login Alerts.
-"""
-
 import logging
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -14,18 +9,17 @@ logger = logging.getLogger(__name__)
 
 
 def send_welcome_email(user, request=None):
-    """Sends account registration welcome email to newly created users."""
     user_email = getattr(user, 'email', '')
     username = getattr(user, 'username', 'User')
 
-    # Default login URL fallback
-    login_url = request.build_absolute_uri('/login/') if request else 'https://project-alpha-pl18hkv1h-abhisheks120906s-projects.vercel.app/login/'
+    login_url = request.build_absolute_uri('/login/') if request else '/login/'
 
     subject = 'Welcome to FreelanceTrack! 🚀'
     context = {
         'username': username,
         'login_url': login_url,
     }
+
 
     try:
         html_content = render_to_string('emails/email_welcome.html', context)

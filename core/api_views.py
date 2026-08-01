@@ -1,8 +1,3 @@
-"""
-FreelanceTrack — Internal API Views (/api/v1/)
-Strictly authenticated, session-protected JSON endpoints for frontend interactions.
-"""
-
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
@@ -24,7 +19,6 @@ from .serializers import (
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def api_health(request):
-    """Minimal system health check endpoint."""
     return Response({"status": "ok", "service": "FreelanceTrack API Proxy", "version": "v1.0"}, status=status.HTTP_200_OK)
 
 
@@ -32,27 +26,20 @@ def api_health(request):
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def api_dashboard_stats(request):
-    """
-    Returns aggregated dashboard stats and chart metrics for the current user.
-    All data is scoped strictly to request.user and filtered via DRF serializers.
-    """
     user = request.user
     today = timezone.now().date()
 
-    # Base Querysets
     user_projects = Project.objects.filter(user=user)
     user_payments = Payment.objects.filter(user=user)
     user_clients = Client.objects.filter(user=user)
     user_tasks = Task.objects.filter(user=user)
 
-    # Core Aggregations
     total_revenue = user_payments.filter(status='paid').aggregate(t=Sum('amount'))['t'] or 0
     pending_amount = user_payments.filter(status='pending').aggregate(t=Sum('amount'))['t'] or 0
     active_projects_count = user_projects.filter(status='in_progress').count()
     total_clients_count = user_clients.filter(status='active').count()
     pending_tasks_count = user_tasks.filter(Q(status='pending') | Q(status='in_progress')).count()
 
-    # Monthly Earnings (Last 6 Months)
     months_labels = []
     monthly_data = []
     for i in range(5, -1, -1):
@@ -65,7 +52,6 @@ def api_dashboard_stats(request):
         months_labels.append(month_date.strftime('%b'))
         monthly_data.append(float(m_total))
 
-    # Project Status Breakdown
     status_counts = user_projects.values('status').annotate(count=Count('id'))
     status_dict = {item['status']: item['count'] for item in status_counts}
     
@@ -76,7 +62,6 @@ def api_dashboard_stats(request):
         'planning': status_dict.get('planning', 0),
     }
 
-    # Scatter Plot (Budget vs. Progress/Earnings per Project)
     scatter_data = []
     for p in user_projects.select_related('client')[:15]:
         p_paid = user_payments.filter(project=p, status='paid').aggregate(t=Sum('amount'))['t'] or 0
@@ -88,7 +73,6 @@ def api_dashboard_stats(request):
             'progress': p.progress
         })
 
-    # Workload & Activity Density Heatmap (7 Days x 4 Weeks)
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     heatmap_matrix = []
     for w in range(3, -1, -1):
@@ -103,6 +87,7 @@ def api_dashboard_stats(request):
                 'intensity': intensity
             })
         heatmap_matrix.append(week_row)
+
 
     # Client Revenue Breakdown (Top Clients)
     client_labels = []

@@ -1,9 +1,3 @@
-/**
- * FreelanceTrack — Interactive Visualization Effects Studio
- * Manages Multi-Chart Switching (Heatmap, Bar Graph, Pie Chart, Scatter Plot, Area Chart),
- * Workload Matrix Heatmap, Revenue Goal Tracker Widget, and Instant Data Exports.
- */
-
 window.VisualizationStudio = (function () {
   let activeCharts = {};
   let currentStudioData = null;
@@ -12,10 +6,8 @@ window.VisualizationStudio = (function () {
     initRevenueGoalTracker();
   });
 
-  /**
-   * Initializes the Revenue Goal & Target Tracker Widget on Dashboard.
-   */
   function initRevenueGoalTracker() {
+
     const goalCard = document.getElementById('revenueGoalCard');
     if (!goalCard) return;
 

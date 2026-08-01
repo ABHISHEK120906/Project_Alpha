@@ -1,12 +1,7 @@
-/* ============================================================
-   Freelancer Project Tracker — Purple/Violet Modern UI
-   Inspired by Reference UI Layouts (Bootstrap 5 + Inter Font)
-   ============================================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── Color Palette & Custom Properties (Purple #7C3AED / Dark Purple #5B21B6) ── */
 :root {
+
   --primary:         #7C3AED;
   --primary-dark:    #5B21B6;
   --primary-deep:    #4C1D95;
