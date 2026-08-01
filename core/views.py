@@ -1823,16 +1823,39 @@ def calendar_event_delete(request, pk):
 @login_required
 def file_manager(request):
     user = request.user
-    files = ProjectFile.objects.filter(user=user).select_related('project')
+    all_files = ProjectFile.objects.filter(user=user).select_related('project')
     projects = Project.objects.filter(user=user, is_archived=False)
 
     search_query = request.GET.get('search', '').strip()
     project_filter = request.GET.get('project', '')
+    category_filter = request.GET.get('category', '')
 
+    files = all_files
     if search_query:
         files = files.filter(file_name__icontains=search_query)
     if project_filter:
         files = files.filter(project_id=project_filter)
+
+    # Category counts matching cloud storage design
+    pictures_count = all_files.filter(file_type__in=['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']).count()
+    documents_count = all_files.filter(file_type__in=['pdf', 'doc', 'docx', 'txt', 'csv', 'xlsx', 'ppt', 'pptx']).count()
+    videos_count = all_files.filter(file_type__in=['mp4', 'mkv', 'avi', 'mov', 'wmv']).count()
+    audio_count = all_files.filter(file_type__in=['mp3', 'wav', 'ogg', 'aac', 'flac']).count()
+
+    if category_filter == 'pictures':
+        files = files.filter(file_type__in=['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])
+    elif category_filter == 'documents':
+        files = files.filter(file_type__in=['pdf', 'doc', 'docx', 'txt', 'csv', 'xlsx', 'ppt', 'pptx'])
+    elif category_filter == 'videos':
+        files = files.filter(file_type__in=['mp4', 'mkv', 'avi', 'mov', 'wmv'])
+    elif category_filter == 'audio':
+        files = files.filter(file_type__in=['mp3', 'wav', 'ogg', 'aac', 'flac'])
+
+    # Storage calculation
+    total_bytes = all_files.aggregate(Sum('file_size'))['file_size__sum'] or 0
+    total_mb = round(total_bytes / (1024 * 1024), 2)
+    max_mb = 500.0  # 500 MB quota
+    storage_percentage = min(100, round((total_mb / max_mb) * 100, 1))
 
     file_form = ProjectFileForm()
     file_form.fields['project'].queryset = projects
@@ -1841,6 +1864,14 @@ def file_manager(request):
         'files': files,
         'projects': projects,
         'file_form': file_form,
+        'pictures_count': pictures_count,
+        'documents_count': documents_count,
+        'videos_count': videos_count,
+        'audio_count': audio_count,
+        'total_mb': total_mb,
+        'max_mb': max_mb,
+        'storage_percentage': storage_percentage,
+        'active_category': category_filter,
     }
     return render(request, 'files/file_manager.html', context)
 

@@ -1,110 +1,285 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}File Manager — FreelanceTrack{% endblock %}
-{% block page_title %}File Manager{% endblock %}
+{% block title %}My Cloud Storage — FreelanceTrack{% endblock %}
+{% block page_title %}Cloud Storage & File Manager{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- Top Header & Search Bar -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
   <div>
-    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">Central File Manager</h4>
-    <p class="text-muted small mb-0">Upload, organize, preview, and download project attachments and assets.</p>
+    <h3 class="fw-bold mb-1" style="color:var(--text-primary);"><i class="fas fa-cloud text-primary me-2"></i> My Cloud Storage</h3>
+    <p class="text-muted small mb-0">Central file hub to organize, filter, upload, and access all project assets.</p>
   </div>
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
-    <i class="fas fa-upload me-1"></i> Upload File
-  </button>
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
+      <i class="fas fa-plus-circle me-1"></i> Add New Files
+    </button>
+  </div>
 </div>
 
-<!-- Search & Filter Bar -->
-<div class="card p-3 mb-4">
-  <form method="get" class="row g-2 align-items-center">
-    <div class="col-md-6">
-      <input type="text" name="search" class="form-control" placeholder="Search by file name..." value="{{ request.GET.search|default:'' }}">
-    </div>
-    <div class="col-md-4">
-      <select name="project" class="form-select">
-        <option value="">All Projects</option>
-        {% for p in projects %}
-          <option value="{{ p.id }}" {% if request.GET.project == p.id|stringformat:'s' %}selected{% endif %}>{{ p.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-2">
-      <button type="submit" class="btn btn-secondary w-100"><i class="fas fa-filter me-1"></i> Filter</button>
+<!-- ── Category Summaries (Matching Image 1 Design) ── -->
+<div class="row g-3 mb-4">
+  <!-- Pictures -->
+  <div class="col-6 col-md-3">
+    <a href="?category=pictures" class="text-decoration-none">
+      <div class="card p-3 h-100 position-relative border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-images"></i>
+          </div>
+          <span class="badge" style="background:rgba(255,255,255,0.25);color:#fff;"><i class="fas fa-star text-warning"></i> Main</span>
+        </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Pictures</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ pictures_count }} Files</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Documents -->
+  <div class="col-6 col-md-3">
+    <a href="?category=documents" class="text-decoration-none">
+      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-file-alt"></i>
+          </div>
+        </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Documents</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ documents_count }} Files</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Videos -->
+  <div class="col-6 col-md-3">
+    <a href="?category=videos" class="text-decoration-none">
+      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-film"></i>
+          </div>
+        </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Videos</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ videos_count }} Files</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Audio -->
+  <div class="col-6 col-md-3">
+    <a href="?category=audio" class="text-decoration-none">
+      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:#fff; border-radius:18px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
+            <i class="fas fa-music"></i>
+          </div>
+        </div>
+        <h6 class="fw-bold mb-1" style="font-size:16px;">Audio</h6>
+        <div style="font-size:12.5px;opacity:0.9;">{{ audio_count }} Files</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- ── Tag Pills & Search Filters ── -->
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <a href="{% url 'core:file_manager' %}" class="btn btn-sm {% if not active_category %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius:20px;padding:6px 16px;">
+      <i class="fas fa-border-all me-1"></i> All Files
+    </a>
+    <a href="?category=documents" class="btn btn-sm {% if active_category == 'documents' %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius:20px;padding:6px 16px;">
+      <i class="fas fa-briefcase me-1"></i> Work & Docs
+    </a>
+    <a href="?category=pictures" class="btn btn-sm {% if active_category == 'pictures' %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius:20px;padding:6px 16px;">
+      <i class="fas fa-image me-1"></i> Media & Assets
+    </a>
+    <a href="?category=videos" class="btn btn-sm {% if active_category == 'videos' %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius:20px;padding:6px 16px;">
+      <i class="fas fa-video me-1"></i> Videos
+    </a>
+  </div>
+
+  <form method="get" class="d-flex align-items-center gap-2" style="max-width:360px;width:100%;">
+    <div class="input-group input-group-sm">
+      <span class="input-group-text bg-transparent border-end-0"><i class="fas fa-search text-muted"></i></span>
+      <input type="text" name="search" class="form-control border-start-0" placeholder="Search files..." value="{{ request.GET.search|default:'' }}">
+      <button type="submit" class="btn btn-sm btn-primary">Find</button>
     </div>
   </form>
 </div>
 
-<!-- Files Grid -->
-<div class="row g-3">
-  {% for file in files %}
-    <div class="col-sm-6 col-md-4 col-lg-3">
-      <div class="card h-100 p-3 text-center position-relative">
-        <div class="mb-3" style="font-size:42px;color:var(--primary);">
-          {% if file.file_type in 'jpg png jpeg gif webp' %}
-            <i class="fas fa-file-image text-success"></i>
-          {% elif file.file_type == 'pdf' %}
-            <i class="fas fa-file-pdf text-danger"></i>
-          {% elif file.file_type in 'doc docx' %}
-            <i class="fas fa-file-word text-primary"></i>
-          {% elif file.file_type in 'xls xlsx csv' %}
-            <i class="fas fa-file-excel text-success"></i>
-          {% elif file.file_type in 'zip rar 7z' %}
-            <i class="fas fa-file-archive text-warning"></i>
-          {% else %}
-            <i class="fas fa-file text-secondary"></i>
-          {% endif %}
-        </div>
-        <h6 class="fw-bold text-truncate mb-1" title="{{ file.file_name }}">{{ file.file_name }}</h6>
-        <p class="small text-muted mb-2">{{ file.project.name|default:"General Asset" }}</p>
-        <span class="badge bg-light text-dark mb-3">
-          {% widthratio file.file_size 1024 1 %} KB • {{ file.uploaded_at|date:"M d, Y" }}
-        </span>
+<!-- ── Main Grid Layout (Matching Image 1: Files Table Left, Storage & Upload Right) ── -->
+<div class="row g-4">
 
-        <div class="d-flex justify-content-center gap-2 mt-auto">
-          <a href="{{ file.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary" title="Preview / Download">
-            <i class="fas fa-download"></i>
-          </a>
-          <form method="post" action="{% url 'core:file_delete' file.pk %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete file {{ file.file_name }}?')" title="Delete">
-              <i class="fas fa-trash"></i>
-            </button>
-          </form>
+  <!-- Left Side: Recent Files List -->
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm p-3" style="border-radius:18px;">
+      <div class="d-flex align-items-center justify-content-between mb-3 px-2">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-clock text-primary me-2"></i> Recent Files</h6>
+        <span class="badge bg-light text-dark">{{ files|length }} Items</span>
+      </div>
+
+      {% if files %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr class="text-muted small">
+              <th>File Name</th>
+              <th>Project</th>
+              <th>Date</th>
+              <th>Size</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for file in files %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  <div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+                    {% if file.file_type in 'jpg png jpeg gif webp svg' %}background:rgba(99,102,241,0.15);color:#6366f1;
+                    {% elif file.file_type in 'pdf doc docx txt csv xlsx' %}background:rgba(20,184,166,0.15);color:#14b8a6;
+                    {% elif file.file_type in 'mp4 mkv avi mov' %}background:rgba(236,72,153,0.15);color:#ec4899;
+                    {% elif file.file_type in 'mp3 wav ogg' %}background:rgba(59,130,246,0.15);color:#3b82f6;
+                    {% else %}background:rgba(156,163,175,0.15);color:#6b7280;{% endif %}">
+                    {% if file.file_type in 'jpg png jpeg gif webp svg' %}<i class="fas fa-file-image"></i>
+                    {% elif file.file_type == 'pdf' %}<i class="fas fa-file-pdf"></i>
+                    {% elif file.file_type in 'doc docx' %}<i class="fas fa-file-word"></i>
+                    {% elif file.file_type in 'xls xlsx csv' %}<i class="fas fa-file-excel"></i>
+                    {% elif file.file_type in 'mp4 mkv avi' %}<i class="fas fa-file-video"></i>
+                    {% elif file.file_type in 'mp3 wav' %}<i class="fas fa-file-audio"></i>
+                    {% elif file.file_type in 'zip rar 7z' %}<i class="fas fa-file-archive"></i>
+                    {% else %}<i class="fas fa-file"></i>{% endif %}
+                  </div>
+                  <div style="min-width:0;">
+                    <a href="{{ file.file.url }}" target="_blank" class="fw-bold text-decoration-none text-truncate d-block" style="color:var(--text-primary);max-width:220px;" title="{{ file.file_name }}">
+                      {{ file.file_name }}
+                    </a>
+                    <span class="small text-muted" style="font-size:11px;">.{{ file.file_type|upper }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {% if file.project %}
+                  <span class="badge bg-light text-primary border" style="font-size:11px;">{{ file.project.name|truncatechars:20 }}</span>
+                {% else %}
+                  <span class="text-muted small">General Asset</span>
+                {% endif %}
+              </td>
+              <td class="small text-muted">{{ file.uploaded_at|date:"M d, Y" }}</td>
+              <td class="small fw-semibold text-secondary">
+                {% if file.file_size > 1048576 %}
+                  {% widthratio file.file_size 1048576 1 %} MB
+                {% else %}
+                  {% widthratio file.file_size 1024 1 %} KB
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <div class="d-inline-flex gap-1">
+                  <a href="{{ file.file.url }}" download class="btn btn-sm btn-light text-primary border" title="Download">
+                    <i class="fas fa-download"></i>
+                  </a>
+                  <button type="button" class="btn btn-sm btn-light text-secondary border" onclick="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}{{ file.file.url }}'); alert('File URL copied to clipboard!');" title="Share URL">
+                    <i class="fas fa-share-alt"></i>
+                  </button>
+                  <form method="post" action="{% url 'core:file_delete' file.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-light text-danger border" onclick="return confirm('Delete file {{ file.file_name }}?')" title="Delete">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--primary-soft);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px;">
+          <i class="fas fa-folder-open"></i>
         </div>
+        <h6 class="fw-bold">No files found</h6>
+        <p class="text-muted small mb-3">Upload assets to start organizing your cloud storage.</p>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
+          <i class="fas fa-upload me-1"></i> Upload First File
+        </button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Right Side: Storage Indicator & Drag Drop Upload (Image 1 Right Column) -->
+  <div class="col-lg-4">
+    <!-- Upload Dropzone Box -->
+    <div class="card p-4 text-center border-2 mb-4 shadow-sm" style="border:2px dashed var(--primary);border-radius:18px;background:var(--bg-secondary);">
+      <div style="width:54px;height:54px;border-radius:16px;background:var(--primary-soft);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;">
+        <i class="fas fa-cloud-upload-alt"></i>
+      </div>
+      <h6 class="fw-bold mb-1" style="color:var(--text-primary);">Add new Files</h6>
+      <p class="text-muted small mb-3">Click or select files to store in your cloud repo.</p>
+      <button class="btn btn-primary w-100 shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
+        <i class="fas fa-plus me-1"></i> Select File
+      </button>
+    </div>
+
+    <!-- Your Storage Usage Card -->
+    <div class="card p-3 mb-4 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-hdd text-info me-2"></i> Your Storage</h6>
+        <span class="badge bg-success-soft text-success" style="font-size:11px;"><i class="fas fa-shield-alt"></i> 100% Safe</span>
+      </div>
+      <p class="text-muted small mb-2">{{ total_mb }} MB of {{ max_mb }} MB used</p>
+      <div class="progress mb-2" style="height:10px;border-radius:6px;background:var(--bg-tertiary);">
+        <div class="progress-bar" role="progressbar" style="width: {{ storage_percentage }}%; background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);" aria-valuenow="{{ storage_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
     </div>
-  {% empty %}
-    <div class="col-12 text-center py-5 text-muted">
-      <i class="fas fa-folder-open fa-3x mb-3 text-secondary d-block"></i>
-      No files found. Click "Upload File" to attach project files.
+
+    <!-- Active Projects / Folders -->
+    <div class="card p-3 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
+      <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-folder text-warning me-2"></i> Project Storage Folders</h6>
+      <div class="list-group list-group-flush">
+        {% for p in projects|slice:":5" %}
+        <a href="?project={{ p.id }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 px-2 py-2" style="border-radius:10px;background:transparent;">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-folder text-warning"></i>
+            <span class="small fw-semibold text-truncate" style="max-width:160px;color:var(--text-primary);">{{ p.name }}</span>
+          </div>
+          <span class="badge bg-light text-dark small" style="font-size:10px;">{{ p.client.name }}</span>
+        </a>
+        {% empty %}
+        <p class="text-muted small mb-0">No active project folders.</p>
+        {% endfor %}
+      </div>
     </div>
-  {% endfor %}
+  </div>
+
 </div>
 
-<!-- Upload Modal -->
-<div class="modal fade" id="uploadFileModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
+<!-- Upload File Modal -->
+<div class="modal fade" id="uploadFileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow" style="border-radius:18px;">
       <form method="post" action="{% url 'core:file_upload' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-header-title fw-bold"><i class="fas fa-upload text-primary me-2"></i> Upload File</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="fas fa-cloud-upload-alt text-primary me-2"></i> Upload File to Cloud</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body py-4">
           <div class="mb-3">
-            <label class="form-label fw-bold">Select Project (Optional)</label>
+            <label class="form-label fw-bold small text-secondary">Associate with Project (Optional)</label>
             {{ file_form.project }}
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Choose File</label>
+            <label class="form-label fw-bold small text-secondary">Choose File</label>
             {{ file_form.file }}
-            <div class="form-text">Supports Images, PDFs, Word, Excel, and ZIP archives.</div>
+            <div class="form-text">Supports Images, Documents, Videos, Audio, and Zip archives.</div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Upload Now</button>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4"><i class="fas fa-upload me-1"></i> Upload Now</button>
         </div>
       </form>
     </div>

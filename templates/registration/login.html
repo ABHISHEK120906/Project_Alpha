@@ -1,25 +1,186 @@
 {% extends 'auth_base.html' %}
-{% block title %}Sign In — FreelanceTrack{% endblock %}
+{% block title %}Member Login — FreelanceTrack{% endblock %}
 
 {% block content %}
 
-<h1 class="auth-heading">Welcome back</h1>
-<p class="auth-subheading">Select login portal to access your account</p>
+<!-- Custom Styles matching Image 2 Futuristic Teal Glassmorphism -->
+<style>
+  /* Page level override for Image 2 design */
+  body.auth-body {
+    background: linear-gradient(135deg, #1d031c 0%, #0d1e24 40%, #06171b 100%) !important;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+  }
 
-<!-- FEATURE 1: Role-Based Login Options -->
-<div class="role-selector-container mb-4" style="display:flex; background:rgba(255,255,255,0.05); border-radius:12px; padding:4px; border:1px solid rgba(255,255,255,0.1);">
-  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:10px; transition:all 0.3s ease; border:none; font-size:14px;" onclick="setLoginType('user')">
-    <i class="fas fa-user-circle me-2"></i> User Login
+  /* Animated Constellation Canvas Background */
+  #constellationCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .auth-wrapper {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Override Left Panel for Image 2 style focus */
+  .auth-panel-left {
+    background: linear-gradient(135deg, rgba(29,3,28,0.7) 0%, rgba(13,30,36,0.8) 100%) !important;
+    border-right: 1px solid rgba(0, 230, 168, 0.15);
+  }
+
+  /* Futuristic Glass Card matching Image 2 */
+  .auth-card {
+    background: linear-gradient(145deg, rgba(20, 65, 60, 0.65) 0%, rgba(8, 32, 36, 0.85) 100%) !important;
+    border: 1px solid rgba(0, 230, 168, 0.3) !important;
+    box-shadow: 0 16px 50px rgba(0, 230, 168, 0.12), inset 0 0 20px rgba(0, 230, 168, 0.05) !important;
+    backdrop-filter: blur(16px) !important;
+    border-radius: 6px !important;
+    padding: 44px 38px !important;
+    text-align: center;
+    max-width: 440px !important;
+  }
+
+  /* Title Header */
+  .member-login-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #6ee7d0;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  /* Role Selector Tabs */
+  .role-selector-container {
+    background: rgba(5, 25, 28, 0.7) !important;
+    border: 1px solid rgba(0, 230, 168, 0.2) !important;
+    border-radius: 4px !important;
+    padding: 3px !important;
+    margin-bottom: 26px !important;
+  }
+  .role-selector-container button {
+    color: rgba(110, 231, 208, 0.7);
+  }
+
+  /* Futuristic Dark Input Fields */
+  .auth-input-wrapper {
+    background: rgba(7, 30, 34, 0.85) !important;
+    border: 1px solid rgba(0, 230, 168, 0.25) !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease;
+  }
+  .auth-input-wrapper:focus-within {
+    border-color: #00e6a8 !important;
+    box-shadow: 0 0 12px rgba(0, 230, 168, 0.3) !important;
+  }
+  .auth-input-icon {
+    background: rgba(0, 230, 168, 0.08) !important;
+    color: #6ee7d0 !important;
+    border-right: 1px solid rgba(0, 230, 168, 0.2) !important;
+    padding: 0 16px !important;
+  }
+  .auth-input {
+    color: #e0fdf7 !important;
+    background: transparent !important;
+  }
+  .auth-input::placeholder {
+    color: rgba(110, 231, 208, 0.45) !important;
+  }
+
+  /* Light Teal LOGIN Button (Matching Image 2 top button) */
+  .btn-login-submit {
+    width: 100%;
+    padding: 13px;
+    background: #cbf7ed;
+    color: #082924;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 15px rgba(203, 247, 237, 0.2);
+  }
+  .btn-login-submit:hover {
+    background: #ffffff;
+    color: #051d19;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+  }
+
+  /* Forgot Password Link */
+  .forgot-pwd-link {
+    color: rgba(224, 253, 247, 0.85);
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .forgot-pwd-link:hover {
+    color: #00e6a8;
+    text-decoration: underline;
+  }
+
+  /* Separator Line */
+  .auth-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 230, 168, 0.3), transparent);
+    margin: 24px 0;
+  }
+
+  /* Bright Mint REGISTER Button (Matching Image 2 bottom button) */
+  .btn-register-action {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: #00e6a8;
+    color: #04241d;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 230, 168, 0.3);
+  }
+  .btn-register-action:hover {
+    background: #15f0b4;
+    color: #021a15;
+    box-shadow: 0 6px 25px rgba(0, 230, 168, 0.5);
+    transform: translateY(-1px);
+  }
+</style>
+
+<!-- Constellation Background Canvas -->
+<canvas id="constellationCanvas"></canvas>
+
+<!-- Member Login Form Card -->
+<div class="member-login-title">MEMBER LOGIN</div>
+
+<!-- Role Selector (User vs Admin) -->
+<div class="role-selector-container mb-4" style="display:flex;">
+  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:3px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('user')">
+    <i class="fas fa-user me-1"></i> USER
   </button>
-  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:10px; transition:all 0.3s ease; border:none; font-size:14px;" onclick="setLoginType('admin')">
-    <i class="fas fa-user-shield me-2"></i> Admin Login
+  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:3px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('admin')">
+    <i class="fas fa-shield-alt me-1"></i> ADMIN
   </button>
 </div>
 
 {% if messages %}
   {% for message in messages %}
-  <div class="auth-alert auth-alert-{{ message.tags }}">
-    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'danger' or message.tags == 'error' %}fa-times-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}" style="flex-shrink:0;margin-top:1px;"></i>
+  <div class="auth-alert auth-alert-{{ message.tags }}" style="background:rgba(220,53,69,0.2);border:1px solid #dc3545;color:#ff869a;">
+    <i class="fas fa-exclamation-circle me-1"></i>
     <span>{{ message }}</span>
   </div>
   {% endfor %}
@@ -30,16 +191,15 @@
   <input type="hidden" name="login_type" id="login_type_input" value="{{ login_type|default:'user' }}">
 
   <!-- Username -->
-  <div class="auth-form-group">
-    <label class="auth-label" for="id_username">Username</label>
-    <div class="auth-input-wrapper">
+  <div class="auth-form-group text-start">
+    <div class="auth-input-wrapper d-flex align-items-center">
       <span class="auth-input-icon"><i class="fas fa-user"></i></span>
       <input
         type="text"
         name="username"
         id="id_username"
-        class="auth-input"
-        placeholder="Enter your username"
+        class="auth-input form-control border-0 px-3 py-2"
+        placeholder="Username"
         required
         autofocus
         autocomplete="username"
@@ -49,39 +209,42 @@
   </div>
 
   <!-- Password -->
-  <div class="auth-form-group">
-    <label class="auth-label" for="id_password">
-      Password
-    </label>
-    <div class="auth-input-wrapper">
+  <div class="auth-form-group text-start">
+    <div class="auth-input-wrapper d-flex align-items-center position-relative">
       <span class="auth-input-icon"><i class="fas fa-lock"></i></span>
       <input
         type="password"
         name="password"
         id="id_password"
-        class="auth-input"
-        placeholder="Enter your password"
+        class="auth-input form-control border-0 px-3 py-2"
+        placeholder="Password"
         required
         autocomplete="current-password"
-        style="padding-right: 46px;"
       >
-      <div class="auth-input-suffix">
-        <button type="button" class="toggle-pwd-btn" id="togglePwd" aria-label="Toggle password visibility">
-          <i class="fas fa-eye" id="pwdEyeIcon"></i>
-        </button>
-      </div>
+      <button type="button" class="btn btn-link text-decoration-none py-0 px-3" id="togglePwd" style="color:#6ee7d0;" aria-label="Toggle password">
+        <i class="fas fa-eye" id="pwdEyeIcon"></i>
+      </button>
     </div>
   </div>
 
-  <button type="submit" class="auth-btn" id="loginSubmitBtn">
-    <i class="fas fa-sign-in-alt"></i>
-    Sign In
+  <!-- LOGIN Submit Button (Matching Image 2 Top Button) -->
+  <button type="submit" class="btn-login-submit" id="loginSubmitBtn">
+    LOGIN
   </button>
 </form>
 
-<div class="auth-footer-text">
-  Don't have an account? <a href="{% url 'core:register' %}">Create one free</a>
+<div class="mb-3">
+  <a href="#" onclick="alert('Password reset instructions have been dispatched. Please contact your Super Admin for direct access.'); return false;" class="forgot-pwd-link">
+    Forgot Password? <span style="text-decoration:underline;color:#00e6a8;">Click Here</span>
+  </a>
 </div>
+
+<div class="auth-divider"></div>
+
+<!-- REGISTER Action Button (Matching Image 2 Bottom Button) -->
+<a href="{% url 'core:register' %}" class="btn-register-action">
+  REGISTER
+</a>
 
 <script>
 function setLoginType(type) {
@@ -91,21 +254,21 @@ function setLoginType(type) {
   const submitBtn = document.getElementById('loginSubmitBtn');
 
   if (type === 'admin') {
-    btnAdmin.style.background = '#6f42c1';
-    btnAdmin.style.color = '#ffffff';
-    btnAdmin.style.boxShadow = '0 4px 12px rgba(111,66,193,0.4)';
+    btnAdmin.style.background = '#00e6a8';
+    btnAdmin.style.color = '#04241d';
+    btnAdmin.style.boxShadow = '0 2px 10px rgba(0,230,168,0.4)';
     btnUser.style.background = 'transparent';
-    btnUser.style.color = 'rgba(255,255,255,0.7)';
+    btnUser.style.color = 'rgba(110,231,208,0.6)';
     btnUser.style.boxShadow = 'none';
-    submitBtn.innerHTML = '<i class="fas fa-user-shield me-2"></i> Sign In as Super Admin';
+    submitBtn.innerHTML = 'LOGIN AS ADMIN';
   } else {
-    btnUser.style.background = '#6f42c1';
-    btnUser.style.color = '#ffffff';
-    btnUser.style.boxShadow = '0 4px 12px rgba(111,66,193,0.4)';
+    btnUser.style.background = '#00e6a8';
+    btnUser.style.color = '#04241d';
+    btnUser.style.boxShadow = '0 2px 10px rgba(0,230,168,0.4)';
     btnAdmin.style.background = 'transparent';
-    btnAdmin.style.color = 'rgba(255,255,255,0.7)';
+    btnAdmin.style.color = 'rgba(110,231,208,0.6)';
     btnAdmin.style.boxShadow = 'none';
-    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i> Sign In as User';
+    submitBtn.innerHTML = 'LOGIN';
   }
 }
 
@@ -113,7 +276,7 @@ function setLoginType(type) {
   const initialType = document.getElementById('login_type_input').value || 'user';
   setLoginType(initialType);
 
-  // Toggle password visibility
+  // Password visibility
   const pwdInput = document.getElementById('id_password');
   const pwdEye   = document.getElementById('pwdEyeIcon');
   document.getElementById('togglePwd').addEventListener('click', function() {
@@ -124,15 +287,68 @@ function setLoginType(type) {
       pwdInput.type = 'password';
       pwdEye.classList.replace('fa-eye-slash', 'fa-eye');
     }
-    pwdInput.focus();
   });
 
-  // Button loading state on submit
-  document.getElementById('loginForm').addEventListener('submit', function() {
-    const btn = document.getElementById('loginSubmitBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating…';
-    btn.style.pointerEvents = 'none';
-  });
+  // Animated Constellation Background Generator (Matching Image 2 polygon network)
+  const canvas = document.getElementById('constellationCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const particleCount = 50;
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        radius: Math.random() * 2 + 1.5
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw particle connections
+      for (let i = 0; i < particleCount; i++) {
+        const p1 = particles[i];
+        p1.x += p1.vx;
+        p1.y += p1.vy;
+
+        if (p1.x < 0 || p1.x > width) p1.vx *= -1;
+        if (p1.y < 0 || p1.y > height) p1.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#00e6a8';
+        ctx.fill();
+
+        for (let j = i + 1; j < particleCount; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          if (dist < 140) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(0, 230, 168, ${1 - dist / 140 * 0.8})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
 })();
 </script>
 {% endblock %}
