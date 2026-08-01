@@ -186,14 +186,14 @@
         <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
       {% endif %}
       <div>
-        <div style="font-size:13px;font-weight:700;color:#fff;">{{ user.get_full_name|default:user.username }}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.6);">Freelancer</div>
+        <div style="font-size:13.5px;font-weight:700;color:#ffffff;">{{ user.get_full_name|default:user.username }}</div>
+        <div style="font-size:12px;font-weight:500;color:#ffffff;">Freelancer</div>
       </div>
     </a>
     <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
       {% csrf_token %}
       <button type="submit" class="sidebar-link mt-2 w-100 text-start"
-              style="color:rgba(255,255,255,0.7);background:none;border:none;cursor:pointer;padding:0;">
+              style="color:#ffffff;font-weight:600;background:none;border:none;cursor:pointer;padding:0;">
         <i class="fas fa-sign-out-alt nav-icon"></i>
         <span>Log Out</span>
       </button>
