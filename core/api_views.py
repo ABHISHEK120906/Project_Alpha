@@ -187,3 +187,138 @@ def api_update_project_status(request, pk):
 
     serializer = ProjectSerializer(project)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def api_dashboard_analytics(request):
+    """
+    Advanced interactive analytics engine for Feature 17.
+    Supports filtering by date range, client, project, status, priority.
+    """
+    user = request.user
+    today = timezone.now().date()
+
+    # Query params
+    date_range = request.GET.get('range', '30d')
+    client_id = request.GET.get('client', '')
+    project_id = request.GET.get('project', '')
+    status_filter = request.GET.get('status', '')
+    priority_filter = request.GET.get('priority', '')
+
+    projects = Project.objects.filter(user=user, is_archived=False)
+    payments = Payment.objects.filter(user=user)
+    incomes = Income.objects.filter(user=user)
+    expenses = Expense.objects.filter(user=user)
+    tasks = Task.objects.filter(user=user, is_archived=False)
+
+    if client_id:
+        projects = projects.filter(client_id=client_id)
+        payments = payments.filter(project__client_id=client_id)
+        incomes = incomes.filter(client_id=client_id)
+    if project_id:
+        projects = projects.filter(id=project_id)
+        payments = payments.filter(project_id=project_id)
+        incomes = incomes.filter(project_id=project_id)
+        expenses = expenses.filter(project_id=project_id)
+        tasks = tasks.filter(project_id=project_id)
+    if status_filter:
+        projects = projects.filter(status=status_filter)
+    if priority_filter:
+        projects = projects.filter(priority=priority_filter)
+
+    # Filter by date range
+    start_date = None
+    if date_range == '7d':
+        start_date = today - timedelta(days=7)
+    elif date_range == '30d':
+        start_date = today - timedelta(days=30)
+    elif date_range == '90d':
+        start_date = today - timedelta(days=90)
+    elif date_range == 'month':
+        start_date = today.replace(day=1)
+    elif date_range == 'year':
+        start_date = today.replace(month=1, day=1)
+
+    if start_date:
+        payments = payments.filter(created_at__date__gte=start_date)
+        incomes = incomes.filter(date__gte=start_date)
+        expenses = expenses.filter(date__gte=start_date)
+
+    # 1. Project Status Distribution
+    status_counts = projects.values('status').annotate(count=Count('id'))
+    status_dist = {item['status']: item['count'] for item in status_counts}
+
+    # 2. Priority Distribution
+    priority_counts = projects.values('priority').annotate(count=Count('id'))
+    priority_dist = {item['priority']: item['count'] for item in priority_counts}
+
+    # 3. Monthly Income vs Expenses Trend (last 6 months)
+    monthly_labels = []
+    income_trend = []
+    expense_trend = []
+    profit_trend = []
+
+    for i in range(5, -1, -1):
+        m_date = (today.replace(day=1) - timedelta(days=i * 30))
+        m_income = (incomes.filter(date__year=m_date.year, date__month=m_date.month).aggregate(t=Sum('amount'))['t'] or 0) + \
+                   (payments.filter(status='paid', paid_date__year=m_date.year, paid_date__month=m_date.month).aggregate(t=Sum('amount'))['t'] or 0)
+        m_expense = expenses.filter(date__year=m_date.year, date__month=m_date.month).aggregate(t=Sum('amount'))['t'] or 0
+        
+        monthly_labels.append(m_date.strftime('%b %Y'))
+        income_trend.append(float(m_income))
+        expense_trend.append(float(m_expense))
+        profit_trend.append(float(m_income) - float(m_expense))
+
+    # 4. Client Revenue Distribution
+    client_rev_labels = []
+    client_rev_data = []
+    for client in Client.objects.filter(user=user, is_archived=False)[:7]:
+        c_pay = payments.filter(project__client=client, status='paid').aggregate(t=Sum('amount'))['t'] or 0
+        c_inc = incomes.filter(client=client).aggregate(t=Sum('amount'))['t'] or 0
+        tot = float(c_pay) + float(c_inc)
+        if tot > 0:
+            client_rev_labels.append(client.name)
+            client_rev_data.append(tot)
+
+    # 5. Productivity Stats
+    tasks_completed = tasks.filter(status='completed').count()
+    tasks_pending = tasks.filter(status__in=['todo', 'in_progress']).count()
+    tasks_overdue = tasks.filter(due_date__lt=today, status__in=['todo', 'in_progress']).count()
+
+    total_projs = projects.count()
+    completed_projs = projects.filter(status='completed').count()
+    completion_rate = round((completed_projs / total_projs * 100), 1) if total_projs > 0 else 0
+
+    payload = {
+        "status_distribution": status_dist,
+        "priority_distribution": priority_dist,
+        "financial_trend": {
+            "labels": monthly_labels,
+            "income": income_trend,
+            "expenses": expense_trend,
+            "profit": profit_trend,
+        },
+        "client_revenue": {
+            "labels": client_rev_labels,
+            "data": client_rev_data,
+        },
+        "productivity": {
+            "completed": tasks_completed,
+            "pending": tasks_pending,
+            "overdue": tasks_overdue,
+            "completion_rate": completion_rate,
+        }
+    }
+    return Response(payload, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def api_unread_notification_count(request):
+    from .models import Notification
+    count = Notification.objects.filter(user=request.user, is_read=False).count()
+    return Response({"unread_count": count}, status=status.HTTP_200_OK)
+

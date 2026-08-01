@@ -14,17 +14,23 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
 import json
 import re
-from .models import Client, Project, Payment, Task, Note, ActivityLog
+from .models import (Client, Project, Payment, Task, Note, ActivityLog,
+                     UserProfile, ProjectFile, ProjectComment, Income,
+                     Expense, Invoice, InvoiceItem, CalendarEvent, Notification)
 from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
-                    NoteForm, SearchForm)
+                    NoteForm, SearchForm, UserBasicForm, UserProfileForm,
+                    IncomeForm, ExpenseForm, InvoiceForm, InvoiceItemForm,
+                    CalendarEventForm, ProjectFileForm, ProjectCommentForm)
 from .email_service import send_welcome_email, send_login_alert_email
 
 
 def log_activity(user, action, model_type, model_id, description, request=None):
     """Helper function to log user activities to the ActivityLog."""
     ip_address = None
+    user_agent = None
     if request:
         ip_address = get_client_ip(request)
+        user_agent = request.META.get('HTTP_USER_AGENT', '')[:255]
 
     ActivityLog.objects.create(
         user=user,
@@ -32,7 +38,8 @@ def log_activity(user, action, model_type, model_id, description, request=None):
         model_type=model_type,
         model_id=model_id,
         description=description,
-        ip_address=ip_address
+        ip_address=ip_address,
+        user_agent=user_agent
     )
 
 
@@ -141,75 +148,60 @@ def dashboard(request):
     user = request.user
 
     # ── KPI Statistics ──────────────────────────────────────
-    total_clients = Client.objects.filter(user=user).count()
-    total_projects = Project.objects.filter(user=user).count()
-    completed_projects = Project.objects.filter(user=user, status='completed').count()
-    pending_projects = Project.objects.filter(user=user, status='pending').count()
-    in_progress_projects = Project.objects.filter(user=user, status='in_progress').count()
-    on_hold_projects = Project.objects.filter(user=user, status='on_hold').count()
-    cancelled_projects = Project.objects.filter(user=user, status='cancelled').count()
+    total_clients = Client.objects.filter(user=user, is_archived=False).count()
+    total_projects = Project.objects.filter(user=user, is_archived=False).count()
+    active_projects = Project.objects.filter(user=user, status='in_progress', is_archived=False).count()
+    pending_projects = Project.objects.filter(user=user, status='pending', is_archived=False).count()
+    completed_projects = Project.objects.filter(user=user, status='completed', is_archived=False).count()
+    cancelled_projects = Project.objects.filter(user=user, status='cancelled', is_archived=False).count()
 
-    # ── Upcoming deadlines (next 7 days) ────────────────────
+    # ── Financial KPI Statistics ────────────────────────────
+    income_from_models = Income.objects.filter(user=user).aggregate(total=Sum('amount'))['total'] or 0
+    paid_payments = Payment.objects.filter(user=user, status='paid').aggregate(total=Sum('amount'))['total'] or 0
+    total_income = float(income_from_models) + float(paid_payments)
+
+    total_expenses = float(Expense.objects.filter(user=user).aggregate(total=Sum('amount'))['total'] or 0)
+    net_profit = total_income - total_expenses
+
+    pending_payments = Payment.objects.filter(user=user, status='pending').aggregate(total=Sum('amount'))['total'] or 0
+    completed_payments = paid_payments
+    overdue_payments = Payment.objects.filter(user=user, status='pending', due_date__lt=timezone.now().date()).aggregate(total=Sum('amount'))['total'] or 0
+
+    # ── Deadlines & Tasks ──────────────────────────────────
     upcoming_deadlines = Project.objects.filter(
         user=user,
         deadline__gte=timezone.now().date(),
         deadline__lte=timezone.now().date() + timedelta(days=7),
-        status__in=['pending', 'in_progress']
+        status__in=['pending', 'in_progress'],
+        is_archived=False
     ).select_related('client').order_by('deadline')[:5]
 
-    # ── Financial Summary ───────────────────────────────────
-    total_earnings = Payment.objects.filter(
-        user=user, status='paid'
-    ).aggregate(total=Sum('amount'))['total'] or 0
+    active_tasks = Task.objects.filter(user=user, status__in=['todo', 'in_progress'], is_archived=False).count()
+    recent_notifications = Notification.objects.filter(user=user, is_read=False)[:5]
 
-    pending_payments = Payment.objects.filter(
-        user=user, status='pending'
-    ).aggregate(total=Sum('amount'))['total'] or 0
-
-    # ── Recent Activities ───────────────────────────────────
-    recent_activities = ActivityLog.objects.filter(
-        user=user
-    ).order_by('-timestamp')[:10]
-
-    # ── Recent Projects ─────────────────────────────────────
-    recent_projects = Project.objects.filter(
-        user=user
-    ).select_related('client').order_by('-created_at')[:5]
-
-    # ── Monthly Earnings (last 6 months for Line/Bar chart) ─
-    monthly_earnings = []
-    monthly_labels = []
-    today = timezone.now().date()
-    for i in range(5, -1, -1):
-        month_date = today.replace(day=1) - timedelta(days=i * 30)
-        month_total = Payment.objects.filter(
-            user=user,
-            status='paid',
-            paid_date__year=month_date.year,
-            paid_date__month=month_date.month
-        ).aggregate(total=Sum('amount'))['total'] or 0
-        monthly_earnings.append(float(month_total))
-        monthly_labels.append(month_date.strftime('%b %Y'))
-
-    # ── Task completion stats ────────────────────────────────
-    total_tasks = Task.objects.filter(user=user).count()
-    completed_tasks = Task.objects.filter(user=user, status='completed').count()
+    # ── Recent Activities & Projects ────────────────────────
+    recent_activities = ActivityLog.objects.filter(user=user).order_by('-timestamp')[:10]
+    recent_projects = Project.objects.filter(user=user, is_archived=False).select_related('client').order_by('-created_at')[:5]
 
     context = {
         'total_clients': total_clients,
         'total_projects': total_projects,
-        'completed_projects': completed_projects,
+        'active_projects': active_projects,
         'pending_projects': pending_projects,
-        'in_progress_projects': in_progress_projects,
-        'on_hold_projects': on_hold_projects,
+        'completed_projects': completed_projects,
         'cancelled_projects': cancelled_projects,
-        'upcoming_deadlines': upcoming_deadlines,
-        'total_earnings': total_earnings,
+        'total_income': total_income,
+        'total_expenses': total_expenses,
+        'net_profit': net_profit,
         'pending_payments': pending_payments,
+        'completed_payments': completed_payments,
+        'overdue_payments': overdue_payments,
+        'upcoming_deadlines': upcoming_deadlines,
+        'active_tasks': active_tasks,
+        'recent_notifications': recent_notifications,
         'recent_activities': recent_activities,
         'recent_projects': recent_projects,
-        'total_tasks': total_tasks,
-        'completed_tasks': completed_tasks,
+        'total_earnings': total_income,
     }
 
     return render(request, 'dashboard.html', context)
@@ -1290,3 +1282,616 @@ def user_settings(request):
         'password_form': password_form,
     }
     return render(request, 'settings.html', context)
+
+
+# ============================================================
+# MY PROFILE VIEWS
+# ============================================================
+
+@login_required
+def profile_view(request):
+    """View user profile and login history."""
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    login_history = ActivityLog.objects.filter(
+        user=request.user, action__in=['login', 'logout']
+    ).order_by('-timestamp')[:15]
+
+    context = {
+        'profile': profile,
+        'login_history': login_history,
+    }
+    return render(request, 'profile/profile.html', context)
+
+
+@login_required
+def profile_edit(request):
+    """Edit user details and profile info."""
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        user_form = UserBasicForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            log_activity(request.user, 'profile_updated', 'user', request.user.id, 'Updated profile details', request)
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('core:profile_view')
+        else:
+            messages.error(request, 'Please fix errors in the form.')
+    else:
+        user_form = UserBasicForm(instance=request.user)
+        profile_form = UserProfileForm(instance=profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'profile': profile,
+    }
+    return render(request, 'profile/profile.html', context)
+
+
+@login_required
+@require_POST
+def profile_change_password(request):
+    """Change account password from profile tab."""
+    form = PasswordChangeForm(user=request.user, data=request.POST)
+    if form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)
+        log_activity(request.user, 'update', 'user', request.user.id, 'Changed password', request)
+        messages.success(request, 'Password changed successfully!')
+    else:
+        messages.error(request, 'Failed to change password. Please check requirements.')
+    return redirect('core:profile_view')
+
+
+@login_required
+@require_POST
+def profile_remove_picture(request):
+    """Remove user profile picture."""
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    if profile.profile_picture:
+        profile.profile_picture.delete(save=True)
+        messages.success(request, 'Profile picture removed.')
+    return redirect('core:profile_view')
+
+
+# ============================================================
+# PROJECT EXTENSION VIEWS (ARCHIVE, RESTORE, DUPLICATE, COMMENTS, FILES)
+# ============================================================
+
+@login_required
+@require_POST
+def project_archive(request, pk):
+    """Archive a project."""
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+    project.is_archived = True
+    project.save()
+    log_activity(request.user, 'archive', 'project', project.id, f'Archived project: {project.name}', request)
+    messages.success(request, f'Project "{project.name}" archived.')
+    return redirect('core:project_list')
+
+
+@login_required
+@require_POST
+def project_restore(request, pk):
+    """Restore an archived project."""
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+    project.is_archived = False
+    project.save()
+    log_activity(request.user, 'restore', 'project', project.id, f'Restored project: {project.name}', request)
+    messages.success(request, f'Project "{project.name}" restored.')
+    return redirect('core:project_list')
+
+
+@login_required
+@require_POST
+def project_duplicate(request, pk):
+    """Duplicate an existing project."""
+    original = get_object_or_404(Project, pk=pk, user=request.user)
+    copy_proj = Project.objects.create(
+        user=request.user,
+        client=original.client,
+        name=f"{original.name} (Copy)",
+        description=original.description,
+        status='pending',
+        priority=original.priority,
+        start_date=timezone.now().date(),
+        deadline=original.deadline,
+        budget=original.budget,
+        progress=0
+    )
+    log_activity(request.user, 'create', 'project', copy_proj.id, f'Duplicated project from {original.name}', request)
+    messages.success(request, f'Project duplicated as "{copy_proj.name}".')
+    return redirect('core:project_detail', pk=copy_proj.pk)
+
+
+@login_required
+@require_POST
+def project_add_comment(request, pk):
+    """Add internal note/comment to project."""
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+    comment_text = request.POST.get('comment', '').strip()
+    if comment_text:
+        ProjectComment.objects.create(user=request.user, project=project, comment=comment_text)
+        log_activity(request.user, 'create', 'project', project.id, f'Added comment on project {project.name}', request)
+        messages.success(request, 'Comment added!')
+    return redirect('core:project_detail', pk=project.pk)
+
+
+@login_required
+@require_POST
+def project_upload_file(request, pk):
+    """Upload attachment to a project."""
+    project = get_object_or_404(Project, pk=pk, user=request.user)
+    file_obj = request.FILES.get('file')
+    if file_obj:
+        name = file_obj.name
+        size = file_obj.size
+        ext = name.split('.')[-1].lower() if '.' in name else 'other'
+        ProjectFile.objects.create(
+            user=request.user,
+            project=project,
+            file=file_obj,
+            file_name=name,
+            file_size=size,
+            file_type=ext
+        )
+        log_activity(request.user, 'create', 'file', project.id, f'Uploaded file {name} to {project.name}', request)
+        messages.success(request, f'File "{name}" uploaded!')
+    return redirect('core:project_detail', pk=project.pk)
+
+
+# ============================================================
+# CLIENT EXTENSION VIEWS
+# ============================================================
+
+@login_required
+@require_POST
+def client_archive(request, pk):
+    client = get_object_or_404(Client, pk=pk, user=request.user)
+    client.is_archived = True
+    client.save()
+    log_activity(request.user, 'archive', 'client', client.id, f'Archived client {client.name}', request)
+    messages.success(request, f'Client "{client.name}" archived.')
+    return redirect('core:client_list')
+
+
+@login_required
+@require_POST
+def client_restore(request, pk):
+    client = get_object_or_404(Client, pk=pk, user=request.user)
+    client.is_archived = False
+    client.save()
+    log_activity(request.user, 'restore', 'client', client.id, f'Restored client {client.name}', request)
+    messages.success(request, f'Client "{client.name}" restored.')
+    return redirect('core:client_list')
+
+
+# ============================================================
+# TASK EXTENSION VIEWS
+# ============================================================
+
+@login_required
+@require_POST
+def task_archive(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    task.is_archived = True
+    task.save()
+    log_activity(request.user, 'archive', 'task', task.id, f'Archived task {task.title}', request)
+    messages.success(request, f'Task "{task.title}" archived.')
+    return redirect('core:task_list')
+
+
+@login_required
+@require_POST
+def task_restore(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    task.is_archived = False
+    task.save()
+    log_activity(request.user, 'restore', 'task', task.id, f'Restored task {task.title}', request)
+    messages.success(request, f'Task "{task.title}" restored.')
+    return redirect('core:task_list')
+
+
+# ============================================================
+# PAYMENT RECEIPT VIEW
+# ============================================================
+
+@login_required
+def payment_receipt(request, pk):
+    """Render printable payment receipt."""
+    payment = get_object_or_404(Payment, pk=pk, user=request.user)
+    profile = getattr(request.user, 'profile', None)
+    context = {
+        'payment': payment,
+        'profile': profile,
+    }
+    return render(request, 'payments/payment_receipt.html', context)
+
+
+# ============================================================
+# INCOME & EXPENSE TRACKER
+# ============================================================
+
+@login_required
+def income_expense_tracker(request):
+    """Manage incomes and expenses."""
+    user = request.user
+    incomes = Income.objects.filter(user=user)
+    expenses = Expense.objects.filter(user=user)
+
+    total_inc = incomes.aggregate(t=Sum('amount'))['t'] or 0
+    total_exp = expenses.aggregate(t=Sum('amount'))['t'] or 0
+    net_profit = float(total_inc) - float(total_exp)
+
+    income_form = IncomeForm()
+    expense_form = ExpenseForm()
+    # Populate choices for forms
+    income_form.fields['client'].queryset = Client.objects.filter(user=user, is_archived=False)
+    income_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
+    expense_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
+
+    context = {
+        'incomes': incomes,
+        'expenses': expenses,
+        'total_income': total_inc,
+        'total_expenses': total_exp,
+        'net_profit': net_profit,
+        'income_form': income_form,
+        'expense_form': expense_form,
+    }
+    return render(request, 'finances/income_expense.html', context)
+
+
+@login_required
+@require_POST
+def income_create(request):
+    form = IncomeForm(request.POST)
+    if form.is_valid():
+        inc = form.save(commit=False)
+        inc.user = request.user
+        inc.save()
+        log_activity(request.user, 'create', 'income', inc.id, f'Added income: {inc.title} (${inc.amount})', request)
+        messages.success(request, f'Income "{inc.title}" recorded!')
+    else:
+        messages.error(request, 'Failed to record income.')
+    return redirect('core:income_expense_tracker')
+
+
+@login_required
+@require_POST
+def income_delete(request, pk):
+    inc = get_object_or_404(Income, pk=pk, user=request.user)
+    inc.delete()
+    log_activity(request.user, 'delete', 'income', inc.id, f'Deleted income: {inc.title}', request)
+    messages.success(request, 'Income entry deleted.')
+    return redirect('core:income_expense_tracker')
+
+
+@login_required
+@require_POST
+def expense_create(request):
+    form = ExpenseForm(request.POST, request.FILES)
+    if form.is_valid():
+        exp = form.save(commit=False)
+        exp.user = request.user
+        exp.save()
+        log_activity(request.user, 'create', 'expense', exp.id, f'Added expense: {exp.title} (${exp.amount})', request)
+        messages.success(request, f'Expense "{exp.title}" recorded!')
+    else:
+        messages.error(request, 'Failed to record expense.')
+    return redirect('core:income_expense_tracker')
+
+
+@login_required
+@require_POST
+def expense_delete(request, pk):
+    exp = get_object_or_404(Expense, pk=pk, user=request.user)
+    exp.delete()
+    log_activity(request.user, 'delete', 'expense', exp.id, f'Deleted expense: {exp.title}', request)
+    messages.success(request, 'Expense entry deleted.')
+    return redirect('core:income_expense_tracker')
+
+
+# ============================================================
+# INVOICE MANAGEMENT
+# ============================================================
+
+@login_required
+def invoice_list(request):
+    invoices = Invoice.objects.filter(user=request.user).select_related('client', 'project')
+    context = {'invoices': invoices}
+    return render(request, 'invoices/invoice_list.html', context)
+
+
+@login_required
+def invoice_create(request):
+    if request.method == 'POST':
+        form = InvoiceForm(request.POST)
+        if form.is_valid():
+            inv = form.save(commit=False)
+            inv.user = request.user
+            inv.save()
+
+            # Process line items from POST
+            descriptions = request.POST.getlist('item_description')
+            quantities = request.POST.getlist('item_quantity')
+            unit_prices = request.POST.getlist('item_unit_price')
+
+            subtotal = 0
+            for d, q, u in zip(descriptions, quantities, unit_prices):
+                if d.strip():
+                    qty = float(q) if q else 1
+                    price = float(u) if u else 0
+                    amt = qty * price
+                    subtotal += amt
+                    InvoiceItem.objects.create(
+                        invoice=inv,
+                        description=d.strip(),
+                        quantity=qty,
+                        unit_price=price,
+                        amount=amt
+                    )
+
+            inv.subtotal = subtotal
+            tax_amt = (subtotal * float(inv.tax_rate)) / 100.0
+            inv.tax_amount = tax_amt
+            inv.total = subtotal + tax_amt - float(inv.discount_amount)
+            inv.save()
+
+            log_activity(request.user, 'invoice_generated', 'invoice', inv.id, f'Created invoice {inv.invoice_number}', request)
+            messages.success(request, f'Invoice {inv.invoice_number} created successfully!')
+            return redirect('core:invoice_detail', pk=inv.pk)
+        else:
+            messages.error(request, 'Failed to create invoice. Please check inputs.')
+    else:
+        # Pre-fill invoice number
+        count = Invoice.objects.filter(user=request.user).count() + 1
+        initial_number = f"INV-{timezone.now().year}-{count:03d}"
+        form = InvoiceForm(initial={'invoice_number': initial_number, 'issue_date': timezone.now().date(), 'due_date': timezone.now().date() + timedelta(days=14)})
+        form.fields['client'].queryset = Client.objects.filter(user=request.user, is_archived=False)
+        form.fields['project'].queryset = Project.objects.filter(user=request.user, is_archived=False)
+
+    context = {'form': form}
+    return render(request, 'invoices/invoice_form.html', context)
+
+
+@login_required
+def invoice_detail(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
+    profile = getattr(request.user, 'profile', None)
+    context = {
+        'invoice': invoice,
+        'profile': profile,
+    }
+    return render(request, 'invoices/invoice_detail.html', context)
+
+
+@login_required
+def invoice_pdf(request, pk):
+    """Render printable PDF view of invoice."""
+    return invoice_detail(request, pk)
+
+
+@login_required
+@require_POST
+def invoice_email(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
+    invoice.status = 'sent'
+    invoice.save()
+    log_activity(request.user, 'update', 'invoice', invoice.id, f'Emailed invoice {invoice.invoice_number} to {invoice.client.email}', request)
+    messages.success(request, f'Invoice {invoice.invoice_number} emailed to {invoice.client.email}!')
+    return redirect('core:invoice_detail', pk=invoice.pk)
+
+
+@login_required
+@require_POST
+def invoice_delete(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
+    invoice.delete()
+    log_activity(request.user, 'delete', 'invoice', invoice.id, f'Deleted invoice {invoice.invoice_number}', request)
+    messages.success(request, 'Invoice deleted.')
+    return redirect('core:invoice_list')
+
+
+# ============================================================
+# CALENDAR & DEADLINES
+# ============================================================
+
+@login_required
+def calendar_view(request):
+    user = request.user
+    events = CalendarEvent.objects.filter(user=user)
+    
+    project_deadlines = Project.objects.filter(user=user, deadline__isnull=False, is_archived=False)
+    task_deadlines = Task.objects.filter(user=user, due_date__isnull=False, is_archived=False)
+    payment_dues = Payment.objects.filter(user=user, due_date__isnull=False, status='pending')
+
+    event_form = CalendarEventForm()
+    event_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
+    event_form.fields['task'].queryset = Task.objects.filter(user=user, is_archived=False)
+
+    context = {
+        'events': events,
+        'project_deadlines': project_deadlines,
+        'task_deadlines': task_deadlines,
+        'payment_dues': payment_dues,
+        'event_form': event_form,
+    }
+    return render(request, 'calendar/calendar.html', context)
+
+
+@login_required
+@require_POST
+def calendar_event_create(request):
+    form = CalendarEventForm(request.POST)
+    if form.is_valid():
+        evt = form.save(commit=False)
+        evt.user = request.user
+        evt.save()
+        log_activity(request.user, 'create', 'note', evt.id, f'Created calendar event: {evt.title}', request)
+        messages.success(request, f'Event "{evt.title}" added to calendar!')
+    else:
+        messages.error(request, 'Failed to add calendar event.')
+    return redirect('core:calendar_view')
+
+
+@login_required
+@require_POST
+def calendar_event_delete(request, pk):
+    evt = get_object_or_404(CalendarEvent, pk=pk, user=request.user)
+    evt.delete()
+    messages.success(request, 'Calendar event deleted.')
+    return redirect('core:calendar_view')
+
+
+# ============================================================
+# FILE MANAGER
+# ============================================================
+
+@login_required
+def file_manager(request):
+    user = request.user
+    files = ProjectFile.objects.filter(user=user).select_related('project')
+    projects = Project.objects.filter(user=user, is_archived=False)
+
+    search_query = request.GET.get('search', '').strip()
+    project_filter = request.GET.get('project', '')
+
+    if search_query:
+        files = files.filter(file_name__icontains=search_query)
+    if project_filter:
+        files = files.filter(project_id=project_filter)
+
+    file_form = ProjectFileForm()
+    file_form.fields['project'].queryset = projects
+
+    context = {
+        'files': files,
+        'projects': projects,
+        'file_form': file_form,
+    }
+    return render(request, 'files/file_manager.html', context)
+
+
+@login_required
+@require_POST
+def file_upload(request):
+    file_obj = request.FILES.get('file')
+    if file_obj:
+        name = file_obj.name
+        size = file_obj.size
+        ext = name.split('.')[-1].lower() if '.' in name else 'other'
+        proj_id = request.POST.get('project')
+        proj = Project.objects.filter(id=proj_id, user=request.user).first() if proj_id else None
+
+        pf = ProjectFile.objects.create(
+            user=request.user,
+            project=proj,
+            file=file_obj,
+            file_name=name,
+            file_size=size,
+            file_type=ext
+        )
+        log_activity(request.user, 'create', 'file', pf.id, f'Uploaded file {name}', request)
+        messages.success(request, f'File "{name}" uploaded successfully!')
+    else:
+        messages.error(request, 'Please select a file to upload.')
+    return redirect('core:file_manager')
+
+
+@login_required
+@require_POST
+def file_delete(request, pk):
+    pf = get_object_or_404(ProjectFile, pk=pk, user=request.user)
+    pf.file.delete(save=False)
+    pf.delete()
+    log_activity(request.user, 'delete', 'file', pf.id, f'Deleted file {pf.file_name}', request)
+    messages.success(request, 'File deleted.')
+    return redirect('core:file_manager')
+
+
+# ============================================================
+# NOTIFICATIONS
+# ============================================================
+
+@login_required
+def notifications_list(request):
+    notifications = Notification.objects.filter(user=request.user)
+    context = {'notifications': notifications}
+    return render(request, 'notifications/notifications.html', context)
+
+
+@login_required
+@require_POST
+def notification_mark_read(request, pk):
+    notif = get_object_or_404(Notification, pk=pk, user=request.user)
+    notif.is_read = True
+    notif.save()
+    return redirect('core:notifications_list')
+
+
+@login_required
+@require_POST
+def notification_read_all(request):
+    Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+    messages.success(request, 'All notifications marked as read.')
+    return redirect('core:notifications_list')
+
+
+@login_required
+@require_POST
+def notification_delete(request, pk):
+    notif = get_object_or_404(Notification, pk=pk, user=request.user)
+    notif.delete()
+    messages.success(request, 'Notification deleted.')
+    return redirect('core:notifications_list')
+
+
+# ============================================================
+# GLOBAL SEARCH & ACCESS CONTROL
+# ============================================================
+
+@login_required
+def global_search(request):
+    query = request.GET.get('q', '').strip()
+    projects = []
+    clients = []
+    tasks = []
+    payments = []
+    invoices = []
+
+    if query:
+        projects = Project.objects.filter(user=request.user, is_archived=False).filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+        clients = Client.objects.filter(user=request.user, is_archived=False).filter(
+            Q(name__icontains=query) | Q(company__icontains=query) | Q(email__icontains=query)
+        )
+        tasks = Task.objects.filter(user=request.user, is_archived=False).filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+        payments = Payment.objects.filter(user=request.user).filter(
+            Q(description__icontains=query) | Q(invoice_number__icontains=query)
+        )
+        invoices = Invoice.objects.filter(user=request.user).filter(
+            Q(invoice_number__icontains=query) | Q(notes__icontains=query)
+        )
+
+    context = {
+        'query': query,
+        'projects': projects,
+        'clients': clients,
+        'tasks': tasks,
+        'payments': payments,
+        'invoices': invoices,
+    }
+    return render(request, 'search/search_results.html', context)
+
+
+def forbidden_view(request):
+    """403 Forbidden page for unauthorized access attempts."""
+    return render(request, '403.html', status=403)

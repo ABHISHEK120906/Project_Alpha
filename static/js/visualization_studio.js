@@ -1,13 +1,13 @@
 window.VisualizationStudio = (function () {
   let activeCharts = {};
-  let currentStudioData = null;
 
   document.addEventListener('DOMContentLoaded', function () {
     initRevenueGoalTracker();
+    initAnalyticsFilters();
+    loadDashboardAnalytics();
   });
 
   function initRevenueGoalTracker() {
-
     const goalCard = document.getElementById('revenueGoalCard');
     if (!goalCard) return;
 
@@ -46,13 +46,69 @@ window.VisualizationStudio = (function () {
     if (targetEl) targetEl.textContent = `$${current.toLocaleString()} / $${target.toLocaleString()}`;
   }
 
-  /**
-   * Renders or switches a chart dynamically.
-   * @param {string} canvasId - Canvas ID
-   * @param {string} chartType - 'bar', 'line', 'pie', 'doughnut', 'scatter', 'heatmap'
-   * @param {object} rawData - Data payload
-   */
-  function renderChart(canvasId, chartType, rawData) {
+  function initAnalyticsFilters() {
+    const filterForm = document.getElementById('analyticsFilterForm');
+    if (filterForm) {
+      filterForm.addEventListener('change', function () {
+        loadDashboardAnalytics();
+      });
+    }
+  }
+
+  function loadDashboardAnalytics() {
+    const filterForm = document.getElementById('analyticsFilterForm');
+    let query = '';
+    if (filterForm) {
+      const formData = new FormData(filterForm);
+      query = '?' + new URLSearchParams(formData).toString();
+    }
+
+    fetch('/api/v1/dashboard/analytics/' + query)
+      .then(res => res.json())
+      .then(data => {
+        if (data.financial_trend) {
+          renderChart('financialTrendChart', 'line', {
+            labels: data.financial_trend.labels,
+            datasets: [
+              { label: 'Income', data: data.financial_trend.income, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.35 },
+              { label: 'Expenses', data: data.financial_trend.expenses, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.35 },
+              { label: 'Net Profit', data: data.financial_trend.profit, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', fill: false, tension: 0.35 }
+            ]
+          });
+        }
+
+        if (data.status_distribution) {
+          const keys = Object.keys(data.status_distribution);
+          const vals = Object.values(data.status_distribution);
+          renderChart('statusDistChart', 'doughnut', {
+            labels: keys.map(k => k.replace('_', ' ').toUpperCase()),
+            data: vals,
+            colors: ['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6']
+          });
+        }
+
+        if (data.priority_distribution) {
+          const keys = Object.keys(data.priority_distribution);
+          const vals = Object.values(data.priority_distribution);
+          renderChart('priorityDistChart', 'bar', {
+            labels: keys.map(k => k.toUpperCase()),
+            data: vals,
+            colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+          });
+        }
+
+        if (data.client_revenue) {
+          renderChart('clientRevenueChart', 'bar', {
+            labels: data.client_revenue.labels,
+            data: data.client_revenue.data,
+            horizontal: true
+          });
+        }
+      })
+      .catch(err => console.log('Analytics load error:', err));
+  }
+
+  function renderChart(canvasId, chartType, configData) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -66,128 +122,42 @@ window.VisualizationStudio = (function () {
     const textColor = isDark ? '#94a3b8' : '#64748b';
     const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
 
-    // 1. Handle Heatmap Matrix Special View
-    if (chartType === 'heatmap') {
-      canvas.style.display = 'none';
-      let heatmapContainer = document.getElementById(canvasId + '_heatmap');
-      if (!heatmapContainer) {
-        heatmapContainer = document.createElement('div');
-        heatmapContainer.id = canvasId + '_heatmap';
-        heatmapContainer.className = 'heatmap-matrix-container';
-        canvas.parentNode.appendChild(heatmapContainer);
-      }
-      heatmapContainer.style.display = 'block';
-      renderHeatmapGrid(heatmapContainer, rawData.heatmap || rawData);
-      return;
-    } else {
-      canvas.style.display = 'block';
-      const heatmapContainer = document.getElementById(canvasId + '_heatmap');
-      if (heatmapContainer) heatmapContainer.style.display = 'none';
-    }
-
-    // 2. Format datasets according to type
-    let config = {
-      type: chartType === 'area' ? 'line' : (chartType === 'scatter' ? 'scatter' : chartType),
-      data: { labels: rawData.labels || [], datasets: [] },
+    let chartConfig = {
+      type: chartType,
+      data: {
+        labels: configData.labels || [],
+        datasets: configData.datasets || [{
+          label: configData.label || 'Amount ($)',
+          data: configData.data || [],
+          backgroundColor: configData.colors || (chartType === 'doughnut' ? ['#7c3aed', '#10b981', '#f59e0b', '#ef4444'] : '#7c3aed'),
+          borderColor: '#7c3aed',
+          borderWidth: 1,
+          borderRadius: 6
+        }]
+      },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        indexAxis: configData.horizontal ? 'y' : 'x',
         plugins: {
           legend: {
-            display: ['pie', 'doughnut'].includes(chartType),
+            display: ['doughnut', 'pie', 'line'].includes(chartType),
             position: 'bottom',
             labels: { color: textColor, font: { family: 'Inter', size: 12 } }
-          },
-          tooltip: {
-            callbacks: {
-              label: function (ctx) {
-                if (chartType === 'scatter') {
-                  const raw = ctx.raw;
-                  return `${raw.name || 'Project'}: Budget $${raw.x} | Earned $${raw.y}`;
-                }
-                return ` ${ctx.dataset.label || 'Value'}: $${ctx.parsed.y !== undefined ? ctx.parsed.y.toLocaleString() : ctx.parsed}`;
-              }
-            }
           }
         },
-        scales: ['pie', 'doughnut'].includes(chartType) ? {} : {
-          x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter' } } },
-          y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Inter' } } }
+        scales: ['doughnut', 'pie'].includes(chartType) ? {} : {
+          x: { grid: { color: gridColor }, ticks: { color: textColor } },
+          y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } }
         }
       }
     };
 
-    if (chartType === 'scatter') {
-      config.data.datasets = [{
-        label: 'Budget vs Revenue',
-        data: rawData.scatter || rawData.data || [],
-        backgroundColor: '#7C3AED',
-        borderColor: '#5B21B6',
-        pointRadius: 6,
-        pointHoverRadius: 9
-      }];
-    } else if (['pie', 'doughnut'].includes(chartType)) {
-      config.data.datasets = [{
-        data: rawData.data || (rawData.status ? Object.values(rawData.status) : []),
-        backgroundColor: ['#7C3AED', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'],
-        borderWidth: 0
-      }];
-      if (!config.data.labels.length) {
-        config.data.labels = rawData.labels || (rawData.status ? Object.keys(rawData.status).map(s => s.replace('_', ' ').toUpperCase()) : []);
-      }
-    } else {
-      config.data.datasets = [{
-        label: rawData.label || 'Revenue ($)',
-        data: rawData.data || [],
-        backgroundColor: chartType === 'area' ? 'rgba(124, 58, 237, 0.25)' : (chartType === 'line' ? '#7C3AED' : 'rgba(124, 58, 237, 0.85)'),
-        borderColor: '#7C3AED',
-        borderWidth: 2,
-        fill: chartType === 'area',
-        tension: 0.35,
-        borderRadius: chartType === 'bar' ? 6 : 0
-      }];
-    }
-
-    activeCharts[canvasId] = new Chart(ctx, config);
+    activeCharts[canvasId] = new Chart(ctx, chartConfig);
   }
 
-  /**
-   * Renders visual Heatmap Grid for workload & activity density.
-   */
-  function renderHeatmapGrid(container, data) {
-    const matrix = data.matrix || [];
-    const days = data.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-    let html = `<div class="heatmap-wrapper">
-      <div class="heatmap-header-row">
-        ${days.map(d => `<div class="heatmap-header-cell">${d}</div>`).join('')}
-      </div>`;
-
-    matrix.forEach(week => {
-      html += `<div class="heatmap-week-row">`;
-      week.forEach(cell => {
-        const bgOpacity = Math.max(0.1, cell.intensity / 100);
-        const bgColor = cell.intensity > 50 
-          ? `rgba(124, 58, 237, ${bgOpacity})` 
-          : `rgba(16, 185, 129, ${bgOpacity})`;
-        
-        html += `<div class="heatmap-cell" style="background:${bgColor};" title="${cell.date}: $${cell.val.toLocaleString()}">
-          <span class="heatmap-date">${cell.date}</span>
-          <span class="heatmap-val">$${cell.val > 0 ? cell.val : 0}</span>
-        </div>`;
-      });
-      html += `</div>`;
-    });
-
-    html += `</div>`;
-    container.innerHTML = html;
-  }
-
-  /**
-   * Export Current Data to CSV
-   */
   function exportCSV(filename, labels, data) {
-    let csv = 'Label/Date,Value\n';
+    let csv = 'Label,Value\n';
     labels.forEach((lbl, idx) => {
       csv += `"${lbl}",${data[idx] || 0}\n`;
     });
@@ -195,13 +165,14 @@ window.VisualizationStudio = (function () {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = filename || 'freelancetrack_report.csv';
+    link.download = filename || 'analytics_report.csv';
     link.click();
   }
 
   return {
     renderChart: renderChart,
     exportCSV: exportCSV,
+    loadDashboardAnalytics: loadDashboardAnalytics,
     initRevenueGoalTracker: initRevenueGoalTracker
   };
 })();

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Payment Receipt — FreelanceTrack{% endblock %}
+{% block page_title %}Payment Receipt{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
+  <a href="{% url 'core:payment_list' %}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-1"></i> Back to Payments
+  </a>
+  <button onclick="window.print()" class="btn btn-primary">
+    <i class="fas fa-print me-1"></i> Print Receipt
+  </button>
+</div>
+
+<div class="card p-5 shadow-sm mx-auto" style="max-width:700px;background:#fff;color:#1e293b;">
+  <div class="text-center mb-4 pb-3 border-bottom">
+    <div class="p-3 rounded-circle bg-success-subtle text-success d-inline-block mb-2">
+      <i class="fas fa-check-circle fa-3x"></i>
+    </div>
+    <h3 class="fw-bold mb-1">PAYMENT RECEIPT</h3>
+    <p class="text-muted small mb-0">Official proof of payment receipt</p>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-6">
+      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;">Issued By</h6>
+      <h6 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h6>
+      <p class="small text-muted mb-0">{{ user.email }}</p>
+    </div>
+    <div class="col-6 text-end">
+      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;">Client</h6>
+      <h6 class="fw-bold mb-1">{{ payment.project.client.name }}</h6>
+      <p class="small text-muted mb-0">{{ payment.project.client.company|default:"" }}</p>
+    </div>
+  </div>
+
+  <table class="table table-bordered mb-4">
+    <tbody>
+      <tr>
+        <th class="bg-light">Project Name</th>
+        <td>{{ payment.project.name }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light">Amount Received</th>
+        <td class="fw-bold text-success fs-5">${{ payment.amount }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light">Payment Method</th>
+        <td>{{ payment.get_payment_method_display }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light">Payment Date</th>
+        <td>{{ payment.paid_date|date:"F d, Y"|default:payment.created_at|date:"F d, Y" }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light">Invoice Reference</th>
+        <td>#{{ payment.invoice_number|default:"N/A" }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light">Status</th>
+        <td><span class="badge bg-success">PAID / CONFIRMED</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  {% if payment.description %}
+    <div class="mb-4">
+      <h6 class="fw-bold small text-muted">Description / Notes</h6>
+      <p class="small text-secondary mb-0">{{ payment.description }}</p>
+    </div>
+  {% endif %}
+
+  <div class="text-center pt-4 border-top text-muted small">
+    Thank you for your prompt payment! If you have any questions, please contact {{ user.email }}.
+  </div>
+</div>
+{% endblock %}

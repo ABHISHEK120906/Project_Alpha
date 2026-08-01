@@ -71,99 +71,191 @@
   </div>
 </div>
 
-<!-- ── Top Metric Cards (Matching Purple-Violet Dashboard Theme) ── -->
-<div class="row g-3 mb-4">
-
-  <!-- Total Clients -->
-  <div class="col-sm-6 col-xl-3">
-    <a href="{% url 'core:client_list' %}" style="text-decoration:none;">
-      <div class="stat-card h-100">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <div class="stat-icon" style="background:var(--primary-soft);color:var(--primary);">
-            <i class="fas fa-users"></i>
-          </div>
-          <span class="stat-trend up"><i class="fas fa-arrow-up"></i> +12%</span>
-        </div>
-        <div class="stat-value stat-number" id="totalClientsStat" data-target="{{ total_clients }}">0</div>
-        <div class="stat-label">Total Clients</div>
-      </div>
-    </a>
-  </div>
-
-  <!-- Total Projects -->
-  <div class="col-sm-6 col-xl-3">
-    <a href="{% url 'core:project_list' %}" style="text-decoration:none;">
-      <div class="stat-card h-100">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <div class="stat-icon" style="background:var(--success-soft);color:var(--success);">
-            <i class="fas fa-folder-open"></i>
-          </div>
-          <span class="stat-trend up"><i class="fas fa-arrow-up"></i> +8%</span>
-        </div>
-        <div class="stat-value stat-number" id="totalProjectsStat" data-target="{{ total_projects }}">0</div>
-        <div class="stat-label">Total Projects</div>
-      </div>
-    </a>
-  </div>
-
-  <!-- Total Earnings -->
-  <div class="col-sm-6 col-xl-3">
-    <a href="{% url 'core:payment_list' %}?status=paid" style="text-decoration:none;">
-      <div class="stat-card h-100">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <div class="stat-icon" style="background:var(--accent-soft);color:var(--accent);">
-            <i class="fas fa-dollar-sign"></i>
-          </div>
-          <span class="stat-trend up"><i class="fas fa-arrow-up"></i> +24%</span>
-        </div>
-        <div class="stat-value stat-number" id="totalRevenueStat" data-prefix="$" data-target="{{ total_earnings }}">0</div>
-        <div class="stat-label">Total Revenue</div>
-      </div>
-    </a>
-  </div>
-
-  <!-- Pending Payments -->
-  <div class="col-sm-6 col-xl-3">
-    <a href="{% url 'core:payment_list' %}?status=pending" style="text-decoration:none;">
-      <div class="stat-card h-100">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <div class="stat-icon" style="background:var(--warning-soft);color:var(--warning);">
-            <i class="fas fa-clock"></i>
-          </div>
-          <span class="stat-trend down"><i class="fas fa-arrow-down"></i> -4%</span>
-        </div>
-        <div class="stat-value stat-number" id="pendingAmountStat" data-prefix="$" data-target="{{ pending_payments }}">0</div>
-        <div class="stat-label">Pending Payments</div>
-      </div>
-    </a>
-  </div>
-
+<!-- ── Interactive Analytics Filter Bar (Feature 17) ── -->
+<div class="card p-3 mb-4" style="background:var(--bg-secondary);border:1px solid var(--border-color);">
+  <form id="analyticsFilterForm" class="row g-2 align-items-center">
+    <div class="col-6 col-md-3">
+      <label class="form-label mb-1 small fw-bold"><i class="fas fa-calendar-alt text-primary me-1"></i> Date Range</label>
+      <select name="range" class="form-select form-select-sm">
+        <option value="7d">Last 7 Days</option>
+        <option value="30d" selected>Last 30 Days</option>
+        <option value="90d">Last 90 Days</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <label class="form-label mb-1 small fw-bold"><i class="fas fa-filter text-primary me-1"></i> Status</label>
+      <select name="status" class="form-select form-select-sm">
+        <option value="">All Statuses</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+        <option value="pending">Pending</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <label class="form-label mb-1 small fw-bold"><i class="fas fa-flag text-primary me-1"></i> Priority</label>
+      <select name="priority" class="form-select form-select-sm">
+        <option value="">All Priorities</option>
+        <option value="urgent">Urgent</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-3 d-flex align-items-end">
+      <button type="button" onclick="VisualizationStudio.loadDashboardAnalytics()" class="btn btn-sm btn-primary w-100 mt-3">
+        <i class="fas fa-sync-alt me-1"></i> Update Analytics
+      </button>
+    </div>
+  </form>
 </div>
 
-<!-- ── Secondary Quick Stats ──────────────────────────────────── -->
+<!-- ── Feature 1: 15 Comprehensive Dashboard Metric Cards ── -->
 <div class="row g-3 mb-4">
-  <div class="col-6 col-md-3">
-    <div class="card text-center py-3">
-      <div style="font-size:24px;font-weight:800;color:var(--success);">{{ completed_projects }}</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text-muted);">Completed Projects</div>
+  <!-- Total Projects -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-folder"></i></div>
+      <div class="stat-value fw-bold fs-4">{{ total_projects }}</div>
+      <div class="stat-label small text-muted">Total Projects</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="card text-center py-3">
-      <div style="font-size:24px;font-weight:800;color:var(--primary);">{{ in_progress_projects }}</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text-muted);">In Progress</div>
+  <!-- Active Projects -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-spinner"></i></div>
+      <div class="stat-value fw-bold fs-4">{{ active_projects }}</div>
+      <div class="stat-label small text-muted">Active Projects</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="card text-center py-3">
-      <div style="font-size:24px;font-weight:800;color:var(--warning);">{{ pending_projects }}</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text-muted);">Pending Review</div>
+  <!-- Pending Projects -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-clock"></i></div>
+      <div class="stat-value fw-bold fs-4">{{ pending_projects }}</div>
+      <div class="stat-label small text-muted">Pending Projects</div>
     </div>
   </div>
-  <div class="col-6 col-md-3">
-    <div class="card text-center py-3">
-      <div style="font-size:24px;font-weight:800;color:var(--accent);">{{ total_tasks }}</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text-muted);">Total Tasks</div>
+  <!-- Completed Projects -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-value fw-bold fs-4">{{ completed_projects }}</div>
+      <div class="stat-label small text-muted">Completed Projects</div>
+    </div>
+  </div>
+  <!-- Cancelled Projects -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-times-circle"></i></div>
+      <div class="stat-value fw-bold fs-4">{{ cancelled_projects }}</div>
+      <div class="stat-label small text-muted">Cancelled Projects</div>
+    </div>
+  </div>
+  <!-- Total Clients -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-users"></i></div>
+      <div class="stat-value fw-bold fs-4">{{ total_clients }}</div>
+      <div class="stat-label small text-muted">Total Clients</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <!-- Total Income -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
+      <div class="stat-value fw-bold fs-5 text-success">${{ total_income|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Total Income</div>
+    </div>
+  </div>
+  <!-- Total Expenses -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-credit-card"></i></div>
+      <div class="stat-value fw-bold fs-5 text-danger">${{ total_expenses|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Total Expenses</div>
+    </div>
+  </div>
+  <!-- Net Profit -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-chart-line"></i></div>
+      <div class="stat-value fw-bold fs-5 text-primary">${{ net_profit|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Net Profit</div>
+    </div>
+  </div>
+  <!-- Pending Payments -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
+      <div class="stat-value fw-bold fs-5 text-warning">${{ pending_payments|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Pending Payments</div>
+    </div>
+  </div>
+  <!-- Completed Payments -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-check-double"></i></div>
+      <div class="stat-value fw-bold fs-5 text-success">${{ completed_payments|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Completed Payments</div>
+    </div>
+  </div>
+  <!-- Overdue Payments -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-exclamation-circle"></i></div>
+      <div class="stat-value fw-bold fs-5 text-danger">${{ overdue_payments|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Overdue Payments</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Feature 17: Rich Interactive Visualization Panels ── -->
+<div class="row g-4 mb-4">
+  <!-- Multi-Line Financial Trend -->
+  <div class="col-lg-8">
+    <div class="card p-3 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-area text-primary me-2"></i> Financial Performance (Income, Expenses, Net Profit)</h6>
+      </div>
+      <div style="height:320px;position:relative;">
+        <canvas id="financialTrendChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Status Distribution Doughnut -->
+  <div class="col-lg-4">
+    <div class="card p-3 h-100">
+      <h6 class="fw-bold mb-3"><i class="fas fa-pie-chart text-success me-2"></i> Project Status Breakdown</h6>
+      <div style="height:320px;position:relative;">
+        <canvas id="statusDistChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Priority Bar Chart -->
+  <div class="col-lg-6">
+    <div class="card p-3 h-100">
+      <h6 class="fw-bold mb-3"><i class="fas fa-signal text-warning me-2"></i> Projects by Priority Level</h6>
+      <div style="height:260px;position:relative;">
+        <canvas id="priorityDistChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue by Client Horizontal Bar -->
+  <div class="col-lg-6">
+    <div class="card p-3 h-100">
+      <h6 class="fw-bold mb-3"><i class="fas fa-building text-info me-2"></i> Top Revenue Generating Clients</h6>
+      <div style="height:260px;position:relative;">
+        <canvas id="clientRevenueChart"></canvas>
+      </div>
     </div>
   </div>
 </div>

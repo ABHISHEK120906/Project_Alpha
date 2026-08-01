@@ -154,6 +154,79 @@ def seed_user_data(user):
             defaults=pm_data
         )
 
+    # Seed UserProfile
+    from core.models import UserProfile, Income, Expense, Invoice, InvoiceItem, Notification, CalendarEvent
+    UserProfile.objects.get_or_create(
+        user=user,
+        defaults={
+            'phone_number': '+1 (555) 987-6543',
+            'address': '742 Evergreen Terrace, Tech Hub, CA 90210',
+            'bio': 'Senior Full-Stack Freelance Developer specializing in Python, Django, React, and Enterprise Web Analytics.',
+            'skills': 'Python, Django, JavaScript, React, PostgreSQL, TailwindCSS, AWS, UI/UX',
+            'experience': '6+ years full-stack web application development',
+            'portfolio_website': 'https://freelancer-portfolio.example.com',
+            'social_github': 'https://github.com/freelancer',
+            'social_linkedin': 'https://linkedin.com/in/freelancer'
+        }
+    )
+
+    # Seed Incomes & Expenses
+    incomes_data = [
+        {'title': 'Retainer Fee - Acme Global', 'client': clients['Acme Global Corp'], 'project': projects['E-Commerce Platform Redesign'], 'amount': Decimal('3500.00'), 'category': 'retainer', 'date': today - timedelta(days=14)},
+        {'title': 'Consulting Milestone - Quantum', 'client': clients['Quantum Tech'], 'project': projects['Mobile App REST API Backend'], 'amount': Decimal('2800.00'), 'category': 'consulting', 'date': today - timedelta(days=5)},
+    ]
+    for inc_d in incomes_data:
+        Income.objects.get_or_create(user=user, title=inc_d['title'], defaults=inc_d)
+
+    expenses_data = [
+        {'title': 'JetBrains PyCharm Professional License', 'amount': Decimal('249.00'), 'category': 'software', 'date': today - timedelta(days=30)},
+        {'title': 'AWS Cloud Hosting Server', 'amount': Decimal('180.50'), 'category': 'software', 'date': today - timedelta(days=15)},
+        {'title': 'Figma Organization Plan', 'amount': Decimal('45.00'), 'category': 'software', 'date': today - timedelta(days=10)},
+    ]
+    for exp_d in expenses_data:
+        Expense.objects.get_or_create(user=user, title=exp_d['title'], defaults=exp_d)
+
+    # Seed Invoice
+    inv, created = Invoice.objects.get_or_create(
+        user=user, invoice_number='INV-2026-001',
+        defaults={
+            'client': clients['Acme Global Corp'],
+            'project': projects['E-Commerce Platform Redesign'],
+            'issue_date': today - timedelta(days=10),
+            'due_date': today + timedelta(days=4),
+            'status': 'sent',
+            'subtotal': Decimal('5000.00'),
+            'tax_rate': Decimal('10.00'),
+            'tax_amount': Decimal('500.00'),
+            'discount_amount': Decimal('0.00'),
+            'total': Decimal('5500.00'),
+            'notes': 'Payment due within 14 days of issue via Bank Transfer.'
+        }
+    )
+    if created:
+        InvoiceItem.objects.create(invoice=inv, description='E-Commerce Frontend UI Implementation', quantity=Decimal('1'), unit_price=Decimal('3000.00'), amount=Decimal('3000.00'))
+        InvoiceItem.objects.create(invoice=inv, description='Stripe Gateway & Cart Integration', quantity=Decimal('1'), unit_price=Decimal('2000.00'), amount=Decimal('2000.00'))
+
+    # Seed Notifications
+    notifs_data = [
+        {'title': 'E-Commerce Project Deadline Approaching', 'message': 'Project deadline is in 5 days on ' + (today + timedelta(days=5)).strftime('%b %d'), 'notification_type': 'deadline'},
+        {'title': 'Payment Received from Quantum Tech', 'message': 'Payment of $3,100.00 confirmed for REST API Backend', 'notification_type': 'payment'},
+        {'title': 'Invoice INV-2026-001 Sent', 'message': 'Invoice emailed to Acme Global Corp', 'notification_type': 'invoice'},
+    ]
+    for ntf_d in notifs_data:
+        if not Notification.objects.filter(user=user, title=ntf_d['title']).exists():
+            Notification.objects.create(user=user, title=ntf_d['title'], message=ntf_d['message'], notification_type=ntf_d['notification_type'])
+
+    # Seed Calendar Event
+    if not CalendarEvent.objects.filter(user=user, title='Client Review Meeting - Acme Corp').exists():
+        CalendarEvent.objects.create(
+            user=user, title='Client Review Meeting - Acme Corp',
+            event_type='meeting',
+            start_time=timezone.now() + timedelta(days=2),
+            project=projects['E-Commerce Platform Redesign'],
+            description='Sprint 3 demo and progress review meeting.'
+        )
+
     notes_data = [
         {'title': 'Client Kickoff Meeting Notes', 'content': 'Acme Corp team prefers clean purple/indigo color schemes with responsive drawer sidebar layout.'},
         {'title': 'API Rate Limits & Authentication', 'content': 'Enforce sliding window rate limit of 100 calls/min on /api/v1/ endpoints.'},
@@ -162,10 +235,9 @@ def seed_user_data(user):
     ]
 
     for n_data in notes_data:
-        Note.objects.get_or_create(
-            user=user, title=n_data['title'],
-            defaults={'content': n_data['content']}
-        )
+        note_obj = Note.objects.filter(user=user, title=n_data['title']).first()
+        if not note_obj:
+            Note.objects.create(user=user, title=n_data['title'], content=n_data['content'])
 
     import uuid
     logs_data = [

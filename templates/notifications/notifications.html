@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Notifications — FreelanceTrack{% endblock %}
+{% block page_title %}Notification Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">Notification History</h4>
+    <p class="text-muted small mb-0">Project updates, payment reminders, deadlines, and system notices.</p>
+  </div>
+  <form method="post" action="{% url 'core:notification_read_all' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-primary btn-sm">
+      <i class="fas fa-check-double me-1"></i> Mark All as Read
+    </button>
+  </form>
+</div>
+
+<div class="card p-3">
+  <div class="list-group list-group-flush">
+    {% for notif in notifications %}
+      <div class="list-group-item px-3 py-3 d-flex justify-content-between align-items-center {% if not notif.is_read %}bg-light border-start border-primary border-4{% endif %}">
+        <div class="d-flex align-items-center gap-3">
+          <div class="p-2 rounded-circle bg-primary-subtle text-primary">
+            {% if notif.notification_type == 'deadline' %}
+              <i class="fas fa-exclamation-triangle text-warning"></i>
+            {% elif notif.notification_type == 'payment' %}
+              <i class="fas fa-dollar-sign text-success"></i>
+            {% elif notif.notification_type == 'invoice' %}
+              <i class="fas fa-file-invoice text-info"></i>
+            {% else %}
+              <i class="fas fa-bell text-primary"></i>
+            {% endif %}
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">{{ notif.title }}</h6>
+            <p class="small text-secondary mb-1">{{ notif.message }}</p>
+            <span class="small text-muted">{{ notif.created_at|date:"M d, Y H:i" }}</span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          {% if not notif.is_read %}
+            <form method="post" action="{% url 'core:notification_mark_read' notif.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-secondary" title="Mark Read"><i class="fas fa-check"></i></button>
+            </form>
+          {% endif %}
+          <form method="post" action="{% url 'core:notification_delete' notif.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+          </form>
+        </div>
+      </div>
+    {% empty %}
+      <div class="text-center py-5 text-muted">
+        <i class="fas fa-bell-slash fa-3x mb-3 text-secondary d-block"></i>
+        No notifications to display.
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

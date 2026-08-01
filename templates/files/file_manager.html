@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}File Manager — FreelanceTrack{% endblock %}
+{% block page_title %}File Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">Central File Manager</h4>
+    <p class="text-muted small mb-0">Upload, organize, preview, and download project attachments and assets.</p>
+  </div>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
+    <i class="fas fa-upload me-1"></i> Upload File
+  </button>
+</div>
+
+<!-- Search & Filter Bar -->
+<div class="card p-3 mb-4">
+  <form method="get" class="row g-2 align-items-center">
+    <div class="col-md-6">
+      <input type="text" name="search" class="form-control" placeholder="Search by file name..." value="{{ request.GET.search|default:'' }}">
+    </div>
+    <div class="col-md-4">
+      <select name="project" class="form-select">
+        <option value="">All Projects</option>
+        {% for p in projects %}
+          <option value="{{ p.id }}" {% if request.GET.project == p.id|stringformat:'s' %}selected{% endif %}>{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-secondary w-100"><i class="fas fa-filter me-1"></i> Filter</button>
+    </div>
+  </form>
+</div>
+
+<!-- Files Grid -->
+<div class="row g-3">
+  {% for file in files %}
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 p-3 text-center position-relative">
+        <div class="mb-3" style="font-size:42px;color:var(--primary);">
+          {% if file.file_type in 'jpg png jpeg gif webp' %}
+            <i class="fas fa-file-image text-success"></i>
+          {% elif file.file_type == 'pdf' %}
+            <i class="fas fa-file-pdf text-danger"></i>
+          {% elif file.file_type in 'doc docx' %}
+            <i class="fas fa-file-word text-primary"></i>
+          {% elif file.file_type in 'xls xlsx csv' %}
+            <i class="fas fa-file-excel text-success"></i>
+          {% elif file.file_type in 'zip rar 7z' %}
+            <i class="fas fa-file-archive text-warning"></i>
+          {% else %}
+            <i class="fas fa-file text-secondary"></i>
+          {% endif %}
+        </div>
+        <h6 class="fw-bold text-truncate mb-1" title="{{ file.file_name }}">{{ file.file_name }}</h6>
+        <p class="small text-muted mb-2">{{ file.project.name|default:"General Asset" }}</p>
+        <span class="badge bg-light text-dark mb-3">
+          {% widthratio file.file_size 1024 1 %} KB • {{ file.uploaded_at|date:"M d, Y" }}
+        </span>
+
+        <div class="d-flex justify-content-center gap-2 mt-auto">
+          <a href="{{ file.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary" title="Preview / Download">
+            <i class="fas fa-download"></i>
+          </a>
+          <form method="post" action="{% url 'core:file_delete' file.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete file {{ file.file_name }}?')" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12 text-center py-5 text-muted">
+      <i class="fas fa-folder-open fa-3x mb-3 text-secondary d-block"></i>
+      No files found. Click "Upload File" to attach project files.
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadFileModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'core:file_upload' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-header-title fw-bold"><i class="fas fa-upload text-primary me-2"></i> Upload File</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Select Project (Optional)</label>
+            {{ file_form.project }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Choose File</label>
+            {{ file_form.file }}
+            <div class="form-text">Supports Images, PDFs, Word, Excel, and ZIP archives.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Upload Now</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

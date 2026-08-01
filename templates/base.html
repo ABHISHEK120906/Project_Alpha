@@ -88,12 +88,36 @@
       <span>Tasks</span>
     </a>
 
-    <p class="sidebar-section-label">Finance & Analytics</p>
+    <a href="{% url 'core:calendar_view' %}"
+       class="sidebar-link {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-calendar-alt nav-icon"></i>
+      <span>Calendar</span>
+    </a>
+
+    <p class="sidebar-section-label">Finance & Assets</p>
 
     <a href="{% url 'core:payment_list' %}"
        class="sidebar-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
       <i class="fas fa-dollar-sign nav-icon"></i>
       <span>Payments</span>
+    </a>
+
+    <a href="{% url 'core:income_expense_tracker' %}"
+       class="sidebar-link {% if 'income' in request.resolver_match.url_name or 'finances' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-wallet nav-icon"></i>
+      <span>Income & Expenses</span>
+    </a>
+
+    <a href="{% url 'core:invoice_list' %}"
+       class="sidebar-link {% if 'invoice' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-file-invoice-dollar nav-icon"></i>
+      <span>Invoices</span>
+    </a>
+
+    <a href="{% url 'core:file_manager' %}"
+       class="sidebar-link {% if 'file' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-paperclip nav-icon"></i>
+      <span>File Manager</span>
     </a>
 
     <a href="{% url 'core:reports_dashboard' %}"
@@ -102,7 +126,19 @@
       <span>Reports</span>
     </a>
 
-    <p class="sidebar-section-label">Preferences</p>
+    <p class="sidebar-section-label">Account & Tools</p>
+
+    <a href="{% url 'core:profile_view' %}"
+       class="sidebar-link {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-user-circle nav-icon"></i>
+      <span>My Profile</span>
+    </a>
+
+    <a href="{% url 'core:notifications_list' %}"
+       class="sidebar-link {% if 'notification' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-bell nav-icon"></i>
+      <span>Notifications</span>
+    </a>
 
     <a href="{% url 'core:note_list' %}"
        class="sidebar-link {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
@@ -123,23 +159,25 @@
     </a>
   </nav>
 
-  <!-- Sidebar Promo Card (Matching Reference UI) -->
+  <!-- Sidebar Promo Card -->
   <div class="sidebar-promo">
-    <h6>Become a Pro User</h6>
-    <p>Unlock advanced reports & unlimited exports</p>
-    <button class="btn-promo">Upgrade Plan</button>
+    <h6>FreelanceTrack Pro</h6>
+    <p>Advanced Analytics & Invoicing Active</p>
   </div>
 
-    <!-- Sidebar User Profile Footer -->
+  <!-- Sidebar User Profile Footer -->
   <div class="sidebar-footer">
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
+    <a href="{% url 'core:profile_view' %}" class="sidebar-user" style="text-decoration:none;">
+      {% if user.profile and user.profile.profile_picture %}
+        <img src="{{ user.profile.profile_picture.url }}" class="sidebar-avatar" style="object-fit:cover;width:36px;height:36px;border-radius:50%;">
+      {% else %}
+        <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
+      {% endif %}
       <div>
         <div style="font-size:13px;font-weight:700;color:#fff;">{{ user.get_full_name|default:user.username }}</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.6);">Freelancer</div>
       </div>
-    </div>
-    <!-- H-02: Logout must be POST to prevent CSRF-logout via GET image/link attacks -->
+    </a>
     <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
       {% csrf_token %}
       <button type="submit" class="sidebar-link mt-2 w-100 text-start"
@@ -165,18 +203,29 @@
       </div>
     </div>
 
-    <!-- Search Pill (Matching Reference UI) -->
-    <div class="topbar-search d-none d-md-block">
+    <!-- Global Search Input -->
+    <form action="{% url 'core:global_search' %}" method="get" class="topbar-search d-none d-md-block" style="margin:0;">
       <i class="fas fa-search search-icon"></i>
-      <input type="text" placeholder="Search projects, clients..." aria-label="Search">
-    </div>
+      <input type="text" name="q" placeholder="Search projects, clients, tasks, invoices..." value="{{ request.GET.q|default:'' }}" aria-label="Search">
+    </form>
 
-    <div class="topbar-actions">
+    <div class="topbar-actions d-flex align-items-center gap-2">
       <!-- Dark Mode Toggle -->
-      <label class="dark-mode-toggle d-flex align-items-center" title="Toggle theme">
+      <label class="dark-mode-toggle d-flex align-items-center mb-0" title="Toggle theme">
         <input type="checkbox" id="themeToggle" aria-label="Dark mode">
         <span class="dark-mode-slider"></span>
       </label>
+
+      <!-- Notifications Bell Icon -->
+      <a href="{% url 'core:notifications_list' %}" class="topbar-btn position-relative" title="Notifications">
+        <i class="fas fa-bell"></i>
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="notifBadge" style="display:none;"></span>
+      </a>
+
+      <!-- Profile Link -->
+      <a href="{% url 'core:profile_view' %}" class="topbar-btn" title="My Profile">
+        <i class="fas fa-user"></i>
+      </a>
 
       <!-- Quick New Project Action Button -->
       <a href="{% url 'core:project_create' %}" class="topbar-btn" title="Create New Project">

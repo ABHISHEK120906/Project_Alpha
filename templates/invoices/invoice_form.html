@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Create Invoice — FreelanceTrack{% endblock %}
+{% block page_title %}Create New Invoice{% endblock %}
+
+{% block content %}
+<div class="card p-4 mx-auto" style="max-width:850px;">
+  <h4 class="fw-bold mb-4"><i class="fas fa-file-invoice-dollar text-primary me-2"></i> Invoice Builder</h4>
+
+  <form method="post" action="{% url 'core:invoice_create' %}" id="invoiceForm">
+    {% csrf_token %}
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Invoice Number</label>
+        {{ form.invoice_number }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Status</label>
+        {{ form.status }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Client</label>
+        {{ form.client }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Associated Project</label>
+        {{ form.project }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Issue Date</label>
+        {{ form.issue_date }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Due Date</label>
+        {{ form.due_date }}
+      </div>
+    </div>
+
+    <!-- Line Items Section -->
+    <h5 class="fw-bold mt-4 mb-3"><i class="fas fa-list me-2"></i> Line Items</h5>
+    <div id="lineItemsContainer">
+      <div class="row g-2 mb-2 item-row">
+        <div class="col-6">
+          <input type="text" name="item_description" class="form-control" placeholder="Item description (e.g. Web Development)" required>
+        </div>
+        <div class="col-2">
+          <input type="number" step="0.01" name="item_quantity" class="form-control qty-input" value="1" placeholder="Qty">
+        </div>
+        <div class="col-3">
+          <input type="number" step="0.01" name="item_unit_price" class="form-control price-input" placeholder="Unit Price ($)">
+        </div>
+        <div class="col-1 d-flex align-items-center">
+          <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-outline-primary mt-2 mb-4" id="addRowBtn">
+      <i class="fas fa-plus me-1"></i> Add Line Item
+    </button>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Tax Rate (%)</label>
+        {{ form.tax_rate }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Discount Amount ($)</label>
+        {{ form.discount_amount }}
+      </div>
+      <div class="col-12">
+        <label class="form-label fw-bold">Invoice Notes / Bank Details</label>
+        {{ form.notes }}
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <a href="{% url 'core:invoice_list' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary px-4"><i class="fas fa-check me-1"></i> Save & Generate Invoice</button>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.getElementById('lineItemsContainer');
+  const addBtn = document.getElementById('addRowBtn');
+
+  addBtn.addEventListener('click', function() {
+    const row = document.createElement('div');
+    row.className = 'row g-2 mb-2 item-row';
+    row.innerHTML = `
+      <div class="col-6">
+        <input type="text" name="item_description" class="form-control" placeholder="Item description" required>
+      </div>
+      <div class="col-2">
+        <input type="number" step="0.01" name="item_quantity" class="form-control qty-input" value="1" placeholder="Qty">
+      </div>
+      <div class="col-3">
+        <input type="number" step="0.01" name="item_unit_price" class="form-control price-input" placeholder="Unit Price ($)">
+      </div>
+      <div class="col-1 d-flex align-items-center">
+        <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn"><i class="fas fa-times"></i></button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+
+  container.addEventListener('click', function(e) {
+    if (e.target.closest('.remove-row-btn')) {
+      const rows = container.querySelectorAll('.item-row');
+      if (rows.length > 1) {
+        e.target.closest('.item-row').remove();
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

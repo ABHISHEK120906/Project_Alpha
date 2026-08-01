@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Invoice #{{ invoice.invoice_number }} — FreelanceTrack{% endblock %}
+{% block page_title %}Invoice Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
+  <a href="{% url 'core:invoice_list' %}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-1"></i> Back to Invoices
+  </a>
+  <div class="d-flex gap-2">
+    <button onclick="window.print()" class="btn btn-primary">
+      <i class="fas fa-print me-1"></i> Print / Save as PDF
+    </button>
+    <form method="post" action="{% url 'core:invoice_email' invoice.pk %}" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-info text-white">
+        <i class="fas fa-paper-plane me-1"></i> Email to Client
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="card p-5 shadow-sm mx-auto" style="max-width:850px;background:#fff;color:#1e293b;">
+  <!-- Invoice Header -->
+  <div class="row align-items-center mb-4 pb-3 border-bottom">
+    <div class="col-6">
+      <h2 class="fw-bold text-primary mb-1"><i class="fas fa-wallet me-2"></i>FreelanceTrack</h2>
+      <p class="text-muted small mb-0">Professional Freelance Services</p>
+    </div>
+    <div class="col-6 text-end">
+      <h3 class="fw-bold mb-0">INVOICE</h3>
+      <div class="text-muted">#{{ invoice.invoice_number }}</div>
+      <span class="badge bg-primary text-white mt-1">{{ invoice.get_status_display|upper }}</span>
+    </div>
+  </div>
+
+  <!-- Parties Info -->
+  <div class="row mb-4">
+    <div class="col-6">
+      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;letter-spacing:1px;">Billed From</h6>
+      <h5 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h5>
+      <p class="small text-muted mb-0">{{ user.email }}</p>
+      {% if profile.phone_number %}<p class="small text-muted mb-0">Phone: {{ profile.phone_number }}</p>{% endif %}
+      {% if profile.address %}<p class="small text-muted mb-0">{{ profile.address }}</p>{% endif %}
+    </div>
+    <div class="col-6 text-end">
+      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;letter-spacing:1px;">Billed To</h6>
+      <h5 class="fw-bold mb-1">{{ invoice.client.name }}</h5>
+      {% if invoice.client.company %}<p class="small text-muted mb-0">{{ invoice.client.company }}</p>{% endif %}
+      <p class="small text-muted mb-0">{{ invoice.client.email }}</p>
+      {% if invoice.client.address %}<p class="small text-muted mb-0">{{ invoice.client.address }}</p>{% endif %}
+    </div>
+  </div>
+
+  <!-- Dates & Metadata -->
+  <div class="row bg-light rounded p-3 mb-4 mx-0">
+    <div class="col-4">
+      <span class="small text-muted d-block">Issue Date</span>
+      <strong class="small">{{ invoice.issue_date|date:"F d, Y" }}</strong>
+    </div>
+    <div class="col-4">
+      <span class="small text-muted d-block">Due Date</span>
+      <strong class="small text-danger">{{ invoice.due_date|date:"F d, Y" }}</strong>
+    </div>
+    <div class="col-4 text-end">
+      <span class="small text-muted d-block">Associated Project</span>
+      <strong class="small">{{ invoice.project.name|default:"General Services" }}</strong>
+    </div>
+  </div>
+
+  <!-- Line Items Table -->
+  <div class="table-responsive mb-4">
+    <table class="table align-middle border-bottom">
+      <thead class="bg-light">
+        <tr>
+          <th>Description</th>
+          <th class="text-center">Qty</th>
+          <th class="text-end">Unit Price</th>
+          <th class="text-end">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in invoice.items.all %}
+          <tr>
+            <td>{{ item.description }}</td>
+            <td class="text-center">{{ item.quantity }}</td>
+            <td class="text-end">${{ item.unit_price|floatformat:2 }}</td>
+            <td class="text-end fw-bold">${{ item.amount|floatformat:2 }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" class="text-center text-muted">Project Services as agreed</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Totals Summary -->
+  <div class="row justify-content-end">
+    <div class="col-md-5">
+      <div class="d-flex justify-content-between mb-2">
+        <span class="text-muted">Subtotal:</span>
+        <strong>${{ invoice.subtotal|floatformat:2 }}</strong>
+      </div>
+      {% if invoice.tax_amount > 0 %}
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Tax ({{ invoice.tax_rate }}%):</span>
+          <strong>+${{ invoice.tax_amount|floatformat:2 }}</strong>
+        </div>
+      {% endif %}
+      {% if invoice.discount_amount > 0 %}
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Discount:</span>
+          <strong class="text-success">-${{ invoice.discount_amount|floatformat:2 }}</strong>
+        </div>
+      {% endif %}
+      <hr>
+      <div class="d-flex justify-content-between fs-5 fw-bold">
+        <span>Total Due:</span>
+        <span class="text-primary">${{ invoice.total|floatformat:2 }}</span>
+      </div>
+    </div>
+  </div>
+
+  {% if invoice.notes %}
+    <div class="mt-4 pt-3 border-top">
+      <h6 class="fw-bold small text-muted">Payment Notes & Terms</h6>
+      <p class="small text-secondary mb-0">{{ invoice.notes }}</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
