@@ -84,6 +84,7 @@ def api_dashboard_stats(request):
         "total_revenue": float(total_revenue),
         "pending_amount": float(pending_amount),
         "active_projects_count": active_projects_count,
+        "total_projects_count": user_projects.count(),
         "total_clients_count": total_clients_count,
         "pending_tasks_count": pending_tasks_count,
         "monthly_chart": {
@@ -93,6 +94,7 @@ def api_dashboard_stats(request):
         "status_chart": status_distribution,
         "recent_projects": recent_projects_serialized
     }
+
 
     return Response(payload, status=status.HTTP_200_OK)
 

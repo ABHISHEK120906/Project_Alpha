@@ -30,13 +30,14 @@ class SecurityHeadersMiddleware:
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
-            "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
+            "font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
             "img-src 'self' data: https:; "
             "connect-src 'self'; "
             "frame-ancestors 'none'; "
             "form-action 'self';"
         )
         response['Content-Security-Policy'] = csp
+
 
         # HSTS (Strict-Transport-Security) in production
         if not getattr(settings, 'DEBUG', True):

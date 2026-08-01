@@ -18,9 +18,10 @@ async function loadDashboardStats() {
     // 2. Update KPI numbers safely
     updateStatElement('totalRevenueStat', data.total_revenue, '$', '');
     updateStatElement('pendingAmountStat', data.pending_amount, '$', '');
-    updateStatElement('activeProjectsStat', data.active_projects_count, '', '');
+    updateStatElement('totalProjectsStat', data.total_projects_count ?? data.active_projects_count, '', '');
     updateStatElement('totalClientsStat', data.total_clients_count, '', '');
     updateStatElement('pendingTasksStat', data.pending_tasks_count, '', '');
+
 
     // 3. Render Chart.js charts dynamically
     renderEarningsChart(data.monthly_chart);
