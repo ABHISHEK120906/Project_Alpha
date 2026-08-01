@@ -1,0 +1,75 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% block title %}Database Management — Super Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold mb-1"><i class="fas fa-database text-warning me-2"></i> Database & Backup Management</h3>
+    <p class="text-muted small mb-0">Create database backups, inspect storage metrics, and restore data dumps.</p>
+  </div>
+  <a href="{% url 'core:admin_database_backup' %}" class="btn btn-purple btn-sm shadow-sm"><i class="fas fa-download me-1"></i> Create & Download Backup</a>
+</div>
+
+<!-- Metrics Row -->
+<div class="row g-4 mb-4">
+  <div class="col-md-6">
+    <div class="glass-card">
+      <h6 class="kpi-title text-warning mb-2"><i class="fas fa-hdd me-1"></i> Database File Size</h6>
+      <div class="kpi-value text-warning">{{ db_file_size }}</div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="glass-card">
+      <h6 class="kpi-title text-info mb-2"><i class="fas fa-folder-open me-1"></i> Media Storage Size</h6>
+      <div class="kpi-value text-info">{{ media_file_size }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Table Statistics -->
+  <div class="col-lg-7">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-table text-purple me-2"></i> Database Table Statistics</h6>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0 small">
+          <thead>
+            <tr>
+              <th>Table Name</th>
+              <th>Total Rows</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ts in table_stats %}
+            <tr>
+              <td class="fw-bold text-white"><i class="fas fa-list text-muted me-2"></i>{{ ts.name }}</td>
+              <td><span class="badge bg-purple">{{ ts.count }} Records</span></td>
+              <td><span class="text-success"><i class="fas fa-check-circle"></i> Healthy</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backup & Restore Panel -->
+  <div class="col-lg-5">
+    <div class="glass-card mb-4">
+      <h6 class="fw-bold mb-3 text-warning"><i class="fas fa-upload me-2"></i> Restore Database Backup</h6>
+      <p class="text-muted small">Upload a previously generated JSON fixture dump to restore platform records.</p>
+      <form action="{% url 'core:admin_database_restore' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label small">Select Backup JSON File</label>
+          <input type="file" name="backup_file" accept=".json" class="form-control bg-dark text-white border-secondary" required>
+        </div>
+        <button type="submit" class="btn btn-warning btn-sm w-100" onclick="return confirm('Restoring database will update system data. Continue?')">
+          <i class="fas fa-undo me-1"></i> Execute Restore
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

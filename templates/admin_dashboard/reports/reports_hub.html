@@ -1,0 +1,91 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% block title %}Reports & Analytics Hub — Super Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold mb-1"><i class="fas fa-file-invoice-dollar text-success me-2"></i> Reports & Analytics Hub</h3>
+    <p class="text-muted small mb-0">Generate, view, and export consolidated PDF and Excel reports for all platform operations.</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- 1. User Reports -->
+  <div class="col-md-4">
+    <div class="glass-card text-center p-4">
+      <div class="mb-3 text-info"><i class="fas fa-users fa-3x"></i></div>
+      <h5 class="fw-bold mb-2">User Reports</h5>
+      <p class="text-muted small mb-3">User catalogs, verification, roles, and status reports.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'core:admin_report_export' 'users' 'excel' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i> Excel</a>
+        <a href="{% url 'core:admin_report_export' 'users' 'pdf' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Project Reports -->
+  <div class="col-md-4">
+    <div class="glass-card text-center p-4">
+      <div class="mb-3 text-warning"><i class="fas fa-folder-open fa-3x"></i></div>
+      <h5 class="fw-bold mb-2">Project Reports</h5>
+      <p class="text-muted small mb-3">Global project status, budget, priority & freelancer assignments.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'core:admin_report_export' 'projects' 'excel' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i> Excel</a>
+        <a href="{% url 'core:admin_report_export' 'projects' 'pdf' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Client Reports -->
+  <div class="col-md-4">
+    <div class="glass-card text-center p-4">
+      <div class="mb-3 text-success"><i class="fas fa-user-tie fa-3x"></i></div>
+      <h5 class="fw-bold mb-2">Client Reports</h5>
+      <p class="text-muted small mb-3">Client directory, companies, project counts, and contact data.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'core:admin_report_export' 'clients' 'excel' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i> Excel</a>
+        <a href="{% url 'core:admin_report_export' 'clients' 'pdf' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Revenue Reports -->
+  <div class="col-md-4">
+    <div class="glass-card text-center p-4">
+      <div class="mb-3 text-purple"><i class="fas fa-wallet fa-3x"></i></div>
+      <h5 class="fw-bold mb-2">Revenue Reports</h5>
+      <p class="text-muted small mb-3">Complete payments & income streams breakdown.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'core:admin_report_export' 'revenue' 'excel' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i> Excel</a>
+        <a href="{% url 'core:admin_report_export' 'revenue' 'pdf' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Expense Reports -->
+  <div class="col-md-4">
+    <div class="glass-card text-center p-4">
+      <div class="mb-3 text-danger"><i class="fas fa-receipt fa-3x"></i></div>
+      <h5 class="fw-bold mb-2">Expense Reports</h5>
+      <p class="text-muted small mb-3">Operating & business expenses across all users.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'core:admin_report_export' 'expenses' 'excel' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i> Excel</a>
+        <a href="{% url 'core:admin_report_export' 'expenses' 'pdf' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Profit Reports -->
+  <div class="col-md-4">
+    <div class="glass-card text-center p-4">
+      <div class="mb-3 text-primary"><i class="fas fa-chart-line fa-3x"></i></div>
+      <h5 class="fw-bold mb-2">Profit & PnL Reports</h5>
+      <p class="text-muted small mb-3">Net profit margin summary and financial health indicators.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'core:admin_report_export' 'profit' 'excel' %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel me-1"></i> Excel</a>
+        <a href="{% url 'core:admin_report_export' 'profit' 'pdf' %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

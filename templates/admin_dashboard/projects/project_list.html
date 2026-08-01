@@ -1,0 +1,195 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% block title %}Global Project Management — Super Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold mb-1"><i class="fas fa-folder-open text-warning me-2"></i> Global Project Catalog</h3>
+    <p class="text-muted small mb-0">System-wide projects overview and batch controls.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btn btn-purple btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#createProjectModal"><i class="fas fa-folder-plus me-1"></i> New Project</button>
+    <a href="{% url 'core:admin_report_export' 'projects' 'excel' %}" class="btn btn-outline-success btn-sm"><i class="fas fa-file-excel me-1"></i> Export Excel</a>
+    <a href="{% url 'core:admin_report_export' 'projects' 'pdf' %}" class="btn btn-outline-danger btn-sm"><i class="fas fa-file-pdf me-1"></i> Export PDF</a>
+  </div>
+</div>
+
+<!-- Search & Filters -->
+<div class="glass-card mb-4">
+  <form method="get" class="row g-3 align-items-center">
+    <div class="col-md-5">
+      <div class="input-group input-group-sm">
+        <span class="input-group-text bg-dark border-secondary text-muted"><i class="fas fa-search"></i></span>
+        <input type="text" name="q" value="{{ search_query }}" class="form-control bg-dark text-white border-secondary" placeholder="Search project name, client, user...">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <select name="status" class="form-select form-select-sm bg-dark text-white border-secondary">
+        <option value="">All Statuses</option>
+        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="priority" class="form-select form-select-sm bg-dark text-white border-secondary">
+        <option value="">All Priorities</option>
+        <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Low</option>
+        <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Medium</option>
+        <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>High</option>
+        <option value="urgent" {% if priority_filter == 'urgent' %}selected{% endif %}>Urgent</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-purple btn-sm w-100"><i class="fas fa-filter me-1"></i> Filter</button>
+    </div>
+  </form>
+</div>
+
+<!-- Bulk Actions Form -->
+<form action="{% url 'core:admin_project_bulk_action' %}" method="post">
+  {% csrf_token %}
+  <div class="d-flex align-items-center justify-content-between mb-3 glass-card py-2">
+    <div class="d-flex align-items-center gap-2">
+      <input type="checkbox" id="selectAllProjects" class="form-check-input ms-2">
+      <label for="selectAllProjects" class="form-check-label small fw-bold">Select All</label>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <select name="bulk_action" class="form-select form-select-sm bg-dark text-white border-secondary" style="width:160px;">
+        <option value="complete">Mark Completed</option>
+        <option value="archive">Archive Projects</option>
+        <option value="delete">Delete Projects</option>
+      </select>
+      <button type="submit" class="btn btn-sm btn-outline-warning"><i class="fas fa-bolt me-1"></i> Apply Bulk Action</button>
+    </div>
+  </div>
+
+  <div class="glass-card">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th style="width:30px;">#</th>
+            <th>Project Name</th>
+            <th>Client</th>
+            <th>Assigned User</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Budget</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in projects %}
+          <tr>
+            <td><input type="checkbox" name="project_ids" value="{{ p.id }}" class="form-check-input project-checkbox"></td>
+            <td>
+              <div class="fw-bold text-white">{{ p.name }}</div>
+              <div class="text-muted small">{{ p.description|truncatechars:35|default:"No description" }}</div>
+            </td>
+            <td><span class="badge bg-dark text-info border border-info">{{ p.client.name }}</span></td>
+            <td><span class="fw-bold text-purple">{{ p.user.username }}</span></td>
+            <td>
+              {% if p.status == 'completed' %}<span class="badge bg-success">Completed</span>
+              {% elif p.status == 'in_progress' %}<span class="badge bg-info">In Progress</span>
+              {% elif p.status == 'pending' %}<span class="badge bg-warning text-dark">Pending</span>
+              {% else %}<span class="badge bg-danger">Cancelled</span>{% endif %}
+            </td>
+            <td>
+              {% if p.priority == 'urgent' %}<span class="badge bg-danger">Urgent</span>
+              {% elif p.priority == 'high' %}<span class="badge bg-warning text-dark">High</span>
+              {% else %}<span class="badge bg-secondary">{{ p.priority|title }}</span>{% endif %}
+            </td>
+            <td class="fw-bold text-success">${{ p.budget|default:0 }}</td>
+            <td class="text-end">
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">Actions</button>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+                  <li><a class="dropdown-item" href="{% url 'core:admin_project_duplicate' p.id %}"><i class="fas fa-copy me-2 text-info"></i> Duplicate</a></li>
+                  <li><a class="dropdown-item" href="{% url 'core:admin_project_archive' p.id %}">
+                    {% if p.is_archived %}<i class="fas fa-box-open me-2 text-success"></i> Restore Archive{% else %}<i class="fas fa-archive me-2 text-warning"></i> Archive{% endif %}
+                  </a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="{% url 'core:admin_project_delete' p.id %}"><i class="fas fa-trash me-2"></i> Delete</a></li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="8" class="text-center text-muted py-4">No projects found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
+
+<!-- Create Project Modal -->
+<div class="modal fade" id="createProjectModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title fw-bold"><i class="fas fa-folder-plus text-warning me-2"></i> Create New Project</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{% url 'core:admin_project_create' %}" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label small">Project Name</label>
+            <input type="text" name="name" class="form-control bg-dark text-white border-secondary" required>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small">Assign Freelancer</label>
+              <select name="user_id" class="form-select bg-dark text-white border-secondary" required>
+                {% for u in all_users %}<option value="{{ u.id }}">{{ u.username }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label small">Assign Client</label>
+              <select name="client_id" class="form-select bg-dark text-white border-secondary" required>
+                {% for c in all_clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small">Status</label>
+              <select name="status" class="form-select bg-dark text-white border-secondary">
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label small">Priority</label>
+              <select name="priority" class="form-select bg-dark text-white border-secondary">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small">Budget ($)</label>
+            <input type="number" step="0.01" name="budget" class="form-control bg-dark text-white border-secondary" value="0.00">
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-purple btn-sm"><i class="fas fa-check me-1"></i> Create Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('selectAllProjects')?.addEventListener('change', function() {
+  document.querySelectorAll('.project-checkbox').forEach(cb => cb.checked = this.checked);
+});
+</script>
+{% endblock %}

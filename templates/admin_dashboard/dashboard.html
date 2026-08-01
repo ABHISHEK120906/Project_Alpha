@@ -1,0 +1,467 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% block title %}Super Admin Master Dashboard — FreelanceTrack{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold mb-1"><i class="fas fa-crown text-warning me-2"></i> Super Admin Master Dashboard</h3>
+    <p class="text-muted small mb-0">System health, performance analytics, and platform statistics.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'core:admin_reports' %}" class="btn btn-sm btn-purple shadow-sm"><i class="fas fa-download me-1"></i> Export Reports</a>
+    <a href="{% url 'core:admin_database_backup' %}" class="btn btn-sm btn-outline-light"><i class="fas fa-database me-1"></i> Backup DB</a>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════
+     FEATURE 3 — 21 KPI STAT CARDS
+     ═════════════════════════════════════════════════════════ -->
+<h6 class="text-uppercase text-muted fw-bold mb-3 small"><i class="fas fa-th-large me-1"></i> Executive Key Performance Indicators</h6>
+
+<div class="row g-3 mb-4">
+  <!-- 1. Total Users -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-users text-primary me-1"></i> Total Users</div>
+      <div class="kpi-value text-primary mt-2">{{ kpi.total_users }}</div>
+    </div>
+  </div>
+  <!-- 2. Online Users -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-signal text-success me-1"></i> Online Users</div>
+      <div class="kpi-value text-success mt-2">{{ kpi.online_users }}</div>
+    </div>
+  </div>
+  <!-- 3. Offline Users -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-user-clock text-secondary me-1"></i> Offline Users</div>
+      <div class="kpi-value text-secondary mt-2">{{ kpi.offline_users }}</div>
+    </div>
+  </div>
+  <!-- 4. Active Users -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-user-check text-info me-1"></i> Active Users</div>
+      <div class="kpi-value text-info mt-2">{{ kpi.active_users }}</div>
+    </div>
+  </div>
+  <!-- 5. Blocked Users -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-user-slash text-danger me-1"></i> Blocked Users</div>
+      <div class="kpi-value text-danger mt-2">{{ kpi.blocked_users }}</div>
+    </div>
+  </div>
+  <!-- 6. Verified Users -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-certificate text-warning me-1"></i> Verified Users</div>
+      <div class="kpi-value text-warning mt-2">{{ kpi.verified_users }}</div>
+    </div>
+  </div>
+
+  <!-- 7. Total Projects -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-folder text-primary me-1"></i> Total Projects</div>
+      <div class="kpi-value mt-2">{{ kpi.total_projects }}</div>
+    </div>
+  </div>
+  <!-- 8. Running Projects -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-play-circle text-info me-1"></i> Running</div>
+      <div class="kpi-value text-info mt-2">{{ kpi.running_projects }}</div>
+    </div>
+  </div>
+  <!-- 9. Pending Projects -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-hourglass-half text-warning me-1"></i> Pending</div>
+      <div class="kpi-value text-warning mt-2">{{ kpi.pending_projects }}</div>
+    </div>
+  </div>
+  <!-- 10. Completed Projects -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-check-double text-success me-1"></i> Completed</div>
+      <div class="kpi-value text-success mt-2">{{ kpi.completed_projects }}</div>
+    </div>
+  </div>
+  <!-- 11. Cancelled Projects -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-times-circle text-danger me-1"></i> Cancelled</div>
+      <div class="kpi-value text-danger mt-2">{{ kpi.cancelled_projects }}</div>
+    </div>
+  </div>
+  <!-- 12. Total Clients -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-user-tie text-light me-1"></i> Total Clients</div>
+      <div class="kpi-value mt-2">{{ kpi.total_clients }}</div>
+    </div>
+  </div>
+
+  <!-- 13. Total Revenue -->
+  <div class="col-xl-3 col-md-6 col-12">
+    <div class="glass-card kpi-card border-success">
+      <div class="kpi-title"><i class="fas fa-wallet text-success me-1"></i> Total Revenue</div>
+      <div class="kpi-value text-success mt-2">${{ kpi.total_revenue|floatformat:2 }}</div>
+    </div>
+  </div>
+  <!-- 14. Monthly Revenue -->
+  <div class="col-xl-3 col-md-6 col-12">
+    <div class="glass-card kpi-card border-info">
+      <div class="kpi-title"><i class="fas fa-calendar-alt text-info me-1"></i> Monthly Revenue</div>
+      <div class="kpi-value text-info mt-2">${{ kpi.monthly_revenue|floatformat:2 }}</div>
+    </div>
+  </div>
+  <!-- 15. Total Expenses -->
+  <div class="col-xl-3 col-md-6 col-12">
+    <div class="glass-card kpi-card border-danger">
+      <div class="kpi-title"><i class="fas fa-file-invoice-dollar text-danger me-1"></i> Total Expenses</div>
+      <div class="kpi-value text-danger mt-2">${{ kpi.total_expenses|floatformat:2 }}</div>
+    </div>
+  </div>
+  <!-- 16. Net Profit -->
+  <div class="col-xl-3 col-md-6 col-12">
+    <div class="glass-card kpi-card border-warning">
+      <div class="kpi-title"><i class="fas fa-chart-line text-warning me-1"></i> Net Profit</div>
+      <div class="kpi-value text-warning mt-2">${{ kpi.net_profit|floatformat:2 }}</div>
+    </div>
+  </div>
+
+  <!-- 17. Pending Payments -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-clock me-1 text-warning"></i> Pending Pay</div>
+      <div class="kpi-value text-warning mt-2">${{ kpi.pending_payments|floatformat:0 }}</div>
+    </div>
+  </div>
+  <!-- 18. Completed Payments -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-receipt me-1 text-success"></i> Completed Pay</div>
+      <div class="kpi-value text-success mt-2">{{ kpi.completed_payments }}</div>
+    </div>
+  </div>
+  <!-- 19. Today's Revenue -->
+  <div class="col-xl-2 col-md-4 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-sun me-1 text-info"></i> Today Revenue</div>
+      <div class="kpi-value text-info mt-2">${{ kpi.today_revenue|floatformat:0 }}</div>
+    </div>
+  </div>
+  <!-- 20. This Month Revenue -->
+  <div class="col-xl-3 col-md-6 col-6">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-calendar-check me-1 text-primary"></i> This Month Rev</div>
+      <div class="kpi-value text-primary mt-2">${{ kpi.this_month_revenue|floatformat:2 }}</div>
+    </div>
+  </div>
+  <!-- 21. Total Files Uploaded -->
+  <div class="col-xl-3 col-md-6 col-12">
+    <div class="glass-card kpi-card">
+      <div class="kpi-title"><i class="fas fa-file-archive me-1 text-light"></i> Total Uploaded Files</div>
+      <div class="kpi-value text-light mt-2">{{ kpi.total_files_uploaded }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════
+     FEATURE 3 — 11 VISUAL CHARTS
+     ═════════════════════════════════════════════════════════ -->
+<h6 class="text-uppercase text-muted fw-bold mb-3 small"><i class="fas fa-chart-bar me-1"></i> Platform Visual Analytics & Trends</h6>
+
+<div class="row g-4 mb-4">
+  <!-- Chart 1: Monthly Revenue -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-chart-area text-success me-2"></i> 1. Monthly Revenue Trend</h6>
+      <canvas id="chartMonthlyRevenue" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 2: Monthly Expenses -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-chart-bar text-danger me-2"></i> 2. Monthly Expenses</h6>
+      <canvas id="chartMonthlyExpenses" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 3: Income vs Expenses -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-balance-scale text-warning me-2"></i> 3. Income vs Expenses</h6>
+      <canvas id="chartIncomeVsExpense" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 4: Project Status -->
+  <div class="col-lg-3 col-md-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-chart-pie text-info me-2"></i> 4. Project Status</h6>
+      <canvas id="chartProjectStatus" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 5: Project Priority -->
+  <div class="col-lg-3 col-md-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-flag text-primary me-2"></i> 5. Project Priority</h6>
+      <canvas id="chartProjectPriority" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 6: User Growth -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-line-chart text-info me-2"></i> 6. Cumulative User Growth</h6>
+      <canvas id="chartUserGrowth" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 7: Online Users Distribution -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-network-wired text-success me-2"></i> 7. User Session Status</h6>
+      <canvas id="chartOnlineUsers" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 8: Top Clients -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-user-shield text-warning me-2"></i> 8. Top Clients by Revenue</h6>
+      <canvas id="chartTopClients" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 9: Top Freelancers -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-trophy text-primary me-2"></i> 9. Top Freelancers by Revenue</h6>
+      <canvas id="chartTopFreelancers" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 10: Monthly Registrations -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-user-plus text-info me-2"></i> 10. Monthly User Registrations</h6>
+      <canvas id="chartRegistrations" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 11: Payment Trends -->
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-money-bill-trend-up text-success me-2"></i> 11. Payment Trends</h6>
+      <canvas id="chartPaymentTrends" height="180"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════
+     FEATURE 14 — RECENT ACTIVITIES & QUICK ACTIONS
+     ═════════════════════════════════════════════════════════ -->
+<div class="row g-4">
+  <!-- Recent Activities -->
+  <div class="col-lg-8">
+    <div class="glass-card">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="fw-bold mb-0"><i class="fas fa-history text-purple me-2"></i> Recent Audit Activity Logs</h6>
+        <a href="{% url 'core:admin_activity_logs' %}" class="btn btn-sm btn-link text-purple text-decoration-none">View All</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle small mb-0">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Action</th>
+              <th>Description</th>
+              <th>IP Address</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in recent_activities %}
+            <tr>
+              <td class="fw-bold text-info">{{ log.user.username }}</td>
+              <td><span class="badge bg-purple">{{ log.action }}</span></td>
+              <td>{{ log.description|truncatechars:45 }}</td>
+              <td class="text-muted">{{ log.ip_address|default:"127.0.0.1" }}</td>
+              <td class="text-muted">{{ log.timestamp|date:"M d, H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted py-3">No activity logs recorded.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions & Feeds -->
+  <div class="col-lg-4">
+    <div class="glass-card mb-4">
+      <h6 class="fw-bold mb-3"><i class="fas fa-bolt text-warning me-2"></i> Quick Actions Panel</h6>
+      <div class="d-grid gap-2">
+        <a href="{% url 'core:admin_users_list' %}" class="btn btn-outline-info text-start"><i class="fas fa-user-plus me-2"></i> Create New User</a>
+        <a href="{% url 'core:admin_projects_list' %}" class="btn btn-outline-warning text-start"><i class="fas fa-folder-plus me-2"></i> Assign New Project</a>
+        <a href="{% url 'core:admin_notifications' %}" class="btn btn-outline-primary text-start"><i class="fas fa-bullhorn me-2"></i> Broadcast Announcement</a>
+        <a href="{% url 'core:admin_database_backup' %}" class="btn btn-outline-success text-start"><i class="fas fa-download me-2"></i> Download Database Backup</a>
+      </div>
+    </div>
+
+    <!-- Pinned Announcements -->
+    <div class="glass-card">
+      <h6 class="fw-bold mb-3"><i class="fas fa-thumbtack text-danger me-2"></i> Pinned Announcements</h6>
+      {% for ann in pinned_announcements %}
+      <div class="p-2 mb-2 rounded bg-dark border border-secondary">
+        <div class="fw-bold text-purple small">{{ ann.title }}</div>
+        <div class="text-muted small">{{ ann.message|truncatechars:80 }}</div>
+      </div>
+      {% empty %}
+      <p class="text-muted small mb-0">No active pinned announcements.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const chartData = {{ charts_json|safe }};
+
+  // Helper Chart Builder
+  function createLineChart(id, label, labels, data, color) {
+    const ctx = document.getElementById(id);
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: label,
+          data: data,
+          borderColor: color,
+          backgroundColor: color + '22',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+  }
+
+  function createBarChart(id, label, labels, data, color) {
+    const ctx = document.getElementById(id);
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: label,
+          data: data,
+          backgroundColor: color,
+          borderRadius: 6
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+  }
+
+  // 1. Monthly Revenue
+  createLineChart('chartMonthlyRevenue', 'Revenue ($)', chartData.months, chartData.revenue, '#00d2ff');
+
+  // 2. Monthly Expenses
+  createBarChart('chartMonthlyExpenses', 'Expenses ($)', chartData.months, chartData.expenses, '#ff4757');
+
+  // 3. Income vs Expenses
+  const ctx3 = document.getElementById('chartIncomeVsExpense');
+  if (ctx3) {
+    new Chart(ctx3, {
+      type: 'bar',
+      data: {
+        labels: chartData.months,
+        datasets: [
+          { label: 'Revenue ($)', data: chartData.revenue, backgroundColor: '#00d2ff' },
+          { label: 'Expenses ($)', data: chartData.expenses, backgroundColor: '#ff4757' }
+        ]
+      },
+      options: { responsive: true }
+    });
+  }
+
+  // 4. Project Status
+  const ctx4 = document.getElementById('chartProjectStatus');
+  if (ctx4) {
+    new Chart(ctx4, {
+      type: 'doughnut',
+      data: {
+        labels: ['Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled'],
+        datasets: [{
+          data: chartData.project_status,
+          backgroundColor: ['#ffc107', '#17a2b8', '#28a745', '#6c757d', '#dc3545']
+        }]
+      },
+      options: { responsive: true }
+    });
+  }
+
+  // 5. Project Priority
+  const ctx5 = document.getElementById('chartProjectPriority');
+  if (ctx5) {
+    new Chart(ctx5, {
+      type: 'pie',
+      data: {
+        labels: ['Low', 'Medium', 'High', 'Urgent'],
+        datasets: [{
+          data: chartData.project_priority,
+          backgroundColor: ['#6c757d', '#17a2b8', '#fd7e14', '#dc3545']
+        }]
+      },
+      options: { responsive: true }
+    });
+  }
+
+  // 6. User Growth
+  createLineChart('chartUserGrowth', 'Users', chartData.months, chartData.user_growth, '#6f42c1');
+
+  // 7. Online Users
+  const ctx7 = document.getElementById('chartOnlineUsers');
+  if (ctx7) {
+    new Chart(ctx7, {
+      type: 'doughnut',
+      data: {
+        labels: ['Online', 'Offline'],
+        datasets: [{
+          data: [{{ kpi.online_users }}, {{ kpi.offline_users }}],
+          backgroundColor: ['#28a745', '#6c757d']
+        }]
+      },
+      options: { responsive: true }
+    });
+  }
+
+  // 8. Top Clients
+  createBarChart('chartTopClients', 'Spent ($)', chartData.top_clients_names, chartData.top_clients_spent, '#ffc107');
+
+  // 9. Top Freelancers
+  createBarChart('chartTopFreelancers', 'Revenue ($)', chartData.top_freelancers_names, chartData.top_freelancers_rev, '#6f42c1');
+
+  // 10. Registrations
+  createBarChart('chartRegistrations', 'New Users', chartData.months, chartData.registrations, '#17a2b8');
+
+  // 11. Payment Trends
+  createLineChart('chartPaymentTrends', 'Revenue ($)', chartData.months, chartData.revenue, '#28a745');
+});
+</script>
+{% endblock %}

@@ -39,6 +39,19 @@
   </div>
 </div>
 
+<!-- FEATURE 8: Super Admin Announcement Banner -->
+{% if announcements %}
+  {% for ann in announcements %}
+  <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-start gap-3" style="background: rgba(111, 66, 193, 0.15); border-left: 4px solid #6f42c1 !important;">
+    <i class="fas fa-bullhorn text-purple fa-lg mt-1"></i>
+    <div>
+      <h6 class="fw-bold mb-1 text-purple">{{ ann.title }}</h6>
+      <p class="mb-0 small text-white">{{ ann.message }}</p>
+    </div>
+  </div>
+  {% endfor %}
+{% endif %}
+
 <div class="card mb-4" id="revenueGoalCard" style="background: linear-gradient(135deg, rgba(124,58,237,0.06) 0%, rgba(91,33,182,0.02) 100%); border: 1px solid rgba(124,58,237,0.18);">
 
   <div class="card-body py-3">

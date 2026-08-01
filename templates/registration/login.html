@@ -4,7 +4,17 @@
 {% block content %}
 
 <h1 class="auth-heading">Welcome back</h1>
-<p class="auth-subheading">Sign in to your FreelanceTrack account</p>
+<p class="auth-subheading">Select login portal to access your account</p>
+
+<!-- FEATURE 1: Role-Based Login Options -->
+<div class="role-selector-container mb-4" style="display:flex; background:rgba(255,255,255,0.05); border-radius:12px; padding:4px; border:1px solid rgba(255,255,255,0.1);">
+  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:10px; transition:all 0.3s ease; border:none; font-size:14px;" onclick="setLoginType('user')">
+    <i class="fas fa-user-circle me-2"></i> User Login
+  </button>
+  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:10px; transition:all 0.3s ease; border:none; font-size:14px;" onclick="setLoginType('admin')">
+    <i class="fas fa-user-shield me-2"></i> Admin Login
+  </button>
+</div>
 
 {% if messages %}
   {% for message in messages %}
@@ -17,6 +27,7 @@
 
 <form method="post" action="{% url 'core:login' %}" id="loginForm" novalidate>
   {% csrf_token %}
+  <input type="hidden" name="login_type" id="login_type_input" value="{{ login_type|default:'user' }}">
 
   <!-- Username -->
   <div class="auth-form-group">
@@ -73,7 +84,35 @@
 </div>
 
 <script>
+function setLoginType(type) {
+  document.getElementById('login_type_input').value = type;
+  const btnUser = document.getElementById('btnUserLogin');
+  const btnAdmin = document.getElementById('btnAdminLogin');
+  const submitBtn = document.getElementById('loginSubmitBtn');
+
+  if (type === 'admin') {
+    btnAdmin.style.background = '#6f42c1';
+    btnAdmin.style.color = '#ffffff';
+    btnAdmin.style.boxShadow = '0 4px 12px rgba(111,66,193,0.4)';
+    btnUser.style.background = 'transparent';
+    btnUser.style.color = 'rgba(255,255,255,0.7)';
+    btnUser.style.boxShadow = 'none';
+    submitBtn.innerHTML = '<i class="fas fa-user-shield me-2"></i> Sign In as Super Admin';
+  } else {
+    btnUser.style.background = '#6f42c1';
+    btnUser.style.color = '#ffffff';
+    btnUser.style.boxShadow = '0 4px 12px rgba(111,66,193,0.4)';
+    btnAdmin.style.background = 'transparent';
+    btnAdmin.style.color = 'rgba(255,255,255,0.7)';
+    btnAdmin.style.boxShadow = 'none';
+    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i> Sign In as User';
+  }
+}
+
 (function() {
+  const initialType = document.getElementById('login_type_input').value || 'user';
+  setLoginType(initialType);
+
   // Toggle password visibility
   const pwdInput = document.getElementById('id_password');
   const pwdEye   = document.getElementById('pwdEyeIcon');
@@ -91,7 +130,7 @@
   // Button loading state on submit
   document.getElementById('loginForm').addEventListener('submit', function() {
     const btn = document.getElementById('loginSubmitBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating…';
     btn.style.pointerEvents = 'none';
   });
 })();

@@ -1,0 +1,87 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% block title %}System Settings — Super Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold mb-1"><i class="fas fa-sliders-h text-secondary me-2"></i> System Configuration Settings</h3>
+    <p class="text-muted small mb-0">Global website parameters, email SMTP, maintenance mode, and session policies.</p>
+  </div>
+</div>
+
+<form action="{% url 'core:admin_settings' %}" method="post">
+  {% csrf_token %}
+  <div class="row g-4">
+    <!-- General Settings -->
+    <div class="col-lg-6">
+      <div class="glass-card mb-4">
+        <h6 class="fw-bold mb-3 text-purple"><i class="fas fa-globe me-2"></i> Website & General Branding</h6>
+        <div class="mb-3">
+          <label class="form-label small">Website Name</label>
+          <input type="text" name="site_name" value="{{ settings_dict.site_name }}" class="form-control bg-dark text-white border-secondary" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small">Contact Email</label>
+          <input type="email" name="contact_email" value="{{ settings_dict.contact_email }}" class="form-control bg-dark text-white border-secondary" required>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label small">Currency Symbol</label>
+            <input type="text" name="currency_symbol" value="{{ settings_dict.currency_symbol }}" class="form-control bg-dark text-white border-secondary" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label small">Timezone</label>
+            <input type="text" name="timezone" value="{{ settings_dict.timezone }}" class="form-control bg-dark text-white border-secondary" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maintenance & Security Policy -->
+      <div class="glass-card">
+        <h6 class="fw-bold mb-3 text-warning"><i class="fas fa-shield-alt me-2"></i> Maintenance & System Security</h6>
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input" type="checkbox" name="maintenance_mode" value="true" id="maintSwitch" {% if settings_dict.maintenance_mode == 'true' %}checked{% endif %}>
+          <label class="form-check-label fw-bold text-warning" for="maintSwitch">Enable Maintenance Mode (Restricts User Access)</label>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label small">Session Timeout (Mins)</label>
+            <input type="number" name="session_timeout" value="{{ settings_dict.session_timeout }}" class="form-control bg-dark text-white border-secondary">
+          </div>
+          <div class="col-6">
+            <label class="form-label small">Min Password Length</label>
+            <input type="number" name="password_min_length" value="{{ settings_dict.password_min_length }}" class="form-control bg-dark text-white border-secondary">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SMTP Configuration -->
+    <div class="col-lg-6">
+      <div class="glass-card mb-4">
+        <h6 class="fw-bold mb-3 text-info"><i class="fas fa-envelope me-2"></i> SMTP Email Server Configuration</h6>
+        <div class="mb-3">
+          <label class="form-label small">SMTP Host</label>
+          <input type="text" name="smtp_host" value="{{ settings_dict.smtp_host }}" class="form-control bg-dark text-white border-secondary">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small">SMTP Port</label>
+          <input type="text" name="smtp_port" value="{{ settings_dict.smtp_port }}" class="form-control bg-dark text-white border-secondary">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small">SMTP User / Email</label>
+          <input type="text" name="smtp_user" value="{{ settings_dict.smtp_user }}" class="form-control bg-dark text-white border-secondary">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small">SMTP Password</label>
+          <input type="password" name="smtp_password" value="" class="form-control bg-dark text-white border-secondary" placeholder="Leave blank to keep existing password">
+        </div>
+      </div>
+
+      <div class="text-end">
+        <button type="submit" class="btn btn-purple btn-lg shadow"><i class="fas fa-save me-2"></i> Save All Settings</button>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

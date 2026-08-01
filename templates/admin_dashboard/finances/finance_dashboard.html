@@ -1,0 +1,135 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% block title %}Financial Management & Refunds — Super Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold mb-1"><i class="fas fa-coins text-danger me-2"></i> Financial Management</h3>
+    <p class="text-muted small mb-0">System-wide cashflows, payments, expenses, and refund approvals.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'core:admin_report_export' 'revenue' 'excel' %}" class="btn btn-outline-success btn-sm"><i class="fas fa-file-excel me-1"></i> Export Income Excel</a>
+    <a href="{% url 'core:admin_report_export' 'expenses' 'excel' %}" class="btn btn-outline-danger btn-sm"><i class="fas fa-file-excel me-1"></i> Export Expense Excel</a>
+    <a href="{% url 'core:admin_report_export' 'profit' 'pdf' %}" class="btn btn-purple btn-sm"><i class="fas fa-file-pdf me-1"></i> Export Profit PDF</a>
+  </div>
+</div>
+
+<!-- Financial KPI Overview -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="glass-card">
+      <div class="kpi-title text-success"><i class="fas fa-arrow-down me-1"></i> Total System Revenue</div>
+      <div class="kpi-value text-success mt-2">${{ total_revenue|floatformat:2 }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card">
+      <div class="kpi-title text-danger"><i class="fas fa-arrow-up me-1"></i> Total System Expenses</div>
+      <div class="kpi-value text-danger mt-2">${{ total_expense|floatformat:2 }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card">
+      <div class="kpi-title text-warning"><i class="fas fa-chart-line me-1"></i> System Net Profit</div>
+      <div class="kpi-value text-warning mt-2">${{ net_profit|floatformat:2 }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-card">
+      <div class="kpi-title text-info"><i class="fas fa-clock me-1"></i> Pending Payments</div>
+      <div class="kpi-value text-info mt-2">${{ pending_payments|floatformat:2 }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Refund Approval Section -->
+<div class="glass-card mb-4">
+  <h6 class="fw-bold mb-3"><i class="fas fa-undo text-warning me-2"></i> Pending Refund Requests</h6>
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle mb-0 small">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Payment / Project</th>
+          <th>Refund Amount</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ref in refund_requests %}
+        <tr>
+          <td class="fw-bold text-info">{{ ref.user.username }}</td>
+          <td>{{ ref.payment.project.name }}</td>
+          <td class="fw-bold text-warning">${{ ref.amount }}</td>
+          <td class="text-muted">{{ ref.reason|truncatechars:40 }}</td>
+          <td>
+            {% if ref.status == 'pending' %}<span class="badge bg-warning text-dark">Pending Approval</span>
+            {% elif ref.status == 'approved' %}<span class="badge bg-success">Approved</span>
+            {% else %}<span class="badge bg-danger">Rejected</span>{% endif %}
+          </td>
+          <td class="text-end">
+            {% if ref.status == 'pending' %}
+            <form action="{% url 'core:admin_refund_action' ref.id %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="approve">
+              <button type="submit" class="btn btn-sm btn-success py-0 px-2" onclick="return confirm('Approve refund?')">Approve</button>
+            </form>
+            <form action="{% url 'core:admin_refund_action' ref.id %}" method="post" class="d-inline ms-1">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="reject">
+              <button type="submit" class="btn btn-sm btn-danger py-0 px-2" onclick="return confirm('Reject refund?')">Reject</button>
+            </form>
+            {% else %}
+            <span class="text-muted font-italic">Resolved</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-3">No refund requests pending.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- System Payments Table -->
+<div class="glass-card">
+  <h6 class="fw-bold mb-3"><i class="fas fa-receipt text-primary me-2"></i> Recent Platform Payments</h6>
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle mb-0 small">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Project</th>
+          <th>Client</th>
+          <th>Amount</th>
+          <th>Payment Method</th>
+          <th>Status</th>
+          <th>Created Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in payments %}
+        <tr>
+          <td class="fw-bold text-info">{{ p.user.username }}</td>
+          <td>{{ p.project.name }}</td>
+          <td>{{ p.project.client.name }}</td>
+          <td class="fw-bold text-success">${{ p.amount }}</td>
+          <td><span class="badge bg-secondary">{{ p.payment_method|title }}</span></td>
+          <td>
+            {% if p.status == 'paid' %}<span class="badge bg-success">Paid</span>
+            {% elif p.status == 'pending' %}<span class="badge bg-warning text-dark">Pending</span>
+            {% else %}<span class="badge bg-danger">{{ p.status|title }}</span>{% endif %}
+          </td>
+          <td class="text-muted">{{ p.created_at|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-3">No payment records found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -283,10 +283,21 @@ class ActivityLog(models.Model):
 
 class UserProfile(models.Model):
     """
-    Extended user profile for freelancers
+    Extended user profile for freelancers & super admins
     """
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('user', 'User'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
+    is_verified = models.BooleanField(default=True)
+    is_suspended = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    last_login_ip = models.GenericIPAddressField(blank=True, null=True)
+    last_login_at = models.DateTimeField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
@@ -301,7 +312,7 @@ class UserProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Profile of {self.user.username}"
+        return f"Profile of {self.user.username} ({self.role})"
 
 
 class ProjectFile(models.Model):
@@ -517,4 +528,136 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.user.username}"
+
+
+class LoginHistory(models.Model):
+    """
+    Log of authentication attempts (successful & failed)
+    """
+    STATUS_CHOICES = [
+        ('success', 'Success'),
+        ('failed', 'Failed'),
+        ('blocked', 'Blocked'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='login_history')
+    username_attempted = models.CharField(max_length=150)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    user_agent = models.CharField(max_length=255, blank=True, null=True)
+    device = models.CharField(max_length=50, default='Unknown')
+    browser = models.CharField(max_length=50, default='Unknown')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='success')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = 'Login History'
+        verbose_name_plural = 'Login History Records'
+
+    def __str__(self):
+        return f"{self.username_attempted} - {self.status} ({self.timestamp})"
+
+
+class BlockedIP(models.Model):
+    """
+    Blocked IP addresses list
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ip_address = models.GenericIPAddressField(unique=True)
+    reason = models.TextField(blank=True, null=True)
+    blocked_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Blocked IP: {self.ip_address}"
+
+
+class SystemSetting(models.Model):
+    """
+    Dynamic system configuration settings managed by Super Admin
+    """
+    key = models.CharField(max_length=100, unique=True)
+    value = models.TextField(blank=True, null=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['key']
+
+    def __str__(self):
+        return f"Setting: {self.key}"
+
+    @classmethod
+    def get_setting(cls, key, default=''):
+        try:
+            setting = cls.objects.get(key=key)
+            return setting.value if setting.value is not None else default
+        except cls.DoesNotExist:
+            return default
+
+    @classmethod
+    def set_setting(cls, key, value, description=''):
+        setting, created = cls.objects.get_or_create(key=key)
+        setting.value = str(value)
+        if description:
+            setting.description = description
+        setting.save()
+        return setting
+
+
+class RefundRequest(models.Model):
+    """
+    Refund requests for financial management
+    """
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='refund_requests')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='refund_requests')
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    reason = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    admin_notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Refund #{self.id} - ${self.amount} ({self.status})"
+
+
+class Announcement(models.Model):
+    """
+    Super Admin announcements broadcast to platform users
+    """
+    TARGET_CHOICES = [
+        ('all', 'All Users'),
+        ('selected', 'Selected Users'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    is_pinned = models.BooleanField(default=False)
+    target_type = models.CharField(max_length=20, choices=TARGET_CHOICES, default='all')
+    target_users = models.ManyToManyField(User, blank=True, related_name='user_announcements')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_announcements')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-is_pinned', '-created_at']
+
+    def __str__(self):
+        return self.title
+
 

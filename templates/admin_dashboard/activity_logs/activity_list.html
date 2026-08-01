@@ -1,0 +1,77 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% block title %}Audit Activity Logs — Super Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold mb-1"><i class="fas fa-history text-light me-2"></i> System Audit Activity Logs</h3>
+    <p class="text-muted small mb-0">Trace every security action, authentication event, and CRUD modification across the platform.</p>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="glass-card mb-4">
+  <form method="get" class="row g-3 align-items-center">
+    <div class="col-md-5">
+      <div class="input-group input-group-sm">
+        <span class="input-group-text bg-dark border-secondary text-muted"><i class="fas fa-search"></i></span>
+        <input type="text" name="q" value="{{ search_q }}" class="form-control bg-dark text-white border-secondary" placeholder="Search description, IP address...">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <select name="action" class="form-select form-select-sm bg-dark text-white border-secondary">
+        <option value="">All Actions</option>
+        <option value="login" {% if action_filter == 'login' %}selected{% endif %}>Login</option>
+        <option value="logout" {% if action_filter == 'logout' %}selected{% endif %}>Logout</option>
+        <option value="create" {% if action_filter == 'create' %}selected{% endif %}>Created</option>
+        <option value="update" {% if action_filter == 'update' %}selected{% endif %}>Updated</option>
+        <option value="delete" {% if action_filter == 'delete' %}selected{% endif %}>Deleted</option>
+        <option value="status_change" {% if action_filter == 'status_change' %}selected{% endif %}>Status Changed</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select name="user" class="form-select form-select-sm bg-dark text-white border-secondary">
+        <option value="">All Users</option>
+        {% for u in all_users %}<option value="{{ u.id }}" {% if user_filter == u.id|stringformat:"s" %}selected{% endif %}>{{ u.username }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-purple btn-sm w-100"><i class="fas fa-filter me-1"></i> Filter</button>
+    </div>
+  </form>
+</div>
+
+<!-- Audit Log Table -->
+<div class="glass-card">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle mb-0 small">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Model Type</th>
+          <th>Description</th>
+          <th>IP Address</th>
+          <th>User Agent</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td class="text-muted fw-bold">{{ log.timestamp|date:"Y-m-d H:i:s" }}</td>
+          <td class="fw-bold text-info">{{ log.user.username }}</td>
+          <td><span class="badge bg-purple">{{ log.get_action_display }}</span></td>
+          <td><span class="badge bg-secondary">{{ log.get_model_type_display }}</span></td>
+          <td>{{ log.description }}</td>
+          <td class="text-muted">{{ log.ip_address|default:"127.0.0.1" }}</td>
+          <td class="text-muted">{{ log.user_agent|truncatechars:35|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No audit logs found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views, api_views
 
 app_name = 'core'
@@ -11,6 +11,9 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
+
+    # ── Super Admin Dashboard Module ─────────────────────
+    path('admin-dashboard/', include('core.admin_urls')),
 
     # ── Dashboard & Sample Data ───────────────────────────
     path('dashboard/', views.dashboard, name='dashboard'),

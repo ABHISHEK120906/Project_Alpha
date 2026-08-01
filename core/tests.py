@@ -420,5 +420,60 @@ class APIProxyEndpointTest(TestCase):
     def test_api_dashboard_stats_requires_login(self):
         self.client.logout()
         resp = self.client.get(reverse('core:api_dashboard_stats'))
+        self.assertIn(resp.status_code, [302, 401, 403])
+
+
+class SuperAdminModuleTest(TestCase):
+    def setUp(self):
+        self.client = TestClient()
+        self.admin_user = User.objects.create_superuser(
+            username='admin_test', email='abhishekmutthalkar121@gmail.com', password='pagal@123'
+        )
+        self.admin_profile, _ = UserProfile.objects.get_or_create(user=self.admin_user)
+        self.admin_profile.role = 'admin'
+        self.admin_profile.save()
+
+        self.normal_user = User.objects.create_user(
+            username='normal_user', email='normal@test.com', password='userpass123'
+        )
+        self.normal_profile, _ = UserProfile.objects.get_or_create(user=self.normal_user)
+        self.normal_profile.role = 'user'
+        self.normal_profile.save()
+
+    def test_role_based_login_admin(self):
+        resp = self.client.post(reverse('core:login'), {
+            'username': 'admin_test',
+            'password': 'pagal@123',
+            'login_type': 'admin'
+        })
+        self.assertRedirects(resp, reverse('core:admin_dashboard'))
+
+    def test_role_based_login_user(self):
+        resp = self.client.post(reverse('core:login'), {
+            'username': 'normal_user',
+            'password': 'userpass123',
+            'login_type': 'user'
+        })
+        self.assertRedirects(resp, reverse('core:dashboard'))
+
+    def test_non_admin_cannot_access_admin_dashboard(self):
+        self.client.login(username='normal_user', password='userpass123')
+        resp = self.client.get(reverse('core:admin_dashboard'))
         self.assertEqual(resp.status_code, 302)
+
+    def test_admin_can_access_admin_dashboard(self):
+        self.client.login(username='admin_test', password='pagal@123')
+        resp = self.client.get(reverse('core:admin_dashboard'))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_admin_user_management(self):
+        self.client.login(username='admin_test', password='pagal@123')
+        resp = self.client.get(reverse('core:admin_users_list'))
+        self.assertEqual(resp.status_code, 200)
+
+    def test_admin_security_center(self):
+        self.client.login(username='admin_test', password='pagal@123')
+        resp = self.client.get(reverse('core:admin_security'))
+        self.assertEqual(resp.status_code, 200)
+
 

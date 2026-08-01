@@ -16,7 +16,8 @@ import json
 import re
 from .models import (Client, Project, Payment, Task, Note, ActivityLog,
                      UserProfile, ProjectFile, ProjectComment, Income,
-                     Expense, Invoice, InvoiceItem, CalendarEvent, Notification)
+                     Expense, Invoice, InvoiceItem, CalendarEvent, Notification,
+                     LoginHistory, BlockedIP, SystemSetting, RefundRequest, Announcement)
 from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
                     NoteForm, SearchForm, UserBasicForm, UserProfileForm,
                     IncomeForm, ExpenseForm, InvoiceForm, InvoiceItemForm,
@@ -86,26 +87,90 @@ def register(request):
 
 
 def custom_login(request):
-    """Custom login view with activity logging and login security notification."""
+    """
+    FEATURE 1 & FEATURE 9 & FEATURE 10 — Role-Based Login & Security Audit:
+    Supports Admin vs User login option selection.
+    Enforces IP blocking, account suspension checks, role verification, and login audit tracking.
+    """
     if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser or (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
+            return redirect('core:admin_dashboard')
         return redirect('core:dashboard')
+
     if request.method == 'POST':
+        login_type = request.POST.get('login_type', 'user')  # 'admin' or 'user'
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
+
+        ip = get_client_ip(request)
+        ua = request.META.get('HTTP_USER_AGENT', '')[:255]
+
+        # Device & Browser parsing
+        device_type = 'Mobile' if 'Mobile' in ua or 'Android' in ua or 'iPhone' in ua else 'Desktop'
+        browser = 'Chrome' if 'Chrome' in ua else 'Firefox' if 'Firefox' in ua else 'Safari' if 'Safari' in ua else 'Browser'
+
+        # Check IP Blockage
+        if BlockedIP.objects.filter(ip_address=ip).exists():
+            messages.error(request, 'Access denied: Your IP address has been blocked for security reasons.')
+            LoginHistory.objects.create(
+                username_attempted=username, ip_address=ip, user_agent=ua,
+                device=device_type, browser=browser, status='blocked'
+            )
+            return render(request, 'registration/login.html', {'login_type': login_type})
+
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+
+            # Check User Suspension or Soft Delete
+            if profile.is_suspended or profile.is_deleted or not user.is_active:
+                messages.error(request, 'Account suspended or inactive. Please contact the Super Admin.')
+                LoginHistory.objects.create(
+                    user=user, username_attempted=username, ip_address=ip, user_agent=ua,
+                    device=device_type, browser=browser, status='failed'
+                )
+                return render(request, 'registration/login.html', {'login_type': login_type})
+
+            is_admin_user = (user.is_staff or user.is_superuser or profile.role == 'admin')
+
+            # Enforce Admin Role check if Admin mode selected
+            if login_type == 'admin' and not is_admin_user:
+                messages.error(request, 'Access denied: You do not have Super Admin privileges.')
+                LoginHistory.objects.create(
+                    user=user, username_attempted=username, ip_address=ip, user_agent=ua,
+                    device=device_type, browser=browser, status='failed'
+                )
+                return render(request, 'registration/login.html', {'login_type': login_type})
+
+            # Successful Authentication
             login(request, user)
-            log_activity(user, 'login', 'user', user.id,
-                         f'User {username} logged in', request)
-            
-            # Send Automated Security Notification Email
+            profile.last_login_ip = ip
+            profile.last_login_at = timezone.now()
+            profile.save()
+
+            LoginHistory.objects.create(
+                user=user, username_attempted=username, ip_address=ip, user_agent=ua,
+                device=device_type, browser=browser, status='success'
+            )
+            log_activity(user, 'login', 'user', user.id, f'User {username} logged in ({login_type} mode)', request)
             send_login_alert_email(user, request)
 
             messages.success(request, f'Welcome back, {username}!')
+
+            if is_admin_user:
+                return redirect('core:admin_dashboard')
             return redirect('core:dashboard')
         else:
+            LoginHistory.objects.create(
+                username_attempted=username, ip_address=ip, user_agent=ua,
+                device=device_type, browser=browser, status='failed'
+            )
             messages.error(request, 'Invalid username or password. Please try again.')
-    return render(request, 'registration/login.html')
+            return render(request, 'registration/login.html', {'login_type': login_type})
+
+    login_type = request.GET.get('type', 'user')
+    return render(request, 'registration/login.html', {'login_type': login_type})
 
 
 
@@ -183,6 +248,8 @@ def dashboard(request):
     recent_activities = ActivityLog.objects.filter(user=user).order_by('-timestamp')[:10]
     recent_projects = Project.objects.filter(user=user, is_archived=False).select_related('client').order_by('-created_at')[:5]
 
+    announcements = Announcement.objects.filter(Q(target_type='all') | Q(target_users=user)).distinct()[:5]
+
     context = {
         'total_clients': total_clients,
         'total_projects': total_projects,
@@ -202,6 +269,7 @@ def dashboard(request):
         'recent_activities': recent_activities,
         'recent_projects': recent_projects,
         'total_earnings': total_income,
+        'announcements': announcements,
     }
 
     return render(request, 'dashboard.html', context)
