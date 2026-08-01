@@ -26,11 +26,53 @@
   </div>
 </div>
 
-<!-- Monthly Earnings Chart -->
+<!-- Interactive Visualization Studio Toolbar Card -->
 <div class="card mb-4">
-  <div class="card-header"><i class="fas fa-chart-bar"></i> Monthly Earnings (Last 12 Months)</div>
+  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div>
+      <h5 style="margin:0;font-weight:700;color:var(--text-primary);"><i class="fas fa-magic text-primary me-2"></i> Business Analytics & Visualization Studio</h5>
+      <p style="margin:0;font-size:12px;color:var(--text-muted);">Switch visualization effects dynamically: Heatmap, Bar Graph, Pie Chart, Scatter Plot & Area Chart.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <div class="btn-group btn-group-sm" role="group" aria-label="Visualization Effects">
+        <button type="button" class="btn btn-outline-primary active" onclick="switchReportChart('bar', this)" title="Bar Graph"><i class="fas fa-chart-bar me-1"></i> Bar</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('line', this)" title="Line Graph"><i class="fas fa-chart-line me-1"></i> Line</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('area', this)" title="Area Chart"><i class="fas fa-chart-area me-1"></i> Area</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('pie', this)" title="Pie/Donut Chart"><i class="fas fa-chart-pie me-1"></i> Pie</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('scatter', this)" title="Scatter Plot"><i class="fas fa-braille me-1"></i> Scatter</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('heatmap', this)" title="Workload Heatmap"><i class="fas fa-th me-1"></i> Heatmap</button>
+      </div>
+      <button class="btn btn-sm btn-outline-success" onclick="exportReportCSV()" title="Export CSV Data"><i class="fas fa-file-csv me-1"></i> CSV Data</button>
+    </div>
+  </div>
   <div class="card-body">
-    <div style="height:280px;"><canvas id="monthlyChart"></canvas></div>
+    <div style="height:320px;position:relative;">
+      <canvas id="monthlyChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Scatter Plot Analysis Card -->
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header"><i class="fas fa-braille text-primary me-2"></i> Project Scatter Matrix (Budget vs Revenue)</div>
+      <div class="card-body">
+        <div style="height:260px;">
+          <canvas id="scatterMatrixChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workload Density Heatmap Card -->
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header"><i class="fas fa-th text-accent me-2"></i> Payment Density Heatmap (Last 4 Weeks)</div>
+      <div class="card-body">
+        <div id="reportHeatmapContainer" class="heatmap-matrix-container"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -141,32 +183,69 @@
 
 {% block extra_js %}
 <script>
-const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
-const textColor = isDark ? '#94a3b8' : '#64748b';
-const labels = JSON.parse('{{ monthly_labels_json|escapejs }}' || '[]');
-const values = JSON.parse('{{ monthly_values_json|escapejs }}' || '[]');
+const reportLabels = JSON.parse('{{ monthly_labels_json|escapejs }}' || '[]');
+const reportValues = JSON.parse('{{ monthly_values_json|escapejs }}' || '[]');
+const scatterData = JSON.parse('{{ scatter_data_json|escapejs }}' || '[]');
+const heatmapData = JSON.parse('{{ heatmap_data_json|escapejs }}' || '{}');
 
-new Chart(document.getElementById('monthlyChart').getContext('2d'), {
-  type: 'bar',
-  data: {
-    labels: labels,
-    datasets: [{
-      label: 'Earnings ($)',
-      data: values,
-      backgroundColor: 'rgba(79,70,229,0.8)',
-      borderRadius: 6,
-      borderSkipped: false,
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.y.toFixed(2) } } },
-    scales: {
-      x: { grid: { color: gridColor }, ticks: { color: textColor } },
-      y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v } }
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.VisualizationStudio) {
+    // Initial Bar Render
+    window.VisualizationStudio.renderChart('monthlyChart', 'bar', {
+      labels: reportLabels,
+      data: reportValues,
+      heatmap: heatmapData,
+      scatter: scatterData
+    });
+
+    // Scatter Matrix Chart Render
+    window.VisualizationStudio.renderChart('scatterMatrixChart', 'scatter', {
+      scatter: scatterData
+    });
+
+    // Standalone Heatmap Card Render
+    const heatmapContainer = document.getElementById('reportHeatmapContainer');
+    if (heatmapContainer && heatmapData.matrix) {
+      const days = heatmapData.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      let html = `<div class="heatmap-wrapper"><div class="heatmap-header-row">${days.map(d=>`<div class="heatmap-header-cell">${d}</div>`).join('')}</div>`;
+      heatmapData.matrix.forEach(week => {
+        html += `<div class="heatmap-week-row">`;
+        week.forEach(cell => {
+          const bgOpacity = Math.max(0.1, cell.intensity / 100);
+          const bgColor = cell.intensity > 50 ? `rgba(124, 58, 237, ${bgOpacity})` : `rgba(16, 185, 129, ${bgOpacity})`;
+          html += `<div class="heatmap-cell" style="background:${bgColor};" title="${cell.date}: $${cell.val}">
+            <span class="heatmap-date">${cell.date}</span>
+            <span class="heatmap-val">$${cell.val}</span>
+          </div>`;
+        });
+        html += `</div>`;
+      });
+      html += `</div>`;
+      heatmapContainer.innerHTML = html;
     }
   }
 });
+
+function switchReportChart(type, btnEl) {
+  if (btnEl && btnEl.parentNode) {
+    btnEl.parentNode.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+  if (window.VisualizationStudio) {
+    window.VisualizationStudio.renderChart('monthlyChart', type, {
+      labels: reportLabels,
+      data: reportValues,
+      heatmap: heatmapData,
+      scatter: scatterData
+    });
+  }
+}
+
+function exportReportCSV() {
+  if (window.VisualizationStudio) {
+    window.VisualizationStudio.exportCSV('freelancetrack_revenue_report.csv', reportLabels, reportValues);
+  }
+}
 </script>
 {% endblock %}
+

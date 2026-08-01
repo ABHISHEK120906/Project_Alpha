@@ -17,6 +17,7 @@ import re
 from .models import Client, Project, Payment, Task, Note, ActivityLog
 from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
                     NoteForm, SearchForm)
+from .email_service import send_welcome_email, send_login_alert_email
 
 
 # ============================================================
@@ -61,7 +62,7 @@ def home(request):
 
 
 def register(request):
-    """User registration with activity logging."""
+    """User registration with activity logging and automated welcome email."""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
     if request.method == 'POST':
@@ -71,7 +72,11 @@ def register(request):
             username = form.cleaned_data.get('username')
             log_activity(user, 'create', 'user', user.id,
                          f'User {username} registered', request)
-            messages.success(request, f'Account created! Welcome, {username}. Please log in.')
+            
+            # Send Automated Welcome Email Notification
+            send_welcome_email(user, request)
+            
+            messages.success(request, f'Account created! Welcome, {username}. A confirmation email has been sent.')
             return redirect('core:login')
         else:
             messages.error(request, 'Please fix the errors below.')
@@ -81,7 +86,7 @@ def register(request):
 
 
 def custom_login(request):
-    """Custom login view with activity logging."""
+    """Custom login view with activity logging and login security notification."""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
     if request.method == 'POST':
@@ -92,11 +97,16 @@ def custom_login(request):
             login(request, user)
             log_activity(user, 'login', 'user', user.id,
                          f'User {username} logged in', request)
+            
+            # Send Automated Security Notification Email
+            send_login_alert_email(user, request)
+
             messages.success(request, f'Welcome back, {username}!')
             return redirect('core:dashboard')
         else:
             messages.error(request, 'Invalid username or password. Please try again.')
     return render(request, 'registration/login.html')
+
 
 
 @require_http_methods(['GET', 'POST'])
@@ -870,6 +880,35 @@ def reports_dashboard(request):
         project_count=Count('projects')
     ).order_by('-project_count')[:10]
 
+    # Scatter Plot dataset (Budget vs Revenue)
+    user_projects = Project.objects.filter(user=user).select_related('client')
+    user_payments = Payment.objects.filter(user=user)
+    scatter_list = []
+    for p in user_projects[:15]:
+        p_paid = user_payments.filter(project=p, status='paid').aggregate(t=Sum('amount'))['t'] or 0
+        scatter_list.append({
+            'x': float(p.budget or 0),
+            'y': float(p_paid),
+            'name': p.name,
+            'client': p.client.name if p.client else 'N/A'
+        })
+
+    # Heatmap Density matrix (7 Days x 4 Weeks)
+    days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    heatmap_matrix = []
+    for w in range(3, -1, -1):
+        week_row = []
+        for d in range(7):
+            day_target = today - timedelta(days=(w * 7 + (today.weekday() - d) % 7))
+            day_payments = user_payments.filter(paid_date=day_target, status='paid').aggregate(t=Sum('amount'))['t'] or 0
+            intensity = min(100, int((float(day_payments) / 500.0) * 100)) if day_payments else (15 if d < 5 else 5)
+            week_row.append({
+                'date': day_target.strftime('%b %d'),
+                'val': float(day_payments),
+                'intensity': intensity
+            })
+        heatmap_matrix.append(week_row)
+
     context = {
         'total_paid': total_paid,
         'total_pending': total_pending,
@@ -879,8 +918,12 @@ def reports_dashboard(request):
         'top_clients': top_clients,
         'monthly_labels_json': json.dumps([d['month'] for d in monthly_data]),
         'monthly_values_json': json.dumps([d['total'] for d in monthly_data]),
+        'scatter_data_json': json.dumps(scatter_list),
+        'heatmap_data_json': json.dumps({'days': days_of_week, 'matrix': heatmap_matrix}),
+        'status_data_json': json.dumps(projects_by_status),
     }
     return render(request, 'reports/reports.html', context)
+
 
 
 _VALID_REPORT_TYPES = frozenset(['payment', 'project', 'client', 'monthly'])

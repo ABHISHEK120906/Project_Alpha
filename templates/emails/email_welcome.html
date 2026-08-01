@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to FreelanceTrack!</title>
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f8fafc; color: #0f172a; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(124,58,237,0.1); border: 1px solid #e2e8f0; }
+    .header { background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%); padding: 32px 24px; text-align: center; color: #ffffff; }
+    .header h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    .header p { margin: 8px 0 0 0; opacity: 0.9; font-size: 14px; }
+    .content { padding: 32px 24px; line-height: 1.6; }
+    .content h2 { font-size: 18px; color: #1e1b4b; margin-top: 0; }
+    .btn { display: inline-block; background: #7C3AED; color: #ffffff !important; font-weight: 700; text-decoration: none; padding: 12px 28px; border-radius: 10px; margin-top: 20px; text-align: center; }
+    .features { margin: 24px 0; padding: 0; list-style: none; }
+    .features li { padding: 8px 0; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .footer { background: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 Welcome to FreelanceTrack</h1>
+      <p>Your complete freelance business management & analytics platform</p>
+    </div>
+    <div class="content">
+      <h2>Hello {{ username }}! 👋</h2>
+      <p>Thank you for creating an account on <strong>FreelanceTrack</strong>. We're excited to help you streamline your projects, clients, payments, and business analytics.</p>
+
+      <ul class="features">
+        <li>📊 <strong>Interactive Analytics Studio</strong> — Switch between Heatmaps, Bar graphs, Pie charts & Scatter plots.</li>
+        <li>📁 <strong>Project & Client Manager</strong> — Track milestones, deadlines, and project status effortlessly.</li>
+        <li>💰 <strong>Revenue & Goal Tracker</strong> — Keep track of earnings, pending invoices, and monthly revenue targets.</li>
+      </ul>
+
+      <p>Log in now to set up your profile and create your first project!</p>
+      
+      <div style="text-align: center;">
+        <a href="{{ login_url }}" class="btn">Log In to Your Dashboard</a>
+      </div>
+    </div>
+    <div class="footer">
+      <p>&copy; {% now "Y" %} FreelanceTrack Project Manager. Sent automatically upon account creation.</p>
+    </div>
+  </div>
+</body>
+</html>

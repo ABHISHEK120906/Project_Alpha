@@ -24,8 +24,10 @@ async function loadDashboardStats() {
 
 
     // 3. Render Chart.js charts dynamically
+    window.dashboardMonthlyData = data.monthly_chart;
     renderEarningsChart(data.monthly_chart);
     renderStatusChart(data.status_chart);
+
 
   } catch (err) {
     console.error('Failed to load dashboard analytics from backend proxy:', err);
@@ -141,3 +143,17 @@ function renderStatusChart(statusData) {
   window.dashboardCharts = window.dashboardCharts || [];
   window.dashboardCharts.push(chart);
 }
+
+window.dashboardRawData = null;
+
+function switchDashboardChart(type, btnEl) {
+  if (btnEl && btnEl.parentNode) {
+    btnEl.parentNode.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+
+  if (window.VisualizationStudio && window.dashboardMonthlyData) {
+    window.VisualizationStudio.renderChart('earningsChart', type, window.dashboardMonthlyData);
+  }
+}
+

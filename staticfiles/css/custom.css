@@ -725,3 +725,63 @@ body {
   .topbar { padding: 14px 20px; }
   .page-content { padding: 20px; }
 }
+
+/* ── Workload Density Heatmap Matrix Styles ─────────────────── */
+.heatmap-matrix-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.heatmap-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 320px;
+}
+
+.heatmap-header-row, .heatmap-week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.heatmap-header-cell {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.heatmap-cell {
+  aspect-ratio: 1.6;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+  z-index: 2;
+}
+
+.heatmap-date {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.heatmap-val {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-primary);
+}

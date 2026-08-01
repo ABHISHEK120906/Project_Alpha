@@ -76,6 +76,42 @@ def api_dashboard_stats(request):
         'planning': status_dict.get('planning', 0),
     }
 
+    # Scatter Plot (Budget vs. Progress/Earnings per Project)
+    scatter_data = []
+    for p in user_projects.select_related('client')[:15]:
+        p_paid = user_payments.filter(project=p, status='paid').aggregate(t=Sum('amount'))['t'] or 0
+        scatter_data.append({
+            'x': float(p.budget or 0),
+            'y': float(p_paid),
+            'name': p.name,
+            'client': p.client.name if p.client else 'N/A',
+            'progress': p.progress
+        })
+
+    # Workload & Activity Density Heatmap (7 Days x 4 Weeks)
+    days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    heatmap_matrix = []
+    for w in range(3, -1, -1):
+        week_row = []
+        for d in range(7):
+            day_target = today - timedelta(days=(w * 7 + (today.weekday() - d) % 7))
+            day_payments = user_payments.filter(paid_date=day_target, status='paid').aggregate(t=Sum('amount'))['t'] or 0
+            intensity = min(100, int((float(day_payments) / 500.0) * 100)) if day_payments else (15 if d < 5 else 5)
+            week_row.append({
+                'date': day_target.strftime('%b %d'),
+                'val': float(day_payments),
+                'intensity': intensity
+            })
+        heatmap_matrix.append(week_row)
+
+    # Client Revenue Breakdown (Top Clients)
+    client_labels = []
+    client_revenues = []
+    for client in user_clients[:6]:
+        c_rev = user_payments.filter(project__client=client, status='paid').aggregate(t=Sum('amount'))['t'] or 0
+        client_labels.append(client.name)
+        client_revenues.append(float(c_rev))
+
     # Recent Projects (Serialized)
     recent_projects_qs = user_projects.select_related('client').order_by('-created_at')[:5]
     recent_projects_serialized = ProjectSerializer(recent_projects_qs, many=True).data
@@ -92,11 +128,20 @@ def api_dashboard_stats(request):
             "data": monthly_data
         },
         "status_chart": status_distribution,
+        "scatter_chart": scatter_data,
+        "heatmap_chart": {
+            "days": days_of_week,
+            "matrix": heatmap_matrix
+        },
+        "client_chart": {
+            "labels": client_labels,
+            "data": client_revenues
+        },
         "recent_projects": recent_projects_serialized
     }
 
-
     return Response(payload, status=status.HTTP_200_OK)
+
 
 
 @api_view(['GET'])
