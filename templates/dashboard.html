@@ -125,147 +125,122 @@
   </form>
 </div>
 
-<!-- ── Feature 1: 15 Comprehensive Dashboard Metric Cards ── -->
+<!-- ── Core KPI Metric Cards (8 Core Metrics) ── -->
 <div class="row g-3 mb-4">
-  <!-- Total Projects -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 1. Total Projects -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-folder"></i></div>
-      <div class="stat-value fw-bold fs-4">{{ total_projects }}</div>
+      <div class="stat-value fw-bold fs-4" id="totalProjectsStat">{{ total_projects }}</div>
       <div class="stat-label small text-muted">Total Projects</div>
     </div>
   </div>
-  <!-- Active Projects -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 2. Active Projects -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-spinner"></i></div>
       <div class="stat-value fw-bold fs-4">{{ active_projects }}</div>
       <div class="stat-label small text-muted">Active Projects</div>
     </div>
   </div>
-  <!-- Pending Projects -->
-  <div class="col-6 col-md-4 col-xl-2">
-    <div class="stat-card h-100 p-3">
-      <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-clock"></i></div>
-      <div class="stat-value fw-bold fs-4">{{ pending_projects }}</div>
-      <div class="stat-label small text-muted">Pending Projects</div>
-    </div>
-  </div>
-  <!-- Completed Projects -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 3. Completed Projects -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-check-circle"></i></div>
       <div class="stat-value fw-bold fs-4">{{ completed_projects }}</div>
       <div class="stat-label small text-muted">Completed Projects</div>
     </div>
   </div>
-  <!-- Cancelled Projects -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 4. Total Clients -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
-      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-times-circle"></i></div>
-      <div class="stat-value fw-bold fs-4">{{ cancelled_projects }}</div>
-      <div class="stat-label small text-muted">Cancelled Projects</div>
-    </div>
-  </div>
-  <!-- Total Clients -->
-  <div class="col-6 col-md-4 col-xl-2">
-    <div class="stat-card h-100 p-3">
-      <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-users"></i></div>
-      <div class="stat-value fw-bold fs-4">{{ total_clients }}</div>
+      <div class="stat-icon mb-2" style="background:var(--purple-soft, rgba(111,66,193,0.15));color:var(--purple, #6f42c1);"><i class="fas fa-users"></i></div>
+      <div class="stat-value fw-bold fs-4" id="totalClientsStat">{{ total_clients }}</div>
       <div class="stat-label small text-muted">Total Clients</div>
     </div>
   </div>
 </div>
 
 <div class="row g-3 mb-4">
-  <!-- Total Income -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 5. Total Revenue -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
-      <div class="stat-value fw-bold fs-5 text-success">${{ total_income|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Total Income</div>
+      <div class="stat-value fw-bold fs-5 text-success" id="totalRevenueStat">${{ total_income|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Total Revenue</div>
     </div>
   </div>
-  <!-- Total Expenses -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 6. Total Expenses -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-credit-card"></i></div>
       <div class="stat-value fw-bold fs-5 text-danger">${{ total_expenses|floatformat:0 }}</div>
       <div class="stat-label small text-muted">Total Expenses</div>
     </div>
   </div>
-  <!-- Net Profit -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 7. Net Profit -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-chart-line"></i></div>
       <div class="stat-value fw-bold fs-5 text-primary">${{ net_profit|floatformat:0 }}</div>
       <div class="stat-label small text-muted">Net Profit</div>
     </div>
   </div>
-  <!-- Pending Payments -->
-  <div class="col-6 col-md-4 col-xl-2">
+  <!-- 8. Pending Payments -->
+  <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
-      <div class="stat-value fw-bold fs-5 text-warning">${{ pending_payments|floatformat:0 }}</div>
+      <div class="stat-value fw-bold fs-5 text-warning" id="pendingAmountStat">${{ pending_payments|floatformat:0 }}</div>
       <div class="stat-label small text-muted">Pending Payments</div>
-    </div>
-  </div>
-  <!-- Completed Payments -->
-  <div class="col-6 col-md-4 col-xl-2">
-    <div class="stat-card h-100 p-3">
-      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-check-double"></i></div>
-      <div class="stat-value fw-bold fs-5 text-success">${{ completed_payments|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Completed Payments</div>
-    </div>
-  </div>
-  <!-- Overdue Payments -->
-  <div class="col-6 col-md-4 col-xl-2">
-    <div class="stat-card h-100 p-3">
-      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-exclamation-circle"></i></div>
-      <div class="stat-value fw-bold fs-5 text-danger">${{ overdue_payments|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Overdue Payments</div>
     </div>
   </div>
 </div>
 
-<!-- ── Feature 17: Rich Interactive Visualization Panels ── -->
+<!-- ── Core Visualizations Grid (Exactly 5 High-Impact Business Visualizations) ── -->
 <div class="row g-4 mb-4">
-  <!-- Multi-Line Financial Trend -->
+  <!-- Visualization 1: Revenue Trend (Line Chart) -->
   <div class="col-lg-8">
     <div class="card p-3 h-100">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-area text-primary me-2"></i> Financial Performance (Income, Expenses, Net Profit)</h6>
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-line text-primary me-2"></i> 1. Revenue Trend</h6>
+        <span class="badge bg-primary-soft text-primary small">Monthly Revenue Trajectory</span>
       </div>
-      <div style="height:320px;position:relative;">
+      <div style="height:300px;position:relative;">
         <canvas id="financialTrendChart"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Project Status Distribution Doughnut -->
+  <!-- Visualization 2: Project Status Distribution (Donut Chart) -->
   <div class="col-lg-4">
     <div class="card p-3 h-100">
-      <h6 class="fw-bold mb-3"><i class="fas fa-pie-chart text-success me-2"></i> Project Status Breakdown</h6>
-      <div style="height:320px;position:relative;">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie text-success me-2"></i> 2. Project Status Distribution</h6>
+      </div>
+      <div style="height:300px;position:relative;">
         <canvas id="statusDistChart"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Priority Bar Chart -->
+  <!-- Visualization 3: Monthly Income vs Expenses (Bar Chart) -->
   <div class="col-lg-6">
     <div class="card p-3 h-100">
-      <h6 class="fw-bold mb-3"><i class="fas fa-signal text-warning me-2"></i> Projects by Priority Level</h6>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-bar text-warning me-2"></i> 3. Monthly Income vs Expenses</h6>
+      </div>
       <div style="height:260px;position:relative;">
-        <canvas id="priorityDistChart"></canvas>
+        <canvas id="incomeVsExpenseChart"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Revenue by Client Horizontal Bar -->
+  <!-- Visualization 4: Project Progress / Client Revenue (Horizontal Bar Chart) -->
   <div class="col-lg-6">
     <div class="card p-3 h-100">
-      <h6 class="fw-bold mb-3"><i class="fas fa-building text-info me-2"></i> Top Revenue Generating Clients</h6>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0"><i class="fas fa-tasks text-info me-2"></i> 4. Project Progress & Account Contribution</h6>
+      </div>
       <div style="height:260px;position:relative;">
         <canvas id="clientRevenueChart"></canvas>
       </div>
@@ -273,135 +248,10 @@
   </div>
 </div>
 
-<!-- ── Charts Row (Purple-Violet Inspired Charts) ─────────────── -->
-<div class="row g-3 mb-4">
-
-  <!-- Monthly Earnings Bar/Line Chart -->
-  <div class="col-lg-8">
-    <div class="card h-100">
-      <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-        <span><i class="fas fa-chart-line text-primary me-2"></i> Monthly Revenue Flow</span>
-        <div class="d-flex align-items-center gap-2">
-          <!-- Visualization Switcher Toolbar -->
-          <div class="btn-group btn-group-sm" role="group" aria-label="Chart Switcher">
-            <button type="button" class="btn btn-outline-secondary active" onclick="switchDashboardChart('line', this)" title="Line View"><i class="fas fa-chart-line"></i></button>
-            <button type="button" class="btn btn-outline-secondary" onclick="switchDashboardChart('bar', this)" title="Bar View"><i class="fas fa-chart-bar"></i></button>
-            <button type="button" class="btn btn-outline-secondary" onclick="switchDashboardChart('area', this)" title="Area View"><i class="fas fa-chart-area"></i></button>
-          </div>
-          <a href="{% url 'core:reports_dashboard' %}" class="btn btn-outline-primary btn-sm">
-            Full Report <i class="fas fa-arrow-right ms-1"></i>
-          </a>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="chart-container">
-          <canvas id="earningsChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- Project Status Donut Chart -->
-  <div class="col-lg-4">
-    <div class="card h-100">
-      <div class="card-header">
-        <span><i class="fas fa-chart-pie text-accent me-2"></i> Project Distribution</span>
-      </div>
-      <div class="card-body">
-        <div class="chart-container">
-          <canvas id="statusChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ── Upcoming Deadlines & Recent Activities ─────────────────── -->
-<div class="row g-3 mb-4">
-
-  <!-- Upcoming Deadlines -->
-  <div class="col-lg-6">
-    <div class="card h-100">
-      <div class="card-header">
-        <span><i class="fas fa-calendar-alt text-warning me-2"></i> Upcoming Deadlines</span>
-        <span class="badge-status status-pending">Next 7 days</span>
-      </div>
-      <div class="card-body p-0">
-        {% if upcoming_deadlines %}
-        <ul class="list-group list-group-flush">
-          {% for project in upcoming_deadlines %}
-          <li class="list-group-item" style="background:transparent;border-color:var(--border-color);padding:14px 20px;">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <a href="{% url 'core:project_detail' project.id %}" style="font-size:14px;font-weight:700;color:var(--text-primary);text-decoration:none;">
-                  {{ project.name }}
-                </a>
-                <div style="font-size:12px;color:var(--text-muted);">{{ project.client.name }}</div>
-              </div>
-              <span class="badge-status {% if project.is_overdue %}status-overdue{% else %}status-pending{% endif %}">
-                {{ project.deadline|date:"M d" }}
-              </span>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <div class="empty-state" style="padding:40px;">
-          <div class="empty-state-icon"><i class="fas fa-calendar-check text-success"></i></div>
-          <p>No deadlines this week!</p>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <!-- Recent Activity Audit Trail -->
-  <div class="col-lg-6">
-    <div class="card h-100">
-      <div class="card-header">
-        <span><i class="fas fa-history text-info me-2"></i> Recent Activity</span>
-        <a href="{% url 'core:activity_list' %}" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">View All</a>
-      </div>
-      <div class="card-body p-0">
-        {% if recent_activities %}
-        <ul class="list-group list-group-flush">
-          {% for activity in recent_activities|slice:":6" %}
-          <li class="list-group-item" style="background:transparent;border-color:var(--border-color);padding:12px 20px;">
-            <div class="d-flex align-items-start gap-3">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
-                {% if activity.action == 'create' %}<i class="fas fa-plus" style="color:var(--success);font-size:12px;"></i>
-                {% elif activity.action == 'update' %}<i class="fas fa-pen" style="color:var(--primary);font-size:12px;"></i>
-                {% elif activity.action == 'delete' %}<i class="fas fa-trash" style="color:var(--danger);font-size:12px;"></i>
-                {% elif activity.action == 'login' %}<i class="fas fa-sign-in-alt" style="color:var(--info);font-size:12px;"></i>
-                {% else %}<i class="fas fa-sync" style="color:var(--warning);font-size:12px;"></i>
-                {% endif %}
-              </div>
-              <div style="flex:1;min-width:0;">
-                <div style="font-size:13px;color:var(--text-primary);font-weight:600;">{{ activity.description|truncatechars:55 }}</div>
-                <div style="font-size:11px;color:var(--text-muted);">{{ activity.timestamp|timesince }} ago</div>
-              </div>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <div class="empty-state" style="padding:40px;">
-          <div class="empty-state-icon"><i class="fas fa-history"></i></div>
-          <p>No activity recorded yet.</p>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ── Recent Projects Table ───────────────────────────────────── -->
-<div class="card">
-  <div class="card-header">
-    <span><i class="fas fa-folder-open text-primary me-2"></i> Recent Projects</span>
+<!-- ── Visualization 5: Recent Projects & Payments (Simple Table) ── -->
+<div class="card mb-4">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <span><i class="fas fa-list-alt text-primary me-2"></i> 5. Recent Projects & Milestones</span>
     <a href="{% url 'core:project_create' %}" class="btn btn-primary btn-sm">
       <i class="fas fa-plus me-1"></i> New Project
     </a>

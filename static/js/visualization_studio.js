@@ -70,9 +70,16 @@ window.VisualizationStudio = (function () {
           renderChart('financialTrendChart', 'line', {
             labels: data.financial_trend.labels,
             datasets: [
-              { label: 'Income', data: data.financial_trend.income, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.35 },
-              { label: 'Expenses', data: data.financial_trend.expenses, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.35 },
-              { label: 'Net Profit', data: data.financial_trend.profit, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', fill: false, tension: 0.35 }
+              { label: 'Revenue', data: data.financial_trend.income, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', fill: true, tension: 0.35 },
+              { label: 'Net Profit', data: data.financial_trend.profit, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.05)', fill: false, tension: 0.35 }
+            ]
+          });
+
+          renderChart('incomeVsExpenseChart', 'bar', {
+            labels: data.financial_trend.labels,
+            datasets: [
+              { label: 'Income ($)', data: data.financial_trend.income, backgroundColor: '#10b981', borderRadius: 4 },
+              { label: 'Expenses ($)', data: data.financial_trend.expenses, backgroundColor: '#ef4444', borderRadius: 4 }
             ]
           });
         }
@@ -84,16 +91,6 @@ window.VisualizationStudio = (function () {
             labels: keys.map(k => k.replace('_', ' ').toUpperCase()),
             data: vals,
             colors: ['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6']
-          });
-        }
-
-        if (data.priority_distribution) {
-          const keys = Object.keys(data.priority_distribution);
-          const vals = Object.values(data.priority_distribution);
-          renderChart('priorityDistChart', 'bar', {
-            labels: keys.map(k => k.toUpperCase()),
-            data: vals,
-            colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
           });
         }
 
