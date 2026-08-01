@@ -7,34 +7,38 @@ from core.models import Client, Project, Payment, Task, Note, ActivityLog
 
 User = get_user_model()
 
+
 class Command(BaseCommand):
-    help = 'Seeds realistic sample clients, projects, tasks, payments, and notes for a user.'
+    help = 'Seeds realistic sample clients, projects, tasks, payments, and notes for users.'
 
     def add_arguments(self, parser):
-        parser.add_argument('--username', type=str, default='admin', help='Username to seed data for')
+        parser.add_argument('--username', type=str, default='', help='Specific username to seed data for (defaults to all users)')
 
     def handle(self, *args, **options):
-        username = options['username']
-        try:
-            user = User.objects.get(username=username)
-        except User.DoesNotExist:
-            user = User.objects.create_user(username=username, email=f"{username}@example.com", password="password123")
-            self.stdout.write(self.style.SUCCESS(f"Created user '{username}'"))
+        target_username = options.get('username')
+        if target_username:
+            users = User.objects.filter(username=target_username)
+        else:
+            users = User.objects.all()
 
-        seed_user_data(user)
-        self.stdout.write(self.style.SUCCESS(f"Successfully seeded sample data for '{user.username}'!"))
+        if not users.exists():
+            user = User.objects.create_user(username="sirji", email="sirji@example.com", password="password123")
+            users = [user]
+
+        for u in users:
+            seed_user_data(u)
+            self.stdout.write(self.style.SUCCESS(f"Successfully loaded realistic demo data for '{u.username}'!"))
 
 
 def seed_user_data(user):
-    """Utility function to populate realistic demo data for a user."""
     today = timezone.now().date()
 
-    # 1. Clients
     clients_data = [
         {'name': 'Acme Global Corp', 'email': 'contact@acmeglobal.com', 'phone': '+1 (555) 234-5678', 'company': 'Acme Corp', 'notes': 'Enterprise client. High priority.'},
         {'name': 'Apex Digital Studios', 'email': 'hello@apexdigital.io', 'phone': '+1 (555) 876-5432', 'company': 'Apex Media', 'notes': 'UI/UX redesign & branding.'},
         {'name': 'Nova BioLabs', 'email': 'support@novabiolabs.org', 'phone': '+1 (555) 432-1098', 'company': 'Nova Science', 'notes': 'Web portal & data visualization.'},
         {'name': 'Quantum Tech', 'email': 'billing@quantumtech.com', 'phone': '+1 (555) 987-6543', 'company': 'Quantum Soft', 'notes': 'Mobile API & Cloud DevOps.'},
+        {'name': 'Starlight Interactive', 'email': 'info@starlight.dev', 'phone': '+1 (555) 654-3210', 'company': 'Starlight Media', 'notes': 'Full stack SaaS & AI integration.'},
     ]
 
     clients = {}
@@ -51,7 +55,6 @@ def seed_user_data(user):
         )
         clients[c_data['name']] = client_obj
 
-    # 2. Projects
     projects_data = [
         {
             'name': 'E-Commerce Platform Redesign',
@@ -61,7 +64,7 @@ def seed_user_data(user):
             'priority': 'high',
             'budget': Decimal('8500.00'),
             'progress': 75,
-            'start_date': today - timedelta(days=20),
+            'start_date': today - timedelta(days=25),
             'deadline': today + timedelta(days=5),
         },
         {
@@ -72,7 +75,7 @@ def seed_user_data(user):
             'priority': 'urgent',
             'budget': Decimal('6200.00'),
             'progress': 45,
-            'start_date': today - timedelta(days=10),
+            'start_date': today - timedelta(days=15),
             'deadline': today + timedelta(days=12),
         },
         {
@@ -83,19 +86,30 @@ def seed_user_data(user):
             'priority': 'medium',
             'budget': Decimal('3400.00'),
             'progress': 100,
-            'start_date': today - timedelta(days=40),
-            'deadline': today - timedelta(days=5),
+            'start_date': today - timedelta(days=50),
+            'deadline': today - timedelta(days=10),
         },
         {
             'name': 'Data Visualization Dashboard',
             'client': clients['Nova BioLabs'],
             'description': 'Interactive analytics dashboard using Chart.js, responsive grid layout, and PDF export reporting.',
-            'status': 'planning',
-            'priority': 'medium',
+            'status': 'in_progress',
+            'priority': 'high',
             'budget': Decimal('4800.00'),
-            'progress': 15,
-            'start_date': today - timedelta(days=2),
-            'deadline': today + timedelta(days=25),
+            'progress': 60,
+            'start_date': today - timedelta(days=12),
+            'deadline': today + timedelta(days=18),
+        },
+        {
+            'name': 'AI Copilot Integration Portal',
+            'client': clients['Starlight Interactive'],
+            'description': 'LLM assistant integration with streaming WebSocket responses and user access controls.',
+            'status': 'completed',
+            'priority': 'urgent',
+            'budget': Decimal('9200.00'),
+            'progress': 100,
+            'start_date': today - timedelta(days=80),
+            'deadline': today - timedelta(days=20),
         },
     ]
 
@@ -107,14 +121,14 @@ def seed_user_data(user):
         )
         projects[p_data['name']] = proj_obj
 
-    # 3. Tasks
     tasks_data = [
         {'title': 'Complete Checkout Flow Wireframes', 'project': projects['E-Commerce Platform Redesign'], 'status': 'completed', 'priority': 'high', 'due_date': today - timedelta(days=3)},
         {'title': 'Integrate Stripe Payment Gateway', 'project': projects['E-Commerce Platform Redesign'], 'status': 'in_progress', 'priority': 'high', 'due_date': today + timedelta(days=2)},
         {'title': 'Configure JWT Authentication Endpoints', 'project': projects['Mobile App REST API Backend'], 'status': 'in_progress', 'priority': 'urgent', 'due_date': today + timedelta(days=4)},
         {'title': 'Write Comprehensive API Unit Tests', 'project': projects['Mobile App REST API Backend'], 'status': 'pending', 'priority': 'medium', 'due_date': today + timedelta(days=8)},
-        {'title': 'Export High-Res SVG Logo Assets', 'project': projects['Brand Identity & Landing Page'], 'status': 'completed', 'priority': 'low', 'due_date': today - timedelta(days=8)},
-        {'title': 'Draft Analytics Dashboard Wireframe Layout', 'project': projects['Data Visualization Dashboard'], 'status': 'in_progress', 'priority': 'medium', 'due_date': today + timedelta(days=6)},
+        {'title': 'Export High-Res SVG Logo Assets', 'project': projects['Brand Identity & Landing Page'], 'status': 'completed', 'priority': 'low', 'due_date': today - timedelta(days=12)},
+        {'title': 'Build Heatmap Matrix & Scatter Plot View', 'project': projects['Data Visualization Dashboard'], 'status': 'in_progress', 'priority': 'high', 'due_date': today + timedelta(days=5)},
+        {'title': 'Optimize Streaming Token Throughput', 'project': projects['AI Copilot Integration Portal'], 'status': 'completed', 'priority': 'urgent', 'due_date': today - timedelta(days=22)},
     ]
 
     for t_data in tasks_data:
@@ -123,13 +137,15 @@ def seed_user_data(user):
             defaults={'status': t_data['status'], 'priority': t_data['priority'], 'due_date': t_data['due_date']}
         )
 
-    # 4. Payments
     payments_data = [
-        {'project': projects['Brand Identity & Landing Page'], 'amount': Decimal('3400.00'), 'status': 'paid', 'payment_method': 'bank_transfer', 'due_date': today - timedelta(days=10), 'paid_date': today - timedelta(days=6), 'invoice_number': 'INV-2026-001'},
-        {'project': projects['E-Commerce Platform Redesign'], 'amount': Decimal('4250.00'), 'status': 'paid', 'payment_method': 'stripe', 'due_date': today - timedelta(days=15), 'paid_date': today - timedelta(days=14), 'invoice_number': 'INV-2026-002'},
-        {'project': projects['E-Commerce Platform Redesign'], 'amount': Decimal('4250.00'), 'status': 'pending', 'payment_method': 'stripe', 'due_date': today + timedelta(days=5), 'paid_date': None, 'invoice_number': 'INV-2026-003'},
-        {'project': projects['Mobile App REST API Backend'], 'amount': Decimal('3100.00'), 'status': 'paid', 'payment_method': 'paypal', 'due_date': today - timedelta(days=5), 'paid_date': today - timedelta(days=4), 'invoice_number': 'INV-2026-004'},
-        {'project': projects['Mobile App REST API Backend'], 'amount': Decimal('3100.00'), 'status': 'pending', 'payment_method': 'bank_transfer', 'due_date': today + timedelta(days=12), 'paid_date': None, 'invoice_number': 'INV-2026-005'},
+        {'project': projects['AI Copilot Integration Portal'], 'amount': Decimal('4600.00'), 'status': 'paid', 'payment_method': 'bank_transfer', 'due_date': today - timedelta(days=70), 'paid_date': today - timedelta(days=68), 'invoice_number': 'INV-2026-101'},
+        {'project': projects['AI Copilot Integration Portal'], 'amount': Decimal('4600.00'), 'status': 'paid', 'payment_method': 'bank_transfer', 'due_date': today - timedelta(days=25), 'paid_date': today - timedelta(days=22), 'invoice_number': 'INV-2026-102'},
+        {'project': projects['Brand Identity & Landing Page'], 'amount': Decimal('3400.00'), 'status': 'paid', 'payment_method': 'bank_transfer', 'due_date': today - timedelta(days=15), 'paid_date': me_date(today, 12), 'invoice_number': 'INV-2026-103'},
+        {'project': projects['E-Commerce Platform Redesign'], 'amount': Decimal('4250.00'), 'status': 'paid', 'payment_method': 'stripe', 'due_date': today - timedelta(days=10), 'paid_date': today - timedelta(days=8), 'invoice_number': 'INV-2026-104'},
+        {'project': projects['E-Commerce Platform Redesign'], 'amount': Decimal('4250.00'), 'status': 'pending', 'payment_method': 'stripe', 'due_date': today + timedelta(days=5), 'paid_date': None, 'invoice_number': 'INV-2026-105'},
+        {'project': projects['Mobile App REST API Backend'], 'amount': Decimal('3100.00'), 'status': 'paid', 'payment_method': 'paypal', 'due_date': today - timedelta(days=5), 'paid_date': today - timedelta(days=4), 'invoice_number': 'INV-2026-106'},
+        {'project': projects['Mobile App REST API Backend'], 'amount': Decimal('3100.00'), 'status': 'pending', 'payment_method': 'bank_transfer', 'due_date': today + timedelta(days=12), 'paid_date': None, 'invoice_number': 'INV-2026-107'},
+        {'project': projects['Data Visualization Dashboard'], 'amount': Decimal('2400.00'), 'status': 'paid', 'payment_method': 'stripe', 'due_date': today - timedelta(days=2), 'paid_date': today - timedelta(days=1), 'invoice_number': 'INV-2026-108'},
     ]
 
     for pm_data in payments_data:
@@ -138,11 +154,11 @@ def seed_user_data(user):
             defaults=pm_data
         )
 
-    # 5. Notes
     notes_data = [
         {'title': 'Client Kickoff Meeting Notes', 'content': 'Acme Corp team prefers clean purple/indigo color schemes with responsive drawer sidebar layout.'},
         {'title': 'API Rate Limits & Authentication', 'content': 'Enforce sliding window rate limit of 100 calls/min on /api/v1/ endpoints.'},
         {'title': 'Deployment Credentials', 'content': 'Production environment deployed via Vercel Serverless with WhiteNoise compressed static assets.'},
+        {'title': 'Visualization Studio Specifications', 'content': 'Support Bar, Line, Area, Doughnut, Scatter plot, and Workload Heatmap grid rendering.'},
     ]
 
     for n_data in notes_data:
@@ -152,15 +168,19 @@ def seed_user_data(user):
         )
 
     import uuid
-    # 6. Activity Logs
     logs_data = [
         ('login', 'user', uuid.uuid4(), f"User {user.username} logged into FreelanceTrack"),
         ('create', 'project', projects['E-Commerce Platform Redesign'].id, f"Created project '{projects['E-Commerce Platform Redesign'].name}'"),
-        ('create', 'payment', uuid.uuid4(), "Recorded payment of $3,400.00 for Brand Identity"),
+        ('create', 'payment', uuid.uuid4(), "Recorded payment of $4,250.00 for E-Commerce Platform"),
         ('update', 'task', uuid.uuid4(), "Completed task 'Checkout Flow Wireframes'"),
+        ('create', 'project', projects['AI Copilot Integration Portal'].id, f"Created project '{projects['AI Copilot Integration Portal'].name}'"),
     ]
 
     for action, m_type, m_id, desc in logs_data:
         ActivityLog.objects.create(
             user=user, action=action, model_type=m_type, model_id=m_id, description=desc
         )
+
+
+def me_date(today, days_back):
+    return today - timedelta(days=days_back)
