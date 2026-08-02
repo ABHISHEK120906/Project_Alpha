@@ -3,10 +3,10 @@
 
 {% block content %}
 
-<!-- Custom Styles for 3D Polygon Mesh & 3D Glassmorphism -->
+<!-- Custom Styles for 3D Polygon Mesh & Brand Color System -->
 <style>
   body.auth-body {
-    background: linear-gradient(135deg, #1f031d 0%, #0e2026 40%, #05161b 100%) !important;
+    background: linear-gradient(135deg, #003333 0%, #002222 50%, #001A1A 100%) !important;
     overflow-x: hidden;
     font-family: 'Inter', sans-serif;
   }
@@ -27,19 +27,19 @@
     z-index: 10;
   }
 
-  /* Left Panel styling matching screenshot */
+  /* Left Panel styling */
   .auth-panel-left {
-    background: linear-gradient(135deg, rgba(31,3,29,0.75) 0%, rgba(14,32,38,0.85) 100%) !important;
-    border-right: 1px solid rgba(0, 230, 168, 0.15);
+    background: linear-gradient(135deg, rgba(0,51,51,0.9) 0%, rgba(18,105,98,0.85) 100%) !important;
+    border-right: 1px solid var(--brand-primary-teal);
   }
 
-  /* Futuristic 3D Glass Card matching Photo 3D mesh style */
+  /* Glass Card matching brand system */
   .auth-card {
-    background: linear-gradient(145deg, rgba(20, 68, 62, 0.72) 0%, rgba(7, 30, 34, 0.9) 100%) !important;
-    border: 1px solid rgba(0, 242, 195, 0.35) !important;
-    box-shadow: 0 20px 60px rgba(0, 230, 168, 0.18), inset 0 0 25px rgba(0, 242, 195, 0.08) !important;
+    background: var(--bg-card) !important;
+    border: 1.5px solid var(--brand-secondary-teal) !important;
+    box-shadow: 0 20px 60px rgba(0, 51, 51, 0.25) !important;
     backdrop-filter: blur(18px) !important;
-    border-radius: 6px !important;
+    border-radius: 16px !important;
     padding: 44px 38px !important;
     text-align: center;
     max-width: 440px !important;
@@ -47,130 +47,131 @@
     transform-style: preserve-3d;
   }
   .auth-card:hover {
-    box-shadow: 0 25px 70px rgba(0, 230, 168, 0.28), inset 0 0 30px rgba(0, 242, 195, 0.12) !important;
+    box-shadow: 0 25px 70px rgba(0, 127, 127, 0.35) !important;
+    border-color: var(--brand-primary-teal) !important;
   }
 
   /* Title Header */
   .member-login-title {
     font-size: 20px;
-    font-weight: 700;
-    color: #6ee7d0;
-    letter-spacing: 4px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 24px;
-    text-shadow: 0 0 12px rgba(110, 231, 208, 0.4);
     transform: translateZ(15px);
   }
 
   /* Role Selector Tabs */
   .role-selector-container {
-    background: rgba(4, 22, 25, 0.8) !important;
-    border: 1px solid rgba(0, 230, 168, 0.25) !important;
-    border-radius: 4px !important;
-    padding: 3px !important;
+    background: var(--bg-canvas) !important;
+    border: 1.5px solid var(--brand-secondary-teal) !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
     margin-bottom: 26px !important;
     transform: translateZ(10px);
   }
   .role-selector-container button {
-    color: rgba(110, 231, 208, 0.75);
+    color: var(--text-secondary);
   }
 
-  /* Futuristic Dark Input Fields */
+  /* Form Input Fields */
   .auth-form-group {
     transform: translateZ(12px);
   }
   .auth-input-wrapper {
-    background: rgba(6, 28, 32, 0.9) !important;
-    border: 1px solid rgba(0, 230, 168, 0.25) !important;
-    border-radius: 4px !important;
+    background: var(--bg-card) !important;
+    border: 1.5px solid var(--brand-secondary-teal) !important;
+    border-radius: 12px !important;
     transition: all 0.3s ease;
   }
   .auth-input-wrapper:focus-within {
-    border-color: #00e6a8 !important;
-    box-shadow: 0 0 15px rgba(0, 230, 168, 0.35) !important;
+    border-color: var(--brand-primary-teal) !important;
+    box-shadow: 0 0 15px rgba(0, 127, 127, 0.25) !important;
   }
   .auth-input-icon {
-    background: rgba(0, 230, 168, 0.08) !important;
-    color: #6ee7d0 !important;
-    border-right: 1px solid rgba(0, 230, 168, 0.2) !important;
+    background: var(--brand-very-light-mint) !important;
+    color: var(--brand-primary-dark) !important;
+    border-right: 1px solid var(--brand-secondary-teal) !important;
     padding: 0 16px !important;
   }
   .auth-input {
-    color: #e0fdf7 !important;
+    color: var(--text-primary) !important;
     background: transparent !important;
   }
   .auth-input::placeholder {
-    color: rgba(110, 231, 208, 0.45) !important;
+    color: var(--text-muted) !important;
   }
 
-  /* Light Teal LOGIN Button */
+  /* LOGIN Button */
   .btn-login-submit {
     width: 100%;
-    padding: 13px;
-    background: #cbf7ed;
-    color: #082924;
+    padding: 14px;
+    background: var(--brand-primary-teal);
+    color: #FFFFFF;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     transition: all 0.3s ease;
     margin-top: 10px;
     margin-bottom: 18px;
-    box-shadow: 0 4px 15px rgba(203, 247, 237, 0.25);
+    box-shadow: 0 4px 15px rgba(0, 127, 127, 0.35);
     transform: translateZ(15px);
   }
   .btn-login-submit:hover {
-    background: #ffffff;
-    color: #051d19;
-    box-shadow: 0 6px 22px rgba(255, 255, 255, 0.45);
+    background: var(--brand-primary-dark);
+    color: #FFFFFF;
+    box-shadow: 0 6px 22px rgba(0, 51, 51, 0.45);
     transform: translateZ(18px) translateY(-1px);
   }
 
   /* Forgot Password Link */
   .forgot-pwd-link {
-    color: rgba(224, 253, 247, 0.85);
-    font-size: 13px;
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    font-weight: 600;
     text-decoration: none;
     transition: color 0.2s ease;
     display: inline-block;
     transform: translateZ(8px);
   }
   .forgot-pwd-link:hover {
-    color: #00e6a8;
+    color: var(--brand-primary-teal);
     text-decoration: underline;
   }
 
   /* Separator Line */
   .auth-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 230, 168, 0.35), transparent);
+    background: var(--brand-secondary-teal);
     margin: 24px 0;
   }
 
-  /* Bright Mint REGISTER Button */
+  /* REGISTER Button */
   .btn-register-action {
     display: block;
     width: 100%;
     padding: 13px;
-    background: #00e6a8;
-    color: #04241d;
+    background: var(--brand-light-mint);
+    color: var(--brand-primary-dark);
     font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 230, 168, 0.35);
+    box-shadow: 0 4px 20px rgba(164, 240, 234, 0.35);
     transform: translateZ(15px);
   }
   .btn-register-action:hover {
-    background: #15f0b4;
-    color: #021a15;
-    box-shadow: 0 6px 28px rgba(0, 230, 168, 0.55);
+    background: var(--brand-very-light-mint);
+    color: var(--brand-primary-dark);
+    box-shadow: 0 6px 28px rgba(210, 247, 244, 0.55);
     transform: translateZ(18px) translateY(-1px);
   }
 </style>
@@ -183,17 +184,17 @@
 
 <!-- Role Selector (User vs Admin) -->
 <div class="role-selector-container mb-4" style="display:flex;">
-  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:3px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('user')">
+  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('user')">
     <i class="fas fa-user me-1"></i> USER
   </button>
-  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:3px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('admin')">
+  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('admin')">
     <i class="fas fa-shield-alt me-1"></i> ADMIN
   </button>
 </div>
 
 {% if messages %}
   {% for message in messages %}
-  <div class="auth-alert auth-alert-{{ message.tags }}" style="background:rgba(220,53,69,0.2);border:1px solid #dc3545;color:#ff869a;">
+  <div class="auth-alert auth-alert-{{ message.tags }}" style="background:#FEF2F2;border:1px solid #FCA5A5;color:#DC2626;">
     <i class="fas fa-exclamation-circle me-1"></i>
     <span>{{ message }}</span>
   </div>
@@ -235,7 +236,7 @@
         required
         autocomplete="current-password"
       >
-      <button type="button" class="btn btn-link text-decoration-none py-0 px-3" id="togglePwd" style="color:#6ee7d0;" aria-label="Toggle password">
+      <button type="button" class="btn btn-link text-decoration-none py-0 px-3" id="togglePwd" style="color:var(--brand-primary-teal);" aria-label="Toggle password">
         <i class="fas fa-eye" id="pwdEyeIcon"></i>
       </button>
     </div>
@@ -249,7 +250,7 @@
 
 <div class="mb-3">
   <a href="#" onclick="alert('Password reset instructions have been dispatched. Please contact your Super Admin for direct access.'); return false;" class="forgot-pwd-link">
-    Forgot Password? <span style="text-decoration:underline;color:#00e6a8;">Click Here</span>
+    Forgot Password? <span style="text-decoration:underline;color:var(--brand-primary-teal);">Click Here</span>
   </a>
 </div>
 
@@ -268,19 +269,19 @@ function setLoginType(type) {
   const submitBtn = document.getElementById('loginSubmitBtn');
 
   if (type === 'admin') {
-    btnAdmin.style.background = '#00e6a8';
-    btnAdmin.style.color = '#04241d';
-    btnAdmin.style.boxShadow = '0 2px 10px rgba(0,230,168,0.4)';
+    btnAdmin.style.background = '#007F7F';
+    btnAdmin.style.color = '#FFFFFF';
+    btnAdmin.style.boxShadow = '0 2px 10px rgba(0,127,127,0.4)';
     btnUser.style.background = 'transparent';
-    btnUser.style.color = 'rgba(110,231,208,0.6)';
+    btnUser.style.color = 'var(--text-secondary)';
     btnUser.style.boxShadow = 'none';
     submitBtn.innerHTML = 'LOGIN AS ADMIN';
   } else {
-    btnUser.style.background = '#00e6a8';
-    btnUser.style.color = '#04241d';
-    btnUser.style.boxShadow = '0 2px 10px rgba(0,230,168,0.4)';
+    btnUser.style.background = '#007F7F';
+    btnUser.style.color = '#FFFFFF';
+    btnUser.style.boxShadow = '0 2px 10px rgba(0,127,127,0.4)';
     btnAdmin.style.background = 'transparent';
-    btnAdmin.style.color = 'rgba(110,231,208,0.6)';
+    btnAdmin.style.color = 'var(--text-secondary)';
     btnAdmin.style.boxShadow = 'none';
     submitBtn.innerHTML = 'LOGIN';
   }
@@ -324,7 +325,7 @@ function setLoginType(type) {
     });
   }
 
-  // ── 3D Floating Low-Poly Polygon Mesh Background Engine (Matches Reference Photo) ──
+  // ── 3D Floating Low-Poly Polygon Mesh Background Engine ──
   const canvas = document.getElementById('constellationCanvas');
   if (canvas) {
     const ctx = canvas.getContext('2d');
@@ -336,7 +337,6 @@ function setLoginType(type) {
       height = canvas.height = window.innerHeight;
     });
 
-    // Generate 3D Points
     const numPoints = 65;
     const points = [];
     const focalLength = 400;
@@ -368,7 +368,6 @@ function setLoginType(type) {
       for (let i = 0; i < points.length; i++) {
         const p = points[i];
 
-        // Move 3D points
         p.x += p.vx;
         p.y += p.vy;
         p.z += p.vz;
@@ -377,13 +376,11 @@ function setLoginType(type) {
         if (Math.abs(p.y) > height) p.vy *= -1;
         if (Math.abs(p.z) > 400) p.vz *= -1;
 
-        // Rotate 3D points
         let y1 = p.y * cosX - p.z * sinX;
         let z1 = p.z * cosX + p.y * sinX;
         let x2 = p.x * cosY + z1 * sinY;
         let z2 = z1 * cosY - p.x * sinY;
 
-        // 3D Perspective projection
         const scale = focalLength / (focalLength + z2 + 500);
         const projX = width / 2 + x2 * scale;
         const projY = height / 2 + y1 * scale;
@@ -391,7 +388,6 @@ function setLoginType(type) {
         projectedPoints.push({ x: projX, y: projY, z: z2, scale: scale });
       }
 
-      // Draw 3D Polygons & Shaded Triangles (Matching Photo Mesh)
       const maxConnectDist = 180;
 
       for (let i = 0; i < projectedPoints.length; i++) {
@@ -408,7 +404,6 @@ function setLoginType(type) {
               const dist3 = Math.hypot(p3.x - p1.x, p3.y - p1.y);
 
               if (dist2 < maxConnectDist && dist3 < maxConnectDist) {
-                // Draw 3D Shaded Polygon Face
                 const avgAlpha = (1 - (p1.z + p2.z + p3.z) / 1200) * 0.15;
                 ctx.beginPath();
                 ctx.moveTo(p1.x, p1.y);
@@ -417,12 +412,12 @@ function setLoginType(type) {
                 ctx.closePath();
 
                 const grad = ctx.createLinearGradient(p1.x, p1.y, p3.x, p3.y);
-                grad.addColorStop(0, `rgba(0, 230, 168, ${Math.max(0.02, avgAlpha)})`);
-                grad.addColorStop(1, `rgba(13, 85, 80, ${Math.max(0.01, avgAlpha * 0.8)})`);
+                grad.addColorStop(0, `rgba(0, 127, 127, ${Math.max(0.02, avgAlpha)})`);
+                grad.addColorStop(1, `rgba(18, 105, 98, ${Math.max(0.01, avgAlpha * 0.8)})`);
                 ctx.fillStyle = grad;
                 ctx.fill();
 
-                ctx.strokeStyle = `rgba(0, 230, 168, ${Math.max(0.05, avgAlpha * 1.5)})`;
+                ctx.strokeStyle = `rgba(0, 127, 127, ${Math.max(0.05, avgAlpha * 1.5)})`;
                 ctx.lineWidth = 0.6;
                 ctx.stroke();
               }
@@ -430,12 +425,11 @@ function setLoginType(type) {
           }
         }
 
-        // Draw 3D Vertex Dot
         const dotAlpha = Math.max(0.2, (p1.z + 400) / 800);
         ctx.beginPath();
         ctx.arc(p1.x, p1.y, 2.5 * p1.scale, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 230, 168, ${dotAlpha})`;
-        ctx.shadowColor = '#00e6a8';
+        ctx.fillStyle = `rgba(0, 127, 127, ${dotAlpha})`;
+        ctx.shadowColor = '#007F7F';
         ctx.shadowBlur = 8;
         ctx.fill();
         ctx.shadowBlur = 0;

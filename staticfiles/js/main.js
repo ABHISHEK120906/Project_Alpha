@@ -87,9 +87,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function applyChartJsTheme(theme) {
     const isDark = theme === 'dark';
-    const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
-    const textColor = isDark ? '#CBD5E1' : '#334155';
-    const mutedColor = isDark ? '#94A3B8' : '#64748B';
+    const gridColor = isDark ? 'rgba(164, 240, 234, 0.15)' : 'rgba(18, 105, 98, 0.15)';
+    const textColor = isDark ? '#D2F7F4' : '#003333';
+    const mutedColor = isDark ? '#A4F0EA' : '#126962';
 
     if (window.Chart && window.Chart.instances) {
       Object.values(window.Chart.instances).forEach(chart => {

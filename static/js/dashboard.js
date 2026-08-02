@@ -52,8 +52,8 @@ function renderEarningsChart(chartData) {
   if (!ctx) return;
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
-  const textColor = isDark ? '#94a3b8' : '#64748b';
+  const gridColor = isDark ? 'rgba(164,240,234,0.15)' : 'rgba(18,105,98,0.15)';
+  const textColor = isDark ? '#D2F7F4' : '#003333';
 
   const chart = new Chart(ctx, {
     type: 'line',
@@ -62,12 +62,12 @@ function renderEarningsChart(chartData) {
       datasets: [{
         label: 'Monthly Revenue ($)',
         data: chartData.data || [],
-        borderColor: '#4f46e5',
-        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+        borderColor: '#007F7F',
+        backgroundColor: 'rgba(0, 127, 127, 0.15)',
         borderWidth: 3,
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: '#4f46e5',
+        pointBackgroundColor: '#007F7F',
         pointRadius: 4,
         pointHoverRadius: 6,
       }]
@@ -109,7 +109,7 @@ function renderStatusChart(statusData) {
   if (!ctx) return;
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const textColor = isDark ? '#94a3b8' : '#64748b';
+  const textColor = isDark ? '#D2F7F4' : '#003333';
 
   const chart = new Chart(ctx, {
     type: 'doughnut',
@@ -122,7 +122,7 @@ function renderStatusChart(statusData) {
           statusData.on_hold || 0,
           statusData.planning || 0
         ],
-        backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#8b5cf6'],
+        backgroundColor: ['#007F7F', '#126962', '#003333', '#A4F0EA'],
         borderWidth: 0,
         hoverOffset: 4
       }]

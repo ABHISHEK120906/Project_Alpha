@@ -17,10 +17,10 @@
 
 <!-- Progress Overview -->
 <div class="row g-3 mb-4">
-  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:#4f46e5;">{{ project.progress }}%</div><div style="font-size:12px;color:var(--text-muted);">Progress</div></div></div>
-  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:#10b981;">${{ total_paid|floatformat:2 }}</div><div style="font-size:12px;color:var(--text-muted);">Paid</div></div></div>
-  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:#ef4444;">${{ total_pending|floatformat:2 }}</div><div style="font-size:12px;color:var(--text-muted);">Pending</div></div></div>
-  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:#8b5cf6;">{{ completed_tasks }}/{{ total_tasks }}</div><div style="font-size:12px;color:var(--text-muted);">Tasks Done</div></div></div>
+  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:var(--brand-primary-teal);">{{ project.progress }}%</div><div style="font-size:12px;color:var(--text-muted);">Progress</div></div></div>
+  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:var(--brand-primary-teal);">${{ total_paid|floatformat:2 }}</div><div style="font-size:12px;color:var(--text-muted);">Paid</div></div></div>
+  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:#DC2626;">${{ total_pending|floatformat:2 }}</div><div style="font-size:12px;color:var(--text-muted);">Pending</div></div></div>
+  <div class="col-md-3"><div class="card text-center py-3"><div style="font-size:22px;font-weight:800;color:var(--brand-secondary-teal);">{{ completed_tasks }}/{{ total_tasks }}</div><div style="font-size:12px;color:var(--text-muted);">Tasks Done</div></div></div>
 </div>
 
 <div class="row g-3">
@@ -32,14 +32,14 @@
         <div class="mb-3">
           <label class="detail-label">Progress</label>
           <div class="progress mt-2" style="height:10px;">
-            <div class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar" role="progressbar" style="width:0%;background-color:var(--brand-primary-teal);" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
         <div class="detail-grid">
           <span class="detail-label">Client</span><span class="detail-value"><a href="{% url 'core:client_detail' project.client.id %}">{{ project.client.name }}</a></span>
           <span class="detail-label">Status</span><span class="detail-value"><span class="badge-status status-{{ project.status }}">{{ project.get_status_display }}</span></span>
           <span class="detail-label">Priority</span><span class="detail-value"><span class="priority-{{ project.priority }}">{{ project.get_priority_display }}</span></span>
-          {% if project.budget %}<span class="detail-label">Budget</span><span class="detail-value" style="font-weight:700;color:#4f46e5;">${{ project.budget|floatformat:2 }}</span>{% endif %}
+          {% if project.budget %}<span class="detail-label">Budget</span><span class="detail-value" style="font-weight:700;color:var(--brand-primary-teal);">${{ project.budget|floatformat:2 }}</span>{% endif %}
           {% if project.start_date %}<span class="detail-label">Start Date</span><span class="detail-value">{{ project.start_date|date:"M d, Y" }}</span>{% endif %}
           {% if project.deadline %}<span class="detail-label">Deadline</span><span class="detail-value {% if project.is_overdue %}overdue{% endif %}">{% if project.is_overdue %}<i class="fas fa-exclamation-circle me-1"></i>{% endif %}{{ project.deadline|date:"M d, Y" }}</span>{% endif %}
           <span class="detail-label">Created</span><span class="detail-value">{{ project.created_at|date:"M d, Y" }}</span>

@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // 1. Monthly Revenue Trend (Line Chart)
-  createLineChart('chartMonthlyRevenue', 'Revenue ($)', chartData.months, chartData.revenue, '#00d2ff');
+  createLineChart('chartMonthlyRevenue', 'Revenue ($)', chartData.months, chartData.revenue, '#007F7F');
 
   // 2. Project Status (Donut Chart)
   const ctxStatus = document.getElementById('chartProjectStatus');
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function() {
         labels: ['Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled'],
         datasets: [{
           data: chartData.project_status,
-          backgroundColor: ['#ffc107', '#17a2b8', '#28a745', '#6c757d', '#dc3545'],
+          backgroundColor: ['#007F7F', '#126962', '#003333', '#A4F0EA', '#D2F7F4'],
           borderWidth: 0
         }]
       },
@@ -275,8 +275,8 @@ document.addEventListener("DOMContentLoaded", function() {
       data: {
         labels: chartData.months,
         datasets: [
-          { label: 'Revenue ($)', data: chartData.revenue, backgroundColor: '#00d2ff', borderRadius: 4 },
-          { label: 'Expenses ($)', data: chartData.expenses, backgroundColor: '#ff4757', borderRadius: 4 }
+          { label: 'Revenue ($)', data: chartData.revenue, backgroundColor: '#007F7F', borderRadius: 4 },
+          { label: 'Expenses ($)', data: chartData.expenses, backgroundColor: '#126962', borderRadius: 4 }
         ]
       },
       options: { responsive: true, maintainAspectRatio: false }
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // 4. Top Clients (Horizontal Bar Chart)
-  createBarChart('chartTopClients', 'Spent ($)', chartData.top_clients_names, chartData.top_clients_spent, '#7c3aed', true);
+  createBarChart('chartTopClients', 'Spent ($)', chartData.top_clients_names, chartData.top_clients_spent, '#007F7F', true);
 });
 </script>
 {% endblock %}

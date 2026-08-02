@@ -70,9 +70,16 @@ window.VisualizationStudio = (function () {
           renderChart('financialTrendChart', 'line', {
             labels: data.financial_trend.labels,
             datasets: [
-              { label: 'Income', data: data.financial_trend.income, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.35 },
-              { label: 'Expenses', data: data.financial_trend.expenses, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.35 },
-              { label: 'Net Profit', data: data.financial_trend.profit, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', fill: false, tension: 0.35 }
+              { label: 'Revenue', data: data.financial_trend.income, borderColor: '#007F7F', backgroundColor: 'rgba(0,127,127,0.15)', fill: true, tension: 0.35 },
+              { label: 'Net Profit', data: data.financial_trend.profit, borderColor: '#126962', backgroundColor: 'rgba(18,105,98,0.1)', fill: false, tension: 0.35 }
+            ]
+          });
+
+          renderChart('incomeVsExpenseChart', 'bar', {
+            labels: data.financial_trend.labels,
+            datasets: [
+              { label: 'Income ($)', data: data.financial_trend.income, backgroundColor: '#007F7F', borderRadius: 4 },
+              { label: 'Expenses ($)', data: data.financial_trend.expenses, backgroundColor: '#126962', borderRadius: 4 }
             ]
           });
         }
@@ -83,17 +90,7 @@ window.VisualizationStudio = (function () {
           renderChart('statusDistChart', 'doughnut', {
             labels: keys.map(k => k.replace('_', ' ').toUpperCase()),
             data: vals,
-            colors: ['#7c3aed', '#10b981', '#f59e0b', '#ef4444', '#3b82f6']
-          });
-        }
-
-        if (data.priority_distribution) {
-          const keys = Object.keys(data.priority_distribution);
-          const vals = Object.values(data.priority_distribution);
-          renderChart('priorityDistChart', 'bar', {
-            labels: keys.map(k => k.toUpperCase()),
-            data: vals,
-            colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+            colors: ['#007F7F', '#126962', '#003333', '#A4F0EA', '#D2F7F4']
           });
         }
 
@@ -119,8 +116,8 @@ window.VisualizationStudio = (function () {
     }
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#94a3b8' : '#64748b';
-    const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+    const textColor = isDark ? '#D2F7F4' : '#003333';
+    const gridColor = isDark ? 'rgba(164,240,234,0.15)' : 'rgba(18,105,98,0.15)';
 
     let chartConfig = {
       type: chartType,
@@ -129,8 +126,8 @@ window.VisualizationStudio = (function () {
         datasets: configData.datasets || [{
           label: configData.label || 'Amount ($)',
           data: configData.data || [],
-          backgroundColor: configData.colors || (chartType === 'doughnut' ? ['#7c3aed', '#10b981', '#f59e0b', '#ef4444'] : '#7c3aed'),
-          borderColor: '#7c3aed',
+          backgroundColor: configData.colors || (chartType === 'doughnut' ? ['#007F7F', '#126962', '#003333', '#A4F0EA', '#D2F7F4'] : '#007F7F'),
+          borderColor: '#007F7F',
           borderWidth: 1,
           borderRadius: 6
         }]
