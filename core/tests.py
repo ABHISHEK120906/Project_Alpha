@@ -478,3 +478,156 @@ class SuperAdminModuleTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
 
+class EmailVerificationSystemTest(TestCase):
+    def setUp(self):
+        from django.core import mail
+        self.mail = mail
+        self.admin_user, created = User.objects.get_or_create(
+            username='Svathi',
+            defaults={
+                'first_name': 'Svathi',
+                'email': 'abhishekmutthalkar121@gmail.com',
+                'is_staff': True,
+                'is_superuser': True
+            }
+        )
+        if created:
+            self.admin_user.set_password('svathi@2244')
+            self.admin_user.save()
+        self.admin_profile, _ = UserProfile.objects.get_or_create(user=self.admin_user)
+        self.admin_profile.role = 'admin'
+        self.admin_profile.is_verified = True
+        self.admin_profile.save()
+
+    def test_registration_requires_email_and_creates_inactive_user(self):
+        resp = self.client.post(reverse('core:register'), {
+            'username': 'newuser1',
+            'email': 'newuser1@example.com',
+            'first_name': 'New',
+            'last_name': 'User',
+            'password1': 'StrongPass123!',
+            'password2': 'StrongPass123!',
+        })
+        self.assertRedirects(resp, reverse('core:verify_email'))
+        
+        user = User.objects.get(username='newuser1')
+        self.assertFalse(user.is_active)
+        self.assertFalse(user.profile.is_verified)
+        self.assertEqual(user.profile.role, 'user')
+        
+        token_obj = user.verification_tokens.first()
+        self.assertIsNotNone(token_obj)
+        self.assertFalse(token_obj.is_used)
+
+        self.assertTrue(len(self.mail.outbox) >= 1)
+        self.assertIn('Verify your FreelanceTrack email', self.mail.outbox[0].subject)
+
+    def test_unverified_user_cannot_login(self):
+        user = User.objects.create_user(username='unverified', email='unverified@example.com', password='password123!')
+        user.is_active = False
+        user.save()
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        profile.is_verified = False
+        profile.save()
+
+        resp = self.client.post(reverse('core:login'), {
+            'username': 'unverified',
+            'password': 'password123!',
+            'login_type': 'user'
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'not verified')
+
+    def test_verification_via_token_activates_user_and_sends_notifications(self):
+        user = User.objects.create_user(username='verifyuser', email='verifyuser@example.com', password='password123!')
+        user.is_active = False
+        user.save()
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        profile.is_verified = False
+        profile.save()
+
+        from .models import EmailVerificationToken
+        token_obj = EmailVerificationToken.objects.create(
+            user=user,
+            token='testtoken123456',
+            otp='654321',
+            expires_at=timezone.now() + timedelta(hours=24)
+        )
+
+        self.mail.outbox = []
+        resp = self.client.get(reverse('core:verify_email_token', kwargs={'token': 'testtoken123456'}))
+        self.assertRedirects(resp, reverse('core:login'))
+
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.profile.is_verified)
+
+        self.assertEqual(len(self.mail.outbox), 2)
+        recipients = [m.to[0] for m in self.mail.outbox]
+        self.assertIn('abhishekmutthalkar121@gmail.com', recipients)
+        self.assertIn('verifyuser@example.com', recipients)
+
+    def test_verification_via_otp_code(self):
+        user = User.objects.create_user(username='otpuser', email='otpuser@example.com', password='password123!')
+        user.is_active = False
+        user.save()
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        profile.is_verified = False
+        profile.save()
+
+        from .models import EmailVerificationToken
+        token_obj = EmailVerificationToken.objects.create(
+            user=user,
+            token='testtoken999',
+            otp='112233',
+            expires_at=timezone.now() + timedelta(hours=24)
+        )
+
+        resp = self.client.post(reverse('core:verify_email'), {'otp': '112233'})
+        self.assertRedirects(resp, reverse('core:login'))
+
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.profile.is_verified)
+
+    def test_expired_token_rejected(self):
+        user = User.objects.create_user(username='expuser', email='expuser@example.com', password='password123!')
+        user.is_active = False
+        user.save()
+
+        from .models import EmailVerificationToken
+        token_obj = EmailVerificationToken.objects.create(
+            user=user,
+            token='expiredtoken',
+            otp='000000',
+            expires_at=timezone.now() - timedelta(hours=1)
+        )
+
+        resp = self.client.get(reverse('core:verify_email_token', kwargs={'token': 'expiredtoken'}))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'invalid or has expired')
+        user.refresh_from_db()
+        self.assertFalse(user.is_active)
+
+    def test_resend_verification_email(self):
+        user = User.objects.create_user(username='resenduser', email='resend@example.com', password='password123!')
+        user.is_active = False
+        user.save()
+
+        self.mail.outbox = []
+        resp = self.client.post(reverse('core:resend_verification'), {'email': 'resend@example.com'})
+        self.assertRedirects(resp, reverse('core:verify_email'))
+        self.assertTrue(len(self.mail.outbox) >= 1)
+        self.assertEqual(user.verification_tokens.filter(is_used=False).count(), 1)
+
+    def test_single_admin_enforcement(self):
+        resp = self.client.post(reverse('core:register'), {
+            'username': 'Svathi',
+            'email': 'fakeadmin@example.com',
+            'password1': 'StrongPass123!',
+            'password2': 'StrongPass123!',
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'reserved for Super Admin')
+
+

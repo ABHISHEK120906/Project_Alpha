@@ -1,0 +1,37 @@
+{% extends 'auth_base.html' %}
+{% block title %}Resend Verification Email — FreelanceTrack{% endblock %}
+
+{% block content %}
+
+<h1 class="auth-heading">Resend Verification Email</h1>
+<p class="auth-subheading">Enter your registered email address to receive a new verification link and OTP.</p>
+
+{% if messages %}
+  {% for message in messages %}
+  <div class="auth-alert auth-alert-{{ message.tags }}">
+    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'danger' or message.tags == 'error' %}fa-times-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}" style="flex-shrink:0;margin-top:1px;"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" action="{% url 'core:resend_verification' %}" id="resendForm">
+  {% csrf_token %}
+
+  <div class="auth-form-group">
+    <label class="auth-label" for="id_email">Registered Email Address</label>
+    <div class="auth-input-wrapper">
+      <span class="auth-input-icon"><i class="fas fa-envelope"></i></span>
+      <input type="email" name="email" id="id_email" class="form-control" placeholder="your@email.com" required autofocus>
+    </div>
+  </div>
+
+  <button type="submit" class="auth-btn" id="resendSubmitBtn">
+    <i class="fas fa-paper-plane"></i> Send Verification Email
+  </button>
+</form>
+
+<div class="auth-footer-text">
+  Remembered your login? <a href="{% url 'core:login' %}">Sign in</a>
+</div>
+{% endblock %}

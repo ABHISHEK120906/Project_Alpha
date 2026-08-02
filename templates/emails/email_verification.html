@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify your email - FreelanceTrack</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333333; }
+    .email-card { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+    .email-header { background: linear-gradient(135deg, #007F7F, #005F5F); padding: 30px 25px; text-align: center; color: #ffffff; }
+    .email-header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+    .email-body { padding: 30px 25px; line-height: 1.6; }
+    .email-body p { margin-top: 0; font-size: 15px; color: #4b5563; }
+    .btn-verify { display: inline-block; background-color: #007F7F; color: #ffffff !important; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 20px 0; text-align: center; }
+    .otp-box { background: #f0fdf4; border: 1px dashed #16a34a; border-radius: 8px; padding: 15px; text-align: center; margin: 20px 0; }
+    .otp-code { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: #15803d; margin: 5px 0; font-family: monospace; }
+    .link-alt { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; word-break: break-all; font-size: 12px; color: #64748b; margin-top: 15px; }
+    .email-footer { background: #f8fafc; padding: 20px 25px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="email-card">
+    <div class="email-header">
+      <h1>✉️ Verify Your Email Address</h1>
+    </div>
+    <div class="email-body">
+      <p>Hello <strong>{{ username }}</strong>,</p>
+      <p>Thank you for signing up for <strong>FreelanceTrack</strong>! To complete your registration and activate your account, please verify your email address.</p>
+      
+      <div style="text-align: center;">
+        <a href="{{ verification_url }}" class="btn-verify">Click Here to Verify Email</a>
+      </div>
+
+      <div class="otp-box">
+        <p style="margin:0; font-size:13px; color:#166534; font-weight:600;">Or enter this 6-digit OTP code on the verification page:</p>
+        <div class="otp-code">{{ otp }}</div>
+        <p style="margin:0; font-size:12px; color:#15803d;">Expires in 24 hours</p>
+      </div>
+
+      <p>If the button above does not work, copy and paste this link into your web browser:</p>
+      <div class="link-alt">{{ verification_url }}</div>
+
+      <p style="margin-top: 25px; font-size: 13px; color: #94a3b8;">If you did not create a FreelanceTrack account, please ignore this email.</p>
+    </div>
+    <div class="email-footer">
+      &copy; FreelanceTrack &bull; All Rights Reserved
+    </div>
+  </div>
+</body>
+</html>

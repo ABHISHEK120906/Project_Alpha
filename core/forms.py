@@ -1,5 +1,7 @@
 from django import forms
-from django.core.validators import EmailValidator, RegexValidator
+from django.core.validators import EmailValidator, RegexValidator, validate_email
+from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import (Client, Project, Payment, Task, Note, UserProfile,
                      Income, Expense, Invoice, InvoiceItem, CalendarEvent,
@@ -423,3 +425,53 @@ class ProjectCommentForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Write an internal note or comment...'}),
         }
+
+
+class UserRegistrationForm(UserCreationForm):
+    """
+    Mandatory registration form requiring valid email verification.
+    """
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'your@email.com', 'class': 'form-control'}),
+        help_text="A verification link will be sent to this email address."
+    )
+    first_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-control'})
+    )
+    last_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'})
+    )
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip().lower()
+        if not email:
+            raise ValidationError("Email address is strictly required.")
+
+        try:
+            validate_email(email)
+        except ValidationError:
+            raise ValidationError("Enter a valid email address.")
+
+        # Check for duplicate email across all existing accounts
+        if User.objects.filter(email__iexact=email).exists():
+            raise ValidationError("This email address is already registered. Please log in or use a different email.")
+
+        return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+
+        if username.lower() == 'svathi':
+            raise ValidationError("The username 'Svathi' is reserved for Super Admin and cannot be registered.")
+
+        if User.objects.filter(username__iexact=username).exists():
+            raise ValidationError("This username is already taken. Please choose a different one.")
+
+        return username

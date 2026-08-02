@@ -318,8 +318,12 @@ def admin_user_create(request):
             messages.error(request, f"Username '{username}' already exists.")
             return redirect('core:admin_users_list')
 
-        if User.objects.filter(email=email).exists():
+        if email and User.objects.filter(email__iexact=email).exists():
             messages.error(request, f"Email '{email}' is already registered.")
+            return redirect('core:admin_users_list')
+
+        if role == 'admin' and username.lower() != 'svathi':
+            messages.error(request, "Action rejected: Only the existing Admin ('Svathi') is allowed to have administrator privileges.")
             return redirect('core:admin_users_list')
 
         user = User.objects.create_user(
@@ -330,16 +334,12 @@ def admin_user_create(request):
             last_name=last_name
         )
 
-        if role == 'admin':
-            user.is_staff = True
-            user.save()
-
         profile, _ = UserProfile.objects.get_or_create(user=user)
-        profile.role = role
+        profile.role = 'user'
         profile.is_verified = True
         profile.save()
 
-        log_admin_activity(request.user, 'create', 'user', user.id, f"Created user {username} ({role})", request)
+        log_admin_activity(request.user, 'create', 'user', user.id, f"Created user {username} (user)", request)
         messages.success(request, f"User '{username}' created successfully!")
         return redirect('core:admin_users_list')
 
@@ -358,12 +358,18 @@ def admin_user_edit(request, user_id):
         user.last_name = request.POST.get('last_name', user.last_name).strip()
 
         new_role = request.POST.get('role', profile.role)
-        profile.role = new_role
-        if new_role == 'admin':
+        if new_role == 'admin' and user.username.lower() != 'svathi':
+            messages.error(request, "Action rejected: Cannot promote user to Admin. Only 'Svathi' can be Admin.")
+            return redirect('core:admin_users_list')
+
+        if user.username.lower() == 'svathi':
+            profile.role = 'admin'
             user.is_staff = True
+            user.is_superuser = True
         else:
-            if not user.is_superuser:
-                user.is_staff = False
+            profile.role = 'user'
+            user.is_staff = False
+            user.is_superuser = False
 
         user.save()
         profile.save()

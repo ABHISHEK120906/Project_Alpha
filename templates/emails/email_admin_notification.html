@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Verified User Registration - Admin Notification</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333333; }
+    .email-card { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+    .email-header { background: linear-gradient(135deg, #0F172A, #1E293B); padding: 25px; text-align: center; color: #ffffff; }
+    .email-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: #38BDF8; }
+    .email-body { padding: 30px 25px; line-height: 1.6; }
+    .email-body p { margin-top: 0; font-size: 15px; color: #475569; }
+    .info-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #f8fafc; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .info-table th, .info-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+    .info-table th { background: #f1f5f9; color: #334155; font-weight: 600; width: 40%; }
+    .info-table td { color: #0f172a; font-weight: 500; }
+    .status-badge { display: inline-block; background: #DCFCE7; color: #166534; font-weight: 700; padding: 4px 10px; border-radius: 12px; font-size: 13px; }
+    .email-footer { background: #f8fafc; padding: 20px 25px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="email-card">
+    <div class="email-header">
+      <h1>🔔 New User Account Verified</h1>
+    </div>
+    <div class="email-body">
+      <p>Hello Administrator (Svathi),</p>
+      <p>A new user has successfully verified their email address and completed account registration on <strong>FreelanceTrack</strong>.</p>
+      
+      <table class="info-table">
+        <tr>
+          <th>User Name</th>
+          <td>{{ user_name }} ({{ username }})</td>
+        </tr>
+        <tr>
+          <th>Registered Email</th>
+          <td>{{ registered_email }}</td>
+        </tr>
+        <tr>
+          <th>Registration Date & Time</th>
+          <td>{{ registration_datetime }}</td>
+        </tr>
+        <tr>
+          <th>Account Type</th>
+          <td>{{ account_type }}</td>
+        </tr>
+        <tr>
+          <th>Status</th>
+          <td><span class="status-badge">Verified</span></td>
+        </tr>
+      </table>
+
+      <p style="font-size: 13px; color: #64748b;">This notification was dispatched automatically by the system security controller.</p>
+    </div>
+    <div class="email-footer">
+      FreelanceTrack System Administration &bull; Automated System Dispatch
+    </div>
+  </div>
+</body>
+</html>
