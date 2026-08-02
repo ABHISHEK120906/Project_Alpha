@@ -3,23 +3,12 @@
 
 {% block content %}
 
-<!-- Custom Styles for 3D Polygon Mesh & Brand Color System -->
+<!-- Custom Styles for Brand Color System & Login Card -->
 <style>
   body.auth-body {
     background: linear-gradient(135deg, #003333 0%, #002222 50%, #001A1A 100%) !important;
     overflow-x: hidden;
     font-family: 'Inter', sans-serif;
-  }
-
-  /* 3D Canvas Background */
-  #constellationCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-    pointer-events: none;
   }
 
   .auth-wrapper {
@@ -29,11 +18,11 @@
 
   /* Left Panel styling */
   .auth-panel-left {
-    background: linear-gradient(135deg, rgba(0,51,51,0.9) 0%, rgba(18,105,98,0.85) 100%) !important;
-    border-right: 1px solid var(--brand-primary-teal);
+    background: linear-gradient(135deg, rgba(0,51,51,0.95) 0%, rgba(18,105,98,0.9) 100%) !important;
+    border-right: 1px solid var(--brand-secondary-teal);
   }
 
-  /* Glass Card matching brand system */
+  /* Card Container */
   .auth-card {
     background: var(--bg-card) !important;
     border: 1.5px solid var(--brand-secondary-teal) !important;
@@ -43,12 +32,8 @@
     padding: 44px 38px !important;
     text-align: center;
     max-width: 440px !important;
-    transition: transform 0.15s ease-out, box-shadow 0.3s ease;
-    transform-style: preserve-3d;
-  }
-  .auth-card:hover {
-    box-shadow: 0 25px 70px rgba(0, 127, 127, 0.35) !important;
-    border-color: var(--brand-primary-teal) !important;
+    position: relative;
+    z-index: 20;
   }
 
   /* Title Header */
@@ -59,7 +44,6 @@
     letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 24px;
-    transform: translateZ(15px);
   }
 
   /* Role Selector Tabs */
@@ -69,21 +53,23 @@
     border-radius: 12px !important;
     padding: 4px !important;
     margin-bottom: 26px !important;
-    transform: translateZ(10px);
   }
+
   .role-selector-container button {
     color: var(--text-secondary);
+    font-weight: 700;
   }
 
   /* Form Input Fields */
   .auth-form-group {
-    transform: translateZ(12px);
+    margin-bottom: 20px;
   }
   .auth-input-wrapper {
     background: var(--bg-card) !important;
     border: 1.5px solid var(--brand-secondary-teal) !important;
     border-radius: 12px !important;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
+    overflow: hidden;
   }
   .auth-input-wrapper:focus-within {
     border-color: var(--brand-primary-teal) !important;
@@ -93,11 +79,13 @@
     background: var(--brand-very-light-mint) !important;
     color: var(--brand-primary-dark) !important;
     border-right: 1px solid var(--brand-secondary-teal) !important;
-    padding: 0 16px !important;
+    padding: 12px 16px !important;
+    font-size: 15px;
   }
   .auth-input {
     color: var(--text-primary) !important;
     background: transparent !important;
+    font-weight: 500;
   }
   .auth-input::placeholder {
     color: var(--text-muted) !important;
@@ -108,24 +96,24 @@
     width: 100%;
     padding: 14px;
     background: var(--brand-primary-teal);
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 2px;
     border: none;
     border-radius: 12px;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     margin-top: 10px;
     margin-bottom: 18px;
     box-shadow: 0 4px 15px rgba(0, 127, 127, 0.35);
-    transform: translateZ(15px);
+    cursor: pointer;
   }
   .btn-login-submit:hover {
     background: var(--brand-primary-dark);
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     box-shadow: 0 6px 22px rgba(0, 51, 51, 0.45);
-    transform: translateZ(18px) translateY(-1px);
+    transform: translateY(-1px);
   }
 
   /* Forgot Password Link */
@@ -136,7 +124,6 @@
     text-decoration: none;
     transition: color 0.2s ease;
     display: inline-block;
-    transform: translateZ(8px);
   }
   .forgot-pwd-link:hover {
     color: var(--brand-primary-teal);
@@ -156,7 +143,7 @@
     width: 100%;
     padding: 13px;
     background: var(--brand-light-mint);
-    color: var(--brand-primary-dark);
+    color: var(--brand-primary-dark) !important;
     font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
@@ -164,30 +151,26 @@
     border: none;
     border-radius: 12px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     box-shadow: 0 4px 20px rgba(164, 240, 234, 0.35);
-    transform: translateZ(15px);
   }
   .btn-register-action:hover {
     background: var(--brand-very-light-mint);
-    color: var(--brand-primary-dark);
+    color: var(--brand-primary-dark) !important;
     box-shadow: 0 6px 28px rgba(210, 247, 244, 0.55);
-    transform: translateZ(18px) translateY(-1px);
+    transform: translateY(-1px);
   }
 </style>
-
-<!-- 3D Polygon Mesh Canvas Background -->
-<canvas id="constellationCanvas"></canvas>
 
 <!-- Member Login Form Card -->
 <div class="member-login-title">MEMBER LOGIN</div>
 
 <!-- Role Selector (User vs Admin) -->
 <div class="role-selector-container mb-4" style="display:flex;">
-  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('user')">
+  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.25s ease; border:none; font-size:13px;" onclick="setLoginType('user')">
     <i class="fas fa-user me-1"></i> USER
   </button>
-  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.3s ease; border:none; font-size:13px;" onclick="setLoginType('admin')">
+  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.25s ease; border:none; font-size:13px;" onclick="setLoginType('admin')">
     <i class="fas fa-shield-alt me-1"></i> ADMIN
   </button>
 </div>
@@ -294,151 +277,16 @@ function setLoginType(type) {
   // Password visibility toggle
   const pwdInput = document.getElementById('id_password');
   const pwdEye   = document.getElementById('pwdEyeIcon');
-  document.getElementById('togglePwd').addEventListener('click', function() {
-    if (pwdInput.type === 'password') {
-      pwdInput.type = 'text';
-      pwdEye.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-      pwdInput.type = 'password';
-      pwdEye.classList.replace('fa-eye-slash', 'fa-eye');
-    }
-  });
-
-  // ── 3D Interactive Parallax Card Tilt ──
-  const authCard = document.querySelector('.auth-card');
-  if (authCard) {
-    document.addEventListener('mousemove', (e) => {
-      const rect = authCard.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const mouseX = e.clientX - centerX;
-      const mouseY = e.clientY - centerY;
-
-      const rotateX = (-mouseY / window.innerHeight) * 16;
-      const rotateY = (mouseX / window.innerWidth) * 16;
-
-      authCard.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(10px)`;
-    });
-
-    document.addEventListener('mouseleave', () => {
-      authCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
-    });
-  }
-
-  // ── 3D Floating Low-Poly Polygon Mesh Background Engine ──
-  const canvas = document.getElementById('constellationCanvas');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const numPoints = 65;
-    const points = [];
-    const focalLength = 400;
-
-    for (let i = 0; i < numPoints; i++) {
-      points.push({
-        x: (Math.random() - 0.5) * width * 1.5,
-        y: (Math.random() - 0.5) * height * 1.5,
-        z: (Math.random() - 0.5) * 600,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: (Math.random() - 0.5) * 0.8,
-        vz: (Math.random() - 0.5) * 0.8,
-      });
-    }
-
-    let angleX = 0.0015;
-    let angleY = 0.0025;
-
-    function animate3DMesh() {
-      ctx.clearRect(0, 0, width, height);
-
-      const cosX = Math.cos(angleX);
-      const sinX = Math.sin(angleX);
-      const cosY = Math.cos(angleY);
-      const sinY = Math.sin(angleY);
-
-      const projectedPoints = [];
-
-      for (let i = 0; i < points.length; i++) {
-        const p = points[i];
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.z += p.vz;
-
-        if (Math.abs(p.x) > width) p.vx *= -1;
-        if (Math.abs(p.y) > height) p.vy *= -1;
-        if (Math.abs(p.z) > 400) p.vz *= -1;
-
-        let y1 = p.y * cosX - p.z * sinX;
-        let z1 = p.z * cosX + p.y * sinX;
-        let x2 = p.x * cosY + z1 * sinY;
-        let z2 = z1 * cosY - p.x * sinY;
-
-        const scale = focalLength / (focalLength + z2 + 500);
-        const projX = width / 2 + x2 * scale;
-        const projY = height / 2 + y1 * scale;
-
-        projectedPoints.push({ x: projX, y: projY, z: z2, scale: scale });
+  if (pwdInput && pwdEye) {
+    document.getElementById('togglePwd').addEventListener('click', function() {
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        pwdEye.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pwdInput.type = 'password';
+        pwdEye.classList.replace('fa-eye-slash', 'fa-eye');
       }
-
-      const maxConnectDist = 180;
-
-      for (let i = 0; i < projectedPoints.length; i++) {
-        const p1 = projectedPoints[i];
-
-        for (let j = i + 1; j < projectedPoints.length; j++) {
-          const p2 = projectedPoints[j];
-          const dist1 = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-
-          if (dist1 < maxConnectDist) {
-            for (let k = j + 1; k < projectedPoints.length; k++) {
-              const p3 = projectedPoints[k];
-              const dist2 = Math.hypot(p2.x - p3.x, p2.y - p3.y);
-              const dist3 = Math.hypot(p3.x - p1.x, p3.y - p1.y);
-
-              if (dist2 < maxConnectDist && dist3 < maxConnectDist) {
-                const avgAlpha = (1 - (p1.z + p2.z + p3.z) / 1200) * 0.15;
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.lineTo(p3.x, p3.y);
-                ctx.closePath();
-
-                const grad = ctx.createLinearGradient(p1.x, p1.y, p3.x, p3.y);
-                grad.addColorStop(0, `rgba(0, 127, 127, ${Math.max(0.02, avgAlpha)})`);
-                grad.addColorStop(1, `rgba(18, 105, 98, ${Math.max(0.01, avgAlpha * 0.8)})`);
-                ctx.fillStyle = grad;
-                ctx.fill();
-
-                ctx.strokeStyle = `rgba(0, 127, 127, ${Math.max(0.05, avgAlpha * 1.5)})`;
-                ctx.lineWidth = 0.6;
-                ctx.stroke();
-              }
-            }
-          }
-        }
-
-        const dotAlpha = Math.max(0.2, (p1.z + 400) / 800);
-        ctx.beginPath();
-        ctx.arc(p1.x, p1.y, 2.5 * p1.scale, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 127, 127, ${dotAlpha})`;
-        ctx.shadowColor = '#007F7F';
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      requestAnimationFrame(animate3DMesh);
-    }
-
-    animate3DMesh();
+    });
   }
 })();
 </script>
