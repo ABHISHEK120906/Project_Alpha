@@ -5,160 +5,169 @@
 
 <!-- Custom Styles for Brand Color System & Login Card -->
 <style>
-  body.auth-body {
-    background: linear-gradient(135deg, #003333 0%, #002222 50%, #001A1A 100%) !important;
-    overflow-x: hidden;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .auth-wrapper {
-    position: relative;
-    z-index: 10;
-  }
-
-  /* Left Panel styling */
-  .auth-panel-left {
-    background: linear-gradient(135deg, rgba(0,51,51,0.95) 0%, rgba(18,105,98,0.9) 100%) !important;
-    border-right: 1px solid var(--brand-secondary-teal);
-  }
-
-  /* Card Container */
+  /* ── Login card local overrides ── */
   .auth-card {
-    background: var(--bg-card) !important;
-    border: 1.5px solid var(--brand-secondary-teal) !important;
-    box-shadow: 0 20px 60px rgba(0, 51, 51, 0.25) !important;
     backdrop-filter: blur(18px) !important;
-    border-radius: 16px !important;
-    padding: 44px 38px !important;
+    border-radius: 20px !important;
+    padding: 40px 36px !important;
     text-align: center;
     max-width: 440px !important;
-    position: relative;
-    z-index: 20;
   }
 
-  /* Title Header */
   .member-login-title {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 800;
-    color: var(--text-primary);
+    color: #1A2530;
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
+    font-family: 'DM Sans', sans-serif;
   }
+
+  [data-theme="dark"] .member-login-title { color: #E5E5DF; }
 
   /* Role Selector Tabs */
   .role-selector-container {
-    background: var(--bg-canvas) !important;
-    border: 1.5px solid var(--brand-secondary-teal) !important;
+    background: #E6E2D8 !important;
+    border: 1.5px solid rgba(57, 68, 77, 0.15) !important;
     border-radius: 12px !important;
     padding: 4px !important;
-    margin-bottom: 26px !important;
+    margin-bottom: 24px !important;
+  }
+
+  [data-theme="dark"] .role-selector-container {
+    background: #1C2B3A !important;
+    border-color: rgba(219,153,65,0.2) !important;
   }
 
   .role-selector-container button {
     color: var(--text-secondary);
     font-weight: 700;
+    background: transparent;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    border-radius: 8px !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Form Input Fields */
-  .auth-form-group {
-    margin-bottom: 20px;
-  }
+  /* Input wrapper */
   .auth-input-wrapper {
-    background: var(--bg-card) !important;
-    border: 1.5px solid var(--brand-secondary-teal) !important;
+    background: #EFECE2 !important;
+    border: 1.5px solid rgba(57, 68, 77, 0.15) !important;
     border-radius: 12px !important;
-    transition: all 0.25s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
   }
+
+  [data-theme="dark"] .auth-input-wrapper {
+    background: #1C2B3A !important;
+    border-color: rgba(219,153,65,0.2) !important;
+  }
+
   .auth-input-wrapper:focus-within {
-    border-color: var(--brand-primary-teal) !important;
-    box-shadow: 0 0 15px rgba(0, 127, 127, 0.25) !important;
+    border-color: #C8881E !important;
+    box-shadow: 0 0 0 3px rgba(200, 136, 30, 0.15) !important;
+    background: #F7F4EC !important;
   }
-  .auth-input-icon {
-    background: var(--brand-very-light-mint) !important;
-    color: var(--brand-primary-dark) !important;
-    border-right: 1px solid var(--brand-secondary-teal) !important;
-    padding: 12px 16px !important;
-    font-size: 15px;
+
+  [data-theme="dark"] .auth-input-wrapper:focus-within {
+    border-color: #DB9941 !important;
+    box-shadow: 0 0 0 3px rgba(219, 153, 65, 0.15) !important;
+    background: #243344 !important;
   }
+
   .auth-input {
-    color: var(--text-primary) !important;
+    color: #1A2530 !important;
     background: transparent !important;
     font-weight: 500;
-  }
-  .auth-input::placeholder {
-    color: var(--text-muted) !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
-  /* LOGIN Button */
+  [data-theme="dark"] .auth-input { color: #E5E5DF !important; }
+  .auth-input::placeholder { color: #9AA0A8 !important; }
+
+  /* Login submit button */
   .btn-login-submit {
-    width: 100%;
-    padding: 14px;
-    background: var(--brand-primary-teal);
-    color: #FFFFFF !important;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    border: none;
-    border-radius: 12px;
-    transition: all 0.25s ease;
-    margin-top: 10px;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 15px rgba(0, 127, 127, 0.35);
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #DB9941 0%, #C8881E 50%, #B87818 100%);
+    color: #07111D !important;
+    font-size: 14px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 2px;
+    border: none; border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin-top: 10px; margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(200,136,30,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.2);
     cursor: pointer;
+    position: relative; overflow: hidden;
   }
+
+  .btn-login-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
   .btn-login-submit:hover {
-    background: var(--brand-primary-dark);
-    color: #FFFFFF !important;
-    box-shadow: 0 6px 22px rgba(0, 51, 51, 0.45);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #C8881E 0%, #A86810 100%);
+    color: #07111D !important;
+    box-shadow: 0 10px 28px rgba(200,136,30,0.5);
+    transform: translateY(-2px) scale(1.01);
   }
 
-  /* Forgot Password Link */
+  .btn-login-submit:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow: 0 3px 10px rgba(200,136,30,0.3);
+  }
+
   .forgot-pwd-link {
-    color: var(--text-secondary);
-    font-size: 13.5px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    display: inline-block;
-  }
-  .forgot-pwd-link:hover {
-    color: var(--brand-primary-teal);
-    text-decoration: underline;
+    color: #6A7480; font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: color 0.2s ease; display: inline-block;
   }
 
-  /* Separator Line */
+  .forgot-pwd-link:hover { color: #C8881E; }
+  [data-theme="dark"] .forgot-pwd-link { color: #8A8070; }
+  [data-theme="dark"] .forgot-pwd-link:hover { color: #DB9941; }
+
   .auth-divider {
     height: 1px;
-    background: var(--brand-secondary-teal);
-    margin: 24px 0;
+    background: rgba(57, 68, 77, 0.15);
+    margin: 22px 0;
   }
 
-  /* REGISTER Button */
+  [data-theme="dark"] .auth-divider { background: rgba(219,153,65,0.12); }
+
   .btn-register-action {
-    display: block;
-    width: 100%;
-    padding: 13px;
-    background: var(--brand-light-mint);
-    color: var(--brand-primary-dark) !important;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    border: none;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 20px rgba(164, 240, 234, 0.35);
+    display: block; width: 100%; padding: 13px;
+    background: transparent;
+    color: #6A7480 !important;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    border: 1.5px solid rgba(57, 68, 77, 0.2);
+    border-radius: 12px; text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'DM Sans', sans-serif;
   }
+
   .btn-register-action:hover {
-    background: var(--brand-very-light-mint);
-    color: var(--brand-primary-dark) !important;
-    box-shadow: 0 6px 28px rgba(210, 247, 244, 0.55);
+    background: rgba(200, 136, 30, 0.06);
+    color: #C8881E !important;
+    border-color: rgba(200, 136, 30, 0.4);
     transform: translateY(-1px);
+  }
+
+  [data-theme="dark"] .btn-register-action {
+    color: rgba(229,229,223,0.5) !important;
+    border-color: rgba(219,153,65,0.2);
+  }
+
+  [data-theme="dark"] .btn-register-action:hover {
+    background: rgba(219,153,65,0.08);
+    color: #DB9941 !important;
+    border-color: rgba(219,153,65,0.4);
   }
 </style>
 
@@ -177,7 +186,7 @@
 
 {% if messages %}
   {% for message in messages %}
-  <div class="auth-alert auth-alert-{{ message.tags }}" style="background:#FEF2F2;border:1px solid #FCA5A5;color:#DC2626;">
+  <div class="auth-alert auth-alert-error">
     <i class="fas fa-exclamation-circle me-1"></i>
     <span>{{ message }}</span>
   </div>
@@ -190,36 +199,36 @@
 
   <!-- Username -->
   <div class="auth-form-group text-start">
-    <div class="auth-input-wrapper d-flex align-items-center">
-      <span class="auth-input-icon"><i class="fas fa-user"></i></span>
+    <div class="auth-input-wrapper">
       <input
         type="text"
         name="username"
         id="id_username"
-        class="auth-input form-control border-0 px-3 py-2"
-        placeholder="Username"
+        class="auth-input form-control border-0"
+        placeholder="Enter your username"
         required
         autofocus
         autocomplete="username"
         value="{{ request.POST.username|default:'' }}"
+        style="padding-left: 16px;"
       >
     </div>
   </div>
 
   <!-- Password -->
   <div class="auth-form-group text-start">
-    <div class="auth-input-wrapper d-flex align-items-center position-relative">
-      <span class="auth-input-icon"><i class="fas fa-lock"></i></span>
+    <div class="auth-input-wrapper position-relative d-flex align-items-center">
       <input
         type="password"
         name="password"
         id="id_password"
-        class="auth-input form-control border-0 px-3 py-2"
-        placeholder="Password"
+        class="auth-input form-control border-0"
+        placeholder="Enter your password"
         required
         autocomplete="current-password"
+        style="padding-left: 16px; padding-right: 44px;"
       >
-      <button type="button" class="btn btn-link text-decoration-none py-0 px-3" id="togglePwd" style="color:var(--brand-primary-teal);" aria-label="Toggle password">
+      <button type="button" class="btn btn-link text-decoration-none py-0 px-3 position-absolute end-0" id="togglePwd" style="color:#DB9941;" aria-label="Toggle password">
         <i class="fas fa-eye" id="pwdEyeIcon"></i>
       </button>
     </div>
@@ -233,7 +242,7 @@
 
 <div class="mb-3">
   <a href="#" onclick="alert('Password reset instructions have been dispatched. Please contact your Super Admin for direct access.'); return false;" class="forgot-pwd-link">
-    Forgot Password? <span style="text-decoration:underline;color:var(--brand-primary-teal);">Click Here</span>
+    Forgot Password? <span style="text-decoration:underline;color:#DB9941;">Click Here</span>
   </a>
 </div>
 
@@ -247,25 +256,25 @@
 <script>
 function setLoginType(type) {
   document.getElementById('login_type_input').value = type;
-  const btnUser = document.getElementById('btnUserLogin');
+  const btnUser  = document.getElementById('btnUserLogin');
   const btnAdmin = document.getElementById('btnAdminLogin');
   const submitBtn = document.getElementById('loginSubmitBtn');
 
   if (type === 'admin') {
-    btnAdmin.style.background = '#007F7F';
-    btnAdmin.style.color = '#FFFFFF';
-    btnAdmin.style.boxShadow = '0 2px 10px rgba(0,127,127,0.4)';
-    btnUser.style.background = 'transparent';
-    btnUser.style.color = 'var(--text-secondary)';
-    btnUser.style.boxShadow = 'none';
+    btnAdmin.style.background  = '#DB9941';
+    btnAdmin.style.color       = '#07111D';
+    btnAdmin.style.boxShadow   = '0 2px 10px rgba(219,153,65,0.4)';
+    btnUser.style.background   = 'transparent';
+    btnUser.style.color        = 'var(--text-secondary)';
+    btnUser.style.boxShadow    = 'none';
     submitBtn.innerHTML = 'LOGIN AS ADMIN';
   } else {
-    btnUser.style.background = '#007F7F';
-    btnUser.style.color = '#FFFFFF';
-    btnUser.style.boxShadow = '0 2px 10px rgba(0,127,127,0.4)';
-    btnAdmin.style.background = 'transparent';
-    btnAdmin.style.color = 'var(--text-secondary)';
-    btnAdmin.style.boxShadow = 'none';
+    btnUser.style.background   = '#DB9941';
+    btnUser.style.color        = '#07111D';
+    btnUser.style.boxShadow    = '0 2px 10px rgba(219,153,65,0.4)';
+    btnAdmin.style.background  = 'transparent';
+    btnAdmin.style.color       = 'var(--text-secondary)';
+    btnAdmin.style.boxShadow   = 'none';
     submitBtn.innerHTML = 'LOGIN';
   }
 }

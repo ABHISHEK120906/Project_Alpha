@@ -3,24 +3,23 @@
 {% block title %}FreelanceTrack — Manage Your Freelance Business{% endblock %}
 
 {% block content %}
-<!-- Override: home page fills the left panel differently -->
 
-<h1 class="auth-heading" style="font-size:28px;">Get started free</h1>
+<h1 class="auth-heading" style="font-size:27px;">Get started free</h1>
 <p class="auth-subheading">Your all-in-one freelance management platform</p>
 
 <!-- Quick stats row -->
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px;">
-  <div style="background:#f3e8ff;border:1px solid #e9d5ff;border-radius:12px;padding:14px;text-align:center;">
-    <div style="font-size:22px;font-weight:800;color:#7C3AED;">6+</div>
-    <div style="font-size:11.5px;font-weight:600;color:#6b21a8;margin-top:2px;">Modules</div>
+  <div style="background:#FDF3E3;border:1px solid rgba(219,153,65,0.35);border-radius:12px;padding:14px;text-align:center;">
+    <div style="font-size:22px;font-weight:800;color:#B8791F;">6+</div>
+    <div style="font-size:11.5px;font-weight:600;color:#8A5C10;margin-top:2px;">Modules</div>
   </div>
-  <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:12px;padding:14px;text-align:center;">
-    <div style="font-size:22px;font-weight:800;color:#059669;">PDF</div>
-    <div style="font-size:11.5px;font-weight:600;color:#065f46;margin-top:2px;">&amp; Excel</div>
+  <div style="background:#FDF3E3;border:1px solid rgba(219,153,65,0.35);border-radius:12px;padding:14px;text-align:center;">
+    <div style="font-size:22px;font-weight:800;color:#DB9941;">PDF</div>
+    <div style="font-size:11.5px;font-weight:600;color:#B8791F;margin-top:2px;">&amp; Excel</div>
   </div>
-  <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px;text-align:center;">
-    <div style="font-size:22px;font-weight:800;color:#2563eb;">100%</div>
-    <div style="font-size:11.5px;font-weight:600;color:#1e40af;margin-top:2px;">Free</div>
+  <div style="background:#E8F5ED;border:1px solid rgba(46,125,71,0.3);border-radius:12px;padding:14px;text-align:center;">
+    <div style="font-size:22px;font-weight:800;color:#2E7D47;">100%</div>
+    <div style="font-size:11.5px;font-weight:600;color:#1A6632;margin-top:2px;">Free</div>
   </div>
 </div>
 
@@ -33,20 +32,22 @@
 <a href="{% url 'core:login' %}" style="
   display:flex;align-items:center;justify-content:center;gap:8px;
   width:100%;padding:14px;
-  background:#f8fafc;
-  border:1.5px solid #e2e8f0;
+  background:transparent;
+  border:1.5px solid rgba(93,93,93,0.25);
   border-radius:12px;
-  color:#475569;
+  color:#39444D;
   font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
   text-decoration:none;
   transition:all 0.2s ease;
-" onmouseover="this.style.background='#f1f5f9';this.style.borderColor='#cbd5e1'" onmouseout="this.style.background='#f8fafc';this.style.borderColor='#e2e8f0'">
+"
+onmouseover="this.style.background='rgba(219,153,65,0.08)';this.style.borderColor='rgba(219,153,65,0.4)';this.style.color='#B8791F';"
+onmouseout="this.style.background='transparent';this.style.borderColor='rgba(93,93,93,0.25)';this.style.color='#39444D';">
   <i class="fas fa-sign-in-alt"></i>
   Sign In to Existing Account
 </a>
 
 <div class="auth-footer-text" style="margin-top:28px;">
-  <i class="fas fa-shield-alt" style="color:#10b981;margin-right:6px;"></i>
+  <i class="fas fa-shield-alt" style="color:#DB9941;margin-right:6px;"></i>
   Secure &amp; private — your data, your control
 </div>
 {% endblock %}

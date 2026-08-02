@@ -42,13 +42,15 @@
           integrity="sha384-6VjfMTYLUm5VpGbNAJXCpWUYTI2cIFlFBKgWqWMXQK8UQ0d7e2GFNBQW+Y5sCX8"
           crossorigin="anonymous"></script>
 
-  <!-- Custom Purple/Violet UI CSS -->
+  <!-- Paper-Cut Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
   {% block extra_css %}{% endblock %}
 </head>
 
 <body>
+<!-- Subtle paper-cut ambient glow for dashboard pages -->
+<div class="dashboard-ambient" aria-hidden="true"></div>
 
 {% if user.is_authenticated %}
 <!-- ════════════════════════════════════════════════

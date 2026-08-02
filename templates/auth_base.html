@@ -19,52 +19,40 @@
   <meta name="description" content="FreelanceTrack — Manage your freelance business like a pro.">
   <title>{% block title %}FreelanceTrack{% endblock %}</title>
 
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts: Inter + Playfair Display + DM Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap 5 (SRI verified) -->
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous">
 
-  <!-- Font Awesome 6 (SRI verified) -->
+  <!-- Font Awesome 6 -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous"
         referrerpolicy="no-referrer">
 
-  <!-- Custom CSS -->
+  <!-- Paper-Cut Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
   <style>
-    /* ── Auth-specific overrides (Matching Purple-Violet Dashboard UI/UX) ── */
+    /* ── Auth Shell ── */
     html, body { height: 100%; margin: 0; padding: 0; }
 
     body.auth-body {
       font-family: 'Inter', system-ui, sans-serif;
-      background-color: var(--bg-canvas);
-      color: var(--text-primary);
+      background-color: #07111D;
+      color: #E5E5DF;
       min-height: 100vh;
       overflow-x: hidden;
-      transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Subtle background ambient mesh */
-    .auth-bg {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 10% 20%, rgba(99,102,241,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 60% at 90% 80%, rgba(139,92,246,0.08) 0%, transparent 60%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* Auth wrapper */
+    /* ── Full Viewport Layout ── */
     .auth-wrapper {
       position: relative;
       z-index: 10;
@@ -72,134 +60,369 @@
       display: flex;
     }
 
-    /* Left decorative panel (Dark split UI using official Primary Dark #003333) */
+    /* ════════════════════════════════════════════
+       LEFT PANEL — Paper-Cut Art Background
+       ════════════════════════════════════════════ */
     .auth-panel-left {
       display: none;
       flex: 1;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 50px;
-      background: var(--brand-primary-dark);
-      color: #ffffff;
-      flex-direction: column;
       position: relative;
       overflow: hidden;
-      border-right: 1px solid var(--brand-secondary-teal);
+      background-color: #07111D;
+      background-image: url("{% static 'images/paper_cut_bg.png' %}");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
     }
+
     @media (min-width: 1024px) {
-      .auth-panel-left { display: flex; }
+      .auth-panel-left { display: block; }
     }
 
-    /* Decorative background shapes on left panel */
-    .auth-panel-left::before {
-      content: '';
+    /* ── Deep midnight base ── */
+    .auth-panel-left .pc-base {
       position: absolute;
-      width: 450px;
-      height: 450px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 127, 127, 0.25) 0%, transparent 70%);
-      top: -120px;
-      left: -120px;
+      inset: 0;
+      background: #07111D;
+    }
+
+    /* ── Layer 1: Large slate ocean wave (bottom-left rising) ── */
+    .auth-panel-left .pc-l1 {
+      position: absolute;
+      inset: 0;
+      background: #39444D;
+      clip-path: polygon(
+        0% 100%, 0% 62%,
+        4%  56%, 10% 52%, 16% 50%, 22% 53%,
+        28% 58%, 34% 62%, 40% 58%, 46% 50%,
+        52% 43%, 57% 40%, 62% 43%, 67% 49%,
+        72% 53%, 78% 49%, 84% 42%, 90% 37%,
+        96% 39%, 100% 43%,
+        100% 100%
+      );
+      box-shadow: 0 -12px 50px rgba(0, 0, 0, 0.45);
+      opacity: 0.98;
+    }
+
+    /* ── Layer 2: Mid slate — slightly lighter, higher crest ── */
+    .auth-panel-left .pc-l2 {
+      position: absolute;
+      inset: 0;
+      background: #4D5860;
+      clip-path: polygon(
+        0% 100%, 0% 72%,
+        5%  66%, 12% 60%, 19% 57%, 25% 60%,
+        31% 66%, 38% 70%, 44% 65%, 50% 56%,
+        56% 49%, 62% 46%, 68% 50%, 74% 57%,
+        80% 61%, 86% 56%, 92% 48%, 98% 44%,
+        100% 47%, 100% 100%
+      );
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35);
+      opacity: 0.85;
+    }
+
+    /* ── Layer 3: Amber warm bloom (upper-right organic mass) ── */
+    .auth-panel-left .pc-l3 {
+      position: absolute;
+      top: -8%;
+      right: -8%;
+      width: 75%;
+      height: 72%;
+      background: linear-gradient(155deg, #F0A830 0%, #DB9941 40%, #C07E2A 75%, #A06018 100%);
+      clip-path: polygon(
+        100% 0%, 100% 72%,
+        94% 78%, 86% 82%, 76% 80%,
+        65% 74%, 55% 68%, 44% 70%,
+        34% 74%, 24% 68%, 16% 60%,
+        10% 50%, 14% 40%, 22% 32%,
+        34% 24%, 48% 18%, 63% 12%,
+        78% 6%, 92% 2%, 100% 0%
+      );
+      box-shadow: -15px 15px 70px rgba(0, 0, 0, 0.6), inset 0 0 60px rgba(240,168,48,0.2);
+      opacity: 1;
+    }
+
+    /* ── Layer 4: Crimson accent cap (far upper-right) ── */
+    .auth-panel-left .pc-l4 {
+      position: absolute;
+      top: -5%;
+      right: -5%;
+      width: 50%;
+      height: 50%;
+      background: linear-gradient(145deg, #C8381A 0%, #AE2C11 50%, #8B1F0A 100%);
+      clip-path: polygon(
+        100% 0%, 100% 58%,
+        93% 64%, 84% 66%, 74% 62%,
+        62% 55%, 52% 50%, 41% 52%,
+        30% 56%, 20% 50%, 12% 42%,
+        16% 32%, 26% 22%, 42% 14%,
+        60% 7%, 80% 2%, 100% 0%
+      );
+      box-shadow: -12px 12px 50px rgba(0, 0, 0, 0.7), inset 0 0 40px rgba(200,56,26,0.15);
+      opacity: 1;
+    }
+
+    /* ── Layer 5: Parchment veins / highlight slivers ── */
+    .auth-panel-left .pc-l5 {
+      position: absolute;
+      top: 12%;
+      right: 28%;
+      width: 22%;
+      height: 28%;
+      background: linear-gradient(160deg,
+        rgba(229, 229, 223, 0.18) 0%,
+        rgba(229, 229, 223, 0.06) 50%,
+        transparent 100%
+      );
+      clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 82%);
+    }
+
+    /* ── Topographic contour line overlay ── */
+    .auth-panel-left .pc-contours {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          -32deg,
+          transparent,
+          transparent 20px,
+          rgba(229, 229, 223, 0.015) 20px,
+          rgba(229, 229, 223, 0.015) 21px
+        );
+      z-index: 3;
       pointer-events: none;
     }
 
-    .auth-panel-left::after {
-      content: '';
+    /* ── Dark overlay for text legibility ── */
+    .auth-panel-left .pc-vignette {
       position: absolute;
-      width: 380px;
-      height: 380px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(164, 240, 234, 0.15) 0%, transparent 70%);
-      bottom: -100px;
-      right: -100px;
+      inset: 0;
+      background:
+        linear-gradient(to right,
+          rgba(7, 17, 29, 0.65) 0%,
+          rgba(7, 17, 29, 0.45) 50%,
+          rgba(7, 17, 29, 0.2) 100%
+        ),
+        radial-gradient(ellipse 110% 110% at 50% 50%,
+          transparent 30%,
+          rgba(7, 17, 29, 0.4) 100%
+        );
+      z-index: 4;
       pointer-events: none;
+    }
+
+    /* ── Brand content over art ── */
+    .auth-panel-left .pc-content {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 56px;
+      color: #FFFFFF;
     }
 
     .auth-panel-left .brand-logo {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 48px;
+      gap: 16px;
+      margin-bottom: 52px;
     }
+
     .auth-panel-left .brand-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--brand-primary-teal);
-      border: 1px solid var(--brand-light-mint);
-      border-radius: 12px;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #DB9941 0%, #B8791F 100%);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      color: #ffffff;
+      font-size: 24px;
+      color: #07111D;
+      box-shadow: 0 6px 24px rgba(219, 153, 65, 0.45);
+      flex-shrink: 0;
     }
+
     .auth-panel-left .brand-name {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
-      color: #ffffff;
-      letter-spacing: -0.5px;
+      color: #FFFFFF;
+      letter-spacing: -0.3px;
+      font-family: 'Inter', sans-serif;
     }
+
     .auth-panel-left .brand-tagline {
-      font-size: 13px;
-      color: var(--brand-light-mint);
-      font-weight: 500;
+      font-size: 12px;
+      color: rgba(219, 153, 65, 0.75);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
     }
 
     .auth-panel-left .hero-text {
-      text-align: left;
-      max-width: 460px;
-      position: relative;
-      z-index: 2;
+      max-width: 500px;
     }
+
+    /* Overline label above headline */
+    .auth-panel-left .hero-overline {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #DB9941;
+      margin-bottom: 16px;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .auth-panel-left .hero-overline::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 2px;
+      background: #DB9941;
+      border-radius: 2px;
+    }
+
     .auth-panel-left .hero-text h1 {
-      font-size: clamp(32px, 3.2vw, 46px);
+      font-size: clamp(34px, 3.2vw, 54px);
       font-weight: 900;
-      color: #ffffff;
-      line-height: 1.15;
-      margin-bottom: 18px;
-      letter-spacing: -1.2px;
+      font-style: italic;
+      color: #FFFFFF;
+      line-height: 1.08;
+      margin-bottom: 10px;
+      letter-spacing: -1.5px;
+      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+      font-family: 'Playfair Display', Georgia, serif;
     }
-    .auth-panel-left .hero-text p {
-      font-size: 15px;
-      color: var(--brand-very-light-mint);
-      font-weight: 400;
-      line-height: 1.6;
+
+    .auth-panel-left .hero-text h1 span {
+      color: #DB9941;
+      font-style: normal;
+    }
+
+    /* Slogan sub-line */
+    .auth-panel-left .hero-slogan {
+      font-size: 16px;
+      font-weight: 300;
+      color: rgba(229, 229, 223, 0.65);
       margin-bottom: 36px;
+      line-height: 1.6;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.2px;
+    }
+
+    .auth-panel-left .hero-slogan strong {
+      color: rgba(229, 229, 223, 0.9);
+      font-weight: 600;
+    }
+
+    /* Stat counters row */
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hero-stat-num {
+      font-size: 26px;
+      font-weight: 800;
+      color: #DB9941;
+      font-family: 'Playfair Display', serif;
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(229, 229, 223, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .hero-stat-divider {
+      width: 1px;
+      background: rgba(229, 229, 223, 0.15);
+      align-self: stretch;
     }
 
     /* Feature pills */
-    .feature-pills { display: flex; flex-direction: column; gap: 12px; }
+    .feature-pills { display: flex; flex-direction: column; gap: 10px; }
+
     .feature-pill {
       display: flex;
       align-items: center;
       gap: 14px;
-      background: var(--brand-secondary-teal);
+      background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
-      border: 1px solid var(--brand-primary-teal);
+      border: 1px solid rgba(219, 153, 65, 0.2);
       border-radius: 12px;
-      padding: 14px 20px;
+      padding: 12px 18px;
       transition: all 0.25s ease;
     }
+
     .feature-pill:hover {
-      background: var(--brand-primary-teal);
-      border-color: var(--brand-light-mint);
+      background: rgba(219, 153, 65, 0.1);
+      border-color: rgba(219, 153, 65, 0.45);
       transform: translateX(4px);
     }
+
     .feature-pill .pill-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--brand-primary-dark);
-      color: var(--brand-light-mint);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(219, 153, 65, 0.12);
+      color: #DB9941;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 14px;
       flex-shrink: 0;
+      border: 1px solid rgba(219, 153, 65, 0.25);
     }
-    .feature-pill .pill-text { color: #ffffff; font-size: 14px; font-weight: 600; }
 
-    /* Right auth form panel */
+    .feature-pill .pill-text {
+      color: rgba(229, 229, 223, 0.85);
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.1px;
+    }
+
+    /* Bottom badge */
+    .auth-panel-left .pc-badge {
+      position: absolute;
+      bottom: 32px;
+      left: 56px;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(219, 153, 65, 0.6);
+      font-weight: 600;
+    }
+
+    .auth-panel-left .pc-badge::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: rgba(219, 153, 65, 0.4);
+    }
+
+    /* ═══════════════════════════════════
+       RIGHT PANEL — Form Area
+       ═══════════════════════════════════ */
     .auth-panel-right {
       display: flex;
       align-items: center;
@@ -207,27 +430,71 @@
       padding: 40px 24px;
       flex: 0 0 100%;
       min-height: 100vh;
-      background: var(--bg-canvas);
-    }
-    @media (min-width: 1024px) {
-      .auth-panel-right {
-        flex: 0 0 540px;
-      }
-    }
-
-    /* The Login Card container */
-    .auth-card {
-      width: 100%;
-      max-width: 420px;
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-color);
-      border-radius: 24px;
-      padding: 40px 36px;
-      box-shadow: var(--card-shadow);
+      background: #E8E4DA;  /* warm parchment — not bright white */
       position: relative;
     }
 
-    /* Mobile Brand logo */
+    [data-theme="dark"] .auth-panel-right {
+      background: #0A1520;
+    }
+
+    @media (min-width: 1024px) {
+      .auth-panel-right {
+        flex: 0 0 520px;
+      }
+    }
+
+    /* Warm corner accent echo */
+    .auth-panel-right::before {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 320px; height: 260px;
+      background:
+        radial-gradient(ellipse at 100% 100%,
+          rgba(200, 136, 30, 0.07) 0%,
+          transparent 65%
+        );
+      pointer-events: none;
+    }
+
+    .auth-panel-right::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 200px; height: 180px;
+      background:
+        radial-gradient(ellipse at 0% 0%,
+          rgba(57, 68, 77, 0.06) 0%,
+          transparent 70%
+        );
+      pointer-events: none;
+    }
+
+    /* ── Auth Card ── */
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: #F7F4EC;         /* warm cream — much easier on eyes */
+      border: 1px solid rgba(57, 68, 77, 0.14);
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow:
+        0 4px 24px rgba(7, 17, 29, 0.08),
+        0 1px 4px rgba(7, 17, 29, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      position: relative;
+      z-index: 1;
+      transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] .auth-card {
+      background: #131F2B;
+      border-color: rgba(219, 153, 65, 0.2);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Mobile brand */
     .auth-card-logo {
       display: flex;
       align-items: center;
@@ -235,238 +502,330 @@
       gap: 12px;
       margin-bottom: 32px;
     }
-    @media (min-width: 1024px) {
-      .auth-card-logo { display: none; }
-    }
+
+    @media (min-width: 1024px) { .auth-card-logo { display: none; } }
+
     .auth-card-logo .logo-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--brand-primary-teal);
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #DB9941 0%, #B8791F 100%);
       border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: #fff;
-      box-shadow: 0 6px 20px rgba(0, 127, 127, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: #07111D;
+      box-shadow: 0 6px 20px rgba(219, 153, 65, 0.35);
     }
-    .auth-card-logo .logo-name { font-size: 22px; font-weight: 800; color: var(--text-primary); }
+
+    .auth-card-logo .logo-name {
+      font-size: 22px; font-weight: 800;
+      color: #07111D;
+    }
+
+    [data-theme="dark"] .auth-card-logo .logo-name { color: #E5E5DF; }
 
     /* Heading */
-    .auth-heading { font-size: 26px; font-weight: 800; color: var(--text-primary); margin-bottom: 6px; letter-spacing: -0.5px; }
-    .auth-subheading { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
+    .auth-heading {
+      font-size: 26px; font-weight: 800;
+      color: #1A2530;
+      margin-bottom: 6px; letter-spacing: -0.5px;
+    }
+
+    [data-theme="dark"] .auth-heading { color: #E5E5DF; }
+
+    .auth-subheading {
+      font-size: 14px;
+      color: #6A7480;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    [data-theme="dark"] .auth-subheading { color: #8A8070; }
 
     /* Alert messages */
     .auth-alert {
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 20px;
-      font-size: 13px;
-      font-weight: 500;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .auth-alert-error {
-      background: #FEF2F2;
-      border: 1px solid #FCA5A5;
-      color: #DC2626;
-    }
-    .auth-alert-success {
-      background: var(--brand-very-light-mint);
-      border: 1px solid var(--brand-primary-teal);
-      color: var(--brand-primary-dark);
-    }
-    .auth-alert-warning {
-      background: var(--brand-light-mint);
-      border: 1px solid var(--brand-secondary-teal);
-      color: var(--brand-primary-dark);
-    }
-    .auth-alert-info {
-      background: var(--brand-very-light-mint);
-      border: 1px solid var(--brand-primary-teal);
-      color: var(--brand-primary-dark);
+      border-radius: 12px; padding: 12px 16px; margin-bottom: 20px;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: flex-start; gap: 10px;
     }
 
-    /* Form fields matching Dashboard inputs */
-    .auth-form-group { margin-bottom: 22px; }
+    .auth-alert-error {
+      background: #FCEAE6; border: 1px solid rgba(174, 44, 17, 0.3);
+      color: #AE2C11;
+    }
+
+    .auth-alert-success {
+      background: #E8F5ED; border: 1px solid rgba(46, 125, 71, 0.3);
+      color: #2E7D47;
+    }
+
+    .auth-alert-warning {
+      background: #FDF3E3; border: 1px solid rgba(219, 153, 65, 0.4);
+      color: #B8791F;
+    }
+
+    .auth-alert-info {
+      background: #FDF3E3; border: 1px solid rgba(219, 153, 65, 0.3);
+      color: #B8791F;
+    }
+
+    /* Form fields */
+    .auth-form-group { margin-bottom: 20px; }
+
     .auth-label {
-      display: block;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text-secondary);
+      display: block; font-size: 11.5px; font-weight: 700;
+      color: #6A7480;
       margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      text-transform: uppercase; letter-spacing: 0.9px;
+      font-family: 'DM Sans', sans-serif;
     }
+
+    [data-theme="dark"] .auth-label { color: rgba(229, 229, 223, 0.5); }
+
     .auth-input-wrapper { position: relative; }
-    .auth-input-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 14px;
-      pointer-events: none;
-      z-index: 2;
-    }
+
     .auth-input {
       width: 100%;
-      padding: 12px 14px 12px 42px;
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-color);
+      padding: 13px 16px;
+      background: #EFECE2;         /* warm input bg — visually distinct from card */
+      border: 1.5px solid rgba(57, 68, 77, 0.18);
       border-radius: 12px;
-      color: var(--text-primary);
+      color: #1A2530;
       font-size: 14px;
       font-family: 'Inter', sans-serif;
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
+      box-shadow: inset 0 1px 3px rgba(7, 17, 29, 0.06);
     }
+
+    [data-theme="dark"] .auth-input {
+      background: #1C2B3A;
+      border-color: rgba(219, 153, 65, 0.2);
+      color: #E5E5DF;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
     .auth-input:focus {
-      background: var(--bg-card);
-      border-color: var(--brand-primary-teal);
-      box-shadow: 0 0 0 3px rgba(0, 127, 127, 0.25);
+      background: #F7F4EC;
+      border-color: #C8881E;
+      box-shadow: 0 0 0 3px rgba(200, 136, 30, 0.18),
+                  inset 0 1px 2px rgba(7, 17, 29, 0.04);
     }
-    .auth-input::placeholder { color: var(--text-muted); }
-    .auth-input.is-invalid { border-color: #DC2626; }
+
+    [data-theme="dark"] .auth-input:focus {
+      background: #243344;
+      border-color: #DB9941;
+      box-shadow: 0 0 0 3px rgba(219, 153, 65, 0.15),
+                  inset 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .auth-input::placeholder { color: #9AA0A8; }
+    [data-theme="dark"] .auth-input::placeholder { color: #4A5058; }
+    .auth-input.is-invalid { border-color: #9E2810; box-shadow: 0 0 0 3px rgba(158, 40, 16, 0.12); }
 
     /* Password toggle */
     .auth-input-suffix {
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      padding: 0 14px;
+      position: absolute; right: 0; top: 0; height: 100%;
+      display: flex; align-items: center; padding: 0 14px;
     }
+
     .toggle-pwd-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 14px;
-      padding: 0;
+      background: none; border: none; color: #5D5D5D;
+      cursor: pointer; font-size: 14px; padding: 0;
       transition: color 0.2s;
     }
-    .toggle-pwd-btn:hover { color: var(--text-primary); }
 
-    /* Submit button matching Dashboard primary button */
+    .toggle-pwd-btn:hover { color: #DB9941; }
+
+    /* Submit button */
     .auth-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--brand-primary-teal);
-      border: none;
-      border-radius: 12px;
-      color: #ffffff;
-      font-size: 14.5px;
-      font-weight: 700;
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, #DB9941 0%, #C8881E 50%, #B87818 100%);
+      border: none; border-radius: 12px;
+      color: #07111D; font-size: 15px; font-weight: 700;
       font-family: 'Inter', sans-serif;
       cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 10px;
-      box-shadow: 0 4px 16px rgba(0, 127, 127, 0.35);
-      letter-spacing: 0.2px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; margin-top: 10px;
+      box-shadow: 0 4px 16px rgba(200, 136, 30, 0.35),
+                  0 1px 3px rgba(7, 17, 29, 0.1),
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
     }
+
+    .auth-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
     .auth-btn:hover {
-      background: var(--brand-primary-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(0, 51, 51, 0.48);
-      color: #ffffff;
+      background: linear-gradient(135deg, #C8881E 0%, #A86810 100%);
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 10px 28px rgba(200, 136, 30, 0.5),
+                  0 4px 8px rgba(7, 17, 29, 0.15);
+      color: #07111D;
     }
-    .auth-btn:active { transform: translateY(0); }
+
+    .auth-btn:active {
+      transform: translateY(0) scale(0.99);
+      box-shadow: 0 3px 10px rgba(200, 136, 30, 0.3);
+    }
 
     /* Footer link */
     .auth-footer-text {
-      text-align: center;
-      font-size: 13.5px;
-      color: var(--text-muted);
-      margin-top: 24px;
+      text-align: center; font-size: 13.5px;
+      color: #5D5D5D; margin-top: 24px;
     }
-    .auth-footer-text a {
-      color: var(--brand-primary-teal);
-      text-decoration: none;
-      font-weight: 700;
-      transition: color 0.2s;
-    }
-    .auth-footer-text a:hover { color: var(--brand-primary-dark); text-decoration: underline; }
 
+    [data-theme="dark"] .auth-footer-text { color: #8A8070; }
+
+    .auth-footer-text a {
+      color: #DB9941; text-decoration: none;
+      font-weight: 700; transition: color 0.2s;
+    }
+
+    .auth-footer-text a:hover { color: #B8791F; text-decoration: underline; }
+
+    /* Theme toggle on auth right panel */
+    .auth-theme-toggle {
+      position: absolute; top: 20px; right: 24px; z-index: 50;
+    }
+
+    /* Entry animation */
     @keyframes authFadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-card { animation: authFadeUp 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    /* Panel content entrance */
+    @keyframes contentRise {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .auth-card { animation: authFadeUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    .pc-content { animation: contentRise 0.8s ease 0.2s both; }
   </style>
 
   {% block extra_css %}{% endblock %}
 </head>
 <body class="auth-body">
 
-  <div class="auth-bg"></div>
-
   <div class="auth-wrapper">
-    <!-- Left decorative panel (desktop) - Matching Purple/Violet Dashboard Sidebar Theme -->
+
+    <!-- ════════════════════════════════════════════════════════
+         LEFT PANEL — Paper-Cut Art + Brand Showcase
+         ════════════════════════════════════════════════════════ -->
     <div class="auth-panel-left">
-      <div class="brand-logo">
-        <div class="brand-icon"><i class="fas fa-rocket"></i></div>
-        <div>
-          <div class="brand-name">FreelanceTrack</div>
-          <div class="brand-tagline">Project Manager</div>
+
+      <!-- Subtle texture overlay -->
+      <div class="pc-contours"></div>
+      <!-- Text legibility dark gradient -->
+      <div class="pc-vignette"></div>
+
+      <!-- Brand content -->
+      <div class="pc-content">
+
+        <!-- Brand Wordmark -->
+        <div class="brand-logo">
+          <div class="brand-icon"><i class="fas fa-wallet"></i></div>
+          <div>
+            <div class="brand-name">FreelanceTrack</div>
+            <div class="brand-tagline">Your Business. Your Rules.</div>
+          </div>
+        </div>
+
+        <div class="hero-text">
+
+          <!-- Overline -->
+          <div class="hero-overline">The Smart Freelancer's Toolkit</div>
+
+          <!-- Main Headline — Playfair Display Italic -->
+          <h1>Where <span>Ambition</span><br>Meets Order.</h1>
+
+          <!-- Slogan / Sub-copy -->
+          <p class="hero-slogan">
+            Stop juggling spreadsheets. Start running a real business.<br>
+            <strong>FreelanceTrack</strong> puts your clients, invoices, projects and payments in one place — beautifully.
+          </p>
+
+          <!-- Social proof stats -->
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-num">6+</div>
+              <div class="hero-stat-label">Power Modules</div>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+              <div class="hero-stat-num">100%</div>
+              <div class="hero-stat-label">Free to Use</div>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+              <div class="hero-stat-num">∞</div>
+              <div class="hero-stat-label">Clients &amp; Projects</div>
+            </div>
+          </div>
+
+          <!-- Feature Pills -->
+          <div class="feature-pills">
+            <div class="feature-pill">
+              <div class="pill-icon"><i class="fas fa-bolt"></i></div>
+              <div class="pill-text">One dashboard. Every client, project &amp; invoice.</div>
+            </div>
+            <div class="feature-pill">
+              <div class="pill-icon"><i class="fas fa-chart-line"></i></div>
+              <div class="pill-text">Real-time earnings reports &amp; PDF exports.</div>
+            </div>
+            <div class="feature-pill">
+              <div class="pill-icon"><i class="fas fa-lock"></i></div>
+              <div class="pill-text">Your data stays yours. Private &amp; secure.</div>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <div class="hero-text">
-        <h1>Manage Your<br>Freelance Business<br>Like a Pro</h1>
-        <p>Track clients, projects, payments and tasks all in one streamlined purple dashboard. Generate reports and never miss a deadline.</p>
-
-        <div class="feature-pills">
-          <div class="feature-pill">
-            <div class="pill-icon"><i class="fas fa-users"></i></div>
-            <div class="pill-text">Client & Project Management</div>
-          </div>
-          <div class="feature-pill">
-            <div class="pill-icon"><i class="fas fa-dollar-sign"></i></div>
-            <div class="pill-text">Payment Tracking & Invoicing</div>
-          </div>
-          <div class="feature-pill">
-            <div class="pill-icon"><i class="fas fa-chart-bar"></i></div>
-            <div class="pill-text">PDF & Excel Reports</div>
-          </div>
-          <div class="feature-pill">
-            <div class="pill-icon"><i class="fas fa-shield-alt"></i></div>
-            <div class="pill-text">Secure & Data Isolated</div>
-          </div>
-        </div>
-      </div>
+      <!-- Bottom signature -->
+      <div class="pc-badge">Built for Freelancers Who Mean Business</div>
     </div>
 
-    <!-- Right form panel -->
-    <div class="auth-panel-right position-relative">
-      <div style="position: absolute; top: 20px; right: 24px; z-index: 50;">
-        <button type="button" class="theme-toggle-btn" id="themeToggleAuthBtn" aria-label="Toggle light and dark theme" title="Toggle Light / Dark Mode">
+    <!-- ════════════════════════════════════════════════════════
+         RIGHT PANEL — Auth Form
+         ════════════════════════════════════════════════════════ -->
+    <div class="auth-panel-right">
+
+      <!-- Theme Toggle -->
+      <div class="auth-theme-toggle">
+        <button type="button" class="theme-toggle-btn" id="themeToggleAuthBtn"
+                aria-label="Toggle light and dark theme" title="Toggle Light / Dark Mode">
           <span class="theme-toggle-icon sun"><i class="fas fa-sun"></i></span>
           <span class="theme-toggle-icon moon"><i class="fas fa-moon"></i></span>
           <span class="theme-toggle-thumb"></span>
           <input type="checkbox" id="themeToggle" aria-label="Theme toggle" style="display:none;">
         </button>
       </div>
+
+      <!-- Auth Card -->
       <div class="auth-card">
-        <!-- Mobile brand -->
+
+        <!-- Mobile brand (hidden on desktop — left panel shows brand) -->
         <div class="auth-card-logo">
-          <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+          <div class="logo-icon"><i class="fas fa-wallet"></i></div>
           <div class="logo-name">FreelanceTrack</div>
         </div>
 
         {% block content %}{% endblock %}
+
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS (SRI verified) -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
           crossorigin="anonymous"></script>
