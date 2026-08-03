@@ -709,23 +709,303 @@
     }
 
     .pc-content { animation: contentRise 0.8s ease 0.2s both; }
+
+    /* ══════════════════════════════════════════════════
+       ANIMATED BACKGROUND SYSTEM — Paper-Cut Motion
+       ══════════════════════════════════════════════════ */
+
+    /* GPU acceleration for all animated layers */
+    .pc-l1, .pc-l2, .pc-l3, .pc-l4, .pc-l5,
+    .auth-orb, .auth-particle-canvas {
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    /* Parallax wrapper — absolute inset, does NOT clip children */
+    .pc-layer-wrap {
+      position: absolute;
+      inset: -40px; /* extra room so layers don't clip when shifted */
+      pointer-events: none;
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    /* Inner layer divs remain position:absolute, inset:0 within wrapper */
+    .pc-layer-wrap .pc-l1,
+    .pc-layer-wrap .pc-l2,
+    .pc-layer-wrap .pc-l3,
+    .pc-layer-wrap .pc-l4,
+    .pc-layer-wrap .pc-l5 {
+      position: absolute;
+      inset: 40px; /* compensate for wrapper's negative inset */
+    }
+
+    /* ── Left Panel: Layer Float Keyframes ── */
+    @keyframes floatL1 {
+      0%   { transform: translateY(0px) translateX(0px); }
+      25%  { transform: translateY(-6px) translateX(3px); }
+      50%  { transform: translateY(-10px) translateX(-2px); }
+      75%  { transform: translateY(-4px) translateX(4px); }
+      100% { transform: translateY(0px) translateX(0px); }
+    }
+
+    @keyframes floatL2 {
+      0%   { transform: translateY(0px) translateX(0px); }
+      30%  { transform: translateY(-8px) translateX(-4px); }
+      60%  { transform: translateY(-14px) translateX(3px); }
+      100% { transform: translateY(0px) translateX(0px); }
+    }
+
+    @keyframes floatL3 {
+      0%   { transform: translateY(0px) translateX(0px) scale(1); }
+      33%  { transform: translateY(8px) translateX(-5px) scale(1.008); }
+      66%  { transform: translateY(4px) translateX(6px) scale(0.994); }
+      100% { transform: translateY(0px) translateX(0px) scale(1); }
+    }
+
+    @keyframes floatL4 {
+      0%   { transform: translateY(0px) translateX(0px) scale(1); }
+      40%  { transform: translateY(10px) translateX(4px) scale(1.01); }
+      80%  { transform: translateY(5px) translateX(-3px) scale(0.995); }
+      100% { transform: translateY(0px) translateX(0px) scale(1); }
+    }
+
+    @keyframes floatL5 {
+      0%   { opacity: 0.5; transform: translateY(0px); }
+      50%  { opacity: 0.8; transform: translateY(-8px); }
+      100% { opacity: 0.5; transform: translateY(0px); }
+    }
+
+    @keyframes shimmerContours {
+      0%   { opacity: 0.6; }
+      50%  { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    /* Apply animations to paper-cut layers */
+    .auth-panel-left.anim-ready .pc-l1 {
+      animation: floatL1 18s ease-in-out infinite;
+    }
+    .auth-panel-left.anim-ready .pc-l2 {
+      animation: floatL2 22s ease-in-out infinite;
+    }
+    .auth-panel-left.anim-ready .pc-l3 {
+      animation: floatL3 26s ease-in-out infinite;
+    }
+    .auth-panel-left.anim-ready .pc-l4 {
+      animation: floatL4 20s ease-in-out infinite 3s;
+    }
+    .auth-panel-left.anim-ready .pc-l5 {
+      animation: floatL5 14s ease-in-out infinite 1s;
+    }
+    .auth-panel-left.anim-ready .pc-contours {
+      animation: shimmerContours 12s ease-in-out infinite;
+    }
+
+    /* ── Parallax wrapper for mouse tracking ── */
+    .parallax-layer {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.1s linear;
+      will-change: transform;
+    }
+
+    /* ── Right Panel: Animated Orbs ── */
+    .auth-bg-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .auth-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0;
+      animation: orbPulse var(--orb-duration, 20s) ease-in-out infinite var(--orb-delay, 0s);
+    }
+
+    @keyframes orbPulse {
+      0%   { opacity: 0; transform: scale(0.85) translate(0px, 0px); }
+      20%  { opacity: var(--orb-max-opacity, 0.12); }
+      50%  { opacity: var(--orb-max-opacity, 0.12); transform: scale(1.08) translate(var(--orb-tx, 10px), var(--orb-ty, -15px)); }
+      80%  { opacity: var(--orb-max-opacity, 0.12); }
+      100% { opacity: 0; transform: scale(0.85) translate(0px, 0px); }
+    }
+
+    /* Light-mode orbs */
+    .auth-orb-1 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #DB9941 0%, #C8881E 50%, transparent 70%);
+      bottom: -80px; right: -80px;
+      --orb-duration: 18s;
+      --orb-delay: 0s;
+      --orb-max-opacity: 0.09;
+      --orb-tx: -20px; --orb-ty: -30px;
+    }
+
+    .auth-orb-2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #39444D 0%, #1A2530 50%, transparent 70%);
+      top: -60px; left: -60px;
+      --orb-duration: 24s;
+      --orb-delay: 6s;
+      --orb-max-opacity: 0.07;
+      --orb-tx: 15px; --orb-ty: 20px;
+    }
+
+    .auth-orb-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, #C8381A 0%, #AE2C11 50%, transparent 70%);
+      top: 40%; left: 30%;
+      --orb-duration: 30s;
+      --orb-delay: 12s;
+      --orb-max-opacity: 0.05;
+      --orb-tx: -10px; --orb-ty: 10px;
+    }
+
+    /* Dark-mode orb overrides */
+    [data-theme="dark"] .auth-orb-1 {
+      background: radial-gradient(circle, #DB9941 0%, #C8881E 50%, transparent 70%);
+      --orb-max-opacity: 0.14;
+    }
+    [data-theme="dark"] .auth-orb-2 {
+      background: radial-gradient(circle, #1C2B3A 0%, #07111D 50%, transparent 70%);
+      --orb-max-opacity: 0.25;
+    }
+    [data-theme="dark"] .auth-orb-3 {
+      background: radial-gradient(circle, #C8381A 0%, #8B1F0A 50%, transparent 70%);
+      --orb-max-opacity: 0.08;
+    }
+
+    /* ── Floating geometric shapes ── */
+    .auth-geo {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+    }
+
+    @keyframes geoFloat {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: var(--geo-opacity, 0.06); }
+      50%  { transform: translateY(var(--geo-rise, -40px)) rotate(var(--geo-rot, 60deg)); opacity: var(--geo-opacity, 0.06); }
+      90%  { opacity: var(--geo-opacity, 0.06); }
+      100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    }
+
+    .auth-geo-ring {
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      background: transparent;
+    }
+
+    .auth-geo-diamond {
+      transform-origin: center center;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    /* Light-mode geo colors */
+    .auth-geo-1 {
+      width: 80px; height: 80px; color: rgba(219,153,65,0.4);
+      top: 15%; right: 12%;
+      animation: geoFloat 22s ease-in-out infinite 2s;
+      --geo-rise: -35px; --geo-rot: 45deg; --geo-opacity: 0.18;
+    }
+    .auth-geo-2 {
+      width: 48px; height: 48px; color: rgba(57,68,77,0.3);
+      top: 60%; left: 8%;
+      animation: geoFloat 28s ease-in-out infinite 8s;
+      --geo-rise: -50px; --geo-rot: -30deg; --geo-opacity: 0.12;
+    }
+    .auth-geo-3 {
+      width: 120px; height: 120px; color: rgba(200,136,30,0.2);
+      bottom: 20%; right: 6%;
+      animation: geoFloat 34s ease-in-out infinite 14s;
+      --geo-rise: -25px; --geo-rot: 90deg; --geo-opacity: 0.08;
+    }
+    .auth-geo-4 {
+      width: 36px; height: 36px;
+      background: rgba(219,153,65,0.15);
+      top: 75%; right: 22%;
+      animation: geoFloat 19s ease-in-out infinite 5s;
+      --geo-rise: -30px; --geo-rot: 120deg; --geo-opacity: 0.15;
+    }
+    .auth-geo-5 {
+      width: 60px; height: 60px; color: rgba(200,56,26,0.2);
+      top: 30%; right: 4%;
+      animation: geoFloat 25s ease-in-out infinite 18s;
+      --geo-rise: -45px; --geo-rot: -60deg; --geo-opacity: 0.1;
+    }
+
+    /* Dark-mode geo overrides */
+    [data-theme="dark"] .auth-geo-1 { color: rgba(219,153,65,0.5); --geo-opacity: 0.25; }
+    [data-theme="dark"] .auth-geo-2 { color: rgba(219,153,65,0.3); --geo-opacity: 0.18; }
+    [data-theme="dark"] .auth-geo-3 { color: rgba(200,136,30,0.3); --geo-opacity: 0.14; }
+    [data-theme="dark"] .auth-geo-4 { background: rgba(219,153,65,0.25); --geo-opacity: 0.22; }
+    [data-theme="dark"] .auth-geo-5 { color: rgba(200,56,26,0.35); --geo-opacity: 0.18; }
+
+    /* ── Particle canvas overlay ── */
+    .auth-particle-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.7;
+    }
+
+    /* ── Smooth theme transition ── */
+    .auth-panel-right,
+    .auth-panel-left {
+      transition: background-color 0.6s ease, background 0.6s ease;
+    }
+
+    /* ── Page load fade-in ── */
+    @keyframes pageReveal {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .auth-wrapper {
+      animation: pageReveal 0.4s ease forwards;
+    }
   </style>
 
   {% block extra_css %}{% endblock %}
 </head>
-<body class="auth-body">
+<body class="auth-body" id="authBody">
 
   <div class="auth-wrapper">
 
     <!-- ════════════════════════════════════════════════════════
          LEFT PANEL — Paper-Cut Art + Brand Showcase
          ════════════════════════════════════════════════════════ -->
-    <div class="auth-panel-left">
+    <div class="auth-panel-left" id="authPanelLeft">
 
       <!-- Subtle texture overlay -->
       <div class="pc-contours"></div>
       <!-- Text legibility dark gradient -->
       <div class="pc-vignette"></div>
+
+      <!-- Animated paper-cut depth layers (parallax targets) -->
+      <div class="pc-layer-wrap" id="pcWrap1" data-depth="0.6">
+        <div class="pc-l1"></div>
+      </div>
+      <div class="pc-layer-wrap" id="pcWrap2" data-depth="0.9">
+        <div class="pc-l2"></div>
+      </div>
+      <div class="pc-layer-wrap" id="pcWrap3" data-depth="1.4">
+        <div class="pc-l3"></div>
+      </div>
+      <div class="pc-layer-wrap" id="pcWrap4" data-depth="1.8">
+        <div class="pc-l4"></div>
+      </div>
+      <div class="pc-layer-wrap" id="pcWrap5" data-depth="0.4">
+        <div class="pc-l5"></div>
+      </div>
 
       <!-- Brand content -->
       <div class="pc-content">
@@ -797,7 +1077,25 @@
     <!-- ════════════════════════════════════════════════════════
          RIGHT PANEL — Auth Form
          ════════════════════════════════════════════════════════ -->
-    <div class="auth-panel-right">
+    <div class="auth-panel-right" id="authPanelRight">
+
+      <!-- Animated Background Canvas -->
+      <div class="auth-bg-canvas" id="authBgCanvas" aria-hidden="true">
+        <!-- Gradient orbs - layered depth -->
+        <div class="auth-orb auth-orb-1"></div>
+        <div class="auth-orb auth-orb-2"></div>
+        <div class="auth-orb auth-orb-3"></div>
+
+        <!-- Floating geometric shapes -->
+        <div class="auth-geo auth-geo-ring auth-geo-1"></div>
+        <div class="auth-geo auth-geo-ring auth-geo-2"></div>
+        <div class="auth-geo auth-geo-ring auth-geo-3"></div>
+        <div class="auth-geo auth-geo-diamond auth-geo-4"></div>
+        <div class="auth-geo auth-geo-ring auth-geo-5"></div>
+
+        <!-- Particle canvas -->
+        <canvas class="auth-particle-canvas" id="authParticleCanvas"></canvas>
+      </div>
 
       <!-- Theme Toggle -->
       <div class="auth-theme-toggle">
@@ -831,5 +1129,297 @@
           crossorigin="anonymous"></script>
   <script src="{% static 'js/main.js' %}"></script>
   {% block extra_js %}{% endblock %}
+
+  <!-- ══════════════════════════════════════════════════
+       AUTH BACKGROUND ANIMATION SYSTEM
+       Lightweight, GPU-accelerated, 60 FPS
+       ══════════════════════════════════════════════════ -->
+  <script>
+  (function() {
+    'use strict';
+
+    /* ─── Configuration ─── */
+    var CFG = {
+      // Parallax sensitivity (px moved per cursor %, lower = subtler)
+      leftParallaxDepth:  [14, 20, 28, 36, 8],   // per layer (L1–L5)
+      rightParallaxDepth: [6, 10, 16],            // per orb group
+      geoParallaxDepth:   [5, 9, 14, 7, 12],      // per geo shape
+      smoothing: 0.06,    // lerp factor — lower = smoother/slower
+
+      // Particle system
+      particleCount: 55,
+      particleMinSize: 1,
+      particleMaxSize: 2.8,
+      particleMinSpeed: 0.18,
+      particleMaxSpeed: 0.55,
+      particleMinOpacity: 0.08,
+      particleMaxOpacity: 0.35,
+      particleConnectDist: 80,
+    };
+
+    /* ─── State ─── */
+    var mouse    = { x: 0.5, y: 0.5 };   // normalized 0..1
+    var target   = { x: 0.5, y: 0.5 };
+    var current  = { x: 0.5, y: 0.5 };
+    var rafId    = null;
+    var canvas, ctx, particles = [];
+    var W = 0, H = 0;
+    var isDark   = false;
+    var paused   = false;
+
+    /* ─── DOM References ─── */
+    var panelLeft  = document.getElementById('authPanelLeft');
+    var panelRight = document.getElementById('authPanelRight');
+    var bgCanvas   = document.getElementById('authBgCanvas');
+    var orbs       = panelRight ? panelRight.querySelectorAll('.auth-orb') : [];
+    var geos       = panelRight ? panelRight.querySelectorAll('.auth-geo') : [];
+    // Parallax wrappers (separate from CSS-animated inner divs)
+    var layerWraps = panelLeft ? panelLeft.querySelectorAll('.pc-layer-wrap') : [];
+
+    /* ─── Helpers ─── */
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
+    function rand(mn, mx) { return mn + Math.random() * (mx - mn); }
+
+    function isDarkMode() {
+      return document.documentElement.getAttribute('data-theme') === 'dark';
+    }
+
+    /* ─── Theme-aware particle colors ─── */
+    function getParticleColors() {
+      if (isDarkMode()) {
+        return [
+          'rgba(219,153,65,',    // amber
+          'rgba(200,136,30,',    // amber dark
+          'rgba(229,229,223,',   // parchment
+          'rgba(57,68,77,',      // slate
+          'rgba(200,56,26,',     // crimson
+        ];
+      } else {
+        return [
+          'rgba(200,136,30,',    // amber
+          'rgba(184,120,24,',    // amber darker
+          'rgba(26,37,48,',      // text dark
+          'rgba(57,68,77,',      // slate
+          'rgba(174,44,17,',     // crimson
+        ];
+      }
+    }
+
+    /* ─── Particle class ─── */
+    function Particle(w, h) {
+      this.reset(w, h, true);
+    }
+
+    Particle.prototype.reset = function(w, h, initial) {
+      this.x    = rand(0, w);
+      this.y    = initial ? rand(0, h) : h + 10;
+      this.vx   = rand(-0.15, 0.15);
+      this.vy   = -rand(CFG.particleMinSpeed, CFG.particleMaxSpeed);
+      this.size = rand(CFG.particleMinSize, CFG.particleMaxSize);
+      this.life = 0;
+      this.maxLife = rand(180, 420);
+      var colors   = getParticleColors();
+      this.colorBase = colors[Math.floor(Math.random() * colors.length)];
+      this.opacity = rand(CFG.particleMinOpacity, CFG.particleMaxOpacity);
+    };
+
+    Particle.prototype.update = function(w, h) {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life++;
+      if (this.y < -10 || this.life > this.maxLife) this.reset(w, h, false);
+    };
+
+    Particle.prototype.draw = function(ctx) {
+      var progress = this.life / this.maxLife;
+      var fade = progress < 0.1 ? progress * 10
+               : progress > 0.85 ? (1 - progress) / 0.15
+               : 1;
+      ctx.globalAlpha = this.opacity * fade;
+      ctx.fillStyle   = this.colorBase + (this.opacity * fade) + ')';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    /* ─── Canvas Setup ─── */
+    function setupCanvas() {
+      canvas = document.getElementById('authParticleCanvas');
+      if (!canvas || !panelRight) return;
+      ctx = canvas.getContext('2d');
+      resizeCanvas();
+      initParticles();
+    }
+
+    function resizeCanvas() {
+      if (!canvas || !panelRight) return;
+      var rect = panelRight.getBoundingClientRect();
+      W = rect.width;
+      H = rect.height || window.innerHeight;
+      canvas.width  = W;
+      canvas.height = H;
+    }
+
+    function initParticles() {
+      particles = [];
+      for (var i = 0; i < CFG.particleCount; i++) {
+        particles.push(new Particle(W, H));
+      }
+    }
+
+    /* ─── Mouse tracking ─── */
+    function onMouseMove(e) {
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
+      target.x = clamp(e.clientX / vw, 0, 1);
+      target.y = clamp(e.clientY / vh, 0, 1);
+    }
+
+    /* Touch support */
+    function onTouchMove(e) {
+      if (!e.touches.length) return;
+      var t = e.touches[0];
+      target.x = clamp(t.clientX / window.innerWidth,  0, 1);
+      target.y = clamp(t.clientY / window.innerHeight, 0, 1);
+    }
+
+    /* ─── Apply parallax to left panel layers ─── */
+    function applyLeftParallax(dx, dy) {
+      // Parallax on the background image itself for subtle depth
+      if (panelLeft) {
+        var bgX = 50 + dx * 4;
+        var bgY = 50 + dy * 4;
+        panelLeft.style.backgroundPosition = bgX + '% ' + bgY + '%';
+      }
+      // Each pc-layer-wrap gets its own depth-multiplied translate
+      // This does NOT interfere with the inner pc-lX CSS keyframe animations
+      layerWraps.forEach(function(wrap) {
+        var depth = parseFloat(wrap.getAttribute('data-depth')) || 1;
+        var tx = dx * depth * 18;
+        var ty = dy * depth * 12;
+        wrap.style.transform = 'translate3d(' + tx + 'px, ' + ty + 'px, 0)';
+      });
+    }
+
+    /* ─── Apply parallax to right panel orbs ─── */
+    function applyRightParallax(dx, dy) {
+      orbs.forEach(function(orb, i) {
+        var depth = CFG.rightParallaxDepth[i] || 8;
+        var tx = dx * depth;
+        var ty = dy * depth;
+        orb.style.transform = 'translate3d(' + tx + 'px, ' + ty + 'px, 0)';
+      });
+      geos.forEach(function(geo, i) {
+        var depth = CFG.geoParallaxDepth[i] || 8;
+        var tx = dx * depth;
+        var ty = dy * depth;
+        // Preserve the geo's base rotation from CSS via a separate data attr
+        geo.style.transform = 'translate3d(' + tx + 'px, ' + ty + 'px, 0)';
+      });
+    }
+
+    /* ─── Main RAF Loop ─── */
+    function tick() {
+      rafId = requestAnimationFrame(tick);
+      if (paused) return;
+
+      /* Smooth interpolate mouse position */
+      current.x = lerp(current.x, target.x, CFG.smoothing);
+      current.y = lerp(current.y, target.y, CFG.smoothing);
+
+      /* Offset from center (−0.5 … +0.5) */
+      var dx = current.x - 0.5;
+      var dy = current.y - 0.5;
+
+      /* Apply parallax */
+      if (panelLeft && layerWraps.length) applyLeftParallax(dx, dy);
+      if (panelRight && orbs.length)      applyRightParallax(dx, dy);
+
+      /* Render particles */
+      if (ctx && W && H) {
+        ctx.clearRect(0, 0, W, H);
+        ctx.globalCompositeOperation = 'source-over';
+
+        for (var i = 0; i < particles.length; i++) {
+          particles[i].update(W, H);
+          particles[i].draw(ctx);
+        }
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    /* ─── Visibility API — pause when tab hidden ─── */
+    document.addEventListener('visibilitychange', function() {
+      paused = document.hidden;
+    });
+
+    /* ─── Reduced-motion respect ─── */
+    function checkReducedMotion() {
+      var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (mq && mq.matches) {
+        paused = true;
+        // Remove CSS animations from layers too
+        if (panelLeft) panelLeft.classList.remove('anim-ready');
+        return true;
+      }
+      return false;
+    }
+
+    /* ─── Theme change listener — refresh particle colors ─── */
+    var themeObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-theme') {
+          // Refresh colors on all existing particles
+          particles.forEach(function(p) {
+            var colors = getParticleColors();
+            p.colorBase = colors[Math.floor(Math.random() * colors.length)];
+          });
+        }
+      });
+    });
+    themeObserver.observe(document.documentElement, { attributes: true });
+
+    /* ─── Resize ─── */
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        resizeCanvas();
+        initParticles();
+      }, 200);
+    });
+
+    /* ─── Init ─── */
+    function init() {
+      if (checkReducedMotion()) return;
+
+      /* Activate CSS layer animations */
+      if (panelLeft) {
+        requestAnimationFrame(function() {
+          panelLeft.classList.add('anim-ready');
+        });
+      }
+
+      /* Setup canvas & particles */
+      setupCanvas();
+
+      /* Start mouse/touch tracking */
+      document.addEventListener('mousemove', onMouseMove, { passive: true });
+      document.addEventListener('touchmove', onTouchMove, { passive: true });
+
+      /* Start main loop */
+      tick();
+    }
+
+    /* Start after DOM is ready */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+  })();
+  </script>
 </body>
 </html>
