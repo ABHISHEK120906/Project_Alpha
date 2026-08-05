@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'core',
+    'social_auth',         # OAuth Social Login
 ]
 
 
@@ -254,5 +255,53 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'FreelanceTrack <no-reply@freelancetrack.com>')
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# OAuth / Social Login Configuration
+# All credentials come from environment variables — never hardcoded.
+# Set these in your .env file before enabling social login.
+# ─────────────────────────────────────────────────────────────────────────────
 
+# Optional: override the base URL used for OAuth callback URIs
+# Example: SOCIAL_AUTH_CALLBACK_BASE_URL=https://yourdomain.com
+# Defaults to request.build_absolute_uri('/') at runtime.
+
+# Google OAuth 2.0
+# https://console.cloud.google.com/apis/credentials
+GOOGLE_CLIENT_ID     = os.environ.get('GOOGLE_CLIENT_ID', '')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+
+# GitHub OAuth App
+# https://github.com/settings/developers
+GITHUB_CLIENT_ID     = os.environ.get('GITHUB_CLIENT_ID', '')
+GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET', '')
+
+# LinkedIn OAuth 2.0 (OpenID Connect)
+# https://www.linkedin.com/developers/apps
+LINKEDIN_CLIENT_ID     = os.environ.get('LINKEDIN_CLIENT_ID', '')
+LINKEDIN_CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET', '')
+
+# Microsoft OAuth 2.0
+# https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps
+MICROSOFT_CLIENT_ID     = os.environ.get('MICROSOFT_CLIENT_ID', '')
+MICROSOFT_CLIENT_SECRET = os.environ.get('MICROSOFT_CLIENT_SECRET', '')
+
+# Facebook Login
+# https://developers.facebook.com/apps
+FACEBOOK_CLIENT_ID     = os.environ.get('FACEBOOK_CLIENT_ID', '')
+FACEBOOK_CLIENT_SECRET = os.environ.get('FACEBOOK_CLIENT_SECRET', '')
+
+# Twitter / X OAuth 2.0 (PKCE)
+# https://developer.twitter.com/en/portal/projects-and-apps
+TWITTER_CLIENT_ID     = os.environ.get('TWITTER_CLIENT_ID', '')
+TWITTER_CLIENT_SECRET = os.environ.get('TWITTER_CLIENT_SECRET', '')
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Logging — add social_auth logger
+# ─────────────────────────────────────────────────────────────────────────────
+LOGGING['loggers']['social_auth'] = {
+    'handlers': ['console'],
+    'level': 'INFO',
+    'propagate': False,
+}
 

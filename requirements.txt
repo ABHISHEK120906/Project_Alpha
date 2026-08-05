@@ -17,3 +17,5 @@ openpyxl>=3.1.0
 psycopg[binary]>=3.1.0
 dj-database-url>=2.1.0
 
+# OAuth / Social Login — HTTP requests to provider APIs
+requests>=2.31.0

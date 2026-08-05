@@ -15,6 +15,7 @@ urlpatterns = [
     path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
 
+
     # ── Super Admin Dashboard Module ─────────────────────
     path('admin-dashboard/', include('core.admin_urls')),
 

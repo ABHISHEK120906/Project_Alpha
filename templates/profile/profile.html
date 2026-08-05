@@ -74,6 +74,11 @@
         <li class="nav-item">
           <button class="nav-link fw-semibold" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button"><i class="fas fa-history me-2"></i>Login History</button>
         </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold" href="{% url 'social_auth:connected_accounts' %}">
+            <i class="fas fa-link me-2"></i>Connected Accounts
+          </a>
+        </li>
       </ul>
 
       <div class="tab-content" id="profileTabsContent">
