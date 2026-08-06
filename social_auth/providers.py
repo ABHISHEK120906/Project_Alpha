@@ -8,6 +8,8 @@ All credentials are loaded from environment variables — never hardcoded.
 
 import os
 
+from django.conf import settings as django_settings
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Each provider dict must contain:
 #   name              Human-readable name
@@ -188,18 +190,18 @@ def get_provider_config(provider_name: str) -> dict:
 
 
 def get_client_id(provider_name: str) -> str:
-    """Read client_id from environment. Returns '' if not set."""
+    """Read client_id from Django settings (populated from .env via decouple). Returns '' if not set."""
     cfg = get_provider_config(provider_name)
-    return os.environ.get(cfg['env_client_id'], '')
+    return getattr(django_settings, cfg['env_client_id'], '') or ''
 
 
 def get_client_secret(provider_name: str) -> str:
-    """Read client_secret from environment. Returns '' if not set."""
+    """Read client_secret from Django settings (populated from .env via decouple). Returns '' if not set."""
     cfg = get_provider_config(provider_name)
     env_key = cfg.get('env_client_secret')
     if not env_key:
         return ''
-    return os.environ.get(env_key, '')
+    return getattr(django_settings, env_key, '') or ''
 
 
 def is_provider_configured(provider_name: str) -> bool:

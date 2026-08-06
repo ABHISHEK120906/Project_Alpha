@@ -23,6 +23,10 @@ try:
     CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.vercel.app,https://*.now.sh,http://localhost:8000,http://127.0.0.1:8000', cast=Csv())
     DATABASE_URL   = config('DATABASE_URL', default='')
 
+    def _env(key, default=''):
+        """Read a value from .env via decouple, falling back to default."""
+        return config(key, default=default)
+
 except ImportError:
     SECRET_KEY     = os.environ.get('SECRET_KEY',
                                     'django-insecure-change-this-to-a-very-long-random-string-in-production-min-50-characters-for-security')
@@ -30,6 +34,10 @@ except ImportError:
     ALLOWED_HOSTS  = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,.vercel.app,.now.sh,*').split(',')
     CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app,https://*.now.sh,http://localhost:8000,http://127.0.0.1:8000').split(',')
     DATABASE_URL   = os.environ.get('DATABASE_URL', '')
+
+    def _env(key, default=''):
+        """Read a value from OS environment, falling back to default."""
+        return os.environ.get(key, default)
 
 
 INSTALLED_APPS = [
@@ -246,19 +254,20 @@ LOGGING = {
     },
 }
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'FreelanceTrack <no-reply@freelancetrack.com>')
+EMAIL_BACKEND = _env('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = _env('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(_env('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = _env('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = _env('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = _env('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = _env('DEFAULT_FROM_EMAIL', 'FreelanceTrack <no-reply@freelancetrack.com>')
+PASSWORD_RESET_TIMEOUT = 3600  # Reset link expires in 1 hour
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # OAuth / Social Login Configuration
-# All credentials come from environment variables — never hardcoded.
-# Set these in your .env file before enabling social login.
+# All credentials are read via _env() which uses decouple (reads .env file)
+# with os.environ as fallback. Set these in your .env file.
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Optional: override the base URL used for OAuth callback URIs
@@ -267,33 +276,33 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'FreelanceTrack <no-re
 
 # Google OAuth 2.0
 # https://console.cloud.google.com/apis/credentials
-GOOGLE_CLIENT_ID     = os.environ.get('GOOGLE_CLIENT_ID', '')
-GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+GOOGLE_CLIENT_ID     = _env('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = _env('GOOGLE_CLIENT_SECRET')
 
 # GitHub OAuth App
 # https://github.com/settings/developers
-GITHUB_CLIENT_ID     = os.environ.get('GITHUB_CLIENT_ID', '')
-GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET', '')
+GITHUB_CLIENT_ID     = _env('GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = _env('GITHUB_CLIENT_SECRET')
 
 # LinkedIn OAuth 2.0 (OpenID Connect)
 # https://www.linkedin.com/developers/apps
-LINKEDIN_CLIENT_ID     = os.environ.get('LINKEDIN_CLIENT_ID', '')
-LINKEDIN_CLIENT_SECRET = os.environ.get('LINKEDIN_CLIENT_SECRET', '')
+LINKEDIN_CLIENT_ID     = _env('LINKEDIN_CLIENT_ID')
+LINKEDIN_CLIENT_SECRET = _env('LINKEDIN_CLIENT_SECRET')
 
 # Microsoft OAuth 2.0
 # https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps
-MICROSOFT_CLIENT_ID     = os.environ.get('MICROSOFT_CLIENT_ID', '')
-MICROSOFT_CLIENT_SECRET = os.environ.get('MICROSOFT_CLIENT_SECRET', '')
+MICROSOFT_CLIENT_ID     = _env('MICROSOFT_CLIENT_ID')
+MICROSOFT_CLIENT_SECRET = _env('MICROSOFT_CLIENT_SECRET')
 
 # Facebook Login
 # https://developers.facebook.com/apps
-FACEBOOK_CLIENT_ID     = os.environ.get('FACEBOOK_CLIENT_ID', '')
-FACEBOOK_CLIENT_SECRET = os.environ.get('FACEBOOK_CLIENT_SECRET', '')
+FACEBOOK_CLIENT_ID     = _env('FACEBOOK_CLIENT_ID')
+FACEBOOK_CLIENT_SECRET = _env('FACEBOOK_CLIENT_SECRET')
 
 # Twitter / X OAuth 2.0 (PKCE)
 # https://developer.twitter.com/en/portal/projects-and-apps
-TWITTER_CLIENT_ID     = os.environ.get('TWITTER_CLIENT_ID', '')
-TWITTER_CLIENT_SECRET = os.environ.get('TWITTER_CLIENT_SECRET', '')
+TWITTER_CLIENT_ID     = _env('TWITTER_CLIENT_ID')
+TWITTER_CLIENT_SECRET = _env('TWITTER_CLIENT_SECRET')
 
 
 # ─────────────────────────────────────────────────────────────────────────────

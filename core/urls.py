@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from . import views, api_views
 
 app_name = 'core'
@@ -15,6 +16,33 @@ urlpatterns = [
     path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
 
+    # ── Password Reset Flow ────────────────────────────────
+    path('forgot-password/',
+         auth_views.PasswordResetView.as_view(
+             template_name='registration/password_reset_form.html',
+             email_template_name='emails/password_reset_email.html',
+             html_email_template_name='emails/password_reset_email.html',
+             subject_template_name='emails/password_reset_subject.txt',
+             success_url='/forgot-password/done/',
+         ),
+         name='password_reset'),
+    path('forgot-password/done/',
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='registration/password_reset_done.html',
+         ),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name='registration/password_reset_confirm.html',
+             success_url='/reset/done/',
+         ),
+         name='password_reset_confirm'),
+    path('reset/done/',
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='registration/password_reset_complete.html',
+         ),
+         name='password_reset_complete'),
+
 
     # ── Super Admin Dashboard Module ─────────────────────
     path('admin-dashboard/', include('core.admin_urls')),
@@ -22,13 +50,6 @@ urlpatterns = [
     # ── Dashboard & Sample Data ───────────────────────────
     path('dashboard/', views.dashboard, name='dashboard'),
     path('seed-sample-data/', views.load_sample_data, name='load_sample_data'),
-
-    # ── Clients ───────────────────────────────────────────
-    path('clients/', views.client_list, name='client_list'),
-    path('clients/create/', views.client_create, name='client_create'),
-    path('clients/<uuid:pk>/', views.client_detail, name='client_detail'),
-    path('clients/<uuid:pk>/update/', views.client_update, name='client_update'),
-    path('clients/<uuid:pk>/delete/', views.client_delete, name='client_delete'),
 
     # ── Projects ──────────────────────────────────────────
     path('projects/', views.project_list, name='project_list'),

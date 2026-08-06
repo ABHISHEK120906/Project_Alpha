@@ -335,7 +335,7 @@
 </form>
 
 <div class="mb-2">
-  <a href="#" onclick="alert('Password reset instructions have been dispatched. Please contact your Super Admin for direct access.'); return false;" class="forgot-pwd-link">
+  <a href="{% url 'core:password_reset' %}" class="forgot-pwd-link">
     Forgot Password? <span style="text-decoration:underline;color:#DB9941;">Click Here</span>
   </a>
 </div>
