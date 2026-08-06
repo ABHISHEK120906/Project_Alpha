@@ -3,163 +3,281 @@
 
 {% block content %}
 
-<h1 class="auth-heading">Create account</h1>
-<p class="auth-subheading">Start managing your freelance business today — free</p>
+<style>
+  .auth-card {
+    backdrop-filter: blur(18px) !important;
+    border-radius: 20px !important;
+    padding: 44px 36px !important;
+    text-align: center;
+    max-width: 420px !important;
+  }
+
+  .brand-logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .brand-logo-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, #DB9941 0%, #C8881E 100%);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(200,136,30,0.4);
+  }
+
+  .brand-logo-text {
+    font-size: 20px; font-weight: 800;
+    color: #1A2530; letter-spacing: -0.5px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  [data-theme="dark"] .brand-logo-text { color: #E5E5DF; }
+
+  .auth-welcome-heading {
+    font-size: 24px; font-weight: 800;
+    color: #1A2530; line-height: 1.2;
+    margin-bottom: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  [data-theme="dark"] .auth-welcome-heading { color: #E5E5DF; }
+
+  .auth-welcome-sub {
+    font-size: 14px; font-weight: 500;
+    color: #6A7480; margin-bottom: 32px;
+    font-family: 'Inter', sans-serif;
+  }
+  [data-theme="dark"] .auth-welcome-sub { color: #8A8070; }
+
+  /* ── Social buttons stack ── */
+  .social-stack {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  /* ── Google Button ── */
+  .btn-google {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; padding: 14px 20px;
+    background: #ffffff;
+    border: 1.5px solid rgba(0,0,0,0.14);
+    border-radius: 14px;
+    color: #3c4043;
+    font-size: 15px; font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden;
+  }
+  .btn-google::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .btn-google:hover {
+    background: #f7f7f7;
+    border-color: rgba(0,0,0,0.22);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.13);
+    transform: translateY(-2px);
+    color: #3c4043;
+  }
+  .btn-google:active { transform: translateY(0) scale(0.99); }
+  [data-theme="dark"] .btn-google {
+    background: #2a2a2a;
+    border-color: rgba(255,255,255,0.12);
+    color: #e8eaed;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  [data-theme="dark"] .btn-google:hover {
+    background: #333;
+    border-color: rgba(255,255,255,0.22);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    color: #e8eaed;
+  }
+  .btn-google-icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .btn-google-spinner {
+    display: none; width: 18px; height: 18px;
+    border: 2px solid rgba(60,64,67,0.25);
+    border-top-color: #3c4043;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-google.loading .btn-google-spinner { display: block; }
+  .btn-google.loading .btn-google-icon { display: none; }
+
+  /* ── GitHub Button ── */
+  .btn-github {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; padding: 14px 20px;
+    background: #24292f;
+    border: 1.5px solid #24292f;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 15px; font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(36,41,47,0.3);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden;
+  }
+  .btn-github::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .btn-github:hover {
+    background: #1a1e23;
+    border-color: #1a1e23;
+    box-shadow: 0 6px 20px rgba(36,41,47,0.45);
+    transform: translateY(-2px);
+    color: #ffffff;
+  }
+  .btn-github:active { transform: translateY(0) scale(0.99); }
+  [data-theme="dark"] .btn-github {
+    background: #161b22;
+    border-color: rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] .btn-github:hover {
+    background: #1c2128;
+    border-color: rgba(255,255,255,0.18);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  .btn-github-icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .btn-github-spinner {
+    display: none; width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  .btn-github.loading .btn-github-spinner { display: block; }
+  .btn-github.loading .btn-github-icon { display: none; }
+
+  /* Footer note */
+  .auth-footer-note {
+    font-size: 12px; color: #9AA0A8; line-height: 1.6;
+    margin-top: 24px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .auth-footer-note a {
+    color: #C8881E; text-decoration: none; font-weight: 600;
+  }
+  .auth-footer-note a:hover { text-decoration: underline; }
+
+  /* Messages */
+  .auth-alert {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 12px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 500;
+    margin-bottom: 20px; text-align: left;
+  }
+  .auth-alert-error {
+    background: rgba(220,38,38,0.08);
+    border: 1px solid rgba(220,38,38,0.2);
+    color: #DC2626;
+  }
+  .auth-alert-success {
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+    color: #16a34a;
+  }
+</style>
+
+<!-- Brand Logo -->
+<div class="brand-logo-wrap">
+  <div class="brand-logo-icon">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#07111D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <span class="brand-logo-text">FreelanceTrack</span>
+</div>
+
+<h1 class="auth-welcome-heading">Create your account</h1>
+<p class="auth-welcome-sub">Start managing your freelance business — free</p>
 
 {% if messages %}
   {% for message in messages %}
   <div class="auth-alert auth-alert-{{ message.tags }}">
-    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'danger' or message.tags == 'error' %}fa-times-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}" style="flex-shrink:0;margin-top:1px;"></i>
+    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}" style="flex-shrink:0;margin-top:1px;"></i>
     <span>{{ message }}</span>
   </div>
   {% endfor %}
 {% endif %}
 
-<form method="post" action="{% url 'core:register' %}" id="registerForm" novalidate>
-  {% csrf_token %}
+<!-- Social Sign-Up Buttons -->
+<div class="social-stack" role="group" aria-label="Sign up with a social account">
 
-  {% for field in form %}
-  <div class="auth-form-group">
-    <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-    <div class="auth-input-wrapper">
-      <!-- Icon per field -->
-      {% if field.name == 'username' %}
-        <span class="auth-input-icon"><i class="fas fa-user"></i></span>
-      {% elif field.name == 'email' %}
-        <span class="auth-input-icon"><i class="fas fa-envelope"></i></span>
-      {% elif 'password' in field.name %}
-        <span class="auth-input-icon"><i class="fas fa-lock"></i></span>
-      {% else %}
-        <span class="auth-input-icon"><i class="fas fa-pen"></i></span>
-      {% endif %}
+  <!-- Google Sign-Up -->
+  <a href="{% url 'social_auth:oauth_initiate' 'google' %}"
+     class="btn-google"
+     id="btn-signup-google"
+     role="button"
+     aria-label="Sign up with Google"
+     onclick="this.classList.add('loading'); this.style.pointerEvents='none';">
+    <span class="btn-google-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+    </span>
+    <span class="btn-google-spinner" aria-hidden="true"></span>
+    Sign up with Google
+  </a>
 
-      <!-- Render widget with our class applied via JS below -->
-      <div class="field-widget-container" data-field="{{ field.name }}">
-        {{ field }}
-      </div>
+  <!-- GitHub Sign-Up -->
+  <a href="{% url 'social_auth:oauth_initiate' 'github' %}"
+     class="btn-github"
+     id="btn-signup-github"
+     role="button"
+     aria-label="Sign up with GitHub"
+     onclick="this.classList.add('loading'); this.style.pointerEvents='none';">
+    <span class="btn-github-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+    </span>
+    <span class="btn-github-spinner" aria-hidden="true"></span>
+    Sign up with GitHub
+  </a>
 
-      <!-- Password toggle buttons -->
-      {% if 'password' in field.name %}
-      <div class="auth-input-suffix">
-        <button type="button" class="toggle-pwd-btn" data-target="{{ field.html_name }}" aria-label="Toggle password">
-          <i class="fas fa-eye"></i>
-        </button>
-      </div>
-      {% endif %}
-    </div>
-
-    {% if field.errors %}
-    <div class="mt-1">
-      {% for error in field.errors %}
-      <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if field.help_text %}
-    <div class="field-help">{{ field.help_text|safe }}</div>
-    {% endif %}
-  </div>
-  {% endfor %}
-
-  <button type="submit" class="auth-btn" id="registerSubmitBtn">
-    <i class="fas fa-user-plus"></i>
-    Create Account
-  </button>
-</form>
-
-<div class="auth-footer-text">
-  Already have an account? <a href="{% url 'core:login' %}">Sign in</a>
 </div>
 
-<style>
-/* Override Django's auto-generated widget to match our light card theme */
-.field-widget-container input[type="text"],
-.field-widget-container input[type="password"],
-.field-widget-container input[type="email"] {
-  width: 100%;
-  padding: 12px 14px 12px 42px;
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-color);
-  border-radius: 12px;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.2s ease;
-  outline: none;
-  -webkit-appearance: none;
-}
-.field-widget-container input:focus {
-  background: var(--bg-card);
-  border-color: var(--brand-primary-teal);
-  box-shadow: 0 0 0 3px rgba(0, 127, 127, 0.25);
-}
-.field-widget-container input::placeholder { color: var(--text-muted); }
-.field-error {
-  color: #DC2626;
-  font-size: 12px;
-  font-weight: 500;
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.field-help {
-  color: var(--text-muted);
-  font-size: 11.5px;
-  margin-top: 4px;
-}
-.field-help ul { margin: 4px 0 0 16px; padding: 0; }
-/* Password field — make room for toggle btn */
-.field-widget-container input[type="password"],
-.field-widget-container input[type="text"][id$="password1"],
-.field-widget-container input[type="text"][id$="password2"] {
-  padding-right: 46px;
-}
-</style>
+<p class="auth-footer-note">
+  Already have an account? <a href="{% url 'core:login' %}">Sign in</a><br>
+  By signing up, you agree to our Terms of Service and Privacy Policy.
+</p>
 
 <script>
-(function() {
-  // Apply placeholder text to Django-rendered inputs
-  const placeholders = {
-    'username': 'Choose a username',
-    'password1': 'Create a strong password',
-    'password2': 'Confirm your password',
-    'email': 'your@email.com',
-  };
-  document.querySelectorAll('.field-widget-container input').forEach(function(inp) {
-    const fieldName = inp.closest('[data-field]').dataset.field;
-    if (placeholders[fieldName]) inp.placeholder = placeholders[fieldName];
-    inp.autocomplete = fieldName === 'password1' ? 'new-password' :
-                       fieldName === 'password2' ? 'new-password' :
-                       fieldName === 'username'  ? 'username' : 'off';
+// Keyboard accessibility
+document.querySelectorAll('#btn-signup-google, #btn-signup-github').forEach(function(btn) {
+  btn.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.classList.add('loading');
+      this.style.pointerEvents = 'none';
+      window.location.href = this.getAttribute('href');
+    }
   });
-
-  // Password toggle buttons
-  document.querySelectorAll('.toggle-pwd-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      const targetName = this.dataset.target;
-      const input = document.querySelector('[name="' + targetName + '"]');
-      const eye = this.querySelector('i');
-      if (input) {
-        if (input.type === 'password') {
-          input.type = 'text';
-          eye.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-          input.type = 'password';
-          eye.classList.replace('fa-eye-slash', 'fa-eye');
-        }
-        input.focus();
-      }
-    });
-  });
-
-  // Submit loading state
-  document.getElementById('registerForm').addEventListener('submit', function() {
-    const btn = document.getElementById('registerSubmitBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
-    btn.style.pointerEvents = 'none';
-  });
-})();
+});
 </script>
+
 {% endblock %}
