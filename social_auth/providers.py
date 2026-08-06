@@ -176,7 +176,7 @@ PROVIDERS = {
 }
 
 # Providers shown on the login page (ordered)
-ACTIVE_LOGIN_PROVIDERS = ['google', 'github', 'linkedin', 'microsoft', 'facebook', 'twitter']
+ACTIVE_LOGIN_PROVIDERS = ['google', 'github']
 
 
 def get_provider_config(provider_name: str) -> dict:

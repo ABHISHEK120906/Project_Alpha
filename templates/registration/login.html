@@ -1,471 +1,256 @@
 {% extends 'auth_base.html' %}
-{% block title %}Member Login — FreelanceTrack{% endblock %}
+{% block title %}Sign In — FreelanceTrack{% endblock %}
 
 {% block content %}
 
-<!-- Custom Styles for Brand Color System & Login Card -->
 <style>
-  /* ── Login card local overrides ── */
   .auth-card {
     backdrop-filter: blur(18px) !important;
     border-radius: 20px !important;
-    padding: 40px 36px !important;
+    padding: 44px 36px !important;
     text-align: center;
-    max-width: 440px !important;
+    max-width: 420px !important;
   }
 
-  .member-login-title {
-    font-size: 17px;
-    font-weight: 800;
-    color: #1A2530;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 22px;
+  .brand-logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .brand-logo-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, #DB9941 0%, #C8881E 100%);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(200,136,30,0.4);
+  }
+
+  .brand-logo-text {
+    font-size: 20px; font-weight: 800;
+    color: #1A2530; letter-spacing: -0.5px;
     font-family: 'DM Sans', sans-serif;
   }
+  [data-theme="dark"] .brand-logo-text { color: #E5E5DF; }
 
-  [data-theme="dark"] .member-login-title { color: #E5E5DF; }
-
-  /* Role Selector Tabs */
-  .role-selector-container {
-    background: #E6E2D8 !important;
-    border: 1.5px solid rgba(57, 68, 77, 0.15) !important;
-    border-radius: 12px !important;
-    padding: 4px !important;
-    margin-bottom: 24px !important;
+  .auth-welcome-heading {
+    font-size: 24px; font-weight: 800;
+    color: #1A2530; line-height: 1.2;
+    margin-bottom: 8px;
+    font-family: 'DM Sans', sans-serif;
   }
+  [data-theme="dark"] .auth-welcome-heading { color: #E5E5DF; }
 
-  [data-theme="dark"] .role-selector-container {
-    background: #1C2B3A !important;
-    border-color: rgba(219,153,65,0.2) !important;
+  .auth-welcome-sub {
+    font-size: 14px; font-weight: 500;
+    color: #6A7480; margin-bottom: 32px;
+    font-family: 'Inter', sans-serif;
   }
+  [data-theme="dark"] .auth-welcome-sub { color: #8A8070; }
 
-  .role-selector-container button {
-    color: var(--text-secondary);
-    font-weight: 700;
-    background: transparent;
-    font-size: 12.5px;
-    letter-spacing: 0.5px;
-    border-radius: 8px !important;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Input wrapper */
-  .auth-input-wrapper {
-    background: #EFECE2 !important;
-    border: 1.5px solid rgba(57, 68, 77, 0.15) !important;
-    border-radius: 12px !important;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-  }
-
-  [data-theme="dark"] .auth-input-wrapper {
-    background: #1C2B3A !important;
-    border-color: rgba(219,153,65,0.2) !important;
-  }
-
-  .auth-input-wrapper:focus-within {
-    border-color: #C8881E !important;
-    box-shadow: 0 0 0 3px rgba(200, 136, 30, 0.15) !important;
-    background: #F7F4EC !important;
-  }
-
-  [data-theme="dark"] .auth-input-wrapper:focus-within {
-    border-color: #DB9941 !important;
-    box-shadow: 0 0 0 3px rgba(219, 153, 65, 0.15) !important;
-    background: #243344 !important;
-  }
-
-  .auth-input {
-    color: #1A2530 !important;
-    background: transparent !important;
-    font-weight: 500;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  [data-theme="dark"] .auth-input { color: #E5E5DF !important; }
-  .auth-input::placeholder { color: #9AA0A8 !important; }
-
-  /* Login submit button */
-  .btn-login-submit {
-    width: 100%; padding: 14px;
-    background: linear-gradient(135deg, #DB9941 0%, #C8881E 50%, #B87818 100%);
-    color: #07111D !important;
-    font-size: 14px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 2px;
-    border: none; border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    margin-top: 10px; margin-bottom: 18px;
-    box-shadow: 0 4px 18px rgba(200,136,30,0.35),
-                inset 0 1px 0 rgba(255,255,255,0.2);
+  /* ── Google Button ── */
+  .btn-google {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; padding: 14px 20px;
+    background: #ffffff;
+    border: 1.5px solid rgba(0,0,0,0.14);
+    border-radius: 14px;
+    color: #3c4043;
+    font-size: 15px; font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative; overflow: hidden;
   }
 
-  .btn-login-submit::after {
+  .btn-google::after {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
     pointer-events: none;
   }
 
-  .btn-login-submit:hover {
-    background: linear-gradient(135deg, #C8881E 0%, #A86810 100%);
-    color: #07111D !important;
-    box-shadow: 0 10px 28px rgba(200,136,30,0.5);
-    transform: translateY(-2px) scale(1.01);
+  .btn-google:hover {
+    background: #f7f7f7;
+    border-color: rgba(0,0,0,0.22);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.13);
+    transform: translateY(-2px);
+    color: #3c4043;
   }
 
-  .btn-login-submit:active {
-    transform: translateY(0) scale(0.99);
-    box-shadow: 0 3px 10px rgba(200,136,30,0.3);
+  .btn-google:active { transform: translateY(0) scale(0.99); }
+
+  [data-theme="dark"] .btn-google {
+    background: #2a2a2a;
+    border-color: rgba(255,255,255,0.12);
+    color: #e8eaed;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  [data-theme="dark"] .btn-google:hover {
+    background: #333;
+    border-color: rgba(255,255,255,0.22);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    color: #e8eaed;
   }
 
-  .forgot-pwd-link {
-    color: #6A7480; font-size: 13px; font-weight: 600;
-    text-decoration: none; transition: color 0.2s ease; display: inline-block;
-  }
-
-  .forgot-pwd-link:hover { color: #C8881E; }
-  [data-theme="dark"] .forgot-pwd-link { color: #8A8070; }
-  [data-theme="dark"] .forgot-pwd-link:hover { color: #DB9941; }
-
-  .auth-divider {
-    height: 1px;
-    background: rgba(57, 68, 77, 0.15);
-    margin: 22px 0;
-  }
-
-  [data-theme="dark"] .auth-divider { background: rgba(219,153,65,0.12); }
-
-  .btn-register-action {
-    display: block; width: 100%; padding: 13px;
-    background: transparent;
-    color: #6A7480 !important;
-    font-size: 13px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1.5px;
-    border: 1.5px solid rgba(57, 68, 77, 0.2);
-    border-radius: 12px; text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .btn-register-action:hover {
-    background: rgba(200, 136, 30, 0.06);
-    color: #C8881E !important;
-    border-color: rgba(200, 136, 30, 0.4);
-    transform: translateY(-1px);
-  }
-
-  [data-theme="dark"] .btn-register-action {
-    color: rgba(229,229,223,0.5) !important;
-    border-color: rgba(219,153,65,0.2);
-  }
-
-  [data-theme="dark"] .btn-register-action:hover {
-    background: rgba(219,153,65,0.08);
-    color: #DB9941 !important;
-    border-color: rgba(219,153,65,0.4);
-  }
-</style>
-
-<!-- Member Login Form Card -->
-<div class="member-login-title">MEMBER LOGIN</div>
-
-<!-- Role Selector (User vs Admin) -->
-<div class="role-selector-container mb-4" style="display:flex;">
-  <button type="button" id="btnUserLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.25s ease; border:none; font-size:13px;" onclick="setLoginType('user')">
-    <i class="fas fa-user me-1"></i> USER
-  </button>
-  <button type="button" id="btnAdminLogin" class="btn flex-fill py-2 font-weight-bold" style="border-radius:8px; transition:all 0.25s ease; border:none; font-size:13px;" onclick="setLoginType('admin')">
-    <i class="fas fa-shield-alt me-1"></i> ADMIN
-  </button>
-</div>
-
-{% if messages %}
-  {% for message in messages %}
-  <div class="auth-alert auth-alert-error">
-    <i class="fas fa-exclamation-circle me-1"></i>
-    <span>{{ message }}</span>
-  </div>
-  {% endfor %}
-{% endif %}
-
-<form method="post" action="{% url 'core:login' %}" id="loginForm" novalidate>
-  {% csrf_token %}
-  <input type="hidden" name="login_type" id="login_type_input" value="{{ login_type|default:'user' }}">
-
-  <!-- Username -->
-  <div class="auth-form-group text-start">
-    <div class="auth-input-wrapper">
-      <input
-        type="text"
-        name="username"
-        id="id_username"
-        class="auth-input form-control border-0"
-        placeholder="Enter your username"
-        required
-        autofocus
-        autocomplete="username"
-        value="{{ request.POST.username|default:'' }}"
-        style="padding-left: 16px;"
-      >
-    </div>
-  </div>
-
-  <!-- Password -->
-  <div class="auth-form-group text-start">
-    <div class="auth-input-wrapper position-relative d-flex align-items-center">
-      <input
-        type="password"
-        name="password"
-        id="id_password"
-        class="auth-input form-control border-0"
-        placeholder="Enter your password"
-        required
-        autocomplete="current-password"
-        style="padding-left: 16px; padding-right: 44px;"
-      >
-      <button type="button" class="btn btn-link text-decoration-none py-0 px-3 position-absolute end-0" id="togglePwd" style="color:#DB9941;" aria-label="Toggle password">
-        <i class="fas fa-eye" id="pwdEyeIcon"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- LOGIN Submit Button -->
-  <button type="submit" class="btn-login-submit" id="loginSubmitBtn">
-    LOGIN
-  </button>
-</form>
-
-<div class="mb-3">
-  <a href="#" onclick="alert('Password reset instructions have been dispatched. Please contact your Super Admin for direct access.'); return false;" class="forgot-pwd-link">
-    Forgot Password? <span style="text-decoration:underline;color:#DB9941;">Click Here</span>
-  </a>
-</div>
-
-<div class="auth-divider"></div>
-
-<!-- REGISTER Action Button -->
-<a href="{% url 'core:register' %}" class="btn-register-action">
-  REGISTER
-</a>
-
-<!-- ════════════════════════════════════════════════════════════════
-     SOCIAL LOGIN — Official OAuth Providers
-     ════════════════════════════════════════════════════════════════ -->
-<style>
-  /* ── OR Divider ── */
-  .social-divider {
-    display: flex; align-items: center; gap: 12px;
-    margin: 24px 0 18px;
-  }
-  .social-divider-line {
-    flex: 1; height: 1px;
-    background: rgba(57,68,77,0.15);
-  }
-  [data-theme="dark"] .social-divider-line { background: rgba(219,153,65,0.12); }
-  .social-divider-text {
-    font-size: 11px; font-weight: 700;
-    color: #9AA0A8; letter-spacing: 1.5px;
-    text-transform: uppercase; white-space: nowrap;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  /* ── Social Button Stack ── */
-  .social-buttons-stack {
-    display: flex; flex-direction: column; gap: 10px;
-  }
-
-  /* ── Base Social Button ── */
-  .social-btn {
-    display: flex; align-items: center; gap: 12px;
-    width: 100%; padding: 11px 16px;
-    border-radius: 11px; border: 1.5px solid transparent;
-    font-size: 13.5px; font-weight: 700;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer; text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-    position: relative; overflow: hidden;
-    outline: none;
-    -webkit-appearance: none;
-  }
-  .social-btn:focus-visible {
-    outline: 3px solid rgba(219,153,65,0.6);
-    outline-offset: 2px;
-  }
-  .social-btn:active { transform: scale(0.98); }
-  .social-btn:disabled,
-  .social-btn[aria-disabled="true"] {
-    opacity: 0.5; cursor: not-allowed; pointer-events: none;
-  }
-
-  /* Ripple sheen on hover */
-  .social-btn::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 60%);
-    pointer-events: none; transition: opacity 0.2s;
-    opacity: 0;
-  }
-  .social-btn:hover::after { opacity: 1; }
-
-  /* Icon container */
-  .social-btn-icon {
+  .btn-google-icon {
     width: 22px; height: 22px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  /* Label */
-  .social-btn-label {
-    flex: 1; text-align: left; line-height: 1;
+    flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center;
   }
 
   /* Loading spinner */
-  .social-btn-spinner {
-    display: none;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: currentColor;
+  .btn-google-spinner {
+    display: none; width: 18px; height: 18px;
+    border: 2px solid rgba(60,64,67,0.25);
+    border-top-color: #3c4043;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
     flex-shrink: 0;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .social-btn.loading .social-btn-spinner { display: block; }
-  .social-btn.loading .social-btn-label::after { content: '…'; }
+  .btn-google.loading .btn-google-spinner { display: block; }
+  .btn-google.loading .btn-google-icon { display: none; }
 
-  /* ── Google ── */
-  .social-btn--google {
-    background: #ffffff;
-    border-color: rgba(0,0,0,0.16);
-    color: #3c4043;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
-  .social-btn--google:hover {
-    background: #f8f8f8;
-    border-color: rgba(0,0,0,0.26);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.14);
-    transform: translateY(-2px);
-    color: #3c4043;
-  }
-  [data-theme="dark"] .social-btn--google {
-    background: #2a2a2a; border-color: rgba(255,255,255,0.12); color: #e8eaed;
-  }
-  [data-theme="dark"] .social-btn--google:hover {
-    background: #333; border-color: rgba(255,255,255,0.22);
+  /* ── Social buttons stack ── */
+  .social-stack {
+    display: flex; flex-direction: column; gap: 10px;
   }
 
-  /* ── GitHub ── */
-  .social-btn--github {
+  /* ── GitHub Button ── */
+  .btn-github {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; padding: 14px 20px;
     background: #24292f;
-    border-color: #24292f;
+    border: 1.5px solid #24292f;
+    border-radius: 14px;
     color: #ffffff;
-    box-shadow: 0 2px 6px rgba(36,41,47,0.3);
+    font-size: 15px; font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(36,41,47,0.3);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden;
   }
-  .social-btn--github:hover {
+  .btn-github::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .btn-github:hover {
     background: #1a1e23;
-    box-shadow: 0 6px 16px rgba(36,41,47,0.45);
+    border-color: #1a1e23;
+    box-shadow: 0 6px 20px rgba(36,41,47,0.45);
     transform: translateY(-2px);
     color: #ffffff;
   }
-  [data-theme="dark"] .social-btn--github {
-    background: #161b22; border-color: rgba(255,255,255,0.1);
+  .btn-github:active { transform: translateY(0) scale(0.99); }
+  [data-theme="dark"] .btn-github {
+    background: #161b22;
+    border-color: rgba(255,255,255,0.1);
   }
+  [data-theme="dark"] .btn-github:hover {
+    background: #1c2128;
+    border-color: rgba(255,255,255,0.18);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  .btn-github-icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .btn-github-spinner {
+    display: none; width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  .btn-github.loading .btn-github-spinner { display: block; }
+  .btn-github.loading .btn-github-icon { display: none; }
 
-  /* ── LinkedIn ── */
-  .social-btn--linkedin {
-    background: #0a66c2;
-    border-color: #0a66c2;
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(10,102,194,0.3);
-  }
-  .social-btn--linkedin:hover {
-    background: #004182;
-    box-shadow: 0 6px 16px rgba(10,102,194,0.5);
-    transform: translateY(-2px);
-    color: #ffffff;
-  }
-
-  /* ── Microsoft ── */
-  .social-btn--microsoft {
-    background: #ffffff;
-    border-color: rgba(0,0,0,0.15);
-    color: #323130;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
-  .social-btn--microsoft:hover {
-    background: #f3f3f3;
-    border-color: rgba(0,0,0,0.25);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    transform: translateY(-2px);
-    color: #323130;
-  }
-  [data-theme="dark"] .social-btn--microsoft {
-    background: #2a2a2a; border-color: rgba(255,255,255,0.12); color: #e8e8e8;
-  }
-  [data-theme="dark"] .social-btn--microsoft:hover {
-    background: #333;
-  }
-
-  /* ── Facebook ── */
-  .social-btn--facebook {
-    background: #1877f2;
-    border-color: #1877f2;
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(24,119,242,0.3);
-  }
-  .social-btn--facebook:hover {
-    background: #0d65d9;
-    box-shadow: 0 6px 16px rgba(24,119,242,0.5);
-    transform: translateY(-2px);
-    color: #ffffff;
-  }
-
-  /* ── X (Twitter) ── */
-  .social-btn--twitter {
-    background: #000000;
-    border-color: #000000;
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-  }
-  .social-btn--twitter:hover {
-    background: #1a1a1a;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-    transform: translateY(-2px);
-    color: #ffffff;
-  }
-  [data-theme="dark"] .social-btn--twitter { border-color: rgba(255,255,255,0.1); }
-
-  /* ── Social footer note ── */
-  .social-footer-note {
-    font-size: 11px; color: #9AA0A8;
-    text-align: center; margin-top: 16px; line-height: 1.5;
+  /* Separator */
+  .auth-separator {
+    font-size: 11px; font-weight: 600; color: #9AA0A8;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin: 28px 0;
+    display: flex; align-items: center; gap: 12px;
     font-family: 'DM Sans', sans-serif;
+  }
+  .auth-separator::before,
+  .auth-separator::after {
+    content: ''; flex: 1; height: 1px;
+    background: rgba(57,68,77,0.12);
+  }
+  [data-theme="dark"] .auth-separator::before,
+  [data-theme="dark"] .auth-separator::after {
+    background: rgba(219,153,65,0.12);
+  }
+
+  .auth-footer-note {
+    font-size: 12px; color: #9AA0A8; line-height: 1.6;
+    margin-top: 24px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .auth-footer-note a {
+    color: #C8881E; text-decoration: none; font-weight: 600;
+  }
+  .auth-footer-note a:hover { text-decoration: underline; }
+
+  /* Messages */
+  .auth-alert {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 12px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 500;
+    margin-bottom: 20px; text-align: left;
+  }
+  .auth-alert-error {
+    background: rgba(220,38,38,0.08);
+    border: 1px solid rgba(220,38,38,0.2);
+    color: #DC2626;
   }
 </style>
 
-<!-- OR Divider -->
-<div class="social-divider" role="separator" aria-label="or">
-  <div class="social-divider-line"></div>
-  <span class="social-divider-text">OR</span>
-  <div class="social-divider-line"></div>
+<!-- Brand Logo -->
+<div class="brand-logo-wrap">
+  <div class="brand-logo-icon">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#07111D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <span class="brand-logo-text">FreelanceTrack</span>
 </div>
 
-<!-- Social Login Buttons -->
-<div class="social-buttons-stack" role="group" aria-label="Sign in with a social account">
+<h1 class="auth-welcome-heading">Welcome back</h1>
+<p class="auth-welcome-sub">Sign in to your account to continue</p>
 
-  <!-- Google -->
+{% if messages %}
+  {% for message in messages %}
+  <div class="auth-alert auth-alert-error">
+    <i class="fas fa-exclamation-circle" style="flex-shrink:0;margin-top:1px;"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Social Buttons Stack -->
+<div class="social-stack" role="group" aria-label="Sign in with a social account">
+
+  <!-- Google Sign-In Button -->
   <a href="{% url 'social_auth:oauth_initiate' 'google' %}"
-     class="social-btn social-btn--google"
+     class="btn-google"
+     id="btn-sign-in-google"
      role="button"
-     id="social-btn-google"
-     aria-label="Continue with Google"
-     onclick="setSocialLoading(this)">
-    <span class="social-btn-icon" aria-hidden="true">
+     aria-label="Sign in with Google"
+     onclick="this.classList.add('loading'); this.style.pointerEvents='none';">
+    <span class="btn-google-icon" aria-hidden="true">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -473,166 +258,43 @@
         <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
       </svg>
     </span>
-    <span class="social-btn-label">Continue with Google</span>
-    <span class="social-btn-spinner" aria-hidden="true"></span>
+    <span class="btn-google-spinner" aria-hidden="true"></span>
+    Continue with Google
   </a>
 
-  <!-- GitHub -->
+  <!-- GitHub Sign-In Button -->
   <a href="{% url 'social_auth:oauth_initiate' 'github' %}"
-     class="social-btn social-btn--github"
+     class="btn-github"
+     id="btn-sign-in-github"
      role="button"
-     id="social-btn-github"
-     aria-label="Continue with GitHub"
-     onclick="setSocialLoading(this)">
-    <span class="social-btn-icon" aria-hidden="true">
+     aria-label="Sign in with GitHub"
+     onclick="this.classList.add('loading'); this.style.pointerEvents='none';">
+    <span class="btn-github-icon" aria-hidden="true">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
       </svg>
     </span>
-    <span class="social-btn-label">Continue with GitHub</span>
-    <span class="social-btn-spinner" aria-hidden="true"></span>
-  </a>
-
-  <!-- LinkedIn -->
-  <a href="{% url 'social_auth:oauth_initiate' 'linkedin' %}"
-     class="social-btn social-btn--linkedin"
-     role="button"
-     id="social-btn-linkedin"
-     aria-label="Continue with LinkedIn"
-     onclick="setSocialLoading(this)">
-    <span class="social-btn-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-      </svg>
-    </span>
-    <span class="social-btn-label">Continue with LinkedIn</span>
-    <span class="social-btn-spinner" aria-hidden="true"></span>
-  </a>
-
-  <!-- Microsoft -->
-  <a href="{% url 'social_auth:oauth_initiate' 'microsoft' %}"
-     class="social-btn social-btn--microsoft"
-     role="button"
-     id="social-btn-microsoft"
-     aria-label="Continue with Microsoft"
-     onclick="setSocialLoading(this)">
-    <span class="social-btn-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24">
-        <rect x="1" y="1" width="10.5" height="10.5" fill="#F25022"/>
-        <rect x="12.5" y="1" width="10.5" height="10.5" fill="#7FBA00"/>
-        <rect x="1" y="12.5" width="10.5" height="10.5" fill="#00A4EF"/>
-        <rect x="12.5" y="12.5" width="10.5" height="10.5" fill="#FFB900"/>
-      </svg>
-    </span>
-    <span class="social-btn-label">Continue with Microsoft</span>
-    <span class="social-btn-spinner" aria-hidden="true"></span>
-  </a>
-
-  <!-- Facebook -->
-  <a href="{% url 'social_auth:oauth_initiate' 'facebook' %}"
-     class="social-btn social-btn--facebook"
-     role="button"
-     id="social-btn-facebook"
-     aria-label="Continue with Facebook"
-     onclick="setSocialLoading(this)">
-    <span class="social-btn-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-      </svg>
-    </span>
-    <span class="social-btn-label">Continue with Facebook</span>
-    <span class="social-btn-spinner" aria-hidden="true"></span>
-  </a>
-
-  <!-- X (Twitter) -->
-  <a href="{% url 'social_auth:oauth_initiate' 'twitter' %}"
-     class="social-btn social-btn--twitter"
-     role="button"
-     id="social-btn-twitter"
-     aria-label="Continue with X"
-     onclick="setSocialLoading(this)">
-    <span class="social-btn-icon" aria-hidden="true">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-      </svg>
-    </span>
-    <span class="social-btn-label">Continue with X</span>
-    <span class="social-btn-spinner" aria-hidden="true"></span>
+    <span class="btn-github-spinner" aria-hidden="true"></span>
+    Continue with GitHub
   </a>
 
 </div>
 
-<p class="social-footer-note">
+<p class="auth-footer-note">
+  Don't have an account? <a href="{% url 'core:register' %}">Sign up</a><br>
   By continuing, you agree to our Terms of Service and Privacy Policy.
 </p>
 
 <script>
-function setSocialLoading(btn) {
-  // Show loading state; disable all social buttons
-  btn.classList.add('loading');
-  document.querySelectorAll('.social-btn').forEach(function(b) {
-    b.setAttribute('aria-disabled', 'true');
-    b.style.pointerEvents = 'none';
-    b.style.opacity = b === btn ? '1' : '0.45';
-  });
-}
-
-// Keyboard: Enter/Space activates social buttons
-document.querySelectorAll('.social-btn').forEach(function(btn) {
-  btn.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      setSocialLoading(btn);
-      window.location.href = btn.getAttribute('href');
-    }
-  });
+// Keyboard accessibility
+document.getElementById('btn-sign-in-google').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    this.classList.add('loading');
+    this.style.pointerEvents = 'none';
+    window.location.href = this.getAttribute('href');
+  }
 });
 </script>
 
-<script>
-function setLoginType(type) {
-  document.getElementById('login_type_input').value = type;
-  const btnUser  = document.getElementById('btnUserLogin');
-  const btnAdmin = document.getElementById('btnAdminLogin');
-  const submitBtn = document.getElementById('loginSubmitBtn');
-
-  if (type === 'admin') {
-    btnAdmin.style.background  = '#DB9941';
-    btnAdmin.style.color       = '#07111D';
-    btnAdmin.style.boxShadow   = '0 2px 10px rgba(219,153,65,0.4)';
-    btnUser.style.background   = 'transparent';
-    btnUser.style.color        = 'var(--text-secondary)';
-    btnUser.style.boxShadow    = 'none';
-    submitBtn.innerHTML = 'LOGIN AS ADMIN';
-  } else {
-    btnUser.style.background   = '#DB9941';
-    btnUser.style.color        = '#07111D';
-    btnUser.style.boxShadow    = '0 2px 10px rgba(219,153,65,0.4)';
-    btnAdmin.style.background  = 'transparent';
-    btnAdmin.style.color       = 'var(--text-secondary)';
-    btnAdmin.style.boxShadow   = 'none';
-    submitBtn.innerHTML = 'LOGIN';
-  }
-}
-
-(function() {
-  const initialType = document.getElementById('login_type_input').value || 'user';
-  setLoginType(initialType);
-
-  // Password visibility toggle
-  const pwdInput = document.getElementById('id_password');
-  const pwdEye   = document.getElementById('pwdEyeIcon');
-  if (pwdInput && pwdEye) {
-    document.getElementById('togglePwd').addEventListener('click', function() {
-      if (pwdInput.type === 'password') {
-        pwdInput.type = 'text';
-        pwdEye.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pwdInput.type = 'password';
-        pwdEye.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    });
-  }
-})();
-</script>
 {% endblock %}
