@@ -13,8 +13,15 @@ ADMIN_NOTIFICATION_EMAIL = getattr(settings, 'ADMIN_NOTIFICATION_EMAIL', 'abhish
 
 def send_verification_email(user, token_obj, request=None):
     """
-    Sends email verification link and 6-digit OTP to newly registered user.
+    Sends email verification link and 6-digit OTP to unverified user.
+    Uses Brevo REST API v3 when BREVO_API_KEY is configured.
+    Falls back to standard Django EmailBackend if Brevo is unconfigured.
     """
+    api_key = getattr(settings, 'BREVO_API_KEY', '')
+    if api_key:
+        from .brevo_service import send_brevo_verification_email
+        return send_brevo_verification_email(user, token_obj, request)
+
     user_email = getattr(user, 'email', '')
     username = getattr(user, 'username', 'User')
 
@@ -23,7 +30,8 @@ def send_verification_email(user, token_obj, request=None):
             reverse('core:verify_email_token', kwargs={'token': token_obj.token})
         )
     else:
-        verification_url = f"/verify-email/{token_obj.token}/"
+        site_url = getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000')
+        verification_url = f"{site_url}/verify-email/{token_obj.token}/"
 
     subject = '✉️ Action Required: Verify your FreelanceTrack email address'
     context = {
@@ -54,6 +62,7 @@ def send_verification_email(user, token_obj, request=None):
     except Exception as e:
         logger.error(f"Failed to send verification email to {user_email}: {e}")
         return False
+
 
 
 def send_admin_new_user_notification(user, request=None):

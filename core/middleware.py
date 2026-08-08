@@ -42,6 +42,18 @@ class UserRestrictionMiddleware:
         except Exception:
             pass
 
+        # Unverified User Access Interceptor (exempting auth/static paths)
+        exempt_paths = ['/login', '/logout', '/register', '/verify-email', '/resend-verification', '/forgot-password', '/reset', '/static', '/media', '/forbidden']
+        if request.user.is_authenticated and not (request.user.is_staff or request.user.is_superuser):
+            profile = getattr(request.user, 'profile', None)
+            if not request.user.is_active or (profile and not profile.is_verified):
+                if not any(path.startswith(p) for p in exempt_paths):
+                    from django.contrib.auth import logout
+                    logout(request)
+                    messages.error(request, "Please verify your email address before logging in.")
+                    return redirect('core:login')
+
         response = self.get_response(request)
         return response
+
 

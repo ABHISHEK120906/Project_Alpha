@@ -692,12 +692,71 @@ class BrevoServiceTest(TestCase):
         self.assertFalse(result)
 
     @patch('requests.post')
-    def test_brevo_network_exception_handled_safely(self, mock_post):
-        mock_post.side_effect = Exception("Connection timed out")
+    def test_send_brevo_verification_email_success(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_post.return_value = mock_response
 
-        from .brevo_service import send_brevo_welcome_email
-        result = send_brevo_welcome_email(self.user)
-        self.assertFalse(result)
+        from .models import EmailVerificationToken
+        from .brevo_service import send_brevo_verification_email
+
+        token_obj = EmailVerificationToken.objects.create(
+            user=self.user,
+            token='testtokenabc',
+            otp='123456',
+            expires_at=timezone.now() + timedelta(hours=24)
+        )
+
+        res = send_brevo_verification_email(self.user, token_obj)
+        self.assertTrue(res)
+        mock_post.assert_called_once()
+        args, kwargs = mock_post.call_args
+        self.assertEqual(args[0], "https://api.brevo.com/v3/smtp/email")
+        self.assertIn("123456", kwargs['json']['htmlContent'])
+
+    def test_unverified_user_login_is_strictly_blocked(self):
+        unverified_user = User.objects.create_user(
+            username='unverifiedguy',
+            email='unverified@example.com',
+            password='MySecretPassword123!'
+        )
+        unverified_user.is_active = False
+        unverified_user.save()
+        profile, _ = UserProfile.objects.get_or_create(user=unverified_user)
+        profile.is_verified = False
+        profile.save()
+
+        resp = self.client.post(reverse('core:login'), {
+            'username': 'unverifiedguy',
+            'password': 'MySecretPassword123!',
+            'login_type': 'user'
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Please verify your email address before logging in.')
+        self.assertContains(resp, 'Resend Verification Email')
+
+    def test_resend_verification_cooldown_enforced(self):
+        user = User.objects.create_user(
+            username='cooldownuser',
+            email='cooldown@example.com',
+            password='Password123!'
+        )
+        user.is_active = False
+        user.save()
+
+        from .models import EmailVerificationToken
+        EmailVerificationToken.objects.create(
+            user=user,
+            token='token1',
+            otp='111111',
+            expires_at=timezone.now() + timedelta(hours=24)
+        )
+
+        # Immediate resend attempt should trigger 60-second cooldown warning
+        resp = self.client.post(reverse('core:resend_verification'), {'email': 'cooldown@example.com'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Please wait 60 seconds before requesting another verification email.')
+
 
 
 

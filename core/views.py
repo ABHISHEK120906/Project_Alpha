@@ -70,7 +70,7 @@ def home(request):
 
 
 def register(request):
-    """User registration with mandatory email verification dispatch."""
+    """User registration with mandatory email verification dispatch via Brevo."""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
 
@@ -100,15 +100,17 @@ def register(request):
                 expires_at=expires_at
             )
 
-            send_verification_email(user, token_obj, request)
-            send_brevo_welcome_email(user, request)
-
+            sent = send_verification_email(user, token_obj, request)
 
             log_activity(user, 'create', 'user', user.id,
                          f'User {username} submitted registration (pending verification)', request)
 
-            messages.success(request, f'Registration successful! We sent a verification email to {email}. Please verify your email to activate your account.')
-            return redirect('core:verify_email')
+            if sent:
+                messages.success(request, f'Registration successful! We sent a verification email to {email}. Please verify your email to activate your account.')
+                return redirect('core:verify_email')
+            else:
+                messages.warning(request, f'Account registered, but we could not send the verification email to {email} right now. Please click Resend Verification to try again.')
+                return redirect('core:resend_verification')
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
@@ -119,6 +121,7 @@ def register(request):
 def verify_email(request, token=None):
     """
     Email verification view via URL token link or 6-digit OTP submission.
+    Upon successful verification, activates account, marks profile verified, and dispatches Brevo welcome email.
     """
     if request.user.is_authenticated:
         return redirect('core:dashboard')
@@ -153,10 +156,10 @@ def verify_email(request, token=None):
 
         log_activity(user, 'update', 'user', user.id, f'User {user.username} verified email successfully', request)
 
-        # 1. Send Admin Notification Email (abhishekmutthalkar121@gmail.com)
+        # 1. Send Admin Notification Email
         send_admin_new_user_notification(user, request)
 
-        # 2. Send User Welcome Email
+        # 2. Sync Brevo Contact & Send Brevo Welcome Transactional Email
         send_welcome_email(user, request)
 
         messages.success(request, f'🎉 Email verified successfully! Welcome to FreelanceTrack, {user.username}. You can now log in.')
@@ -167,7 +170,7 @@ def verify_email(request, token=None):
 
 def resend_verification(request):
     """
-    Allows user to request a new verification email if previous expired or got lost.
+    Allows user to request a new verification email with 60-second rate-limit cooldown.
     """
     if request.user.is_authenticated:
         return redirect('core:dashboard')
@@ -187,6 +190,12 @@ def resend_verification(request):
                 messages.info(request, 'Your account is already verified. You can log in directly.')
                 return redirect('core:login')
 
+            # 60-second cooldown check to prevent email spam
+            last_token = EmailVerificationToken.objects.filter(user=user).order_by('-created_at').first()
+            if last_token and (timezone.now() - last_token.created_at).total_seconds() < 60:
+                messages.warning(request, 'Please wait 60 seconds before requesting another verification email.')
+                return render(request, 'registration/resend_verification.html', {'email': email})
+
             EmailVerificationToken.objects.filter(user=user, is_used=False).update(is_used=True)
 
             token_str = secrets.token_urlsafe(32)
@@ -200,9 +209,13 @@ def resend_verification(request):
                 expires_at=expires_at
             )
 
-            send_verification_email(user, token_obj, request)
-            messages.success(request, f'A new verification email and OTP have been sent to {email}.')
-            return redirect('core:verify_email')
+            sent = send_verification_email(user, token_obj, request)
+            if sent:
+                messages.success(request, f'A new verification email and OTP have been sent to {email}.')
+                return redirect('core:verify_email')
+            else:
+                messages.error(request, 'Failed to send verification email via Brevo. Please try again in a few moments.')
+                return render(request, 'registration/resend_verification.html', {'email': email})
         else:
             messages.error(request, 'No registered account found with that email address.')
 
@@ -213,7 +226,7 @@ def custom_login(request):
     """
     FEATURE 1 & FEATURE 9 & FEATURE 10 — Role-Based Login & Security Audit:
     Supports Admin vs User login option selection.
-    Enforces IP blocking, account verification checks, account suspension checks, role verification, and login audit tracking.
+    Enforces IP blocking, mandatory email verification, account suspension checks, role verification, and login audit tracking.
     """
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser or (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
@@ -241,15 +254,21 @@ def custom_login(request):
             )
             return render(request, 'registration/login.html', {'login_type': login_type})
 
-        # Pre-authenticate check for email verification status if credentials match inactive user
-        unverified_user = User.objects.filter(username=username).first()
-        if unverified_user and not unverified_user.is_active and unverified_user.check_password(password):
-            messages.error(request, 'Your email address is not verified. Please verify your email before logging in.')
-            LoginHistory.objects.create(
-                user=unverified_user, username_attempted=username, ip_address=ip, user_agent=ua,
-                device=device_type, browser=browser, status='failed'
-            )
-            return render(request, 'registration/login.html', {'login_type': login_type, 'show_resend_link': True})
+        # Pre-authenticate check for unverified email status if credentials match an account
+        unverified_user = User.objects.filter(Q(username__iexact=username) | Q(email__iexact=username)).first()
+        if unverified_user and unverified_user.check_password(password):
+            profile = getattr(unverified_user, 'profile', None)
+            if not unverified_user.is_active or (profile and not profile.is_verified):
+                messages.error(request, 'Please verify your email address before logging in.')
+                LoginHistory.objects.create(
+                    user=unverified_user, username_attempted=username, ip_address=ip, user_agent=ua,
+                    device=device_type, browser=browser, status='failed'
+                )
+                return render(request, 'registration/login.html', {
+                    'login_type': login_type,
+                    'show_resend_link': True,
+                    'unverified_email': unverified_user.email
+                })
 
         user = authenticate(request, username=username, password=password)
 
@@ -258,12 +277,17 @@ def custom_login(request):
 
             # Check Email Verification & User Suspension or Soft Delete
             if not profile.is_verified or not user.is_active:
-                messages.error(request, 'Account email is not verified or account is inactive.')
+                messages.error(request, 'Please verify your email address before logging in.')
                 LoginHistory.objects.create(
                     user=user, username_attempted=username, ip_address=ip, user_agent=ua,
                     device=device_type, browser=browser, status='failed'
                 )
-                return render(request, 'registration/login.html', {'login_type': login_type, 'show_resend_link': True})
+                return render(request, 'registration/login.html', {
+                    'login_type': login_type,
+                    'show_resend_link': True,
+                    'unverified_email': user.email
+                })
+
 
             if profile.is_suspended or profile.is_deleted:
                 messages.error(request, 'Account suspended or deleted. Please contact the Super Admin.')

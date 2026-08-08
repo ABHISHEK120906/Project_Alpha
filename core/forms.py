@@ -460,10 +460,16 @@ class UserRegistrationForm(UserCreationForm):
             raise ValidationError("Enter a valid email address.")
 
         # Check for duplicate email across all existing accounts
-        if User.objects.filter(email__iexact=email).exists():
-            raise ValidationError("This email address is already registered. Please log in or use a different email.")
+        existing_user = User.objects.filter(email__iexact=email).first()
+        if existing_user:
+            profile = getattr(existing_user, 'profile', None)
+            if existing_user.is_active and (profile and profile.is_verified):
+                raise ValidationError("Email already registered. Please log in.")
+            else:
+                raise ValidationError("An unverified account with this email address already exists. Please verify your email or click Resend Verification.")
 
         return email
+
 
     def clean_username(self):
         username = self.cleaned_data.get('username', '').strip()

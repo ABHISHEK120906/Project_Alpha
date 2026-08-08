@@ -140,3 +140,77 @@ def send_brevo_welcome_email(user, request=None) -> bool:
     except Exception as exc:
         logger.error(f"Network error while sending Brevo welcome email to {email}: {exc}")
         return False
+
+
+def send_brevo_verification_email(user, token_obj, request=None) -> bool:
+    """
+    Sends email verification link and 6-digit OTP code to unverified user using Brevo API.
+    Returns True if sent successfully, False otherwise.
+    """
+    from django.template.loader import render_to_string
+    from django.utils.html import strip_tags
+    from django.urls import reverse
+
+    email = getattr(user, 'email', '').strip().lower()
+    if not email:
+        logger.warning("Brevo verification email failed: User has no email address.")
+        return False
+
+    headers = get_brevo_headers()
+    if not headers:
+        logger.error("Brevo verification email failed: BREVO_API_KEY is missing or invalid.")
+        return False
+
+    username = getattr(user, 'username', 'User')
+
+    if request:
+        verification_url = request.build_absolute_uri(
+            reverse('core:verify_email_token', kwargs={'token': token_obj.token})
+        )
+    else:
+        site_url = getattr(settings, 'SITE_URL', 'http://127.0.0.1:8000')
+        verification_url = f"{site_url}/verify-email/{token_obj.token}/"
+
+    subject = '✉️ Action Required: Verify your FreelanceTrack email address'
+    context = {
+        'username': username,
+        'verification_url': verification_url,
+        'otp': token_obj.otp,
+        'expires_at': token_obj.expires_at,
+    }
+
+    try:
+        html_content = render_to_string('emails/email_verification.html', context)
+        text_content = strip_tags(html_content)
+
+        sender_email = getattr(settings, 'BREVO_SENDER_EMAIL', 'abhishekmutthalkar10@gmail.com')
+        sender_name = getattr(settings, 'BREVO_SENDER_NAME', 'Freelancing Tracker')
+        full_name = user.get_full_name().strip() if hasattr(user, 'get_full_name') and user.get_full_name() else username
+
+        payload = {
+            "to": [
+                {
+                    "email": email,
+                    "name": full_name
+                }
+            ],
+            "subject": subject,
+            "htmlContent": html_content,
+            "textContent": text_content,
+            "sender": {
+                "email": sender_email,
+                "name": sender_name
+            }
+        }
+
+        response = requests.post(BREVO_SMTP_EMAIL_API_URL, json=payload, headers=headers, timeout=10)
+        if response.status_code in (200, 201, 202):
+            logger.info(f"Brevo Verification email successfully dispatched to {email}")
+            return True
+        else:
+            logger.error(f"Brevo API error sending verification email to {email}: Status {response.status_code} - {response.text}")
+            return False
+    except Exception as exc:
+        logger.error(f"Network error while sending Brevo verification email to {email}: {exc}")
+        return False
+
