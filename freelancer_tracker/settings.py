@@ -263,6 +263,18 @@ EMAIL_HOST_PASSWORD = _env('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = _env('DEFAULT_FROM_EMAIL', 'FreelanceTrack <no-reply@freelancetrack.com>')
 PASSWORD_RESET_TIMEOUT = 3600  # Reset link expires in 1 hour
 
+# Brevo Transactional Email Configuration
+BREVO_API_KEY = _env('BREVO_API_KEY', '')
+BREVO_SENDER_EMAIL = _env('BREVO_SENDER_EMAIL', 'abhishekmutthalkar10@gmail.com')
+BREVO_SENDER_NAME = _env('BREVO_SENDER_NAME', 'Freelancing Tracker')
+try:
+    BREVO_WELCOME_TEMPLATE_ID = int(_env('BREVO_WELCOME_TEMPLATE_ID', '4'))
+except ValueError:
+    BREVO_WELCOME_TEMPLATE_ID = 4
+
+SITE_URL = _env('SITE_URL', _env('SOCIAL_AUTH_CALLBACK_BASE_URL', 'http://127.0.0.1:8000'))
+
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # OAuth / Social Login Configuration

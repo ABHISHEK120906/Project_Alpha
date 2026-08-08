@@ -95,6 +95,18 @@ def send_admin_new_user_notification(user, request=None):
 
 
 def send_welcome_email(user, request=None):
+    """
+    Sends welcome email to user.
+    If BREVO_API_KEY is configured, sends via Brevo Transactional Email API (creating/updating Brevo contact first).
+    Falls back to standard Django Email Backend if Brevo is unconfigured or fails.
+    """
+    api_key = getattr(settings, 'BREVO_API_KEY', '')
+    if api_key:
+        from .brevo_service import send_brevo_welcome_email
+        success = send_brevo_welcome_email(user, request)
+        if success:
+            return True
+
     user_email = getattr(user, 'email', '')
     username = getattr(user, 'username', 'User')
 
@@ -129,6 +141,7 @@ def send_welcome_email(user, request=None):
     except Exception as e:
         logger.warning(f"Could not send welcome email to {user_email}: {e}")
         return False
+
 
 
 def send_login_alert_email(user, request=None):

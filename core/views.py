@@ -28,6 +28,8 @@ from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
                     UserRegistrationForm)
 from .email_service import (send_welcome_email, send_login_alert_email,
                             send_verification_email, send_admin_new_user_notification)
+from .brevo_service import send_brevo_welcome_email
+
 
 
 def log_activity(user, action, model_type, model_id, description, request=None):
@@ -99,6 +101,8 @@ def register(request):
             )
 
             send_verification_email(user, token_obj, request)
+            send_brevo_welcome_email(user, request)
+
 
             log_activity(user, 'create', 'user', user.id,
                          f'User {username} submitted registration (pending verification)', request)

@@ -631,3 +631,73 @@ class EmailVerificationSystemTest(TestCase):
         self.assertContains(resp, 'reserved for Super Admin')
 
 
+from unittest.mock import patch, MagicMock
+
+class BrevoServiceTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='brevouser',
+            email='brevouser@example.com',
+            first_name='Alex',
+            last_name='Morgan',
+            password='Password123!'
+        )
+
+    @patch('requests.post')
+    def test_create_or_update_brevo_contact_success(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_post.return_value = mock_response
+
+        from .brevo_service import create_or_update_brevo_contact
+        result = create_or_update_brevo_contact('brevouser@example.com', first_name='Alex', last_name='Morgan')
+        self.assertTrue(result)
+
+        mock_post.assert_called_once()
+        args, kwargs = mock_post.call_args
+        self.assertEqual(args[0], "https://api.brevo.com/v3/contacts")
+        self.assertEqual(kwargs['json']['email'], 'brevouser@example.com')
+        self.assertEqual(kwargs['json']['attributes']['FIRSTNAME'], 'Alex')
+        self.assertEqual(kwargs['json']['attributes']['LASTNAME'], 'Morgan')
+        self.assertTrue(kwargs['json']['updateEnabled'])
+
+    @patch('requests.post')
+    def test_send_brevo_welcome_email_success(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_post.return_value = mock_response
+
+        from .brevo_service import send_brevo_welcome_email
+        result = send_brevo_welcome_email(self.user)
+        self.assertTrue(result)
+
+        # Expect two calls: 1 to contacts API, 1 to smtp email API
+        self.assertEqual(mock_post.call_count, 2)
+        smtp_args, smtp_kwargs = mock_post.call_args_list[1]
+        self.assertEqual(smtp_args[0], "https://api.brevo.com/v3/smtp/email")
+        self.assertEqual(smtp_kwargs['json']['templateId'], 4)
+        self.assertEqual(smtp_kwargs['json']['to'][0]['email'], 'brevouser@example.com')
+        self.assertIn('firstName', smtp_kwargs['json']['params'])
+
+    @patch('requests.post')
+    def test_brevo_api_failure_does_not_raise(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 400
+        mock_response.text = '{"code":"invalid_parameter","message":"Invalid email"}'
+        mock_post.return_value = mock_response
+
+        from .brevo_service import send_brevo_welcome_email
+        result = send_brevo_welcome_email(self.user)
+        # Should return False safely without raising an uncaught exception
+        self.assertFalse(result)
+
+    @patch('requests.post')
+    def test_brevo_network_exception_handled_safely(self, mock_post):
+        mock_post.side_effect = Exception("Connection timed out")
+
+        from .brevo_service import send_brevo_welcome_email
+        result = send_brevo_welcome_email(self.user)
+        self.assertFalse(result)
+
+
+

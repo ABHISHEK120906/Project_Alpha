@@ -449,7 +449,15 @@ def get_or_create_social_user(userinfo: dict, provider: str, token_data: dict, r
     )
 
     logger.info('Social login: new account created user=%s provider=%s', username, provider)
+
+    try:
+        from core.brevo_service import send_brevo_welcome_email
+        send_brevo_welcome_email(user, request)
+    except Exception as exc:
+        logger.error('Failed to trigger Brevo welcome email for social auth user %s: %s', username, exc)
+
     return user, is_new_account
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
