@@ -18,9 +18,14 @@ BREVO_SMTP_EMAIL_API_URL = "https://api.brevo.com/v3/smtp/email"
 
 def get_brevo_headers():
     """Build request headers containing the Brevo API Key safely from settings."""
-    api_key = getattr(settings, 'BREVO_API_KEY', '')
+    api_key = getattr(settings, 'BREVO_API_KEY', '').strip()
     if not api_key:
         return None
+    if api_key.startswith('xsmtpsib-'):
+        logger.warning(
+            "BREVO_API_KEY appears to be an SMTP Relay key ('xsmtpsib-...'). "
+            "Brevo REST API v3 endpoints require a v3 API key ('xkeysib-...')."
+        )
     return {
         "api-key": api_key,
         "accept": "application/json",

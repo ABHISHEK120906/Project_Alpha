@@ -15,12 +15,18 @@ def send_verification_email(user, token_obj, request=None):
     """
     Sends email verification link and 6-digit OTP to unverified user.
     Uses Brevo REST API v3 when BREVO_API_KEY is configured.
-    Falls back to standard Django EmailBackend if Brevo is unconfigured.
+    Falls back to standard Django EmailBackend if Brevo is unconfigured or fails.
     """
     api_key = getattr(settings, 'BREVO_API_KEY', '')
     if api_key:
         from .brevo_service import send_brevo_verification_email
-        return send_brevo_verification_email(user, token_obj, request)
+        success = send_brevo_verification_email(user, token_obj, request)
+        if success:
+            return True
+        logger.warning(
+            f"Brevo API verification email dispatch failed for {getattr(user, 'email', '')}. "
+            f"Attempting fallback via standard Django EmailBackend..."
+        )
 
     user_email = getattr(user, 'email', '')
     username = getattr(user, 'username', 'User')

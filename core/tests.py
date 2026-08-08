@@ -757,6 +757,29 @@ class BrevoServiceTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Please wait 60 seconds before requesting another verification email.')
 
+    @patch('requests.post')
+    def test_send_verification_email_falls_back_when_brevo_fails(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 401
+        mock_response.text = '{"message":"Key not found"}'
+        mock_post.return_value = mock_response
+
+        from .models import EmailVerificationToken
+        from .email_service import send_verification_email
+        from django.core import mail
+
+        token_obj = EmailVerificationToken.objects.create(
+            user=self.user,
+            token='fallbacktoken123',
+            otp='654321',
+            expires_at=timezone.now() + timedelta(hours=24)
+        )
+
+        res = send_verification_email(self.user, token_obj)
+        self.assertTrue(res)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('654321', mail.outbox[0].body)
+
 
 
 
