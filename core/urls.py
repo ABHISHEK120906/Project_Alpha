@@ -10,9 +10,6 @@ urlpatterns = [
 
     # ── Authentication ────────────────────────────────────
     path('register/', views.register, name='register'),
-    path('verify-email/', views.verify_email, name='verify_email'),
-    path('verify-email/<str:token>/', views.verify_email, name='verify_email_token'),
-    path('resend-verification/', views.resend_verification, name='resend_verification'),
     path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
 
@@ -20,9 +17,6 @@ urlpatterns = [
     path('forgot-password/',
          auth_views.PasswordResetView.as_view(
              template_name='registration/password_reset_form.html',
-             email_template_name='emails/password_reset_email.html',
-             html_email_template_name='emails/password_reset_email.html',
-             subject_template_name='emails/password_reset_subject.txt',
              success_url='/forgot-password/done/',
          ),
          name='password_reset'),

@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.contrib import messages
@@ -15,7 +14,6 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
 import json
 import re
-import secrets
 from .models import (Client, Project, Payment, Task, Note, ActivityLog,
                      UserProfile, ProjectFile, ProjectComment, Income,
                      Expense, Invoice, InvoiceItem, CalendarEvent, Notification,
@@ -26,9 +24,6 @@ from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
                     IncomeForm, ExpenseForm, InvoiceForm, InvoiceItemForm,
                     CalendarEventForm, ProjectFileForm, ProjectCommentForm,
                     UserRegistrationForm)
-from .email_service import (send_welcome_email, send_login_alert_email,
-                            send_verification_email, send_admin_new_user_notification)
-from .brevo_service import send_brevo_welcome_email
 
 
 
@@ -70,163 +65,38 @@ def home(request):
 
 
 def register(request):
-    """User registration with mandatory email verification dispatch via Brevo."""
+    """Simple user registration — no email verification required."""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
 
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
+            user = form.save()
 
-            username = form.cleaned_data.get('username')
-            email = form.cleaned_data.get('email')
-
+            # Create UserProfile for the new user
             profile, _ = UserProfile.objects.get_or_create(user=user)
             profile.role = 'user'
-            profile.is_verified = False
+            profile.is_verified = True
             profile.save()
 
-            token_str = secrets.token_urlsafe(32)
-            otp_code = f"{secrets.randbelow(1000000):06d}"
-            expires_at = timezone.now() + timedelta(hours=24)
-
-            token_obj = EmailVerificationToken.objects.create(
-                user=user,
-                token=token_str,
-                otp=otp_code,
-                expires_at=expires_at
-            )
-
-            sent = send_verification_email(user, token_obj, request)
-
             log_activity(user, 'create', 'user', user.id,
-                         f'User {username} submitted registration (pending verification)', request)
+                         f'User {user.username} registered successfully', request)
 
-            if sent:
-                messages.success(request, f'Registration successful! We sent a verification email to {email}. Please verify your email to activate your account.')
-                return redirect('core:verify_email')
-            else:
-                messages.warning(request, f'Account registered, but we could not send the verification email to {email} right now. Please click Resend Verification to try again.')
-                return redirect('core:resend_verification')
+            messages.success(request, f'Account created successfully! Welcome, {user.first_name or user.username}. Please log in.')
+            return redirect('core:login')
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
         form = UserRegistrationForm()
+
     return render(request, 'registration/register.html', {'form': form})
-
-
-def verify_email(request, token=None):
-    """
-    Email verification view via URL token link or 6-digit OTP submission.
-    Upon successful verification, activates account, marks profile verified, and dispatches Brevo welcome email.
-    """
-    if request.user.is_authenticated:
-        return redirect('core:dashboard')
-
-    token_str = token or request.GET.get('token')
-    otp_code = request.POST.get('otp', '').strip() if request.method == 'POST' else None
-
-    token_obj = None
-
-    if token_str:
-        token_obj = EmailVerificationToken.objects.filter(token=token_str, is_used=False).first()
-    elif otp_code:
-        token_obj = EmailVerificationToken.objects.filter(otp=otp_code, is_used=False).order_by('-created_at').first()
-
-    if (token_str or otp_code):
-        if not token_obj or not token_obj.is_valid():
-            messages.error(request, 'The verification link or OTP code is invalid or has expired. Please request a new verification email.')
-            return render(request, 'registration/verify_email.html')
-
-        user = token_obj.user
-
-        token_obj.is_used = True
-        token_obj.save()
-
-        user.is_active = True
-        user.save()
-
-        profile, _ = UserProfile.objects.get_or_create(user=user)
-        profile.is_verified = True
-        profile.role = 'user'
-        profile.save()
-
-        log_activity(user, 'update', 'user', user.id, f'User {user.username} verified email successfully', request)
-
-        # 1. Send Admin Notification Email
-        send_admin_new_user_notification(user, request)
-
-        # 2. Sync Brevo Contact & Send Brevo Welcome Transactional Email
-        send_welcome_email(user, request)
-
-        messages.success(request, f'🎉 Email verified successfully! Welcome to FreelanceTrack, {user.username}. You can now log in.')
-        return redirect('core:login')
-
-    return render(request, 'registration/verify_email.html')
-
-
-def resend_verification(request):
-    """
-    Allows user to request a new verification email with 60-second rate-limit cooldown.
-    """
-    if request.user.is_authenticated:
-        return redirect('core:dashboard')
-
-    if request.method == 'POST':
-        email = request.POST.get('email', '').strip().lower()
-
-        if not email:
-            messages.error(request, 'Please enter your registered email address.')
-            return render(request, 'registration/resend_verification.html')
-
-        user = User.objects.filter(email__iexact=email).first()
-
-        if user:
-            profile, _ = UserProfile.objects.get_or_create(user=user)
-            if user.is_active and profile.is_verified:
-                messages.info(request, 'Your account is already verified. You can log in directly.')
-                return redirect('core:login')
-
-            # 60-second cooldown check to prevent email spam
-            last_token = EmailVerificationToken.objects.filter(user=user).order_by('-created_at').first()
-            if last_token and (timezone.now() - last_token.created_at).total_seconds() < 60:
-                messages.warning(request, 'Please wait 60 seconds before requesting another verification email.')
-                return render(request, 'registration/resend_verification.html', {'email': email})
-
-            EmailVerificationToken.objects.filter(user=user, is_used=False).update(is_used=True)
-
-            token_str = secrets.token_urlsafe(32)
-            otp_code = f"{secrets.randbelow(1000000):06d}"
-            expires_at = timezone.now() + timedelta(hours=24)
-
-            token_obj = EmailVerificationToken.objects.create(
-                user=user,
-                token=token_str,
-                otp=otp_code,
-                expires_at=expires_at
-            )
-
-            sent = send_verification_email(user, token_obj, request)
-            if sent:
-                messages.success(request, f'A new verification email and OTP have been sent to {email}.')
-                return redirect('core:verify_email')
-            else:
-                messages.error(request, 'Failed to send verification email via Brevo. Please try again in a few moments.')
-                return render(request, 'registration/resend_verification.html', {'email': email})
-        else:
-            messages.error(request, 'No registered account found with that email address.')
-
-    return render(request, 'registration/resend_verification.html')
 
 
 def custom_login(request):
     """
-    FEATURE 1 & FEATURE 9 & FEATURE 10 — Role-Based Login & Security Audit:
-    Supports Admin vs User login option selection.
-    Enforces IP blocking, mandatory email verification, account suspension checks, role verification, and login audit tracking.
+    Role-Based Login: supports Admin vs User login.
+    Enforces IP blocking, account suspension checks, role verification, and login audit tracking.
     """
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser or (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
@@ -254,41 +124,12 @@ def custom_login(request):
             )
             return render(request, 'registration/login.html', {'login_type': login_type})
 
-        # Pre-authenticate check for unverified email status if credentials match an account
-        unverified_user = User.objects.filter(Q(username__iexact=username) | Q(email__iexact=username)).first()
-        if unverified_user and unverified_user.check_password(password):
-            profile = getattr(unverified_user, 'profile', None)
-            if not unverified_user.is_active or (profile and not profile.is_verified):
-                messages.error(request, 'Please verify your email address before logging in.')
-                LoginHistory.objects.create(
-                    user=unverified_user, username_attempted=username, ip_address=ip, user_agent=ua,
-                    device=device_type, browser=browser, status='failed'
-                )
-                return render(request, 'registration/login.html', {
-                    'login_type': login_type,
-                    'show_resend_link': True,
-                    'unverified_email': unverified_user.email
-                })
-
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             profile, _ = UserProfile.objects.get_or_create(user=user)
 
-            # Check Email Verification & User Suspension or Soft Delete
-            if not profile.is_verified or not user.is_active:
-                messages.error(request, 'Please verify your email address before logging in.')
-                LoginHistory.objects.create(
-                    user=user, username_attempted=username, ip_address=ip, user_agent=ua,
-                    device=device_type, browser=browser, status='failed'
-                )
-                return render(request, 'registration/login.html', {
-                    'login_type': login_type,
-                    'show_resend_link': True,
-                    'unverified_email': user.email
-                })
-
-
+            # Check account suspension or soft-delete
             if profile.is_suspended or profile.is_deleted:
                 messages.error(request, 'Account suspended or deleted. Please contact the Super Admin.')
                 LoginHistory.objects.create(
@@ -314,13 +155,11 @@ def custom_login(request):
             profile.last_login_at = timezone.now()
             profile.save()
 
-
             LoginHistory.objects.create(
                 user=user, username_attempted=username, ip_address=ip, user_agent=ua,
                 device=device_type, browser=browser, status='success'
             )
             log_activity(user, 'login', 'user', user.id, f'User {username} logged in ({login_type} mode)', request)
-            send_login_alert_email(user, request)
 
             messages.success(request, f'Welcome back, {username}!')
 
@@ -337,6 +176,7 @@ def custom_login(request):
 
     login_type = request.GET.get('type', 'user')
     return render(request, 'registration/login.html', {'login_type': login_type})
+
 
 
 

@@ -4,7 +4,6 @@ from django.urls import reverse
 
 class UserRestrictionMiddleware:
     """
-    FEATURE 1 & FEATURE 16 — User Restrictions & Security:
     Enforces that non-admin/non-staff users cannot access /admin-dashboard/ or admin management APIs.
     If a user manually enters an Admin URL: Returns 403 Forbidden or redirects to User Dashboard.
     Also handles Maintenance Mode enforcement.
@@ -41,17 +40,6 @@ class UserRestrictionMiddleware:
                     return render(request, 'maintenance.html', status=503)
         except Exception:
             pass
-
-        # Unverified User Access Interceptor (exempting auth/static paths)
-        exempt_paths = ['/login', '/logout', '/register', '/verify-email', '/resend-verification', '/forgot-password', '/reset', '/static', '/media', '/forbidden']
-        if request.user.is_authenticated and not (request.user.is_staff or request.user.is_superuser):
-            profile = getattr(request.user, 'profile', None)
-            if not request.user.is_active or (profile and not profile.is_verified):
-                if not any(path.startswith(p) for p in exempt_paths):
-                    from django.contrib.auth import logout
-                    logout(request)
-                    messages.error(request, "Please verify your email address before logging in.")
-                    return redirect('core:login')
 
         response = self.get_response(request)
         return response

@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'core',
-    'social_auth',         # OAuth Social Login
 ]
 
 
@@ -254,75 +253,5 @@ LOGGING = {
     },
 }
 
-EMAIL_BACKEND = _env('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = _env('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(_env('EMAIL_PORT', '587'))
-EMAIL_USE_TLS = _env('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = _env('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = _env('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = _env('DEFAULT_FROM_EMAIL', 'FreelanceTrack <no-reply@freelancetrack.com>')
-PASSWORD_RESET_TIMEOUT = 3600  # Reset link expires in 1 hour
-
-# Brevo Transactional Email Configuration
-BREVO_API_KEY = _env('BREVO_API_KEY', '')
-BREVO_SENDER_EMAIL = _env('BREVO_SENDER_EMAIL', 'abhishekmutthalkar10@gmail.com')
-BREVO_SENDER_NAME = _env('BREVO_SENDER_NAME', 'Freelancing Tracker')
-try:
-    BREVO_WELCOME_TEMPLATE_ID = int(_env('BREVO_WELCOME_TEMPLATE_ID', '4'))
-except ValueError:
-    BREVO_WELCOME_TEMPLATE_ID = 4
-
-SITE_URL = _env('SITE_URL', _env('SOCIAL_AUTH_CALLBACK_BASE_URL', 'http://127.0.0.1:8000'))
-
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# OAuth / Social Login Configuration
-# All credentials are read via _env() which uses decouple (reads .env file)
-# with os.environ as fallback. Set these in your .env file.
-# ─────────────────────────────────────────────────────────────────────────────
-
-# Optional: override the base URL used for OAuth callback URIs
-# Example: SOCIAL_AUTH_CALLBACK_BASE_URL=https://yourdomain.com
-# Defaults to request.build_absolute_uri('/') at runtime.
-
-# Google OAuth 2.0
-# https://console.cloud.google.com/apis/credentials
-GOOGLE_CLIENT_ID     = _env('GOOGLE_CLIENT_ID')
-GOOGLE_CLIENT_SECRET = _env('GOOGLE_CLIENT_SECRET')
-
-# GitHub OAuth App
-# https://github.com/settings/developers
-GITHUB_CLIENT_ID     = _env('GITHUB_CLIENT_ID')
-GITHUB_CLIENT_SECRET = _env('GITHUB_CLIENT_SECRET')
-
-# LinkedIn OAuth 2.0 (OpenID Connect)
-# https://www.linkedin.com/developers/apps
-LINKEDIN_CLIENT_ID     = _env('LINKEDIN_CLIENT_ID')
-LINKEDIN_CLIENT_SECRET = _env('LINKEDIN_CLIENT_SECRET')
-
-# Microsoft OAuth 2.0
-# https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps
-MICROSOFT_CLIENT_ID     = _env('MICROSOFT_CLIENT_ID')
-MICROSOFT_CLIENT_SECRET = _env('MICROSOFT_CLIENT_SECRET')
-
-# Facebook Login
-# https://developers.facebook.com/apps
-FACEBOOK_CLIENT_ID     = _env('FACEBOOK_CLIENT_ID')
-FACEBOOK_CLIENT_SECRET = _env('FACEBOOK_CLIENT_SECRET')
-
-# Twitter / X OAuth 2.0 (PKCE)
-# https://developer.twitter.com/en/portal/projects-and-apps
-TWITTER_CLIENT_ID     = _env('TWITTER_CLIENT_ID')
-TWITTER_CLIENT_SECRET = _env('TWITTER_CLIENT_SECRET')
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Logging — add social_auth logger
-# ─────────────────────────────────────────────────────────────────────────────
-LOGGING['loggers']['social_auth'] = {
-    'handlers': ['console'],
-    'level': 'INFO',
-    'propagate': False,
-}
+SITE_URL = _env('SITE_URL', 'http://127.0.0.1:8000')
 

@@ -9,7 +9,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls', namespace='core')),
-    path('', include('social_auth.urls', namespace='social_auth')),
 ]
 
 if settings.DEBUG:

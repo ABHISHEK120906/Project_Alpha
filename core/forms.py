@@ -1,7 +1,6 @@
 from django import forms
 from django.core.validators import EmailValidator, RegexValidator, validate_email
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import (Client, Project, Payment, Task, Note, UserProfile,
                      Income, Expense, Invoice, InvoiceItem, CalendarEvent,
@@ -427,57 +426,101 @@ class ProjectCommentForm(forms.ModelForm):
         }
 
 
-class UserRegistrationForm(UserCreationForm):
+class UserRegistrationForm(forms.Form):
     """
-    Mandatory registration form requiring valid email verification.
+    Simple registration form: Full Name, Email, Password, Confirm Password.
+    No email verification required — account is activated immediately.
     """
-    email = forms.EmailField(
+    full_name = forms.CharField(
+        label='Full Name',
         required=True,
-        widget=forms.EmailInput(attrs={'placeholder': 'your@email.com', 'class': 'form-control'}),
-        help_text="A verification link will be sent to this email address."
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Enter your full name',
+            'class': 'form-control',
+            'autocomplete': 'name',
+        }),
     )
-    first_name = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-control'})
+    email = forms.EmailField(
+        label='Email Address',
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'your@email.com',
+            'class': 'form-control',
+            'autocomplete': 'email',
+        }),
     )
-    last_name = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'})
+    password1 = forms.CharField(
+        label='Password',
+        required=True,
+        min_length=8,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Create a password (min 8 chars)',
+            'class': 'form-control',
+            'autocomplete': 'new-password',
+        }),
+    )
+    password2 = forms.CharField(
+        label='Confirm Password',
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Repeat your password',
+            'class': 'form-control',
+            'autocomplete': 'new-password',
+        }),
     )
 
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name')
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get('full_name', '').strip()
+        if not full_name:
+            raise ValidationError("Full name is required.")
+        return full_name
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '').strip().lower()
         if not email:
-            raise ValidationError("Email address is strictly required.")
-
+            raise ValidationError("Email address is required.")
         try:
             validate_email(email)
         except ValidationError:
             raise ValidationError("Enter a valid email address.")
-
-        # Check for duplicate email across all existing accounts
-        existing_user = User.objects.filter(email__iexact=email).first()
-        if existing_user:
-            profile = getattr(existing_user, 'profile', None)
-            if existing_user.is_active and (profile and profile.is_verified):
-                raise ValidationError("Email already registered. Please log in.")
-            else:
-                raise ValidationError("An unverified account with this email address already exists. Please verify your email or click Resend Verification.")
-
+        if User.objects.filter(email__iexact=email).exists():
+            raise ValidationError("An account with this email already exists. Please log in.")
         return email
 
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            self.add_error('password2', "Passwords do not match.")
+        return cleaned_data
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username', '').strip()
+    def save(self):
+        """Create and return the new active User."""
+        full_name = self.cleaned_data['full_name']
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password1']
 
-        if username.lower() == 'svathi':
-            raise ValidationError("The username 'Svathi' is reserved for Super Admin and cannot be registered.")
+        # Derive a unique username from email prefix
+        base_username = email.split('@')[0][:30]
+        username = base_username
+        counter = 1
+        while User.objects.filter(username__iexact=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
 
-        if User.objects.filter(username__iexact=username).exists():
-            raise ValidationError("This username is already taken. Please choose a different one.")
+        # Split full name into first/last
+        parts = full_name.split(' ', 1)
+        first_name = parts[0]
+        last_name = parts[1] if len(parts) > 1 else ''
 
-        return username
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            is_active=True,
+        )
+        return user
