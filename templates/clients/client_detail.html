@@ -44,18 +44,26 @@
       </div>
     </div>
 
-    <!-- Quick Stats -->
+    <!-- Client Performance Overview -->
     <div class="card mt-3">
-      <div class="card-header"><i class="fas fa-chart-bar"></i> Quick Stats</div>
+      <div class="card-header"><i class="fas fa-chart-bar me-1"></i> Client Overview</div>
       <div class="card-body">
-        <div class="row g-2 text-center">
+        <div class="row g-3 text-center">
           <div class="col-6">
-            <div style="font-size:24px;font-weight:800;color:#4f46e5;">{{ projects.count }}</div>
-            <div style="font-size:12px;color:var(--text-muted);">Projects</div>
+            <div style="font-size:22px;font-weight:800;color:var(--primary);">{{ total_projects }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Total Projects</div>
           </div>
           <div class="col-6">
-            <div style="font-size:24px;font-weight:800;color:#10b981;">${{ total_earned|floatformat:0 }}</div>
-            <div style="font-size:12px;color:var(--text-muted);">Total Earned</div>
+            <div style="font-size:22px;font-weight:800;color:#3b82f6;">{{ active_projects }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Active</div>
+          </div>
+          <div class="col-6">
+            <div style="font-size:22px;font-weight:800;color:#10b981;">{{ completed_projects }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Completed</div>
+          </div>
+          <div class="col-6">
+            <div style="font-size:22px;font-weight:800;color:#10b981;">${{ total_earned|floatformat:0 }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Total Revenue</div>
           </div>
         </div>
       </div>

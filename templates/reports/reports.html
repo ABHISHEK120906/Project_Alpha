@@ -1,46 +1,55 @@
 {% extends 'base.html' %}
 {% block title %}Reports — FreelanceTrack{% endblock %}
-{% block page_title %}<i class="fas fa-chart-bar"></i> Reports{% endblock %}
+{% block page_title %}<i class="fas fa-chart-bar"></i> Business Reports & Analytics{% endblock %}
 
 {% block content %}
 <div class="page-header">
-  <div><h1><i class="fas fa-chart-bar"></i> Reports</h1><p class="page-subtitle">Generate and export business reports</p></div>
+  <div>
+    <h1><i class="fas fa-chart-bar"></i> Business Reports & Analytics</h1>
+    <p class="page-subtitle">Track financial earnings, project performance, and export detailed reports</p>
+  </div>
 </div>
 
 <!-- Summary Cards -->
 <div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div class="card stat-card success">
-      <div class="card-body"><div class="stat-value">${{ total_paid|floatformat:2 }}</div><div class="stat-label">Total Received</div></div>
+    <div class="card stat-card success p-3">
+      <div class="card-body p-1">
+        <div class="stat-value text-success fs-3 font-weight-bold">${{ total_paid|floatformat:2 }}</div>
+        <div class="stat-label text-muted small">Total Revenue Received</div>
+      </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card stat-card warning">
-      <div class="card-body"><div class="stat-value">${{ total_pending|floatformat:2 }}</div><div class="stat-label">Pending</div></div>
+    <div class="card stat-card warning p-3">
+      <div class="card-body p-1">
+        <div class="stat-value text-warning fs-3 font-weight-bold">${{ total_pending|floatformat:2 }}</div>
+        <div class="stat-label text-muted small">Pending Payments</div>
+      </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card stat-card danger">
-      <div class="card-body"><div class="stat-value">${{ total_overdue|floatformat:2 }}</div><div class="stat-label">Overdue</div></div>
+    <div class="card stat-card danger p-3">
+      <div class="card-body p-1">
+        <div class="stat-value text-danger fs-3 font-weight-bold">${{ total_overdue|floatformat:2 }}</div>
+        <div class="stat-label text-muted small">Overdue Payments</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Interactive Visualization Studio Toolbar Card -->
-<div class="card mb-4">
-  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+<!-- Interactive Analytics Chart Card -->
+<div class="card mb-4 border-0 shadow-sm" style="border-radius:18px;">
+  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2 py-3">
     <div>
-      <h5 style="margin:0;font-weight:700;color:var(--text-primary);"><i class="fas fa-magic text-primary me-2"></i> Business Analytics & Visualization Studio</h5>
-      <p style="margin:0;font-size:12px;color:var(--text-muted);">Switch visualization effects dynamically: Heatmap, Bar Graph, Pie Chart, Scatter Plot & Area Chart.</p>
+      <h5 class="mb-0 fw-bold" style="color:var(--text-primary);"><i class="fas fa-chart-area text-primary me-2"></i> Monthly Revenue & Earnings</h5>
+      <p class="mb-0 small text-muted">Visual representation of earnings across months</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
-      <div class="btn-group btn-group-sm" role="group" aria-label="Visualization Effects">
-        <button type="button" class="btn btn-outline-primary active" onclick="switchReportChart('bar', this)" title="Bar Graph"><i class="fas fa-chart-bar me-1"></i> Bar</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('line', this)" title="Line Graph"><i class="fas fa-chart-line me-1"></i> Line</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('area', this)" title="Area Chart"><i class="fas fa-chart-area me-1"></i> Area</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('pie', this)" title="Pie/Donut Chart"><i class="fas fa-chart-pie me-1"></i> Pie</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('scatter', this)" title="Scatter Plot"><i class="fas fa-braille me-1"></i> Scatter</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('heatmap', this)" title="Workload Heatmap"><i class="fas fa-th me-1"></i> Heatmap</button>
+      <div class="btn-group btn-group-sm" role="group" aria-label="Chart Switcher">
+        <button type="button" class="btn btn-outline-primary active" onclick="switchReportChart('bar', this)" title="Bar Chart"><i class="fas fa-chart-bar me-1"></i> Bar</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('line', this)" title="Line Chart"><i class="fas fa-chart-line me-1"></i> Line</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('pie', this)" title="Pie Chart"><i class="fas fa-chart-pie me-1"></i> Pie</button>
       </div>
       <button class="btn btn-sm btn-outline-success" onclick="exportReportCSV()" title="Export CSV Data"><i class="fas fa-file-csv me-1"></i> CSV Data</button>
     </div>
@@ -52,128 +61,125 @@
   </div>
 </div>
 
-<div class="row g-4 mb-4">
-  <!-- Scatter Plot Analysis Card -->
-  <div class="col-lg-6">
-    <div class="card h-100">
-      <div class="card-header"><i class="fas fa-braille text-primary me-2"></i> Project Scatter Matrix (Budget vs Revenue)</div>
-      <div class="card-body">
-        <div style="height:260px;">
-          <canvas id="scatterMatrixChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Workload Density Heatmap Card -->
-  <div class="col-lg-6">
-    <div class="card h-100">
-      <div class="card-header"><i class="fas fa-th text-accent me-2"></i> Payment Density Heatmap (Last 4 Weeks)</div>
-      <div class="card-body">
-        <div id="reportHeatmapContainer" class="heatmap-matrix-container"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="row g-4">
-  <!-- Export Reports -->
+  <!-- Export Reports Cards -->
   <div class="col-lg-8">
-    <div class="card">
-      <div class="card-header"><i class="fas fa-download"></i> Export Reports</div>
-      <div class="card-body">
+    <div class="card border-0 shadow-sm p-3" style="border-radius:18px;">
+      <div class="card-header border-0 bg-transparent px-1"><h5 class="fw-bold mb-0"><i class="fas fa-file-export text-primary me-2"></i> Export Report Packages</h5></div>
+      <div class="card-body p-1">
         <div class="row g-3">
-          {% for report in report_types %}
-          {% empty %}
           <!-- Monthly Report -->
           <div class="col-md-6">
-            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-                <div style="width:44px;height:44px;background:var(--brand-very-light-mint);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-calendar-alt" style="color:var(--brand-primary-teal);font-size:20px;"></i></div>
-                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Monthly Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">Earnings for the last 12 months</p></div>
+            <div class="p-3" style="border:1px solid var(--border-color);border-radius:14px;background:var(--bg-card);">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div style="width:44px;height:44px;background:var(--primary-soft);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-calendar-alt text-primary fs-5"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Monthly Report</h6>
+                  <p class="small text-muted mb-0">Earnings for the last 12 months</p>
+                </div>
               </div>
               <div class="d-flex gap-2">
-                <a href="{% url 'core:export_pdf_report' 'monthly' %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i> PDF</a>
-                <a href="{% url 'core:export_excel_report' 'monthly' %}" class="btn btn-sm btn-primary"><i class="fas fa-file-excel"></i> Excel</a>
+                <a href="{% url 'core:export_pdf_report' 'monthly' %}" class="btn btn-sm btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'monthly' %}" class="btn btn-sm btn-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
               </div>
             </div>
           </div>
+
           <!-- Payment Report -->
           <div class="col-md-6">
-            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-                <div style="width:44px;height:44px;background:var(--brand-very-light-mint);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-dollar-sign" style="color:var(--brand-primary-teal);font-size:20px;"></i></div>
-                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Payment Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">All invoices and payments</p></div>
+            <div class="p-3" style="border:1px solid var(--border-color);border-radius:14px;background:var(--bg-card);">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div style="width:44px;height:44px;background:var(--success-soft);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-dollar-sign text-success fs-5"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Payment Report</h6>
+                  <p class="small text-muted mb-0">All invoices and payments</p>
+                </div>
               </div>
               <div class="d-flex gap-2">
-                <a href="{% url 'core:export_pdf_report' 'payment' %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i> PDF</a>
-                <a href="{% url 'core:export_excel_report' 'payment' %}" class="btn btn-sm btn-primary"><i class="fas fa-file-excel"></i> Excel</a>
+                <a href="{% url 'core:export_pdf_report' 'payment' %}" class="btn btn-sm btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'payment' %}" class="btn btn-sm btn-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
               </div>
             </div>
           </div>
+
           <!-- Project Report -->
           <div class="col-md-6">
-            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-                <div style="width:44px;height:44px;background:var(--brand-very-light-mint);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-layer-group" style="color:var(--brand-primary-teal);font-size:20px;"></i></div>
-                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Project Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">All projects with details</p></div>
+            <div class="p-3" style="border:1px solid var(--border-color);border-radius:14px;background:var(--bg-card);">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div style="width:44px;height:44px;background:var(--info-soft);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-layer-group text-info fs-5"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Project Report</h6>
+                  <p class="small text-muted mb-0">All projects with details</p>
+                </div>
               </div>
               <div class="d-flex gap-2">
-                <a href="{% url 'core:export_pdf_report' 'project' %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i> PDF</a>
-                <a href="{% url 'core:export_excel_report' 'project' %}" class="btn btn-sm btn-primary"><i class="fas fa-file-excel"></i> Excel</a>
+                <a href="{% url 'core:export_pdf_report' 'project' %}" class="btn btn-sm btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'project' %}" class="btn btn-sm btn-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
               </div>
             </div>
           </div>
+
           <!-- Client Report -->
           <div class="col-md-6">
-            <div style="border:1px solid var(--border-color);border-radius:12px;padding:20px;">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-                <div style="width:44px;height:44px;background:var(--brand-very-light-mint);border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-users" style="color:var(--brand-primary-teal);font-size:20px;"></i></div>
-                <div><h5 style="font-weight:700;margin:0;font-size:15px;">Client Report</h5><p style="font-size:12px;color:var(--text-muted);margin:0;">All clients with project counts</p></div>
+            <div class="p-3" style="border:1px solid var(--border-color);border-radius:14px;background:var(--bg-card);">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div style="width:44px;height:44px;background:var(--purple-soft, rgba(111,66,193,0.15));border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-users text-purple fs-5" style="color:#6f42c1;"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Client Report</h6>
+                  <p class="small text-muted mb-0">All clients with project counts</p>
+                </div>
               </div>
               <div class="d-flex gap-2">
-                <a href="{% url 'core:export_pdf_report' 'client' %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i> PDF</a>
-                <a href="{% url 'core:export_excel_report' 'client' %}" class="btn btn-sm btn-primary"><i class="fas fa-file-excel"></i> Excel</a>
+                <a href="{% url 'core:export_pdf_report' 'client' %}" class="btn btn-sm btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
+                <a href="{% url 'core:export_excel_report' 'client' %}" class="btn btn-sm btn-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
               </div>
             </div>
           </div>
-          {% endfor %}
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Project Status Breakdown -->
+  <!-- Project Status & Top Clients Sidebar -->
   <div class="col-lg-4">
-    <div class="card">
-      <div class="card-header"><i class="fas fa-tasks"></i> Project Status</div>
+    <!-- Project Status Breakdown -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius:18px;">
+      <div class="card-header bg-transparent fw-bold"><i class="fas fa-tasks text-primary me-2"></i> Project Status Breakdown</div>
       <div class="card-body">
         {% for status, count in projects_by_status.items %}
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <span style="font-size:13px;font-weight:500;text-transform:capitalize;">{{ status|cut:'_'|title }}</span>
-          <span class="badge-status {% if status == 'completed' %}status-completed{% elif status == 'in_progress' %}status-in_progress{% elif status == 'cancelled' %}status-cancelled{% elif status == 'on_hold' %}status-on_hold{% else %}status-pending{% endif %}">{{ count }}</span>
+          <span class="small fw-semibold text-capitalize" style="color:var(--text-primary);">{{ status|cut:'_'|title }}</span>
+          <span class="badge-status status-{{ status }}">{{ count }}</span>
         </div>
         {% endfor %}
       </div>
     </div>
 
     <!-- Top Clients -->
-    <div class="card mt-3">
-      <div class="card-header"><i class="fas fa-users"></i> Top Clients by Projects</div>
+    <div class="card border-0 shadow-sm" style="border-radius:18px;">
+      <div class="card-header bg-transparent fw-bold"><i class="fas fa-users text-primary me-2"></i> Top Clients by Projects</div>
       <div class="card-body p-0">
         {% if top_clients %}
         <ul class="list-group list-group-flush">
           {% for client in top_clients|slice:':5' %}
-          <li class="list-group-item" style="background:transparent;border-color:var(--border-color);padding:12px 16px;">
+          <li class="list-group-item bg-transparent border-0 px-3 py-2">
             <div class="d-flex justify-content-between align-items-center">
-              <a href="{% url 'core:client_detail' client.id %}" style="font-weight:600;font-size:13px;color:var(--text-primary);">{{ client.name }}</a>
-              <span style="font-size:12px;color:var(--text-muted);">{{ client.project_count }} projects</span>
+              <a href="{% url 'core:client_detail' client.id %}" class="fw-bold small text-decoration-none" style="color:var(--text-primary);">{{ client.name }}</a>
+              <span class="small text-muted">{{ client.project_count }} projects</span>
             </div>
           </li>
           {% endfor %}
         </ul>
         {% else %}
-        <div class="p-4 text-center" style="color:var(--text-muted);">No clients yet.</div>
+        <div class="p-4 text-center text-muted small">No clients found.</div>
         {% endif %}
       </div>
     </div>
@@ -185,44 +191,13 @@
 <script>
 const reportLabels = JSON.parse('{{ monthly_labels_json|escapejs }}' || '[]');
 const reportValues = JSON.parse('{{ monthly_values_json|escapejs }}' || '[]');
-const scatterData = JSON.parse('{{ scatter_data_json|escapejs }}' || '[]');
-const heatmapData = JSON.parse('{{ heatmap_data_json|escapejs }}' || '{}');
 
 document.addEventListener('DOMContentLoaded', function () {
   if (window.VisualizationStudio) {
-    // Initial Bar Render
     window.VisualizationStudio.renderChart('monthlyChart', 'bar', {
       labels: reportLabels,
-      data: reportValues,
-      heatmap: heatmapData,
-      scatter: scatterData
+      data: reportValues
     });
-
-    // Scatter Matrix Chart Render
-    window.VisualizationStudio.renderChart('scatterMatrixChart', 'scatter', {
-      scatter: scatterData
-    });
-
-    // Standalone Heatmap Card Render
-    const heatmapContainer = document.getElementById('reportHeatmapContainer');
-    if (heatmapContainer && heatmapData.matrix) {
-      const days = heatmapData.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      let html = `<div class="heatmap-wrapper"><div class="heatmap-header-row">${days.map(d=>`<div class="heatmap-header-cell">${d}</div>`).join('')}</div>`;
-      heatmapData.matrix.forEach(week => {
-        html += `<div class="heatmap-week-row">`;
-        week.forEach(cell => {
-          const bgOpacity = Math.max(0.1, cell.intensity / 100);
-          const bgColor = cell.intensity > 50 ? `rgba(124, 58, 237, ${bgOpacity})` : `rgba(16, 185, 129, ${bgOpacity})`;
-          html += `<div class="heatmap-cell" style="background:${bgColor};" title="${cell.date}: $${cell.val}">
-            <span class="heatmap-date">${cell.date}</span>
-            <span class="heatmap-val">$${cell.val}</span>
-          </div>`;
-        });
-        html += `</div>`;
-      });
-      html += `</div>`;
-      heatmapContainer.innerHTML = html;
-    }
   }
 });
 
@@ -234,9 +209,7 @@ function switchReportChart(type, btnEl) {
   if (window.VisualizationStudio) {
     window.VisualizationStudio.renderChart('monthlyChart', type, {
       labels: reportLabels,
-      data: reportValues,
-      heatmap: heatmapData,
-      scatter: scatterData
+      data: reportValues
     });
   }
 }
@@ -248,4 +221,3 @@ function exportReportCSV() {
 }
 </script>
 {% endblock %}
-

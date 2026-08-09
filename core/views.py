@@ -247,31 +247,22 @@ def dashboard(request):
         is_archived=False
     ).select_related('client').order_by('deadline')[:5]
 
-    active_tasks = Task.objects.filter(user=user, status__in=['todo', 'in_progress'], is_archived=False).count()
+    pending_tasks_count = Task.objects.filter(user=user, status__in=['todo', 'in_progress'], is_archived=False).count()
+    overdue_tasks_count = Task.objects.filter(
+        user=user,
+        due_date__lt=timezone.now().date(),
+        is_archived=False
+    ).exclude(status__in=['completed', 'cancelled']).count()
+    pending_tasks_list = Task.objects.filter(user=user, status__in=['todo', 'in_progress'], is_archived=False).select_related('project').order_by('due_date')[:5]
+
     recent_notifications = Notification.objects.filter(user=user, is_read=False)[:5]
 
-    # ── Recent Activities & Projects ────────────────────────
+    # ── Recent Activities, Projects & Payments ─────────────
     recent_activities = ActivityLog.objects.filter(user=user).order_by('-timestamp')[:10]
     recent_projects = Project.objects.filter(user=user, is_archived=False).select_related('client').order_by('-created_at')[:5]
+    recent_payments = Payment.objects.filter(user=user).select_related('project', 'project__client').order_by('-created_at')[:5]
 
     announcements = Announcement.objects.filter(Q(target_type='all') | Q(target_users=user)).distinct()[:5]
-
-    # ── Cloud Storage Metrics (Image 1 UI Integration) ──────
-    all_files = ProjectFile.objects.filter(user=user).select_related('project')
-    recent_user_files = all_files.order_by('-uploaded_at')[:6]
-
-    pictures_count = all_files.filter(file_type__in=['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']).count()
-    documents_count = all_files.filter(file_type__in=['pdf', 'doc', 'docx', 'txt', 'csv', 'xlsx', 'ppt', 'pptx']).count()
-    videos_count = all_files.filter(file_type__in=['mp4', 'mkv', 'avi', 'mov', 'wmv']).count()
-    audio_count = all_files.filter(file_type__in=['mp3', 'wav', 'ogg', 'aac', 'flac']).count()
-
-    total_bytes = all_files.aggregate(Sum('file_size'))['file_size__sum'] or 0
-    total_mb = round(total_bytes / (1024 * 1024), 2)
-    max_mb = 500.0
-    storage_percentage = min(100, round((total_mb / max_mb) * 100, 1))
-
-    file_form = ProjectFileForm()
-    file_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
 
     context = {
         'total_clients': total_clients,
@@ -287,23 +278,15 @@ def dashboard(request):
         'completed_payments': completed_payments,
         'overdue_payments': overdue_payments,
         'upcoming_deadlines': upcoming_deadlines,
-        'active_tasks': active_tasks,
+        'pending_tasks_count': pending_tasks_count,
+        'overdue_tasks_count': overdue_tasks_count,
+        'pending_tasks_list': pending_tasks_list,
         'recent_notifications': recent_notifications,
         'recent_activities': recent_activities,
         'recent_projects': recent_projects,
+        'recent_payments': recent_payments,
         'total_earnings': total_income,
         'announcements': announcements,
-
-        # Cloud Storage Data
-        'user_files': recent_user_files,
-        'pictures_count': pictures_count,
-        'documents_count': documents_count,
-        'videos_count': videos_count,
-        'audio_count': audio_count,
-        'total_mb': total_mb,
-        'max_mb': max_mb,
-        'storage_percentage': storage_percentage,
-        'file_form': file_form,
     }
 
     return render(request, 'dashboard.html', context)
@@ -362,10 +345,19 @@ def client_detail(request, pk):
         project__client=client, status='paid'
     ).aggregate(total=Sum('amount'))['total'] or 0
 
+    total_projects = projects.count()
+    active_projects = projects.filter(status='in_progress').count()
+    completed_projects = projects.filter(status='completed').count()
+    pending_projects = projects.filter(status='pending').count()
+
     context = {
         'client': client,
         'projects': projects,
         'total_earned': total_earned,
+        'total_projects': total_projects,
+        'active_projects': active_projects,
+        'completed_projects': completed_projects,
+        'pending_projects': pending_projects,
     }
     return render(request, 'clients/client_detail.html', context)
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Dashboard — FreelanceTrack{% endblock %}
-{% block page_title %}Workspace & Cloud Dashboard{% endblock %}
+{% block page_title %}Freelancer Dashboard{% endblock %}
 
 {% block content %}
 
@@ -10,15 +10,15 @@
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
       <h2 class="welcome-banner-title">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
-      <p class="welcome-banner-sub">Here is your freelance business performance, cloud storage, and active project summary.</p>
+      <p class="welcome-banner-sub">Here is your freelance business performance, projects, and pending tasks overview.</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
       <a href="{% url 'core:project_create' %}" class="welcome-banner-btn" title="Create Project">
         <i class="fas fa-plus"></i> New Project
       </a>
-      <button class="welcome-banner-btn" style="background:rgba(255,255,255,0.25);color:#fff;border:none;" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
-        <i class="fas fa-cloud-upload-alt me-1"></i> Upload File
-      </button>
+      <a href="{% url 'core:client_create' %}" class="welcome-banner-btn" style="background:rgba(255,255,255,0.25);color:#fff;border:none;" title="Add Client">
+        <i class="fas fa-user-plus me-1"></i> Add Client
+      </a>
       <a href="{% url 'core:payment_create' %}" class="welcome-banner-btn" title="Record Payment">
         <i class="fas fa-dollar-sign"></i> Log Payment
       </a>
@@ -47,89 +47,7 @@
   {% endfor %}
 {% endif %}
 
-<!-- ── Category Summaries (Image 1 UI - Cloud & Workspace Categories) ── -->
-<h6 class="text-uppercase text-muted fw-bold mb-3 small"><i class="fas fa-th-large me-1"></i> Cloud & Asset Categories</h6>
-<div class="row g-3 mb-4">
-  <!-- Pictures -->
-  <div class="col-6 col-md-3">
-    <a href="{% url 'core:file_manager' %}?category=pictures" class="text-decoration-none">
-      <div class="card p-3 h-100 position-relative border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color:#fff; border-radius:18px;">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
-            <i class="fas fa-images"></i>
-          </div>
-          <span class="badge" style="background:rgba(255,255,255,0.25);color:#fff;"><i class="fas fa-star text-warning"></i> Main</span>
-        </div>
-        <h6 class="fw-bold mb-1" style="font-size:16px;">Pictures</h6>
-        <div style="font-size:12.5px;opacity:0.9;">{{ pictures_count }} Files</div>
-      </div>
-    </a>
-  </div>
-
-  <!-- Documents -->
-  <div class="col-6 col-md-3">
-    <a href="{% url 'core:file_manager' %}?category=documents" class="text-decoration-none">
-      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color:#fff; border-radius:18px;">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
-            <i class="fas fa-file-alt"></i>
-          </div>
-        </div>
-        <h6 class="fw-bold mb-1" style="font-size:16px;">Documents</h6>
-        <div style="font-size:12.5px;opacity:0.9;">{{ documents_count }} Files</div>
-      </div>
-    </a>
-  </div>
-
-  <!-- Videos -->
-  <div class="col-6 col-md-3">
-    <a href="{% url 'core:file_manager' %}?category=videos" class="text-decoration-none">
-      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color:#fff; border-radius:18px;">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
-            <i class="fas fa-film"></i>
-          </div>
-        </div>
-        <h6 class="fw-bold mb-1" style="font-size:16px;">Videos</h6>
-        <div style="font-size:12.5px;opacity:0.9;">{{ videos_count }} Files</div>
-      </div>
-    </a>
-  </div>
-
-  <!-- Audio -->
-  <div class="col-6 col-md-3">
-    <a href="{% url 'core:file_manager' %}?category=audio" class="text-decoration-none">
-      <div class="card p-3 h-100 border-0 shadow-sm transition-all" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:#fff; border-radius:18px;">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;">
-            <i class="fas fa-music"></i>
-          </div>
-        </div>
-        <h6 class="fw-bold mb-1" style="font-size:16px;">Audio</h6>
-        <div style="font-size:12.5px;opacity:0.9;">{{ audio_count }} Files</div>
-      </div>
-    </a>
-  </div>
-</div>
-
-<!-- ── Tag Pills (Image 1 Filter Pills) ── -->
-<div class="d-flex flex-wrap align-items-center gap-2 mb-4">
-  <span class="small fw-bold text-muted me-2">Files Filter:</span>
-  <a href="{% url 'core:project_list' %}" class="btn btn-sm btn-primary" style="border-radius:20px;padding:5px 16px;">
-    <i class="fas fa-briefcase me-1"></i> Work
-  </a>
-  <a href="{% url 'core:client_list' %}" class="btn btn-sm btn-outline-secondary" style="border-radius:20px;padding:5px 16px;">
-    <i class="fas fa-user me-1"></i> Personal
-  </a>
-  <a href="{% url 'core:file_manager' %}" class="btn btn-sm btn-outline-secondary" style="border-radius:20px;padding:5px 16px;">
-    <i class="fas fa-graduation-cap me-1"></i> School / Assets
-  </a>
-  <a href="{% url 'core:project_list' %}?status=completed" class="btn btn-sm btn-outline-secondary" style="border-radius:20px;padding:5px 16px;">
-    <i class="fas fa-archive me-1"></i> Archive
-  </a>
-</div>
-
-<!-- ── 8 Core Business KPI Cards ── -->
+<!-- ── 8 Core KPI Cards ── -->
 <div class="row g-3 mb-4">
   <!-- 1. Total Projects -->
   <div class="col-6 col-md-3">
@@ -166,31 +84,15 @@
 </div>
 
 <div class="row g-3 mb-4">
-  <!-- 5. Total Revenue -->
+  <!-- 5. Total Earnings -->
   <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
-      <div class="stat-value fw-bold fs-5 text-success" id="totalRevenueStat">${{ total_income|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Total Revenue</div>
+      <div class="stat-value fw-bold fs-5 text-success" id="totalRevenueStat">${{ total_earnings|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Total Earnings</div>
     </div>
   </div>
-  <!-- 6. Total Expenses -->
-  <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
-      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-credit-card"></i></div>
-      <div class="stat-value fw-bold fs-5 text-danger">${{ total_expenses|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Total Expenses</div>
-    </div>
-  </div>
-  <!-- 7. Net Profit -->
-  <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
-      <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-chart-line"></i></div>
-      <div class="stat-value fw-bold fs-5 text-primary">${{ net_profit|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Net Profit</div>
-    </div>
-  </div>
-  <!-- 8. Pending Payments -->
+  <!-- 6. Pending Payments -->
   <div class="col-6 col-md-3">
     <div class="stat-card h-100 p-3">
       <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
@@ -198,19 +100,33 @@
       <div class="stat-label small text-muted">Pending Payments</div>
     </div>
   </div>
+  <!-- 7. Pending Tasks -->
+  <div class="col-6 col-md-3">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-tasks"></i></div>
+      <div class="stat-value fw-bold fs-5 text-info">{{ pending_tasks_count }}</div>
+      <div class="stat-label small text-muted">Pending Tasks</div>
+    </div>
+  </div>
+  <!-- 8. Overdue Tasks -->
+  <div class="col-6 col-md-3">
+    <div class="stat-card h-100 p-3">
+      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="stat-value fw-bold fs-5 text-danger">{{ overdue_tasks_count }}</div>
+      <div class="stat-label small text-muted">Overdue Tasks</div>
+    </div>
+  </div>
 </div>
 
-<!-- ── Main Workspace Grid (Matching Image 1: Recent Files/Projects Left, Upload & Storage Right) ── -->
+<!-- ── Main Dashboard Content Grid ── -->
 <div class="row g-4 mb-4">
-  <!-- Left Side: Recent Files & Projects -->
+  <!-- Left Side: Recent Projects & Pending Tasks -->
   <div class="col-lg-8">
     <!-- Recent Projects Table -->
     <div class="card border-0 shadow-sm p-3 mb-4" style="border-radius:18px;">
       <div class="d-flex align-items-center justify-content-between mb-3 px-2">
-        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-list-alt text-primary me-2"></i> Recent Projects</h6>
-        <a href="{% url 'core:project_create' %}" class="btn btn-primary btn-sm">
-          <i class="fas fa-plus me-1"></i> New Project
-        </a>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-folder-open text-primary me-2"></i> Recent Projects</h6>
+        <a href="{% url 'core:project_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
       </div>
       {% if recent_projects %}
       <div class="table-responsive">
@@ -241,13 +157,19 @@
               <td style="min-width:130px;">
                 <div class="d-flex align-items-center gap-2">
                   <div class="progress flex-grow-1" style="height:8px;">
-                    <div class="progress-bar" role="progressbar" style="width:{{ project.progress }}%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <span style="font-size:11px;font-weight:700;color:var(--text-secondary);">{{ project.progress }}%</span>
                 </div>
               </td>
-              <td class="small text-muted">
-                {% if project.deadline %}{{ project.deadline|date:"M d, Y" }}{% else %}—{% endif %}
+              <td class="small">
+                {% if project.deadline %}
+                  {% if project.is_overdue %}
+                    <span class="overdue"><i class="fas fa-exclamation-circle me-1"></i>{{ project.deadline|date:"M d, Y" }}</span>
+                  {% else %}
+                    <span class="text-secondary">{{ project.deadline|date:"M d, Y" }}</span>
+                  {% endif %}
+                {% else %}—{% endif %}
               </td>
             </tr>
             {% endfor %}
@@ -255,108 +177,123 @@
         </table>
       </div>
       {% else %}
-      <div class="text-center py-4 text-muted small">No active projects yet.</div>
+      <div class="empty-state p-4 text-center">
+        <i class="fas fa-folder-open text-muted fs-2 mb-2"></i>
+        <p class="text-muted small mb-0">No active projects yet. Click "New Project" to start tracking!</p>
+      </div>
       {% endif %}
     </div>
 
-    <!-- Recent Cloud Files Table (Image 1 Files Table) -->
+    <!-- Recent Payments Table -->
     <div class="card border-0 shadow-sm p-3" style="border-radius:18px;">
       <div class="d-flex align-items-center justify-content-between mb-3 px-2">
-        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-file-alt text-info me-2"></i> Recent Cloud Files</h6>
-        <a href="{% url 'core:file_manager' %}" class="btn btn-sm btn-link text-primary text-decoration-none">View Storage</a>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-dollar-sign text-success me-2"></i> Recent Payments</h6>
+        <a href="{% url 'core:payment_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
       </div>
-      {% if user_files %}
+      {% if recent_payments %}
       <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
           <thead>
             <tr class="text-muted small">
-              <th>File</th>
               <th>Project</th>
-              <th>Uploaded</th>
-              <th>Size</th>
+              <th>Client</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
-            {% for file in user_files %}
-            <tr>
-              <td>
-                <div class="d-flex align-items-center gap-2">
-                  <i class="fas fa-file text-primary"></i>
-                  <a href="{{ file.file.url }}" target="_blank" class="fw-semibold text-decoration-none text-truncate" style="max-width:180px;color:var(--text-primary);">
-                    {{ file.file_name }}
-                  </a>
-                </div>
-              </td>
-              <td class="small text-muted">{{ file.project.name|default:"General Asset" }}</td>
-              <td class="small text-muted">{{ file.uploaded_at|date:"M d" }}</td>
-              <td class="small fw-semibold text-secondary">
-                {% widthratio file.file_size 1024 1 %} KB
-              </td>
+            {% for payment in recent_payments %}
+            <tr data-href="{% url 'core:payment_detail' payment.id %}">
+              <td class="fw-semibold">{{ payment.project.name }}</td>
+              <td class="text-secondary small">{{ payment.project.client.name }}</td>
+              <td class="fw-bold text-success">${{ payment.amount|floatformat:2 }}</td>
+              <td><span class="badge-status status-{{ payment.status }}">{{ payment.get_status_display }}</span></td>
+              <td class="small text-muted">{{ payment.due_date|date:"M d, Y"|default:"—" }}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
       {% else %}
-      <div class="text-center py-3 text-muted small">No files uploaded recently.</div>
+      <div class="empty-state p-4 text-center">
+        <i class="fas fa-receipt text-muted fs-2 mb-2"></i>
+        <p class="text-muted small mb-0">No payment records logged yet.</p>
+      </div>
       {% endif %}
     </div>
   </div>
 
-  <!-- Right Side: Storage Indicator & Upload Dropzone Box (Image 1 Right Column) -->
+  <!-- Right Side: Upcoming Deadlines & Pending Tasks -->
   <div class="col-lg-4">
-    <!-- Upload Dropzone Box (Image 1 Upload Box) -->
-    <div class="card p-4 text-center border-2 mb-4 shadow-sm" style="border:2px dashed var(--primary);border-radius:18px;background:var(--bg-secondary);">
-      <div style="width:54px;height:54px;border-radius:16px;background:var(--primary-soft);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;">
-        <i class="fas fa-cloud-upload-alt"></i>
-      </div>
-      <h6 class="fw-bold mb-1" style="color:var(--text-primary);">Add new Files</h6>
-      <p class="text-muted small mb-3">Upload media, invoices, and documents to cloud storage.</p>
-      <button class="btn btn-primary w-100 shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
-        <i class="fas fa-plus me-1"></i> Select File
-      </button>
-    </div>
-
-    <!-- Your Storage Usage Card (Image 1 Storage Card) -->
+    <!-- Upcoming Deadlines Card -->
     <div class="card p-3 mb-4 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-hdd text-info me-2"></i> Your Storage</h6>
-        <span class="badge bg-success-soft text-success" style="font-size:11px;"><i class="fas fa-shield-alt"></i> 100% Safe</span>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-calendar-alt text-warning me-2"></i> Upcoming Deadlines</h6>
+        <a href="{% url 'core:calendar_view' %}" class="btn btn-sm btn-link text-primary text-decoration-none">Calendar</a>
       </div>
-      <p class="text-muted small mb-2">{{ total_mb }} MB of {{ max_mb }} MB used</p>
-      <div class="progress mb-2" style="height:10px;border-radius:6px;background:var(--bg-tertiary);">
-        <div class="progress-bar" role="progressbar" style="width: {{ storage_percentage }}%; background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);" aria-valuenow="{{ storage_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-    </div>
-
-    <!-- Shared Folders / Active Accounts -->
-    <div class="card p-3 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
-      <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-folder text-warning me-2"></i> Your Shared Folders</h6>
+      {% if upcoming_deadlines %}
       <div class="list-group list-group-flush">
-        {% for p in recent_projects|slice:":4" %}
-        <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-2 py-2 mb-1" style="border-radius:10px;background:rgba(99,102,241,0.06);">
-          <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-folder text-primary"></i>
-            <span class="small fw-semibold text-truncate" style="max-width:140px;color:var(--text-primary);">{{ p.name }}</span>
+        {% for project in upcoming_deadlines %}
+        <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-2 py-2 mb-2" style="border-radius:10px;background:rgba(219,153,65,0.08);">
+          <div>
+            <a href="{% url 'core:project_detail' project.id %}" class="fw-bold text-decoration-none small d-block" style="color:var(--text-primary);">
+              {{ project.name }}
+            </a>
+            <span class="text-muted small" style="font-size:11px;">{{ project.client.name }}</span>
           </div>
-          <span class="badge-status status-{{ p.status }}" style="font-size:10px;">{{ p.get_status_display }}</span>
+          <div class="text-end">
+            <span class="badge bg-warning text-dark" style="font-size:10px;">{{ project.deadline|date:"M d" }}</span>
+          </div>
         </div>
-        {% empty %}
-        <p class="text-muted small mb-0">No active shared folders.</p>
         {% endfor %}
       </div>
+      {% else %}
+      <div class="text-center py-3 text-muted small"><i class="fas fa-check-double me-1"></i> No upcoming deadlines this week.</div>
+      {% endif %}
+    </div>
+
+    <!-- Pending Tasks Card -->
+    <div class="card p-3 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-check-square text-info me-2"></i> Pending Tasks</h6>
+        <a href="{% url 'core:task_list' %}" class="btn btn-sm btn-link text-primary text-decoration-none">View Tasks</a>
+      </div>
+      {% if pending_tasks_list %}
+      <div class="list-group list-group-flush">
+        {% for task in pending_tasks_list %}
+        <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-2 py-2 mb-2" style="border-radius:10px;background:var(--bg-secondary);">
+          <div class="text-truncate me-2">
+            <a href="{% url 'core:task_detail' task.id %}" class="fw-semibold text-decoration-none small d-block text-truncate" style="color:var(--text-primary);">
+              {{ task.title }}
+            </a>
+            <span class="text-muted" style="font-size:11px;">{{ task.project.name }}</span>
+          </div>
+          <div>
+            {% if task.is_overdue %}
+            <span class="badge bg-danger" style="font-size:10px;">Overdue</span>
+            {% else %}
+            <span class="priority-{{ task.priority }}" style="font-size:10px;">{{ task.get_priority_display }}</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-3 text-muted small"><i class="fas fa-smile me-1"></i> All tasks completed!</div>
+      {% endif %}
     </div>
   </div>
 </div>
 
-<!-- ── Core Visualizations Grid (5 Clean Business Analytics Charts) ── -->
+<!-- ── Analytics Visualizations Grid (2 Core Charts) ── -->
 <div class="row g-4 mb-4">
-  <!-- Visualization 1: Revenue Trend (Line Chart) -->
+  <!-- Revenue Trend -->
   <div class="col-lg-8">
     <div class="card p-3 h-100">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-line text-primary me-2"></i> 1. Revenue Trend</h6>
-        <span class="badge bg-primary-soft text-primary small">Monthly Trajectory</span>
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-line text-primary me-2"></i> Financial Performance</h6>
+        <span class="badge bg-primary-soft text-primary small">Monthly Revenue</span>
       </div>
       <div style="height:260px;position:relative;">
         <canvas id="financialTrendChart"></canvas>
@@ -364,72 +301,19 @@
     </div>
   </div>
 
-  <!-- Visualization 2: Project Status Distribution (Donut Chart) -->
+  <!-- Project Status Distribution -->
   <div class="col-lg-4">
     <div class="card p-3 h-100">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie text-primary me-2"></i> 2. Project Status</h6>
+        <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie text-primary me-2"></i> Project Statuses</h6>
       </div>
       <div style="height:260px;position:relative;">
         <canvas id="statusDistChart"></canvas>
       </div>
     </div>
   </div>
-
-  <!-- Visualization 3: Monthly Income vs Expenses (Bar Chart) -->
-  <div class="col-lg-6">
-    <div class="card p-3 h-100">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-bar text-primary me-2"></i> 3. Income vs Expenses</h6>
-      </div>
-      <div style="height:240px;position:relative;">
-        <canvas id="incomeVsExpenseChart"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- Visualization 4: Client Revenue Contribution (Horizontal Bar Chart) -->
-  <div class="col-lg-6">
-    <div class="card p-3 h-100">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-tasks text-primary me-2"></i> 4. Account Contribution</h6>
-      </div>
-      <div style="height:240px;position:relative;">
-        <canvas id="clientRevenueChart"></canvas>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- Upload File Modal -->
-<div class="modal fade" id="uploadFileModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow" style="border-radius:18px;">
-      <form method="post" action="{% url 'core:file_upload' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold"><i class="fas fa-cloud-upload-alt text-primary me-2"></i> Upload File</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body py-4">
-          <div class="mb-3">
-            <label class="form-label fw-bold small text-secondary">Project (Optional)</label>
-            {{ file_form.project }}
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-bold small text-secondary">Choose File</label>
-            {{ file_form.file }}
-            <div class="form-text">Supports Images, Documents, Videos, Audio, and Zip archives.</div>
-          </div>
-        </div>
-        <div class="modal-footer border-0 pt-0">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary px-4"><i class="fas fa-upload me-1"></i> Upload Now</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}

@@ -300,21 +300,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // ============================================================
   // PROGRESS BAR ANIMATIONS
   // ============================================================
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const bar = entry.target;
-        const val = bar.getAttribute('aria-valuenow');
-        bar.style.width = val + '%';
-      }
-    });
-  }, { threshold: 0.1 });
-
   document.querySelectorAll('.progress-bar').forEach(bar => {
     const val = bar.getAttribute('aria-valuenow') || 0;
-    bar.style.width = '0%';
     bar.style.transition = 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-    observer.observe(bar);
+    requestAnimationFrame(() => {
+      bar.style.width = val + '%';
+    });
   });
 
   // ============================================================

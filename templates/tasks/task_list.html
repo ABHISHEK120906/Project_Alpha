@@ -58,9 +58,10 @@
         <thead><tr><th>Task</th><th>Project</th><th>Status</th><th>Priority</th><th>Due Date</th><th>Hours</th><th>Actions</th></tr></thead>
         <tbody>
           {% for task in page_obj %}
-          <tr data-href="{% url 'core:task_detail' task.id %}">
+          <tr data-href="{% url 'core:task_detail' task.id %}" {% if task.is_overdue %}style="background:rgba(239,68,68,0.06);"{% endif %}>
             <td>
               <a href="{% url 'core:task_detail' task.id %}" style="font-weight:600;color:var(--text-primary);">{{ task.title }}</a>
+              {% if task.is_overdue %}<span class="badge bg-danger text-white ms-1" style="font-size:10px;">Overdue</span>{% endif %}
               {% if task.description %}<div style="font-size:12px;color:var(--text-muted);">{{ task.description|truncatechars:40 }}</div>{% endif %}
             </td>
             <td><a href="{% url 'core:project_detail' task.project.id %}" style="font-size:13px;color:var(--text-secondary);">{{ task.project.name }}</a></td>
