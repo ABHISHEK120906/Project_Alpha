@@ -19,3 +19,6 @@ dj-database-url>=2.1.0
 
 # OAuth / Social Login — HTTP requests to provider APIs
 requests>=2.31.0
+
+# AI Chatbot — OpenAI-compatible API client
+openai>=1.30.0

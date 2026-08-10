@@ -150,4 +150,15 @@ urlpatterns = [
     path('api/v1/tasks/<uuid:pk>/toggle/', api_views.api_toggle_task, name='api_toggle_task'),
     path('api/v1/projects/<uuid:pk>/quick-status/', api_views.api_update_project_status, name='api_update_project_status'),
     path('api/v1/notifications/unread-count/', api_views.api_unread_notification_count, name='api_unread_notification_count'),
+
+    # ── TrackBot AI Chatbot Pages ─────────────────────────
+    path('chat/', views.chat_home, name='chat_home'),
+    path('chat/<uuid:pk>/', views.chat_conversation, name='chat_conversation'),
+
+    # ── TrackBot AI Chatbot API ──────────────────────────
+    path('api/v1/chat/conversations/', api_views.chat_conversations, name='chat_conversations'),
+    path('api/v1/chat/conversations/<uuid:pk>/delete/', api_views.chat_delete_conversation, name='chat_delete_conversation'),
+    path('api/v1/chat/conversations/<uuid:pk>/rename/', api_views.chat_rename_conversation, name='chat_rename_conversation'),
+    path('api/v1/chat/conversations/<uuid:pk>/messages/', api_views.chat_get_messages, name='chat_get_messages'),
+    path('api/v1/chat/send/', api_views.chat_send_message, name='chat_send_message'),
 ]

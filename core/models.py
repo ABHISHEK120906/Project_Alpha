@@ -685,3 +685,48 @@ class EmailVerificationToken(models.Model):
         return f"Verification Token for {self.user.username} (Valid: {self.is_valid()})"
 
 
+class ChatConversation(models.Model):
+    """
+    A single TrackBot chat session belonging to one user.
+    Title is auto-generated from the first user message.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_conversations')
+    title = models.CharField(max_length=200, default='New Conversation')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated_at']
+        verbose_name = 'Chat Conversation'
+        verbose_name_plural = 'Chat Conversations'
+
+    def __str__(self):
+        return f"{self.title} — {self.user.username}"
+
+
+class ChatMessage(models.Model):
+    """
+    An individual message inside a ChatConversation.
+    role is either 'user' or 'assistant'.
+    """
+    ROLE_CHOICES = [
+        ('user', 'User'),
+        ('assistant', 'Assistant'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    conversation = models.ForeignKey(
+        ChatConversation, on_delete=models.CASCADE, related_name='messages'
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+        verbose_name = 'Chat Message'
+        verbose_name_plural = 'Chat Messages'
+
+    def __str__(self):
+        return f"[{self.role}] {self.content[:60]}"

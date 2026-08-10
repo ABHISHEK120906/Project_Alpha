@@ -171,6 +171,12 @@
       <i class="fas fa-cog nav-icon"></i>
       <span>Settings</span>
     </a>
+
+    <a href="{% url 'core:chat_home' %}"
+       class="sidebar-link {% if 'chat' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-robot nav-icon"></i>
+      <span>AI Assistant</span>
+    </a>
   </nav>
 
   <!-- Sidebar Promo Card -->
@@ -284,7 +290,13 @@
     </button>
   </div>
 
-</div><!-- /.main-content -->
+  </div><!-- /.main-content -->
+
+  <!-- TrackBot Floating AI Assistant Button -->
+  <a href="{% url 'core:chat_home' %}" class="chatbot-fab" id="chatbotFab" title="Ask TrackBot" aria-label="Open AI Assistant">
+    <i class="fas fa-robot"></i>
+    <span class="chatbot-fab-pulse"></span>
+  </a>
 
 {% else %}
 <!-- ════════════════════════════════════════════════
@@ -311,6 +323,9 @@
 <!-- Application JS -->
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/visualization_studio.js' %}"></script>
+
+<!-- TrackBot Chatbot styles (loaded globally for FAB button) -->
+<link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
 
 {% block extra_js %}{% endblock %}
 

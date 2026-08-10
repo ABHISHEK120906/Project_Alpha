@@ -18,7 +18,7 @@ from .models import (Client, Project, Payment, Task, Note, ActivityLog,
                      UserProfile, ProjectFile, ProjectComment, Income,
                      Expense, Invoice, InvoiceItem, CalendarEvent, Notification,
                      LoginHistory, BlockedIP, SystemSetting, RefundRequest, Announcement,
-                     EmailVerificationToken)
+                     EmailVerificationToken, ChatConversation, ChatMessage)
 from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
                     NoteForm, SearchForm, UserBasicForm, UserProfileForm,
                     IncomeForm, ExpenseForm, InvoiceForm, InvoiceItemForm,
@@ -2020,3 +2020,42 @@ def global_search(request):
 def forbidden_view(request):
     """403 Forbidden page for unauthorized access attempts."""
     return render(request, '403.html', status=403)
+
+
+# ════════════════════════════════════════════════════════════════
+# TRACKBOT — AI CHATBOT PAGE VIEWS
+# ════════════════════════════════════════════════════════════════
+
+@login_required
+def chat_home(request):
+    """
+    Main TrackBot chat page — shows welcome screen for a new conversation.
+    Passes the user's existing conversation list to pre-populate the sidebar.
+    """
+    conversations = ChatConversation.objects.filter(
+        user=request.user
+    ).order_by('-updated_at')[:50]
+    return render(request, 'chat/chat.html', {
+        'conversations': conversations,
+        'active_conversation': None,
+        'page_title': 'TrackBot AI Assistant',
+    })
+
+
+@login_required
+def chat_conversation(request, pk):
+    """
+    TrackBot chat page for a specific conversation.
+    Validates ownership — users can only access their own conversations.
+    """
+    conv = get_object_or_404(ChatConversation, pk=pk, user=request.user)
+    conversations = ChatConversation.objects.filter(
+        user=request.user
+    ).order_by('-updated_at')[:50]
+    messages_qs = conv.messages.order_by('created_at')
+    return render(request, 'chat/chat.html', {
+        'conversations': conversations,
+        'active_conversation': conv,
+        'initial_messages': messages_qs,
+        'page_title': f'TrackBot — {conv.title}',
+    })

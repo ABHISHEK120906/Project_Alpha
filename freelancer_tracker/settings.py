@@ -255,3 +255,10 @@ LOGGING = {
 
 SITE_URL = _env('SITE_URL', 'http://127.0.0.1:8000')
 
+# ── AI Chatbot (TrackBot) Configuration ──────────────────────────
+# Set AI_API_KEY in your .env file — never hardcode keys here.
+AI_API_KEY  = _env('AI_API_KEY', '')
+AI_MODEL    = _env('AI_MODEL', 'gpt-4o-mini')
+AI_BASE_URL = _env('AI_BASE_URL', 'https://api.openai.com/v1')
+# Chat rate limit: max messages per user per hour
+CHAT_RATE_LIMIT_PER_HOUR = int(_env('CHAT_RATE_LIMIT_PER_HOUR', '50'))

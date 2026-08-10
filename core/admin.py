@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Project, Payment, Task, Note, ActivityLog
+from .models import Client, Project, Payment, Task, Note, ActivityLog, ChatConversation, ChatMessage
 
 
 @admin.register(Client)
@@ -142,3 +142,26 @@ class ActivityLogAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+class ChatMessageInline(admin.TabularInline):
+    model = ChatMessage
+    extra = 0
+    readonly_fields = ['id', 'role', 'content', 'created_at']
+    can_delete = False
+
+
+@admin.register(ChatConversation)
+class ChatConversationAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'created_at', 'updated_at']
+    list_filter = ['created_at']
+    search_fields = ['title', 'user__username']
+    readonly_fields = ['id', 'created_at', 'updated_at']
+    inlines = [ChatMessageInline]
+
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ['conversation', 'role', 'created_at']
+    list_filter = ['role', 'created_at']
+    readonly_fields = ['id', 'created_at']
