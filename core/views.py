@@ -105,7 +105,7 @@ def custom_login(request):
 
     if request.method == 'POST':
         login_type = request.POST.get('login_type', 'user')  # 'admin' or 'user'
-        username = request.POST.get('username', '').strip()
+        raw_username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
 
         ip = get_client_ip(request)
@@ -119,10 +119,14 @@ def custom_login(request):
         if BlockedIP.objects.filter(ip_address=ip).exists():
             messages.error(request, 'Access denied: Your IP address has been blocked for security reasons.')
             LoginHistory.objects.create(
-                username_attempted=username, ip_address=ip, user_agent=ua,
+                username_attempted=raw_username, ip_address=ip, user_agent=ua,
                 device=device_type, browser=browser, status='blocked'
             )
             return render(request, 'registration/login.html', {'login_type': login_type})
+
+        # Resolve exact username case-insensitively
+        matched_user = User.objects.filter(username__iexact=raw_username).first()
+        username = matched_user.username if matched_user else raw_username
 
         user = authenticate(request, username=username, password=password)
 
@@ -147,7 +151,7 @@ def custom_login(request):
                     user=user, username_attempted=username, ip_address=ip, user_agent=ua,
                     device=device_type, browser=browser, status='failed'
                 )
-                return render(request, 'registration/admin_login.html', {})
+                return render(request, 'registration/login.html', {'login_type': login_type})
 
             # Successful Authentication
             login(request, user)
@@ -168,7 +172,7 @@ def custom_login(request):
             return redirect('core:dashboard')
         else:
             LoginHistory.objects.create(
-                username_attempted=username, ip_address=ip, user_agent=ua,
+                username_attempted=raw_username, ip_address=ip, user_agent=ua,
                 device=device_type, browser=browser, status='failed'
             )
             messages.error(request, 'Invalid username or password. Please try again.')
@@ -181,8 +185,7 @@ def custom_login(request):
 def admin_login_view(request):
     """
     Separate Admin Login page.
-    Renders the admin login template and delegates POST to custom_login logic
-    with login_type forced to 'admin'.
+    Renders the admin login template and authenticates admin credentials.
     """
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser or (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
@@ -190,7 +193,7 @@ def admin_login_view(request):
         return redirect('core:dashboard')
 
     if request.method == 'POST':
-        username = request.POST.get('username', '').strip()
+        raw_username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
         ip = get_client_ip(request)
         ua = request.META.get('HTTP_USER_AGENT', '')[:255]
@@ -200,10 +203,14 @@ def admin_login_view(request):
         if BlockedIP.objects.filter(ip_address=ip).exists():
             messages.error(request, 'Access denied: Your IP address has been blocked.')
             LoginHistory.objects.create(
-                username_attempted=username, ip_address=ip, user_agent=ua,
+                username_attempted=raw_username, ip_address=ip, user_agent=ua,
                 device=device_type, browser=browser, status='blocked'
             )
             return render(request, 'registration/admin_login.html', {})
+
+        # Resolve exact username case-insensitively
+        matched_user = User.objects.filter(username__iexact=raw_username).first()
+        username = matched_user.username if matched_user else raw_username
 
         user = authenticate(request, username=username, password=password)
 
@@ -242,7 +249,7 @@ def admin_login_view(request):
             return redirect('core:admin_dashboard')
         else:
             LoginHistory.objects.create(
-                username_attempted=username, ip_address=ip, user_agent=ua,
+                username_attempted=raw_username, ip_address=ip, user_agent=ua,
                 device=device_type, browser=browser, status='failed'
             )
             messages.error(request, 'Invalid admin credentials. Please try again.')
