@@ -65,7 +65,7 @@ def home(request):
 
 
 def register(request):
-    """Simple user registration — no email verification required."""
+    """Simple user registration — username + password only, no email verification."""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
 
@@ -83,7 +83,7 @@ def register(request):
             log_activity(user, 'create', 'user', user.id,
                          f'User {user.username} registered successfully', request)
 
-            messages.success(request, f'Account created successfully! Welcome, {user.first_name or user.username}. Please log in.')
+            messages.success(request, f'Account created! Welcome, {user.username}. Please log in.')
             return redirect('core:login')
         else:
             messages.error(request, 'Please fix the errors below.')
@@ -147,7 +147,7 @@ def custom_login(request):
                     user=user, username_attempted=username, ip_address=ip, user_agent=ua,
                     device=device_type, browser=browser, status='failed'
                 )
-                return render(request, 'registration/login.html', {'login_type': login_type})
+                return render(request, 'registration/admin_login.html', {})
 
             # Successful Authentication
             login(request, user)
@@ -178,6 +178,81 @@ def custom_login(request):
     return render(request, 'registration/login.html', {'login_type': login_type})
 
 
+def admin_login_view(request):
+    """
+    Separate Admin Login page.
+    Renders the admin login template and delegates POST to custom_login logic
+    with login_type forced to 'admin'.
+    """
+    if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser or (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
+            return redirect('core:admin_dashboard')
+        return redirect('core:dashboard')
+
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+        ip = get_client_ip(request)
+        ua = request.META.get('HTTP_USER_AGENT', '')[:255]
+        device_type = 'Mobile' if 'Mobile' in ua or 'Android' in ua or 'iPhone' in ua else 'Desktop'
+        browser = 'Chrome' if 'Chrome' in ua else 'Firefox' if 'Firefox' in ua else 'Safari' if 'Safari' in ua else 'Browser'
+
+        if BlockedIP.objects.filter(ip_address=ip).exists():
+            messages.error(request, 'Access denied: Your IP address has been blocked.')
+            LoginHistory.objects.create(
+                username_attempted=username, ip_address=ip, user_agent=ua,
+                device=device_type, browser=browser, status='blocked'
+            )
+            return render(request, 'registration/admin_login.html', {})
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+
+            if profile.is_suspended or profile.is_deleted:
+                messages.error(request, 'Account suspended or deleted. Please contact support.')
+                LoginHistory.objects.create(
+                    user=user, username_attempted=username, ip_address=ip, user_agent=ua,
+                    device=device_type, browser=browser, status='failed'
+                )
+                return render(request, 'registration/admin_login.html', {})
+
+            is_admin_user = (user.is_staff or user.is_superuser or profile.role == 'admin')
+
+            if not is_admin_user:
+                messages.error(request, 'Access denied: You do not have Super Admin privileges.')
+                LoginHistory.objects.create(
+                    user=user, username_attempted=username, ip_address=ip, user_agent=ua,
+                    device=device_type, browser=browser, status='failed'
+                )
+                return render(request, 'registration/admin_login.html', {})
+
+            login(request, user)
+            profile.last_login_ip = ip
+            profile.last_login_at = timezone.now()
+            profile.save()
+
+            LoginHistory.objects.create(
+                user=user, username_attempted=username, ip_address=ip, user_agent=ua,
+                device=device_type, browser=browser, status='success'
+            )
+            log_activity(user, 'login', 'user', user.id, f'Admin {username} logged in', request)
+            messages.success(request, f'Welcome, {username}. Admin access granted.')
+            return redirect('core:admin_dashboard')
+        else:
+            LoginHistory.objects.create(
+                username_attempted=username, ip_address=ip, user_agent=ua,
+                device=device_type, browser=browser, status='failed'
+            )
+            messages.error(request, 'Invalid admin credentials. Please try again.')
+            return render(request, 'registration/admin_login.html', {})
+
+    return render(request, 'registration/admin_login.html', {})
+
+
+
+
 
 
 @require_http_methods(['GET', 'POST'])
@@ -194,6 +269,65 @@ def custom_logout(request):
         # For GET requests, redirect to a confirmation page instead of logging out
         return redirect('core:dashboard')
     return redirect('core:login')
+
+
+def forgot_password_direct(request):
+    """
+    Direct username-based password reset — no email or OTP required.
+    User provides their username + new password to reset immediately.
+    """
+    if request.user.is_authenticated:
+        return redirect('core:dashboard')
+
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        new_password = request.POST.get('new_password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+        context = {'prefill_username': username}
+
+        # Validate username
+        if not username:
+            messages.error(request, 'Please enter your username.')
+            return render(request, 'registration/password_reset_form.html', context)
+
+        # Validate passwords match
+        if not new_password or not confirm_password:
+            messages.error(request, 'Please enter and confirm your new password.')
+            return render(request, 'registration/password_reset_form.html', context)
+
+        if new_password != confirm_password:
+            messages.error(request, 'Passwords do not match. Please try again.')
+            return render(request, 'registration/password_reset_form.html', context)
+
+        if len(new_password) < 8:
+            messages.error(request, 'Password must be at least 8 characters long.')
+            return render(request, 'registration/password_reset_form.html', context)
+
+        # Look up user
+        try:
+            user = User.objects.get(username__iexact=username)
+        except User.DoesNotExist:
+            messages.error(request, 'No account found with that username.')
+            return render(request, 'registration/password_reset_form.html', context)
+
+        # Prevent resetting suspended/deleted accounts
+        if hasattr(user, 'profile') and (user.profile.is_suspended or user.profile.is_deleted):
+            messages.error(request, 'This account has been suspended. Please contact an administrator.')
+            return render(request, 'registration/password_reset_form.html', context)
+
+        # Update password securely
+        user.set_password(new_password)
+        user.save()
+
+        log_activity(user, 'update', 'user', user.id,
+                     f'Password reset via forgot-password for {username}', request)
+
+        messages.success(request, 'Password updated successfully! You can now log in with your new password.')
+        return redirect('core:login')
+
+    return render(request, 'registration/password_reset_form.html', {})
+
+
 
 
 @login_required

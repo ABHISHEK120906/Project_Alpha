@@ -4,47 +4,32 @@
 {% block content %}
 
 <style>
-  .auth-card {
-    backdrop-filter: blur(18px) !important;
-    border-radius: 20px !important;
-    padding: 40px 36px !important;
-    text-align: center;
-    max-width: 440px !important;
-  }
-
-  .member-login-title {
-    font-size: 17px;
-    font-weight: 800;
-    color: #1A2530;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 22px;
+  /* ── Title ── */
+  .register-title {
     font-family: 'DM Sans', sans-serif;
+    font-size: 18px; font-weight: 800;
+    color: #1A2530; margin-bottom: 4px;
   }
-  [data-theme="dark"] .member-login-title { color: #E5E5DF; }
+  [data-theme="dark"] .register-title { color: #E5E5DF; }
 
-  /* Register Form Section */
-  .register-section-label {
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    font-size: 11.5px; font-weight: 700; color: #6A7480;
-    letter-spacing: 2px; text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
-    margin-bottom: 14px;
+  .register-subtitle {
+    font-size: 13px; color: #6A7480;
+    font-family: 'Inter', sans-serif; margin-bottom: 26px;
   }
-  [data-theme="dark"] .register-section-label { color: #8A8070; }
-  .register-section-label i { color: #DB9941; font-size: 12px; }
+  [data-theme="dark"] .register-subtitle { color: #8A8070; }
 
-  /* Input wrapper */
+  /* ── Input wrapper ── */
   .auth-input-wrapper {
     background: #EFECE2 !important;
     border: 1.5px solid rgba(57, 68, 77, 0.15) !important;
-    border-radius: 12px !important;
+    border-radius: 11px !important;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    display: flex; align-items: center;
   }
   [data-theme="dark"] .auth-input-wrapper {
-    background: #1C2B3A !important;
-    border-color: rgba(219,153,65,0.2) !important;
+    background: rgba(255,255,255,0.04) !important;
+    border-color: rgba(255,255,255,0.08) !important;
   }
   .auth-input-wrapper:focus-within {
     border-color: #C8881E !important;
@@ -52,27 +37,34 @@
     background: #F7F4EC !important;
   }
   [data-theme="dark"] .auth-input-wrapper:focus-within {
-    border-color: #DB9941 !important;
-    box-shadow: 0 0 0 3px rgba(219,153,65,0.15) !important;
-    background: #243344 !important;
+    border-color: rgba(219,153,65,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(200,136,30,0.12) !important;
+    background: rgba(219,153,65,0.04) !important;
   }
 
-  /* Auth label */
+  .auth-input-icon {
+    padding: 0 12px 0 14px; color: #9AA0A8;
+    font-size: 13px; flex-shrink: 0; pointer-events: none;
+    transition: color 0.25s ease;
+  }
+  [data-theme="dark"] .auth-input-icon { color: rgba(229,229,223,0.25); }
+  .auth-input-wrapper:focus-within .auth-input-icon { color: #DB9941; }
+
+  /* ── Auth label ── */
   .auth-label {
-    display: block; font-size: 12px; font-weight: 700;
-    color: #6A7480; letter-spacing: 0.5px;
+    display: block; font-size: 11px; font-weight: 700;
+    color: #6A7480; letter-spacing: 1.5px;
     text-transform: uppercase; margin-bottom: 6px;
     text-align: left;
     font-family: 'DM Sans', sans-serif;
   }
-  [data-theme="dark"] .auth-label { color: #8A8070; }
+  [data-theme="dark"] .auth-label { color: rgba(229,229,223,0.5); }
 
-  /* Field widget inputs */
+  /* ── Field widget inputs ── */
   .field-widget-container input[type="text"],
-  .field-widget-container input[type="password"],
-  .field-widget-container input[type="email"] {
-    width: 100%;
-    padding: 12px 14px;
+  .field-widget-container input[type="password"] {
+    flex: 1;
+    padding: 13px 14px 13px 0;
     background: transparent;
     border: none !important;
     box-shadow: none !important;
@@ -84,9 +76,10 @@
   }
   [data-theme="dark"] .field-widget-container input { color: #E5E5DF !important; }
   .field-widget-container input::placeholder { color: #9AA0A8 !important; }
+  [data-theme="dark"] .field-widget-container input::placeholder { color: rgba(229,229,223,0.22) !important; }
 
-  /* Password field — make room for toggle btn */
-  .field-widget-container input[type="password"] { padding-right: 46px; }
+  /* ── Password field — room for toggle btn ── */
+  .field-widget-container input[type="password"] { padding-right: 44px; }
 
   .auth-input-suffix {
     position: absolute; right: 0; top: 0; bottom: 0;
@@ -94,24 +87,25 @@
   }
   .toggle-pwd-btn {
     background: none; border: none; cursor: pointer;
-    color: #DB9941; padding: 4px;
-    font-size: 14px; line-height: 1;
+    color: #9AA0A8; padding: 4px;
+    font-size: 13px; line-height: 1;
+    transition: color 0.2s;
   }
-  .toggle-pwd-btn:hover { color: #C8881E; }
+  .toggle-pwd-btn:hover { color: #DB9941; }
 
-  /* Field errors & help */
+  /* ── Field errors & help ── */
   .field-error {
     color: #DC2626; font-size: 12px; font-weight: 500;
-    margin-top: 4px; display: flex; align-items: center; gap: 4px;
+    margin-top: 5px; display: flex; align-items: center; gap: 4px;
     text-align: left;
   }
   .field-help {
     color: #9AA0A8; font-size: 11.5px; margin-top: 4px; text-align: left;
   }
 
-  /* Submit button */
+  /* ── Submit button ── */
   .btn-register-submit {
-    width: 100%; padding: 13px;
+    width: 100%; padding: 14px;
     background: linear-gradient(135deg, #DB9941 0%, #C8881E 50%, #B87818 100%);
     color: #07111D !important;
     font-size: 13px; font-weight: 800;
@@ -121,6 +115,7 @@
     margin-top: 10px;
     box-shadow: 0 4px 18px rgba(200,136,30,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
     cursor: pointer; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
   }
   .btn-register-submit::after {
     content: ''; position: absolute; inset: 0;
@@ -135,29 +130,34 @@
   }
   .btn-register-submit:active { transform: translateY(0) scale(0.99); }
 
-  /* Bottom sign-in link */
+  /* ── Bottom sign-in link ── */
   .auth-footer-text {
-    font-size: 13px; color: #6A7480; margin-top: 20px;
-    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px; color: #6A7480; margin-top: 22px;
+    text-align: center; font-family: 'DM Sans', sans-serif;
   }
   .auth-footer-text a { color: #C8881E; font-weight: 600; text-decoration: none; }
   .auth-footer-text a:hover { text-decoration: underline; }
   [data-theme="dark"] .auth-footer-text { color: #8A8070; }
+  [data-theme="dark"] .auth-footer-text a { color: #DB9941; }
 
-  /* Alert */
+  /* ── Alert ── */
   .auth-alert {
     display: flex; align-items: flex-start; gap: 8px;
     padding: 12px 14px; border-radius: 10px;
     font-size: 13px; font-weight: 500;
-    margin-bottom: 16px; text-align: left;
+    margin-bottom: 16px; text-align: left; line-height: 1.4;
   }
-  .auth-alert-error { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2); color: #DC2626; }
-  .auth-alert-success { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #16a34a; }
-  .auth-alert-warning { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.2); color: #ca8a04; }
+  .auth-alert-error   { background: rgba(220,38,38,0.08);  border: 1px solid rgba(220,38,38,0.2);  color: #DC2626; }
+  .auth-alert-success { background: rgba(34,197,94,0.08);  border: 1px solid rgba(34,197,94,0.2);  color: #16a34a; }
+  .auth-alert-warning { background: rgba(234,179,8,0.08);  border: 1px solid rgba(234,179,8,0.2);  color: #ca8a04; }
+  [data-theme="dark"] .auth-alert-error   { color: #EF6666; }
+  [data-theme="dark"] .auth-alert-success { color: #4ADE80; }
+  [data-theme="dark"] .auth-alert-warning { color: #FDE047; }
 </style>
 
 <!-- Title -->
-<div class="member-login-title">CREATE ACCOUNT</div>
+<div class="register-title">Create your account</div>
+<div class="register-subtitle">Join FreelanceTrack — no email required</div>
 
 {% if messages %}
   {% for message in messages %}
@@ -168,27 +168,18 @@
   {% endfor %}
 {% endif %}
 
-<!-- Section Label -->
-<div class="register-section-label">
-  <i class="fas fa-user-plus"></i> Register with Email
-</div>
-
-<!-- ══════════════════════════════════════
-     REGISTRATION FORM — 4 Fields
-     ══════════════════════════════════════ -->
+<!-- Registration Form -->
 <form method="post" action="{% url 'core:register' %}" id="registerForm" novalidate>
   {% csrf_token %}
 
   {% for field in form %}
-  <div class="auth-form-group">
+  <div class="auth-form-group" style="margin-bottom:16px;">
     <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
     <div class="auth-input-wrapper position-relative">
 
       <!-- Icon per field -->
-      {% if field.name == 'full_name' %}
+      {% if field.name == 'username' %}
         <span class="auth-input-icon"><i class="fas fa-user"></i></span>
-      {% elif field.name == 'email' %}
-        <span class="auth-input-icon"><i class="fas fa-envelope"></i></span>
       {% elif 'password' in field.name %}
         <span class="auth-input-icon"><i class="fas fa-lock"></i></span>
       {% endif %}
@@ -221,7 +212,7 @@
   {% endfor %}
 
   <button type="submit" class="btn-register-submit" id="registerSubmitBtn">
-    <i class="fas fa-user-plus me-1"></i> CREATE ACCOUNT
+    <i class="fas fa-user-plus"></i> Create Account
   </button>
 </form>
 

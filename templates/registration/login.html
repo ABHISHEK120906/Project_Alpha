@@ -1,140 +1,76 @@
 {% extends 'auth_base.html' %}
-{% block title %}Login — FreelanceTrack{% endblock %}
+{% block title %}Sign In — FreelanceTrack{% endblock %}
 
 {% block content %}
 
 <style>
-  /* ── Tab Switcher ── */
-  .login-tab-wrapper {
-    display: flex;
-    background: rgba(7, 17, 29, 0.6);
-    border: 1px solid rgba(219, 153, 65, 0.15);
-    border-radius: 14px;
-    padding: 5px;
-    margin-bottom: 28px;
-    gap: 4px;
-  }
-
-  .login-tab-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 11px 16px;
-    border: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12.5px;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    background: transparent;
-    color: rgba(229, 229, 223, 0.4);
-  }
-  [data-theme="light"] .login-tab-btn { color: rgba(57,68,77,0.45); }
-
-  .login-tab-btn i { font-size: 13px; transition: all 0.3s ease; }
-
-  .login-tab-btn.active {
-    background: linear-gradient(135deg, #DB9941 0%, #C8881E 60%, #B87818 100%);
-    color: #07111D;
-    box-shadow: 0 4px 20px rgba(200, 136, 30, 0.45), inset 0 1px 0 rgba(255,255,255,0.18);
-  }
-
-  .login-tab-btn.admin-tab.active {
-    background: linear-gradient(135deg, #1E3A5F 0%, #1A2E4A 60%, #152540 100%);
-    color: #E5E5DF;
-    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.6), inset 0 1px 0 rgba(255,255,255,0.08);
-    border: 1px solid rgba(100, 160, 255, 0.25);
-  }
-  .login-tab-btn.admin-tab.active i { color: #64A0FF; }
-
-  .login-tab-btn:not(.active):hover {
-    background: rgba(219, 153, 65, 0.08);
-    color: rgba(219, 153, 65, 0.7);
-  }
-  .login-tab-btn.admin-tab:not(.active):hover {
-    background: rgba(100, 160, 255, 0.07);
-    color: rgba(100, 160, 255, 0.6);
-  }
-
-  /* ── Tab Panels ── */
-  .login-panel { display: none; animation: panelIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .login-panel.active { display: block; }
-
-  @keyframes panelIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
   /* ── Panel Header ── */
-  .panel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+  .panel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
 
   .panel-header-icon {
-    width: 40px; height: 40px; border-radius: 10px;
+    width: 42px; height: 42px; border-radius: 11px;
     display: flex; align-items: center; justify-content: center;
     font-size: 16px; flex-shrink: 0;
-  }
-  .panel-header-icon.user-icon {
     background: linear-gradient(135deg, rgba(219,153,65,0.2), rgba(200,136,30,0.1));
     color: #DB9941; border: 1px solid rgba(219,153,65,0.25);
   }
-  .panel-header-icon.admin-icon {
-    background: linear-gradient(135deg, rgba(100,160,255,0.15), rgba(70,120,220,0.08));
-    color: #64A0FF; border: 1px solid rgba(100,160,255,0.2);
+  [data-theme="dark"] .panel-header-icon {
+    background: linear-gradient(135deg, rgba(219,153,65,0.15), rgba(200,136,30,0.08));
   }
 
-  .panel-header-text h3 {
+  .panel-header-text h2 {
     font-family: 'DM Sans', sans-serif;
-    font-size: 17px; font-weight: 800;
-    margin: 0 0 2px; line-height: 1; color: #E5E5DF;
+    font-size: 18px; font-weight: 800;
+    margin: 0 0 2px; line-height: 1; color: #1A2530;
   }
-  [data-theme="light"] .panel-header-text h3 { color: #1A2530; }
+  [data-theme="dark"] .panel-header-text h2 { color: #E5E5DF; }
 
   .panel-header-text p {
-    font-size: 12px; font-weight: 500; margin: 0;
-    color: rgba(229,229,223,0.4); font-family: 'Inter', sans-serif;
+    font-size: 12.5px; font-weight: 500; margin: 0;
+    color: #6A7480; font-family: 'Inter', sans-serif;
   }
-  [data-theme="light"] .panel-header-text p { color: #6A7480; }
+  [data-theme="dark"] .panel-header-text p { color: rgba(229,229,223,0.4); }
 
   /* ── Inputs ── */
-  .ft-input-group { margin-bottom: 14px; }
+  .ft-input-group { margin-bottom: 16px; }
 
   .ft-input-label {
     display: block; font-family: 'DM Sans', sans-serif;
     font-size: 11px; font-weight: 700;
     letter-spacing: 1.5px; text-transform: uppercase;
-    color: rgba(229,229,223,0.5); margin-bottom: 6px;
+    color: #6A7480; margin-bottom: 6px;
   }
-  [data-theme="light"] .ft-input-label { color: #6A7480; }
+  [data-theme="dark"] .ft-input-label { color: rgba(229,229,223,0.5); }
 
   .ft-input-wrap {
     position: relative; display: flex; align-items: center;
-    background: rgba(255,255,255,0.04);
-    border: 1.5px solid rgba(255,255,255,0.08);
+    background: #EFECE2;
+    border: 1.5px solid rgba(57,68,77,0.18);
     border-radius: 11px; overflow: hidden;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  [data-theme="light"] .ft-input-wrap { background: #F0EDE4; border-color: rgba(57,68,77,0.15); }
+  [data-theme="dark"] .ft-input-wrap {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.08);
+  }
 
   .ft-input-wrap:focus-within {
+    border-color: #C8881E;
+    box-shadow: 0 0 0 3px rgba(200,136,30,0.15);
+    background: #F7F4EC;
+  }
+  [data-theme="dark"] .ft-input-wrap:focus-within {
     border-color: rgba(219,153,65,0.5);
     box-shadow: 0 0 0 3px rgba(200,136,30,0.12);
     background: rgba(219,153,65,0.04);
   }
-  [data-theme="light"] .ft-input-wrap:focus-within {
-    border-color: #C8881E; background: #F7F4EC;
-  }
 
   .ft-input-icon {
-    padding: 0 12px 0 14px; color: rgba(229,229,223,0.25);
+    padding: 0 12px 0 14px; color: #9AA0A8;
     font-size: 13px; flex-shrink: 0; pointer-events: none;
     transition: color 0.25s ease;
   }
-  [data-theme="light"] .ft-input-icon { color: #9AA0A8; }
+  [data-theme="dark"] .ft-input-icon { color: rgba(229,229,223,0.25); }
   .ft-input-wrap:focus-within .ft-input-icon { color: #DB9941; }
 
   .ft-input {
@@ -142,42 +78,35 @@
     border: none !important; box-shadow: none !important; outline: none;
     font-family: 'Inter', sans-serif;
     font-size: 14px; font-weight: 500;
-    color: #E5E5DF !important;
+    color: #1A2530 !important;
     padding: 13px 14px 13px 0;
   }
-  [data-theme="light"] .ft-input { color: #1A2530 !important; }
-  .ft-input::placeholder { color: rgba(229,229,223,0.22) !important; }
-  [data-theme="light"] .ft-input::placeholder { color: #B0B7BF !important; }
-
-  /* Admin focus variant */
-  .ft-input-wrap.admin-focus:focus-within {
-    border-color: rgba(100,160,255,0.4);
-    box-shadow: 0 0 0 3px rgba(100,160,255,0.1);
-    background: rgba(100,160,255,0.03);
-  }
-  [data-theme="light"] .ft-input-wrap.admin-focus:focus-within { border-color: #3B82F6; }
-  .ft-input-wrap.admin-focus:focus-within .ft-input-icon { color: #64A0FF; }
+  [data-theme="dark"] .ft-input { color: #E5E5DF !important; }
+  .ft-input::placeholder { color: #9AA0A8 !important; }
+  [data-theme="dark"] .ft-input::placeholder { color: rgba(229,229,223,0.22) !important; }
 
   .ft-eye-btn {
     background: none; border: none;
-    padding: 0 14px; color: rgba(229,229,223,0.25);
+    padding: 0 14px; color: #9AA0A8;
     font-size: 13px; cursor: pointer; transition: color 0.2s;
   }
+  [data-theme="dark"] .ft-eye-btn { color: rgba(229,229,223,0.25); }
   .ft-eye-btn:hover { color: #DB9941; }
-  .admin-panel .ft-eye-btn:hover { color: #64A0FF; }
-  [data-theme="light"] .ft-eye-btn { color: #9AA0A8; }
 
-  /* ── Forgot Password ── */
-  .ft-forgot-row { display: flex; justify-content: flex-end; margin-bottom: 20px; margin-top: -4px; }
-  .ft-forgot-link {
-    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
-    color: rgba(229,229,223,0.35); text-decoration: none; transition: color 0.2s ease;
+  /* ── Forgot Password row ── */
+  .ft-forgot-row {
+    display: flex; justify-content: flex-end;
+    margin-bottom: 20px; margin-top: -4px;
   }
-  .ft-forgot-link:hover { color: #DB9941; }
-  [data-theme="light"] .ft-forgot-link { color: #9AA0A8; }
-  [data-theme="light"] .ft-forgot-link:hover { color: #C8881E; }
+  .ft-forgot-link {
+    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+    color: #9AA0A8; text-decoration: none; transition: color 0.2s ease;
+  }
+  .ft-forgot-link:hover { color: #C8881E; }
+  [data-theme="dark"] .ft-forgot-link { color: rgba(229,229,223,0.35); }
+  [data-theme="dark"] .ft-forgot-link:hover { color: #DB9941; }
 
-  /* ── Submit Buttons ── */
+  /* ── Primary Login Button ── */
   .btn-user-login {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     width: 100%; padding: 14px 24px;
@@ -201,77 +130,71 @@
   }
   .btn-user-login:active { transform: translateY(0) scale(0.99); }
 
-  .btn-admin-login {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 14px 24px;
-    background: linear-gradient(135deg, #243E6A 0%, #1E3A5F 40%, #1A2E4A 70%, #142438 100%);
-    color: #E5E5DF !important;
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 800;
-    letter-spacing: 2px; text-transform: uppercase;
-    border: 1px solid rgba(100,160,255,0.2);
-    border-radius: 12px; cursor: pointer;
-    position: relative; overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 6px 24px rgba(30,58,95,0.5), inset 0 1px 0 rgba(100,160,255,0.12);
-  }
-  .btn-admin-login::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(100,160,255,0.08) 0%, transparent 55%);
-    pointer-events: none;
-  }
-  .btn-admin-login i { color: #64A0FF; }
-  .btn-admin-login:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 12px 36px rgba(30,58,95,0.7);
-    border-color: rgba(100,160,255,0.4);
-  }
-  .btn-admin-login:active { transform: translateY(0) scale(0.99); }
-
   /* ── Divider ── */
   .ft-divider {
-    display: flex; align-items: center; gap: 12px; margin: 24px 0;
+    display: flex; align-items: center; gap: 12px; margin: 22px 0 18px;
     font-family: 'DM Sans', sans-serif; font-size: 10.5px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; color: rgba(229,229,223,0.2);
+    letter-spacing: 2px; text-transform: uppercase; color: rgba(57,68,77,0.3);
   }
   .ft-divider::before, .ft-divider::after {
-    content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.07);
+    content: ''; flex: 1; height: 1px; background: rgba(57,68,77,0.12);
   }
-  [data-theme="light"] .ft-divider { color: rgba(57,68,77,0.3); }
-  [data-theme="light"] .ft-divider::before,
-  [data-theme="light"] .ft-divider::after { background: rgba(57,68,77,0.12); }
+  [data-theme="dark"] .ft-divider { color: rgba(229,229,223,0.2); }
+  [data-theme="dark"] .ft-divider::before,
+  [data-theme="dark"] .ft-divider::after { background: rgba(255,255,255,0.07); }
 
-  /* ── Register Button ── */
+  /* ── Create Account Button ── */
   .btn-create-account {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     width: 100%; padding: 13px 24px;
-    background: transparent; color: rgba(229,229,223,0.45) !important;
+    background: transparent; color: #6A7480 !important;
     font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 700;
     letter-spacing: 1.5px; text-transform: uppercase;
-    border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px;
+    border: 1.5px solid rgba(57,68,77,0.18); border-radius: 12px;
     text-decoration: none; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-create-account:hover {
-    background: rgba(219,153,65,0.07); border-color: rgba(219,153,65,0.3);
-    color: #DB9941 !important; transform: translateY(-1px);
+    background: rgba(219,153,65,0.07); border-color: rgba(219,153,65,0.35);
+    color: #C8881E !important; transform: translateY(-1px);
   }
-  [data-theme="light"] .btn-create-account { color: #6A7480 !important; border-color: rgba(57,68,77,0.18); }
-  [data-theme="light"] .btn-create-account:hover {
-    color: #C8881E !important; border-color: rgba(200,136,30,0.35);
-    background: rgba(200,136,30,0.05);
+  [data-theme="dark"] .btn-create-account {
+    color: rgba(229,229,223,0.45) !important;
+    border-color: rgba(255,255,255,0.08);
+  }
+  [data-theme="dark"] .btn-create-account:hover {
+    background: rgba(219,153,65,0.07); border-color: rgba(219,153,65,0.3);
+    color: #DB9941 !important;
   }
 
-  /* ── Admin Security Note ── */
-  .admin-security-note {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 13px;
-    background: rgba(100,160,255,0.06);
-    border: 1px solid rgba(100,160,255,0.12);
-    border-radius: 9px; margin-bottom: 18px;
-    font-size: 11.5px; font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    color: rgba(100,160,255,0.7); letter-spacing: 0.3px;
+  /* ── Admin Login Link ── */
+  .admin-login-link-row {
+    display: flex; justify-content: center; align-items: center;
+    margin-top: 22px; gap: 8px;
   }
-  .admin-security-note i { font-size: 12px; color: #64A0FF; }
+  .admin-login-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+    color: #9AA0A8; text-decoration: none;
+    padding: 7px 14px; border-radius: 8px;
+    border: 1px solid rgba(57,68,77,0.12);
+    background: rgba(57,68,77,0.04);
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+  }
+  .admin-login-link:hover {
+    color: #64A0FF; border-color: rgba(100,160,255,0.25);
+    background: rgba(100,160,255,0.06);
+  }
+  .admin-login-link i { font-size: 11px; }
+  [data-theme="dark"] .admin-login-link {
+    color: rgba(229,229,223,0.3);
+    border-color: rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.02);
+  }
+  [data-theme="dark"] .admin-login-link:hover {
+    color: #64A0FF; border-color: rgba(100,160,255,0.2);
+    background: rgba(100,160,255,0.05);
+  }
 
   /* ── Alert ── */
   .ft-alert {
@@ -281,45 +204,13 @@
     margin-bottom: 18px; text-align: left; line-height: 1.4;
   }
   .ft-alert i { margin-top: 1px; flex-shrink: 0; }
-  .ft-alert-error   { background: rgba(220,38,38,0.09);  border: 1px solid rgba(220,38,38,0.22);  color: #EF6666; }
-  .ft-alert-success { background: rgba(34,197,94,0.09);  border: 1px solid rgba(34,197,94,0.22);  color: #4ADE80; }
-  .ft-alert-warning { background: rgba(234,179,8,0.09);  border: 1px solid rgba(234,179,8,0.22);  color: #FDE047; }
-  [data-theme="light"] .ft-alert-error   { color: #DC2626; }
-  [data-theme="light"] .ft-alert-success { color: #16A34A; }
-  [data-theme="light"] .ft-alert-warning { color: #CA8A04; }
-
-  /* ── Card ── */
-  .auth-card {
-    backdrop-filter: blur(20px) !important;
-    border-radius: 22px !important;
-    padding: 36px 34px !important;
-    max-width: 430px !important;
-  }
-
-  /* ── Brand ── */
-  .ft-brand {
-    display: flex; align-items: center; justify-content: center;
-    gap: 10px; margin-bottom: 26px;
-  }
-  .ft-brand-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, #DB9941, #B87818);
-    border-radius: 9px; display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: #07111D;
-    box-shadow: 0 4px 16px rgba(200,136,30,0.4);
-  }
-  .ft-brand-name {
-    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 800;
-    letter-spacing: 2.5px; text-transform: uppercase; color: #E5E5DF;
-  }
-  [data-theme="light"] .ft-brand-name { color: #1A2530; }
+  .ft-alert-error   { background: rgba(220,38,38,0.08);  border: 1px solid rgba(220,38,38,0.2);  color: #DC2626; }
+  .ft-alert-success { background: rgba(34,197,94,0.08);  border: 1px solid rgba(34,197,94,0.2);  color: #16a34a; }
+  .ft-alert-warning { background: rgba(234,179,8,0.08);  border: 1px solid rgba(234,179,8,0.2);  color: #ca8a04; }
+  [data-theme="dark"] .ft-alert-error   { color: #EF6666; }
+  [data-theme="dark"] .ft-alert-success { color: #4ADE80; }
+  [data-theme="dark"] .ft-alert-warning { color: #FDE047; }
 </style>
-
-<!-- Brand -->
-<div class="ft-brand">
-  <div class="ft-brand-icon"><i class="fas fa-bolt"></i></div>
-  <span class="ft-brand-name">FreelanceTrack</span>
-</div>
 
 {% if messages %}
   {% for message in messages %}
@@ -330,184 +221,102 @@
   {% endfor %}
 {% endif %}
 
-<!-- Tab Switcher -->
-<div class="login-tab-wrapper" role="tablist">
-  <button class="login-tab-btn user-tab {% if login_type != 'admin' %}active{% endif %}"
-          id="tab-user" role="tab" aria-controls="panel-user"
-          aria-selected="{% if login_type != 'admin' %}true{% else %}false{% endif %}"
-          type="button" onclick="switchTab('user')">
-    <i class="fas fa-user"></i> User Login
-  </button>
-  <button class="login-tab-btn admin-tab {% if login_type == 'admin' %}active{% endif %}"
-          id="tab-admin" role="tab" aria-controls="panel-admin"
-          aria-selected="{% if login_type == 'admin' %}true{% else %}false{% endif %}"
-          type="button" onclick="switchTab('admin')">
-    <i class="fas fa-shield-halved"></i> Admin Login
-  </button>
+<!-- Panel Header -->
+<div class="panel-header">
+  <div class="panel-header-icon"><i class="fas fa-user"></i></div>
+  <div class="panel-header-text">
+    <h2>Welcome back</h2>
+    <p>Sign in to your FreelanceTrack account</p>
+  </div>
 </div>
 
-<!-- ══════════════ USER PANEL ══════════════ -->
-<div class="login-panel user-panel {% if login_type != 'admin' %}active{% endif %}"
-     id="panel-user" role="tabpanel">
+<form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate>
+  {% csrf_token %}
+  <input type="hidden" name="login_type" value="user">
 
-  <div class="panel-header">
-    <div class="panel-header-icon user-icon"><i class="fas fa-user"></i></div>
-    <div class="panel-header-text">
-      <h3>Welcome back</h3>
-      <p>Sign in to your freelancer account</p>
+  <!-- Username -->
+  <div class="ft-input-group">
+    <label class="ft-input-label" for="id_username">Username</label>
+    <div class="ft-input-wrap">
+      <span class="ft-input-icon"><i class="fas fa-user"></i></span>
+      <input
+        type="text"
+        name="username"
+        id="id_username"
+        class="ft-input"
+        placeholder="Enter your username"
+        required
+        autocomplete="username"
+        autofocus
+        value="{{ request.POST.username|default:'' }}"
+      >
     </div>
   </div>
 
-  <form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate>
-    {% csrf_token %}
-    <input type="hidden" name="login_type" value="user">
-
-    <!-- Username only (no email) -->
-    <div class="ft-input-group">
-      <label class="ft-input-label" for="id_user_username">Username</label>
-      <div class="ft-input-wrap">
-        <span class="ft-input-icon"><i class="fas fa-user"></i></span>
-        <input
-          type="text"
-          name="username"
-          id="id_user_username"
-          class="ft-input"
-          placeholder="Enter your username"
-          required
-          autocomplete="username"
-          value="{{ request.POST.username|default:'' }}"
-        >
-      </div>
+  <!-- Password -->
+  <div class="ft-input-group">
+    <label class="ft-input-label" for="id_password">Password</label>
+    <div class="ft-input-wrap">
+      <span class="ft-input-icon"><i class="fas fa-lock"></i></span>
+      <input
+        type="password"
+        name="password"
+        id="id_password"
+        class="ft-input"
+        placeholder="Enter your password"
+        required
+        autocomplete="current-password"
+      >
+      <button type="button" class="ft-eye-btn" id="togglePwd" aria-label="Toggle password visibility">
+        <i class="fas fa-eye" id="pwdIcon"></i>
+      </button>
     </div>
+  </div>
 
-    <!-- Password -->
-    <div class="ft-input-group">
-      <label class="ft-input-label" for="id_user_password">Password</label>
-      <div class="ft-input-wrap">
-        <span class="ft-input-icon"><i class="fas fa-lock"></i></span>
-        <input
-          type="password"
-          name="password"
-          id="id_user_password"
-          class="ft-input"
-          placeholder="Enter your password"
-          required
-          autocomplete="current-password"
-        >
-        <button type="button" class="ft-eye-btn" id="toggleUserPwd" aria-label="Toggle password visibility">
-          <i class="fas fa-eye" id="userPwdIcon"></i>
-        </button>
-      </div>
-    </div>
+  <div class="ft-forgot-row">
+    <a href="{% url 'core:password_reset' %}" class="ft-forgot-link">Forgot password?</a>
+  </div>
 
-    <div class="ft-forgot-row">
-      <a href="{% url 'core:password_reset' %}" class="ft-forgot-link">Forgot password?</a>
-    </div>
+  <button type="submit" class="btn-user-login" id="loginSubmitBtn">
+    <i class="fas fa-arrow-right-to-bracket"></i> Sign In
+  </button>
+</form>
 
-    <button type="submit" class="btn-user-login" id="userSubmitBtn">
-      <i class="fas fa-arrow-right-to-bracket"></i> Sign In
-    </button>
-  </form>
+<div class="ft-divider">or</div>
 
-  <div class="ft-divider">or</div>
+<a href="{% url 'core:register' %}" class="btn-create-account">
+  <i class="fas fa-user-plus"></i> Create New Account
+</a>
 
-  <a href="{% url 'core:register' %}" class="btn-create-account">
-    <i class="fas fa-user-plus"></i> Create New Account
+<!-- Admin Login link -->
+<div class="admin-login-link-row">
+  <a href="{% url 'core:admin_login' %}" class="admin-login-link" id="adminLoginPageLink">
+    <i class="fas fa-shield-halved"></i> Admin Login
   </a>
 </div>
 
-<!-- ══════════════ ADMIN PANEL ══════════════ -->
-<div class="login-panel admin-panel {% if login_type == 'admin' %}active{% endif %}"
-     id="panel-admin" role="tabpanel">
-
-  <div class="panel-header">
-    <div class="panel-header-icon admin-icon"><i class="fas fa-shield-halved"></i></div>
-    <div class="panel-header-text">
-      <h3>Administrator Access</h3>
-      <p>Restricted — authorized personnel only</p>
-    </div>
-  </div>
-
-  <div class="admin-security-note">
-    <i class="fas fa-lock"></i>
-    <span>This session is monitored and logged for security.</span>
-  </div>
-
-  <form method="post" action="{% url 'core:login' %}" id="adminLoginForm" novalidate>
-    {% csrf_token %}
-    <input type="hidden" name="login_type" value="admin">
-
-    <!-- Admin Username -->
-    <div class="ft-input-group">
-      <label class="ft-input-label" for="id_admin_username">Username</label>
-      <div class="ft-input-wrap admin-focus">
-        <span class="ft-input-icon"><i class="fas fa-user-shield"></i></span>
-        <input
-          type="text"
-          name="username"
-          id="id_admin_username"
-          class="ft-input"
-          placeholder="Enter admin username"
-          required
-          autocomplete="username"
-        >
-      </div>
-    </div>
-
-    <!-- Admin Password -->
-    <div class="ft-input-group">
-      <label class="ft-input-label" for="id_admin_password">Password</label>
-      <div class="ft-input-wrap admin-focus">
-        <span class="ft-input-icon"><i class="fas fa-key"></i></span>
-        <input
-          type="password"
-          name="password"
-          id="id_admin_password"
-          class="ft-input"
-          placeholder="Enter admin password"
-          required
-          autocomplete="current-password"
-        >
-        <button type="button" class="ft-eye-btn" id="toggleAdminPwd" aria-label="Toggle password visibility">
-          <i class="fas fa-eye" id="adminPwdIcon"></i>
-        </button>
-      </div>
-    </div>
-
-    <div style="margin-bottom: 18px;"></div>
-
-    <button type="submit" class="btn-admin-login" id="adminSubmitBtn">
-      <i class="fas fa-shield-halved"></i> Access Admin Panel
-    </button>
-  </form>
-</div>
-
 <script>
-function switchTab(tab) {
-  document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.login-tab-btn').forEach(t => {
-    t.classList.remove('active');
-    t.setAttribute('aria-selected', 'false');
-  });
-  document.getElementById('panel-' + tab).classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('tab-' + tab).setAttribute('aria-selected', 'true');
-}
-
 (function() {
-  function initToggle(btnId, inputId, iconId) {
-    const btn   = document.getElementById(btnId);
-    const input = document.getElementById(inputId);
-    const icon  = document.getElementById(iconId);
-    if (!btn || !input || !icon) return;
+  const btn   = document.getElementById('togglePwd');
+  const input = document.getElementById('id_password');
+  const icon  = document.getElementById('pwdIcon');
+  if (btn && input && icon) {
     btn.addEventListener('click', function() {
       const visible = input.type === 'text';
-      input.type    = visible ? 'password' : 'text';
+      input.type = visible ? 'password' : 'text';
       icon.className = visible ? 'fas fa-eye' : 'fas fa-eye-slash';
     });
   }
-  initToggle('toggleUserPwd',  'id_user_password',  'userPwdIcon');
-  initToggle('toggleAdminPwd', 'id_admin_password', 'adminPwdIcon');
+
+  // Loading state on submit
+  const form = document.getElementById('userLoginForm');
+  const submitBtn = document.getElementById('loginSubmitBtn');
+  if (form && submitBtn) {
+    form.addEventListener('submit', function() {
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In…';
+      submitBtn.style.pointerEvents = 'none';
+    });
+  }
 })();
 </script>
 

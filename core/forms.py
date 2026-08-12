@@ -1,5 +1,6 @@
 from django import forms
-from django.core.validators import EmailValidator, RegexValidator, validate_email
+import re
+from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from .models import (Client, Project, Payment, Task, Note, UserProfile,
@@ -49,8 +50,10 @@ class ClientForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if email:
-            validator = EmailValidator()
-            validator(email)
+            try:
+                validate_email(email)
+            except ValidationError:
+                raise ValidationError("Enter a valid email address.")
         return email
 
 
@@ -428,26 +431,17 @@ class ProjectCommentForm(forms.ModelForm):
 
 class UserRegistrationForm(forms.Form):
     """
-    Simple registration form: Full Name, Email, Password, Confirm Password.
-    No email verification required — account is activated immediately.
+    Simple registration form: Username + Password + Confirm Password.
+    No email, no full name, no verification — account is activated immediately.
     """
-    full_name = forms.CharField(
-        label='Full Name',
+    username = forms.CharField(
+        label='Username',
         required=True,
         max_length=150,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Enter your full name',
+            'placeholder': 'Choose a unique username',
             'class': 'form-control',
-            'autocomplete': 'name',
-        }),
-    )
-    email = forms.EmailField(
-        label='Email Address',
-        required=True,
-        widget=forms.EmailInput(attrs={
-            'placeholder': 'your@email.com',
-            'class': 'form-control',
-            'autocomplete': 'email',
+            'autocomplete': 'username',
         }),
     )
     password1 = forms.CharField(
@@ -470,23 +464,16 @@ class UserRegistrationForm(forms.Form):
         }),
     )
 
-    def clean_full_name(self):
-        full_name = self.cleaned_data.get('full_name', '').strip()
-        if not full_name:
-            raise ValidationError("Full name is required.")
-        return full_name
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email', '').strip().lower()
-        if not email:
-            raise ValidationError("Email address is required.")
-        try:
-            validate_email(email)
-        except ValidationError:
-            raise ValidationError("Enter a valid email address.")
-        if User.objects.filter(email__iexact=email).exists():
-            raise ValidationError("An account with this email already exists. Please log in.")
-        return email
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if not username:
+            raise ValidationError("Username is required.")
+        # Only allow alphanumeric, underscores, hyphens
+        if not re.match(r'^[\w.-]+$', username):
+            raise ValidationError("Username may only contain letters, numbers, dots, hyphens, and underscores.")
+        if User.objects.filter(username__iexact=username).exists():
+            raise ValidationError("This username is already taken. Please choose another.")
+        return username
 
     def clean(self):
         cleaned_data = super().clean()
@@ -498,29 +485,12 @@ class UserRegistrationForm(forms.Form):
 
     def save(self):
         """Create and return the new active User."""
-        full_name = self.cleaned_data['full_name']
-        email = self.cleaned_data['email']
+        username = self.cleaned_data['username']
         password = self.cleaned_data['password1']
-
-        # Derive a unique username from email prefix
-        base_username = email.split('@')[0][:30]
-        username = base_username
-        counter = 1
-        while User.objects.filter(username__iexact=username).exists():
-            username = f"{base_username}{counter}"
-            counter += 1
-
-        # Split full name into first/last
-        parts = full_name.split(' ', 1)
-        first_name = parts[0]
-        last_name = parts[1] if len(parts) > 1 else ''
 
         user = User.objects.create_user(
             username=username,
-            email=email,
             password=password,
-            first_name=first_name,
-            last_name=last_name,
             is_active=True,
         )
         return user

@@ -1,5 +1,4 @@
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 from . import views, api_views
 
 app_name = 'core'
@@ -12,31 +11,10 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
+    path('admin-login/', views.admin_login_view, name='admin_login'),
 
-    # ── Password Reset Flow ────────────────────────────────
-    path('forgot-password/',
-         auth_views.PasswordResetView.as_view(
-             template_name='registration/password_reset_form.html',
-             success_url='/forgot-password/done/',
-         ),
-         name='password_reset'),
-    path('forgot-password/done/',
-         auth_views.PasswordResetDoneView.as_view(
-             template_name='registration/password_reset_done.html',
-         ),
-         name='password_reset_done'),
-    path('reset/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(
-             template_name='registration/password_reset_confirm.html',
-             success_url='/reset/done/',
-         ),
-         name='password_reset_confirm'),
-    path('reset/done/',
-         auth_views.PasswordResetCompleteView.as_view(
-             template_name='registration/password_reset_complete.html',
-         ),
-         name='password_reset_complete'),
-
+    # ── Password Reset (direct — no email) ────────────────
+    path('forgot-password/', views.forgot_password_direct, name='password_reset'),
 
     # ── Super Admin Dashboard Module ─────────────────────
     path('admin-dashboard/', include('core.admin_urls')),
