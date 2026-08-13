@@ -781,5 +781,74 @@ class BrevoServiceTest(TestCase):
         self.assertIn('654321', mail.outbox[0].body)
 
 
+class SecurityHardeningTestCase(TestCase):
+    def setUp(self):
+        self.user_a = User.objects.create_user(username='usera', password='Password123!')
+        self.user_b = User.objects.create_user(username='userb', password='Password123!')
+        self.client_a = Client.objects.create(user=self.user_a, name='Client A', email='a@example.com')
+        self.client_b = Client.objects.create(user=self.user_b, name='Client B', email='b@example.com')
+        self.project_a = Project.objects.create(user=self.user_a, client=self.client_a, name='Project A')
+        self.project_b = Project.objects.create(user=self.user_b, client=self.client_b, name='Project B')
+
+    def test_security_headers_present(self):
+        response = self.client.get(reverse('core:home'))
+        self.assertEqual(response['X-Frame-Options'], 'DENY')
+        self.assertEqual(response['X-Content-Type-Options'], 'nosniff')
+        self.assertIn('Content-Security-Policy', response)
+        self.assertIn("object-src 'none'", response['Content-Security-Policy'])
+        self.assertIn("base-uri 'self'", response['Content-Security-Policy'])
+
+    def test_open_redirect_login_prevented(self):
+        response = self.client.post(
+            reverse('core:login') + '?next=https://malicious-site.com',
+            {'username': 'usera', 'password': 'Password123!', 'login_type': 'user'}
+        )
+        self.assertRedirects(response, reverse('core:dashboard'))
+
+    def test_open_redirect_social_oauth_initiate_prevented(self):
+        response = self.client.get(
+            reverse('social_auth:oauth_initiate', kwargs={'provider': 'google'}) + '?next=https://evil.com'
+        )
+        if response.status_code == 302:
+            self.assertNotIn('https://evil.com', response.url)
+
+    def test_multi_tenant_form_idor_isolation(self):
+        from .forms import PaymentForm
+        form = PaymentForm(
+            data={
+                'project': str(self.project_b.id),
+                'amount': '100.00',
+                'status': 'pending',
+                'payment_method': 'bank_transfer',
+                'due_date': '2026-12-31'
+            },
+            user=self.user_a
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn('project', form.errors)
+
+    def test_file_upload_extension_validation(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from core.models import validate_file_upload
+        from django.core.exceptions import ValidationError
+
+        bad_file = SimpleUploadedFile("malicious.sh", b"echo hack", content_type="application/x-sh")
+        with self.assertRaises(ValidationError):
+            validate_file_upload(bad_file)
+
+        good_file = SimpleUploadedFile("document.pdf", b"%PDF-1.4", content_type="application/pdf")
+        validate_file_upload(good_file)
+
+    def test_file_upload_oversized_validation(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from core.models import validate_file_upload
+        from django.core.exceptions import ValidationError
+
+        huge_file = SimpleUploadedFile("large.pdf", b"0" * (11 * 1024 * 1024))
+        with self.assertRaises(ValidationError):
+            validate_file_upload(huge_file)
+
+
+
 
 

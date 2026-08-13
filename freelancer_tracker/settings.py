@@ -19,7 +19,7 @@ try:
     SECRET_KEY     = config('SECRET_KEY',
                             default='django-insecure-change-this-to-a-very-long-random-string-in-production-min-50-characters-for-security')
     DEBUG          = config('DEBUG', default=True, cast=bool)
-    ALLOWED_HOSTS  = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,.vercel.app,.now.sh,*', cast=Csv())
+    ALLOWED_HOSTS  = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,.vercel.app,.now.sh', cast=Csv())
     CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.vercel.app,https://*.now.sh,http://localhost:8000,http://127.0.0.1:8000', cast=Csv())
     DATABASE_URL   = config('DATABASE_URL', default='')
 
@@ -31,7 +31,7 @@ except ImportError:
     SECRET_KEY     = os.environ.get('SECRET_KEY',
                                     'django-insecure-change-this-to-a-very-long-random-string-in-production-min-50-characters-for-security')
     DEBUG          = os.environ.get('DEBUG', 'False') == 'True'
-    ALLOWED_HOSTS  = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,.vercel.app,.now.sh,*').split(',')
+    ALLOWED_HOSTS  = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,.vercel.app,.now.sh').split(',')
     CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app,https://*.now.sh,http://localhost:8000,http://127.0.0.1:8000').split(',')
     DATABASE_URL   = os.environ.get('DATABASE_URL', '')
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'core',
+    'social_auth',
 ]
 
 
@@ -203,6 +204,11 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS             = 'DENY'
 SECURE_REFERRER_POLICY      = 'strict-origin-when-cross-origin'
 
+SESSION_COOKIE_HTTPONLY     = True
+SESSION_COOKIE_SAMESITE     = 'Lax'
+CSRF_COOKIE_HTTPONLY       = True
+CSRF_COOKIE_SAMESITE       = 'Lax'
+
 
 if not DEBUG:
     SECURE_SSL_REDIRECT           = False
@@ -213,9 +219,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD           = True
 
     SESSION_COOKIE_SECURE  = True
-    SESSION_COOKIE_HTTPONLY = True
     CSRF_COOKIE_SECURE     = True
-    CSRF_COOKIE_HTTPONLY   = True
 
 
 MESSAGE_TAGS = {

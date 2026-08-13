@@ -61,6 +61,11 @@ class ProjectForm(forms.ModelForm):
     """
     Form for creating and updating Project instances
     """
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['client'].queryset = Client.objects.filter(user=user)
     class Meta:
         model = Project
         fields = ['client', 'name', 'description', 'status', 'priority', 
@@ -123,6 +128,11 @@ class PaymentForm(forms.ModelForm):
     """
     Form for creating and updating Payment instances
     """
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['project'].queryset = Project.objects.filter(user=user)
     class Meta:
         model = Payment
         fields = ['project', 'amount', 'status', 'payment_method', 
@@ -172,6 +182,11 @@ class TaskForm(forms.ModelForm):
     """
     Form for creating and updating Task instances
     """
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['project'].queryset = Project.objects.filter(user=user)
     class Meta:
         model = Task
         fields = ['project', 'title', 'description', 'status', 'priority', 
@@ -228,6 +243,12 @@ class NoteForm(forms.ModelForm):
     """
     Form for creating and updating Note instances
     """
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['project'].queryset = Project.objects.filter(user=user)
+            self.fields['client'].queryset = Client.objects.filter(user=user)
     class Meta:
         model = Note
         fields = ['project', 'client', 'title', 'content', 'is_private']
@@ -338,6 +359,12 @@ class UserProfileForm(forms.ModelForm):
 
 
 class IncomeForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['client'].queryset = Client.objects.filter(user=user)
+            self.fields['project'].queryset = Project.objects.filter(user=user)
     class Meta:
         model = Income
         fields = ['title', 'client', 'project', 'amount', 'category', 'date', 'notes']
@@ -353,6 +380,11 @@ class IncomeForm(forms.ModelForm):
 
 
 class ExpenseForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['project'].queryset = Project.objects.filter(user=user)
     class Meta:
         model = Expense
         fields = ['title', 'project', 'amount', 'category', 'date', 'receipt', 'notes']
@@ -368,6 +400,12 @@ class ExpenseForm(forms.ModelForm):
 
 
 class InvoiceForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['client'].queryset = Client.objects.filter(user=user)
+            self.fields['project'].queryset = Project.objects.filter(user=user)
     class Meta:
         model = Invoice
         fields = ['invoice_number', 'client', 'project', 'issue_date', 'due_date', 'status', 'tax_rate', 'discount_amount', 'notes']
@@ -396,6 +434,12 @@ class InvoiceItemForm(forms.ModelForm):
 
 
 class CalendarEventForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['project'].queryset = Project.objects.filter(user=user)
+            self.fields['task'].queryset = Task.objects.filter(user=user)
     class Meta:
         model = CalendarEvent
         fields = ['title', 'event_type', 'start_time', 'end_time', 'project', 'task', 'description']
@@ -411,6 +455,11 @@ class CalendarEventForm(forms.ModelForm):
 
 
 class ProjectFileForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user is not None:
+            self.fields['project'].queryset = Project.objects.filter(user=user)
     class Meta:
         model = ProjectFile
         fields = ['project', 'file']

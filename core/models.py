@@ -2,7 +2,33 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import EmailValidator, MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 import uuid
+import os
+
+ALLOWED_FILE_EXTENSIONS = ['.pdf', '.png', '.jpg', '.jpeg', '.doc', '.docx', '.xls', '.xlsx', '.csv', '.txt', '.zip']
+ALLOWED_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
+MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10MB
+
+
+def validate_file_upload(file):
+    if not file:
+        return
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in ALLOWED_FILE_EXTENSIONS:
+        raise ValidationError(f"Unsupported file extension '{ext}'. Allowed extensions: {', '.join(ALLOWED_FILE_EXTENSIONS)}")
+    if getattr(file, 'size', 0) > MAX_FILE_SIZE_BYTES:
+        raise ValidationError(f"File size exceeds maximum limit of 10MB.")
+
+
+def validate_image_upload(file):
+    if not file:
+        return
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in ALLOWED_IMAGE_EXTENSIONS:
+        raise ValidationError(f"Unsupported image extension '{ext}'. Allowed extensions: {', '.join(ALLOWED_IMAGE_EXTENSIONS)}")
+    if getattr(file, 'size', 0) > MAX_FILE_SIZE_BYTES:
+        raise ValidationError(f"Image size exceeds maximum limit of 10MB.")
 
 
 class Client(models.Model):
@@ -298,7 +324,7 @@ class UserProfile(models.Model):
     is_deleted = models.BooleanField(default=False)
     last_login_ip = models.GenericIPAddressField(blank=True, null=True)
     last_login_at = models.DateTimeField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True, validators=[validate_image_upload])
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
@@ -322,7 +348,7 @@ class ProjectFile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='files')
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='files', blank=True, null=True)
-    file = models.FileField(upload_to='project_files/')
+    file = models.FileField(upload_to='project_files/', validators=[validate_file_upload])
     file_name = models.CharField(max_length=255)
     file_size = models.IntegerField(default=0, help_text="Size in bytes")
     file_type = models.CharField(max_length=50, default='other')
@@ -405,7 +431,7 @@ class Expense(models.Model):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default='software')
     date = models.DateField(default=timezone.now)
-    receipt = models.FileField(upload_to='receipts/', blank=True, null=True)
+    receipt = models.FileField(upload_to='receipts/', blank=True, null=True, validators=[validate_file_upload])
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

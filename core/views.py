@@ -11,6 +11,7 @@ from django.utils import timezone
 from datetime import timedelta, date
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST, require_http_methods
 import json
 import re
@@ -166,6 +167,10 @@ def custom_login(request):
             log_activity(user, 'login', 'user', user.id, f'User {username} logged in ({login_type} mode)', request)
 
             messages.success(request, f'Welcome back, {username}!')
+
+            next_url = request.POST.get('next') or request.GET.get('next')
+            if next_url and url_has_allowed_host_and_scheme(url=next_url, allowed_hosts={request.get_host()}):
+                return redirect(next_url)
 
             if is_admin_user:
                 return redirect('core:admin_dashboard')
@@ -636,8 +641,7 @@ def project_detail(request, pk):
 def project_create(request):
     """Create a new project."""
     if request.method == 'POST':
-        form = ProjectForm(request.POST)
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = ProjectForm(request.POST, user=request.user)
         if form.is_valid():
             project = form.save(commit=False)
             project.user = request.user
@@ -649,8 +653,7 @@ def project_create(request):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = ProjectForm()
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = ProjectForm(user=request.user)
     return render(request, 'projects/project_form.html', {'form': form, 'action': 'Create'})
 
 
@@ -659,8 +662,7 @@ def project_update(request, pk):
     """Update an existing project."""
     project = get_object_or_404(Project, pk=pk, user=request.user)
     if request.method == 'POST':
-        form = ProjectForm(request.POST, instance=project)
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = ProjectForm(request.POST, instance=project, user=request.user)
         if form.is_valid():
             old_status = project.status
             updated_project = form.save()
@@ -674,8 +676,7 @@ def project_update(request, pk):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = ProjectForm(instance=project)
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = ProjectForm(instance=project, user=request.user)
     return render(request, 'projects/project_form.html', {
         'form': form, 'action': 'Update', 'project': project
     })
@@ -754,8 +755,7 @@ def payment_detail(request, pk):
 def payment_create(request):
     """Create a new payment record."""
     if request.method == 'POST':
-        form = PaymentForm(request.POST)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = PaymentForm(request.POST, user=request.user)
         if form.is_valid():
             payment = form.save(commit=False)
             payment.user = request.user
@@ -767,8 +767,7 @@ def payment_create(request):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = PaymentForm()
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = PaymentForm(user=request.user)
     return render(request, 'payments/payment_form.html', {'form': form, 'action': 'Create'})
 
 
@@ -778,8 +777,7 @@ def payment_update(request, pk):
     payment = get_object_or_404(Payment, pk=pk, user=request.user)
     old_status = payment.status
     if request.method == 'POST':
-        form = PaymentForm(request.POST, instance=payment)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = PaymentForm(request.POST, instance=payment, user=request.user)
         if form.is_valid():
             updated_payment = form.save()
             if old_status != updated_payment.status:
@@ -792,8 +790,7 @@ def payment_update(request, pk):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = PaymentForm(instance=payment)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = PaymentForm(instance=payment, user=request.user)
     return render(request, 'payments/payment_form.html', {
         'form': form, 'action': 'Update', 'payment': payment
     })
@@ -883,8 +880,7 @@ def task_detail(request, pk):
 def task_create(request):
     """Create a new task."""
     if request.method == 'POST':
-        form = TaskForm(request.POST)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = TaskForm(request.POST, user=request.user)
         if form.is_valid():
             task = form.save(commit=False)
             task.user = request.user
@@ -896,8 +892,7 @@ def task_create(request):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = TaskForm()
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = TaskForm(user=request.user)
     return render(request, 'tasks/task_form.html', {'form': form, 'action': 'Create'})
 
 
@@ -907,8 +902,7 @@ def task_update(request, pk):
     task = get_object_or_404(Task, pk=pk, user=request.user)
     old_status = task.status
     if request.method == 'POST':
-        form = TaskForm(request.POST, instance=task)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = TaskForm(request.POST, instance=task, user=request.user)
         if form.is_valid():
             updated_task = form.save()
             if old_status != updated_task.status:
@@ -921,8 +915,7 @@ def task_update(request, pk):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = TaskForm(instance=task)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
+        form = TaskForm(instance=task, user=request.user)
     return render(request, 'tasks/task_form.html', {
         'form': form, 'action': 'Update', 'task': task
     })
@@ -981,9 +974,7 @@ def note_detail(request, pk):
 def note_create(request):
     """Create a new note."""
     if request.method == 'POST':
-        form = NoteForm(request.POST)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = NoteForm(request.POST, user=request.user)
         if form.is_valid():
             note = form.save(commit=False)
             note.user = request.user
@@ -995,9 +986,7 @@ def note_create(request):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = NoteForm()
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = NoteForm(user=request.user)
     return render(request, 'notes/note_form.html', {'form': form, 'action': 'Create'})
 
 
@@ -1006,9 +995,7 @@ def note_update(request, pk):
     """Update an existing note."""
     note = get_object_or_404(Note, pk=pk, user=request.user)
     if request.method == 'POST':
-        form = NoteForm(request.POST, instance=note)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = NoteForm(request.POST, instance=note, user=request.user)
         if form.is_valid():
             updated_note = form.save()
             log_activity(request.user, 'update', 'note', note.id,
@@ -1018,9 +1005,7 @@ def note_update(request, pk):
         else:
             messages.error(request, 'Please fix the errors below.')
     else:
-        form = NoteForm(instance=note)
-        form.fields['project'].queryset = Project.objects.filter(user=request.user)
-        form.fields['client'].queryset = Client.objects.filter(user=request.user)
+        form = NoteForm(instance=note, user=request.user)
     return render(request, 'notes/note_form.html', {
         'form': form, 'action': 'Update', 'note': note
     })
@@ -1762,12 +1747,8 @@ def income_expense_tracker(request):
     total_exp = expenses.aggregate(t=Sum('amount'))['t'] or 0
     net_profit = float(total_inc) - float(total_exp)
 
-    income_form = IncomeForm()
-    expense_form = ExpenseForm()
-    # Populate choices for forms
-    income_form.fields['client'].queryset = Client.objects.filter(user=user, is_archived=False)
-    income_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
-    expense_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
+    income_form = IncomeForm(user=user)
+    expense_form = ExpenseForm(user=user)
 
     context = {
         'incomes': incomes,
@@ -1784,7 +1765,7 @@ def income_expense_tracker(request):
 @login_required
 @require_POST
 def income_create(request):
-    form = IncomeForm(request.POST)
+    form = IncomeForm(request.POST, user=request.user)
     if form.is_valid():
         inc = form.save(commit=False)
         inc.user = request.user
@@ -1809,7 +1790,7 @@ def income_delete(request, pk):
 @login_required
 @require_POST
 def expense_create(request):
-    form = ExpenseForm(request.POST, request.FILES)
+    form = ExpenseForm(request.POST, request.FILES, user=request.user)
     if form.is_valid():
         exp = form.save(commit=False)
         exp.user = request.user
@@ -1845,7 +1826,7 @@ def invoice_list(request):
 @login_required
 def invoice_create(request):
     if request.method == 'POST':
-        form = InvoiceForm(request.POST)
+        form = InvoiceForm(request.POST, user=request.user)
         if form.is_valid():
             inv = form.save(commit=False)
             inv.user = request.user
@@ -1945,9 +1926,7 @@ def calendar_view(request):
     task_deadlines = Task.objects.filter(user=user, due_date__isnull=False, is_archived=False)
     payment_dues = Payment.objects.filter(user=user, due_date__isnull=False, status='pending')
 
-    event_form = CalendarEventForm()
-    event_form.fields['project'].queryset = Project.objects.filter(user=user, is_archived=False)
-    event_form.fields['task'].queryset = Task.objects.filter(user=user, is_archived=False)
+    event_form = CalendarEventForm(user=user)
 
     context = {
         'events': events,
@@ -1962,7 +1941,7 @@ def calendar_view(request):
 @login_required
 @require_POST
 def calendar_event_create(request):
-    form = CalendarEventForm(request.POST)
+    form = CalendarEventForm(request.POST, user=request.user)
     if form.is_valid():
         evt = form.save(commit=False)
         evt.user = request.user
@@ -2024,8 +2003,7 @@ def file_manager(request):
     max_mb = 500.0  # 500 MB quota
     storage_percentage = min(100, round((total_mb / max_mb) * 100, 1))
 
-    file_form = ProjectFileForm()
-    file_form.fields['project'].queryset = projects
+    file_form = ProjectFileForm(user=user)
 
     context = {
         'files': files,
@@ -2048,22 +2026,28 @@ def file_manager(request):
 def file_upload(request):
     file_obj = request.FILES.get('file')
     if file_obj:
-        name = file_obj.name
-        size = file_obj.size
-        ext = name.split('.')[-1].lower() if '.' in name else 'other'
-        proj_id = request.POST.get('project')
-        proj = Project.objects.filter(id=proj_id, user=request.user).first() if proj_id else None
+        try:
+            from .models import validate_file_upload
+            validate_file_upload(file_obj)
 
-        pf = ProjectFile.objects.create(
-            user=request.user,
-            project=proj,
-            file=file_obj,
-            file_name=name,
-            file_size=size,
-            file_type=ext
-        )
-        log_activity(request.user, 'create', 'file', pf.id, f'Uploaded file {name}', request)
-        messages.success(request, f'File "{name}" uploaded successfully!')
+            name = file_obj.name
+            size = file_obj.size
+            ext = name.split('.')[-1].lower() if '.' in name else 'other'
+            proj_id = request.POST.get('project')
+            proj = Project.objects.filter(id=proj_id, user=request.user).first() if proj_id else None
+
+            pf = ProjectFile.objects.create(
+                user=request.user,
+                project=proj,
+                file=file_obj,
+                file_name=name,
+                file_size=size,
+                file_type=ext
+            )
+            log_activity(request.user, 'create', 'file', pf.id, f'Uploaded file {name}', request)
+            messages.success(request, f'File "{name}" uploaded successfully!')
+        except Exception as e:
+            messages.error(request, f'Upload failed: {e}')
     else:
         messages.error(request, 'Please select a file to upload.')
     return redirect('core:file_manager')

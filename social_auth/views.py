@@ -17,6 +17,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from .models import OAuthLoginHistory, SocialAccount
@@ -70,6 +71,8 @@ def oauth_initiate(request, provider: str):
         request.session.create()
 
     next_url = request.GET.get('next', '/dashboard/')
+    if not url_has_allowed_host_and_scheme(url=next_url, allowed_hosts={request.get_host()}):
+        next_url = '/dashboard/'
 
     try:
         auth_url = build_authorization_url(provider, request, next_url)
@@ -222,6 +225,9 @@ def oauth_callback(request, provider: str):
             request,
             f'Welcome back! You signed in with {provider_name}.'
         )
+
+    if not url_has_allowed_host_and_scheme(url=next_url, allowed_hosts={request.get_host()}):
+        next_url = '/dashboard/'
 
     return redirect(next_url)
 

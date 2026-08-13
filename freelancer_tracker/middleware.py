@@ -4,6 +4,7 @@ Enforces strict Content-Security-Policy (CSP), rate limiting, and security heade
 """
 
 import time
+import ipaddress
 from collections import defaultdict
 from django.http import JsonResponse
 from django.conf import settings
@@ -34,7 +35,9 @@ class SecurityHeadersMiddleware:
             "img-src 'self' data: https:; "
             "connect-src 'self'; "
             "frame-ancestors 'none'; "
-            "form-action 'self';"
+            "form-action 'self'; "
+            "object-src 'none'; "
+            "base-uri 'self';"
         )
         response['Content-Security-Policy'] = csp
 
@@ -64,10 +67,17 @@ class RateLimitMiddleware:
     def get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR', '127.0.0.1')
-        return ip
+            ips = [ip.strip() for ip in x_forwarded_for.split(',') if ip.strip()]
+            for ip in reversed(ips):
+                try:
+                    ip_obj = ipaddress.ip_address(ip)
+                    if not ip_obj.is_private and not ip_obj.is_loopback:
+                        return ip
+                except ValueError:
+                    continue
+            if ips:
+                return ips[0]
+        return request.META.get('REMOTE_ADDR', '127.0.0.1')
 
     def __call__(self, request):
         path = request.path
