@@ -302,9 +302,14 @@ document.addEventListener('DOMContentLoaded', function () {
   // ============================================================
   document.querySelectorAll('.progress-bar').forEach(bar => {
     const val = bar.getAttribute('aria-valuenow') || 0;
-    bar.style.transition = 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+    // Reset to 0 first, then animate to actual value for visual effect
+    bar.style.width = '0%';
+    bar.style.transition = 'none';
     requestAnimationFrame(() => {
-      bar.style.width = val + '%';
+      requestAnimationFrame(() => {
+        bar.style.transition = 'width 1s cubic-bezier(0.4, 0, 0.2, 1)';
+        bar.style.width = val + '%';
+      });
     });
   });
 
@@ -390,11 +395,49 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ============================================================
+  // SCROLL-REVEAL — IntersectionObserver
+  // ============================================================
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+  // Observe all .reveal-up elements and also trigger immediately for visible ones
+  document.querySelectorAll('.reveal-up').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // ============================================================
+  // BUTTON RIPPLE EFFECT
+  // ============================================================
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn, .welcome-banner-btn, .fab-main-btn');
+    if (!btn) return;
+
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-circle';
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${e.clientX - rect.left - size / 2}px;
+      top: ${e.clientY - rect.top - size / 2}px;
+    `;
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 700);
+  });
+
+  // ============================================================
   // ANIMATE PAGE CONTENT ON LOAD
   // ============================================================
   const pageContent = document.querySelector('.page-content');
   if (pageContent) {
-    pageContent.style.animation = 'fadeInUp .4s ease';
+    pageContent.style.animation = 'fadeInUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both';
   }
 
 });

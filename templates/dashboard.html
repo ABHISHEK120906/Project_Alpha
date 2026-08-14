@@ -9,7 +9,7 @@
 <div class="welcome-banner mb-4">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
-      <h2 class="welcome-banner-title">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
+      <h2 class="welcome-banner-title gradient-text">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
       <p class="welcome-banner-sub">Here is your freelance business performance, projects, and pending tasks overview.</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -37,7 +37,7 @@
 <!-- Super Admin Announcement Banner -->
 {% if announcements %}
   {% for ann in announcements %}
-  <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-start gap-3" style="background: rgba(111, 66, 193, 0.15); border-left: 4px solid #6f42c1 !important;">
+  <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-start gap-3 reveal-up" style="background: rgba(111, 66, 193, 0.15); border-left: 4px solid #6f42c1 !important;">
     <i class="fas fa-bullhorn text-purple fa-lg mt-1"></i>
     <div>
       <h6 class="fw-bold mb-1 text-purple">{{ ann.title }}</h6>
@@ -51,33 +51,33 @@
 <div class="row g-3 mb-4">
   <!-- 1. Total Projects -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-1">
       <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-folder"></i></div>
-      <div class="stat-value fw-bold fs-4" id="totalProjectsStat">{{ total_projects }}</div>
+      <div class="stat-value fw-bold fs-4 stat-number" id="totalProjectsStat" data-target="{{ total_projects }}">{{ total_projects }}</div>
       <div class="stat-label small text-muted">Total Projects</div>
     </div>
   </div>
   <!-- 2. Active Projects -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-2">
       <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-spinner"></i></div>
-      <div class="stat-value fw-bold fs-4">{{ active_projects }}</div>
+      <div class="stat-value fw-bold fs-4 stat-number" data-target="{{ active_projects }}">{{ active_projects }}</div>
       <div class="stat-label small text-muted">Active Projects</div>
     </div>
   </div>
   <!-- 3. Completed Projects -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-3">
       <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-check-circle"></i></div>
-      <div class="stat-value fw-bold fs-4">{{ completed_projects }}</div>
+      <div class="stat-value fw-bold fs-4 stat-number" data-target="{{ completed_projects }}">{{ completed_projects }}</div>
       <div class="stat-label small text-muted">Completed Projects</div>
     </div>
   </div>
   <!-- 4. Total Clients -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-4">
       <div class="stat-icon mb-2" style="background:var(--purple-soft, rgba(111,66,193,0.15));color:var(--purple, #6f42c1);"><i class="fas fa-users"></i></div>
-      <div class="stat-value fw-bold fs-4" id="totalClientsStat">{{ total_clients }}</div>
+      <div class="stat-value fw-bold fs-4 stat-number" id="totalClientsStat" data-target="{{ total_clients }}">{{ total_clients }}</div>
       <div class="stat-label small text-muted">Total Clients</div>
     </div>
   </div>
@@ -86,33 +86,33 @@
 <div class="row g-3 mb-4">
   <!-- 5. Total Earnings -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-1">
       <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
-      <div class="stat-value fw-bold fs-5 text-success" id="totalRevenueStat">${{ total_earnings|floatformat:0 }}</div>
+      <div class="stat-value fw-bold fs-5 text-success stat-number" id="totalRevenueStat" data-target="{{ total_earnings|floatformat:0 }}" data-prefix="$">${{ total_earnings|floatformat:0 }}</div>
       <div class="stat-label small text-muted">Total Earnings</div>
     </div>
   </div>
   <!-- 6. Pending Payments -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-2">
       <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
-      <div class="stat-value fw-bold fs-5 text-warning" id="pendingAmountStat">${{ pending_payments|floatformat:0 }}</div>
+      <div class="stat-value fw-bold fs-5 text-warning stat-number" id="pendingAmountStat" data-target="{{ pending_payments|floatformat:0 }}" data-prefix="$">${{ pending_payments|floatformat:0 }}</div>
       <div class="stat-label small text-muted">Pending Payments</div>
     </div>
   </div>
   <!-- 7. Pending Tasks -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-3">
       <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-tasks"></i></div>
-      <div class="stat-value fw-bold fs-5 text-info">{{ pending_tasks_count }}</div>
+      <div class="stat-value fw-bold fs-5 text-info stat-number" data-target="{{ pending_tasks_count }}">{{ pending_tasks_count }}</div>
       <div class="stat-label small text-muted">Pending Tasks</div>
     </div>
   </div>
   <!-- 8. Overdue Tasks -->
   <div class="col-6 col-md-3">
-    <div class="stat-card h-100 p-3">
+    <div class="stat-card h-100 p-3 reveal-up delay-4">
       <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-exclamation-triangle"></i></div>
-      <div class="stat-value fw-bold fs-5 text-danger">{{ overdue_tasks_count }}</div>
+      <div class="stat-value fw-bold fs-5 text-danger stat-number" data-target="{{ overdue_tasks_count }}">{{ overdue_tasks_count }}</div>
       <div class="stat-label small text-muted">Overdue Tasks</div>
     </div>
   </div>
@@ -123,8 +123,8 @@
   <!-- Left Side: Recent Projects & Pending Tasks -->
   <div class="col-lg-8">
     <!-- Recent Projects Table -->
-    <div class="card border-0 shadow-sm p-3 mb-4" style="border-radius:18px;">
-      <div class="d-flex align-items-center justify-content-between mb-3 px-2">
+    <div class="card border-0 shadow-sm p-3 mb-4 reveal-up delay-1" style="border-radius:18px;">
+      <div class="d-flex align-items-center justify-content-between mb-3 px-2 card-header-accent">
         <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-folder-open text-primary me-2"></i> Recent Projects</h6>
         <a href="{% url 'core:project_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
       </div>
@@ -157,7 +157,7 @@
               <td style="min-width:130px;">
                 <div class="d-flex align-items-center gap-2">
                   <div class="progress flex-grow-1" style="height:8px;">
-                    <div class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width:{{ project.progress }}%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <span style="font-size:11px;font-weight:700;color:var(--text-secondary);">{{ project.progress }}%</span>
                 </div>
@@ -185,8 +185,8 @@
     </div>
 
     <!-- Recent Payments Table -->
-    <div class="card border-0 shadow-sm p-3" style="border-radius:18px;">
-      <div class="d-flex align-items-center justify-content-between mb-3 px-2">
+    <div class="card border-0 shadow-sm p-3 reveal-up delay-2" style="border-radius:18px;">
+      <div class="d-flex align-items-center justify-content-between mb-3 px-2 card-header-accent">
         <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-dollar-sign text-success me-2"></i> Recent Payments</h6>
         <a href="{% url 'core:payment_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
       </div>
@@ -227,8 +227,8 @@
   <!-- Right Side: Upcoming Deadlines & Pending Tasks -->
   <div class="col-lg-4">
     <!-- Upcoming Deadlines Card -->
-    <div class="card p-3 mb-4 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="card p-3 mb-4 shadow-sm border-0 reveal-up delay-3" style="border-radius:18px;background:var(--bg-card);">
+      <div class="d-flex justify-content-between align-items-center mb-3 card-header-accent">
         <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-calendar-alt text-warning me-2"></i> Upcoming Deadlines</h6>
         <a href="{% url 'core:calendar_view' %}" class="btn btn-sm btn-link text-primary text-decoration-none">Calendar</a>
       </div>
@@ -254,8 +254,8 @@
     </div>
 
     <!-- Pending Tasks Card -->
-    <div class="card p-3 shadow-sm border-0" style="border-radius:18px;background:var(--bg-card);">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="card p-3 shadow-sm border-0 reveal-up delay-4" style="border-radius:18px;background:var(--bg-card);">
+      <div class="d-flex justify-content-between align-items-center mb-3 card-header-accent">
         <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-check-square text-info me-2"></i> Pending Tasks</h6>
         <a href="{% url 'core:task_list' %}" class="btn btn-sm btn-link text-primary text-decoration-none">View Tasks</a>
       </div>
@@ -290,7 +290,8 @@
 <div class="row g-4 mb-4">
   <!-- Revenue Trend -->
   <div class="col-lg-8">
-    <div class="card p-3 h-100">
+    <div class="card p-3 h-100 reveal-up delay-1">
+      <div class="chart-card-header-strip"></div>
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="fw-bold mb-0"><i class="fas fa-chart-line text-primary me-2"></i> Financial Performance</h6>
         <span class="badge bg-primary-soft text-primary small">Monthly Revenue</span>
@@ -303,7 +304,8 @@
 
   <!-- Project Status Distribution -->
   <div class="col-lg-4">
-    <div class="card p-3 h-100">
+    <div class="card p-3 h-100 reveal-up delay-2">
+      <div class="chart-card-header-strip"></div>
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie text-primary me-2"></i> Project Statuses</h6>
       </div>

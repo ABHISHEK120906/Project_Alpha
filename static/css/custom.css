@@ -1081,3 +1081,598 @@ body, .card, .topbar, .sidebar, .table, .form-control, .form-select,
   .topbar { padding: 14px 20px; }
   .page-content { padding: 20px; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ██████████████ PREMIUM UI ENHANCEMENTS v2 ██████████████████
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Keyframe Library ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes shimmerSweep {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33%       { transform: translate(18px, -14px) rotate(1.5deg); }
+  66%       { transform: translate(-12px, 12px) rotate(-1deg); }
+}
+
+@keyframes pulseRing {
+  0%   { transform: scale(0.85); opacity: 0.9; }
+  70%  { transform: scale(1.6);  opacity: 0; }
+  100% { transform: scale(0.85); opacity: 0; }
+}
+
+@keyframes shineSwipe {
+  from { left: -80%; }
+  to   { left: 120%; }
+}
+
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(219, 153, 65, 0); }
+  50%       { box-shadow: 0 0 0 6px rgba(219, 153, 65, 0.25); }
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes progressFill {
+  from { width: 0%; }
+}
+
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes activeBarPulse {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1; }
+}
+
+@keyframes topbarGlow {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.9; }
+}
+
+@keyframes rippleEffect {
+  to { transform: scale(4); opacity: 0; }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL-REVEAL UTILITY
+   ══════════════════════════════════════════════════════════════ */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(28px) scale(0.98);
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-up.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Stagger delays */
+.reveal-up.delay-1 { transition-delay: 0.05s; }
+.reveal-up.delay-2 { transition-delay: 0.12s; }
+.reveal-up.delay-3 { transition-delay: 0.19s; }
+.reveal-up.delay-4 { transition-delay: 0.26s; }
+.reveal-up.delay-5 { transition-delay: 0.33s; }
+.reveal-up.delay-6 { transition-delay: 0.40s; }
+.reveal-up.delay-7 { transition-delay: 0.47s; }
+.reveal-up.delay-8 { transition-delay: 0.54s; }
+
+/* ══════════════════════════════════════════════════════════════
+   GLASSMORPHISM CARDS (Dark Mode)
+   ══════════════════════════════════════════════════════════════ */
+[data-theme="dark"] .card,
+[data-theme="dark"] .stat-card {
+  background: rgba(19, 31, 43, 0.82) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+  border: 1px solid rgba(219, 153, 65, 0.2) !important;
+}
+
+[data-theme="dark"] .card:hover,
+[data-theme="dark"] .stat-card:hover {
+  background: rgba(25, 40, 56, 0.92) !important;
+  border-color: rgba(219, 153, 65, 0.45) !important;
+}
+
+/* Subtle gradient border shimmer on dark cards */
+[data-theme="dark"] .card::before,
+[data-theme="dark"] .stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(219, 153, 65, 0.3) 0%,
+    transparent 40%,
+    rgba(174, 44, 17, 0.2) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+[data-theme="dark"] .card:hover::before,
+[data-theme="dark"] .stat-card:hover::before {
+  opacity: 1;
+}
+
+/* Position context for ::before to work */
+.card, .stat-card { position: relative; }
+
+/* ══════════════════════════════════════════════════════════════
+   ENHANCED STAT CARDS
+   ══════════════════════════════════════════════════════════════ */
+.stat-card {
+  overflow: hidden;
+}
+
+/* Shimmer sweep on hover */
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -80%;
+  width: 60%; height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 60%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: none;
+}
+
+.stat-card:hover::after {
+  animation: shineSwipe 0.7s ease forwards;
+}
+
+/* Stat icon — rotate on hover */
+.stat-card:hover .stat-icon {
+  transform: rotate(-8deg) scale(1.12);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stat-icon {
+  transition: transform 0.3s ease;
+}
+
+/* Enhanced stat value with gradient in dark mode */
+[data-theme="dark"] .stat-value,
+[data-theme="dark"] .stat-card .stat-value {
+  background: linear-gradient(135deg, var(--amber-light) 0%, var(--amber) 60%, #F5D98A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* stat-number class for the count-up animation */
+.stat-number {
+  animation: countUp 0.5s ease both;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ENHANCED PROGRESS BARS
+   ══════════════════════════════════════════════════════════════ */
+.progress {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, var(--amber) 0%, #F0C470 60%, var(--amber-dark) 100%);
+  background-size: 200% 100%;
+  border-radius: 20px;
+  position: relative;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200px 100%;
+  animation: shimmerSweep 2.5s infinite linear;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BUTTON SHINE EFFECT
+   ══════════════════════════════════════════════════════════════ */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -80%;
+  width: 60%; height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.btn:hover::after {
+  animation: shineSwipe 0.55s ease forwards;
+}
+
+/* Ripple container */
+.btn .ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: rippleEffect 0.6s linear;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SIDEBAR — ACTIVE GLOW BAR + ENHANCED HOVER
+   ══════════════════════════════════════════════════════════════ */
+.sidebar-link.active {
+  box-shadow:
+    0 6px 20px rgba(219, 153, 65, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Left accent bar on active link */
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: var(--amber);
+  border-radius: 0 4px 4px 0;
+  animation: activeBarPulse 2s ease infinite;
+  box-shadow: 0 0 10px rgba(219, 153, 65, 0.6);
+}
+
+.sidebar-link { position: relative; }
+
+/* Active icon glow */
+.sidebar-link.active .nav-icon {
+  filter: drop-shadow(0 0 6px rgba(219, 153, 65, 0.7));
+}
+
+/* Sidebar hover — subtle left border flash */
+.sidebar-link:hover::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 50%;
+  background: rgba(219, 153, 65, 0.5);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Sidebar scrollbar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(219, 153, 65, 0.3);
+  border-radius: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(219, 153, 65, 0.6);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOPBAR — SHIMMER UNDERLINE + ENHANCED SEARCH
+   ══════════════════════════════════════════════════════════════ */
+.topbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(219, 153, 65, 0.6) 30%,
+    rgba(240, 196, 112, 0.8) 50%,
+    rgba(219, 153, 65, 0.6) 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: gradientShift 4s ease infinite;
+}
+
+.topbar { position: relative; }
+
+/* Notification bell pulse ring */
+.topbar-btn.notif-active {
+  position: relative;
+}
+
+.topbar-btn.notif-active::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid rgba(219, 153, 65, 0.5);
+  animation: pulseRing 1.5s ease-out infinite;
+}
+
+/* Search icon focus glow */
+.topbar-search input:focus + .search-icon,
+.topbar-search:focus-within .search-icon {
+  color: var(--amber);
+  filter: drop-shadow(0 0 6px rgba(219, 153, 65, 0.6));
+  transition: all 0.3s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WELCOME BANNER — ANIMATED GRADIENT + FLOATING PARTICLES
+   ══════════════════════════════════════════════════════════════ */
+.welcome-banner {
+  background: linear-gradient(
+    135deg,
+    #07111D 0%,
+    #1A2D3F 25%,
+    #39444D 55%,
+    #4A555E 75%,
+    #07111D 100%
+  ) !important;
+  background-size: 300% 300% !important;
+  animation: gradientShift 8s ease infinite !important;
+}
+
+/* Drifting amber orb */
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(219, 153, 65, 0.28) 0%, transparent 70%);
+  animation: drift 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Crimson bloom */
+.welcome-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; left: 30%;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(174, 44, 17, 0.2) 0%, transparent 70%);
+  animation: drift 14s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ENHANCED TABLE ROWS
+   ══════════════════════════════════════════════════════════════ */
+.table-hover tbody tr {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.table-hover tbody tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOAST — ENHANCED SLIDE-IN
+   ══════════════════════════════════════════════════════════════ */
+.custom-toast {
+  animation: toastSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Progress drain bar on toasts */
+.custom-toast::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--amber), var(--amber-dark));
+  border-radius: 0 0 12px 12px;
+  animation: toastDrain 4s linear forwards;
+  transform-origin: left center;
+}
+
+@keyframes toastDrain {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EMPTY STATE — FLOATING ICON
+   ══════════════════════════════════════════════════════════════ */
+.empty-state i {
+  animation: floatIcon 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GRADIENT TEXT UTILITY
+   ══════════════════════════════════════════════════════════════ */
+.gradient-text {
+  background: linear-gradient(135deg, var(--amber) 0%, #F0C470 50%, var(--amber-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GLOW UTILITIES
+   ══════════════════════════════════════════════════════════════ */
+.glow-amber {
+  box-shadow: 0 0 20px rgba(219, 153, 65, 0.4), 0 0 60px rgba(219, 153, 65, 0.15);
+}
+
+.glow-text-amber {
+  text-shadow: 0 0 20px rgba(219, 153, 65, 0.5);
+}
+
+/* Pulse ring for notification dots */
+.pulse-ring {
+  position: relative;
+}
+
+.pulse-ring::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--amber);
+  animation: pulseRing 1.5s ease-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STATUS BADGES — DARK MODE BREATHING BORDER
+   ══════════════════════════════════════════════════════════════ */
+[data-theme="dark"] .badge-status {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARD HEADER — ACCENT BAR DECORATION
+   ══════════════════════════════════════════════════════════════ */
+.card-header-accent {
+  border-left: 4px solid var(--amber);
+  padding-left: 16px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE TRANSITION
+   ══════════════════════════════════════════════════════════════ */
+.page-content {
+  animation: fadeInUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SKELETON LOADING SHIMMER
+   ══════════════════════════════════════════════════════════════ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--bg-tertiary) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmerSweep 1.5s infinite linear;
+  border-radius: 8px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHART CARD WRAPPER
+   ══════════════════════════════════════════════════════════════ */
+.chart-card-header-strip {
+  height: 4px;
+  background: linear-gradient(90deg, var(--amber) 0%, #F0C470 50%, var(--amber-dark) 100%);
+  margin: -24px -24px 20px -24px;
+  border-radius: 16px 16px 0 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE POLISH
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 992px) {
+  .welcome-banner { padding: 20px 20px; }
+  .welcome-banner-title { font-size: 20px !important; }
+  .stat-card .stat-value { font-size: 26px; }
+}
+
+@media (max-width: 576px) {
+  .topbar-title { font-size: 17px; }
+  .fab-main-btn { width: 50px; height: 50px; font-size: 18px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SIDEBAR — BRAND ICON GLOW ON LOAD
+   ══════════════════════════════════════════════════════════════ */
+.sidebar-brand-icon {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UPCOMING DEADLINE ITEMS — HOVER LIFT
+   ══════════════════════════════════════════════════════════════ */
+.list-group-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.list-group-item:hover {
+  transform: translateX(4px);
+  box-shadow: -3px 0 0 var(--amber) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NOTIFICATION BADGE PULSE
+   ══════════════════════════════════════════════════════════════ */
+#notifBadge {
+  animation: pulseRing 1.5s ease-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLLBAR — GLOBAL THEME
+   ══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-canvas); }
+::-webkit-scrollbar-thumb {
+  background: rgba(219, 153, 65, 0.35);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(219, 153, 65, 0.6);
+}
