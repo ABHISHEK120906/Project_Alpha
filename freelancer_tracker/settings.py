@@ -90,19 +90,33 @@ TEMPLATES = [
 ]
 
 
-if os.environ.get('VERCEL'):
+import sys
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'test_db.sqlite3',
+        }
+    }
+elif os.environ.get('VERCEL'):
     db_path = Path('/tmp') / 'db.sqlite3'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': db_path,
+        }
+    }
 else:
     db_path = BASE_DIR / 'db.sqlite3'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': db_path,
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': db_path,
+        }
     }
-}
 
-if DATABASE_URL and dj_database_url:
+if 'test' not in sys.argv and DATABASE_URL and dj_database_url:
     try:
         DATABASES['default'] = dj_database_url.parse(
             DATABASE_URL,
@@ -206,7 +220,7 @@ SECURE_REFERRER_POLICY      = 'strict-origin-when-cross-origin'
 
 SESSION_COOKIE_HTTPONLY     = True
 SESSION_COOKIE_SAMESITE     = 'Lax'
-CSRF_COOKIE_HTTPONLY       = True
+CSRF_COOKIE_HTTPONLY       = False
 CSRF_COOKIE_SAMESITE       = 'Lax'
 
 
