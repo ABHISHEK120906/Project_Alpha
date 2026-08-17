@@ -515,7 +515,7 @@ class UserRegistrationAndSecurityTest(TestCase):
             'password2': 'StrongPass123!',
         })
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'already exists')
+        self.assertContains(resp, 'already taken')
 
     def test_suspended_user_cannot_login(self):
         user = User.objects.create_user(username='suspendeduser', password='Password123!')
