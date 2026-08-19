@@ -32,7 +32,9 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 /media
-!/staticfiles/.gitkeep
+
+# Django collectstatic output — generated, never commit
+staticfiles/
 
 # IDE
 .vscode/
@@ -50,3 +52,10 @@ Thumbs.db
 .env.local
 
 .vercel
+
+# Temp / test scripts and databases
+test_*.py
+test_*.sqlite3
+
+# Misc junk files
+*.txt
