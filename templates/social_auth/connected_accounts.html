@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Connected Accounts — FreelanceTrack{% endblock %}
+{% block page_title %}Connected Accounts{% endblock %}
+
+{% block extra_css %}
+<style>
+  .provider-card {
+    border: 2px solid var(--border-color, #e5e7eb);
+    border-radius: 16px;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    background: var(--card-bg, #fff);
+    overflow: hidden;
+  }
+  .provider-card:hover {
+    box-shadow: 0 8px 32px rgba(99,102,241,0.10);
+    transform: translateY(-2px);
+  }
+  .provider-card.linked {
+    border-color: #22c55e;
+  }
+  .provider-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .badge-linked {
+    background: #dcfce7;
+    color: #166534;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .badge-unlinked {
+    background: var(--light-bg, #f3f4f6);
+    color: var(--text-muted, #6b7280);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .badge-unconfigured {
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .security-alert {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1.5px solid #f59e0b;
+    border-radius: 12px;
+    color: #78350f;
+  }
+  .history-table th {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted, #6b7280);
+    border-bottom: 2px solid var(--border-color, #e5e7eb);
+  }
+  .history-table td {
+    font-size: 13px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+  }
+  .provider-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color, #e5e7eb);
+  }
+  .breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: var(--text-muted);
+  }
+  .section-card {
+    border-radius: 16px;
+    border: 1.5px solid var(--border-color, #e5e7eb);
+    background: var(--card-bg, #fff);
+  }
+  .section-header {
+    padding: 18px 24px;
+    border-bottom: 1.5px solid var(--border-color, #e5e7eb);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .connect-btn {
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 18px;
+  }
+  [data-theme="dark"] .provider-card { background: var(--card-bg); border-color: var(--border-color); }
+  [data-theme="dark"] .badge-unlinked { background: rgba(255,255,255,0.08); color: #9ca3af; }
+  [data-theme="dark"] .security-alert { background: linear-gradient(135deg,#451a03,#78350f); border-color: #b45309; color: #fde68a; }
+  [data-theme="dark"] .section-card { background: var(--card-bg); border-color: var(--border-color); }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'core:profile' %}" class="text-decoration-none">Profile</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Connected Accounts</li>
+  </ol>
+</nav>
+
+<!-- Page Header -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+  <div>
+    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">
+      <i class="fas fa-link me-2 text-primary"></i>Connected Accounts
+    </h4>
+    <p class="text-muted small mb-0">Manage social logins linked to your FreelanceTrack account.</p>
+  </div>
+  <a href="{% url 'core:profile' %}" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-arrow-left me-1"></i> Back to Profile
+  </a>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4" role="alert">
+      <i class="fas fa-info-circle me-2"></i>
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Security Warning if no password set -->
+{% if not has_password and linked_count <= 1 %}
+<div class="security-alert p-3 mb-4 d-flex align-items-start gap-3">
+  <i class="fas fa-shield-exclamation fs-5 mt-1"></i>
+  <div>
+    <strong>Security Notice:</strong> You must keep at least one login method active.
+    Since you have no password set, you cannot disconnect your only linked account.
+    <a href="{% url 'core:profile' %}#change-password" class="fw-bold" style="color:inherit;">Set a password</a> to unlock full control.
+  </div>
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <!-- ── LEFT: Provider Cards ─────────────────────────────────────────────── -->
+  <div class="col-lg-8">
+    <div class="section-card mb-4">
+      <div class="section-header">
+        <i class="fas fa-plug text-primary"></i>
+        <div>
+          <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Social Login Providers</h6>
+          <p class="text-muted mb-0" style="font-size:12px;">Connect accounts to enable one-click sign-in.</p>
+        </div>
+        <span class="ms-auto badge bg-primary-soft text-primary" style="background:var(--primary-soft);font-size:12px;">
+          {{ linked_count }} of {{ provider_data|length }} connected
+        </span>
+      </div>
+
+      <div class="p-4 d-flex flex-column gap-3">
+        {% for provider in provider_data %}
+        <div class="provider-card p-3 {% if provider.is_linked %}linked{% endif %}">
+          <div class="d-flex align-items-center gap-3 flex-wrap">
+
+            <!-- Provider Icon -->
+            <div class="provider-icon-wrap"
+                 style="background:{{ provider.color }}18; color:{{ provider.color }};">
+              {% if provider.key == 'google' %}
+                <i class="fab fa-google"></i>
+              {% elif provider.key == 'github' %}
+                <i class="fab fa-github"></i>
+              {% elif provider.key == 'facebook' %}
+                <i class="fab fa-facebook-f"></i>
+              {% elif provider.key == 'twitter' %}
+                <i class="fab fa-twitter"></i>
+              {% elif provider.key == 'linkedin' %}
+                <i class="fab fa-linkedin-in"></i>
+              {% else %}
+                <i class="fas fa-key"></i>
+              {% endif %}
+            </div>
+
+            <!-- Provider Info -->
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                <span class="fw-bold" style="color:var(--text-primary);font-size:15px;">{{ provider.name }}</span>
+
+                {% if provider.is_linked %}
+                  <span class="badge-linked">
+                    <i class="fas fa-check-circle" style="font-size:10px;"></i> Connected
+                  </span>
+                {% elif not provider.is_configured %}
+                  <span class="badge-unconfigured">
+                    <i class="fas fa-wrench" style="font-size:10px;"></i> Not Configured
+                  </span>
+                {% else %}
+                  <span class="badge-unlinked">
+                    <i class="fas fa-minus-circle" style="font-size:10px;"></i> Not Connected
+                  </span>
+                {% endif %}
+              </div>
+
+              {% if provider.is_linked and provider.social_account %}
+                <div class="small text-muted d-flex align-items-center gap-2 flex-wrap">
+                  {% if provider.avatar_url %}
+                    <img src="{{ provider.avatar_url }}" alt="{{ provider.name }}" class="provider-avatar">
+                  {% endif %}
+                  <span>
+                    <i class="fas fa-user me-1"></i>
+                    {{ provider.social_account.full_name|default:"—" }}
+                  </span>
+                  {% if provider.social_account.email %}
+                    <span>
+                      <i class="fas fa-envelope me-1"></i>{{ provider.social_account.email }}
+                    </span>
+                  {% endif %}
+                  <span>
+                    <i class="fas fa-clock me-1"></i>
+                    Linked {{ provider.social_account.created_at|date:"M d, Y" }}
+                  </span>
+                </div>
+              {% elif not provider.is_linked and provider.is_configured %}
+                <p class="small text-muted mb-0">
+                  Sign in with {{ provider.name }} for faster, password-free access.
+                </p>
+              {% elif not provider.is_configured %}
+                <p class="small mb-0" style="color:#92400e;">
+                  This provider is not enabled by the administrator.
+                </p>
+              {% endif %}
+            </div>
+
+            <!-- Action Button -->
+            <div class="ms-auto">
+              {% if provider.is_linked %}
+                {% if can_disconnect %}
+                  <form method="post"
+                        action="{% url 'social_auth:disconnect_provider' provider.key %}"
+                        onsubmit="return confirm('Disconnect {{ provider.name }}? You can reconnect anytime.');">
+                    {% csrf_token %}
+                    <button type="submit" class="connect-btn btn btn-outline-danger">
+                      <i class="fas fa-unlink me-1"></i> Disconnect
+                    </button>
+                  </form>
+                {% else %}
+                  <button class="connect-btn btn btn-outline-secondary" disabled
+                          title="Set a password before disconnecting your only login method.">
+                    <i class="fas fa-lock me-1"></i> Locked
+                  </button>
+                {% endif %}
+              {% elif provider.is_configured %}
+                <a href="{% url 'social_auth:oauth_initiate' provider.key %}?next=/profile/connected-accounts/"
+                   class="connect-btn btn btn-outline-primary">
+                  <i class="fas fa-link me-1"></i> Connect
+                </a>
+              {% else %}
+                <button class="connect-btn btn btn-outline-secondary" disabled>
+                  <i class="fas fa-ban me-1"></i> Unavailable
+                </button>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+        {% empty %}
+          <div class="text-center py-5 text-muted">
+            <i class="fas fa-plug fa-3x mb-3 opacity-25"></i>
+            <p class="mb-0">No social providers are configured.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ── OAuth Login History ──────────────────────────────────────────── -->
+    <div class="section-card">
+      <div class="section-header">
+        <i class="fas fa-history text-primary"></i>
+        <div>
+          <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Recent OAuth Login History</h6>
+          <p class="text-muted mb-0" style="font-size:12px;">Last 20 sign-ins via social providers.</p>
+        </div>
+      </div>
+
+      {% if oauth_history %}
+        <div class="table-responsive">
+          <table class="table history-table mb-0">
+            <thead>
+              <tr>
+                <th class="ps-4">Provider</th>
+                <th>Action</th>
+                <th>IP Address</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for entry in oauth_history %}
+              <tr>
+                <td class="ps-4">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="rounded-circle d-flex align-items-center justify-content-center"
+                          style="width:28px;height:28px;background:#f3f4f6;font-size:13px;">
+                      {% if entry.provider == 'google' %}
+                        <i class="fab fa-google text-danger"></i>
+                      {% elif entry.provider == 'github' %}
+                        <i class="fab fa-github"></i>
+                      {% else %}
+                        <i class="fas fa-key text-muted"></i>
+                      {% endif %}
+                    </span>
+                    <span class="fw-medium" style="font-size:13px;">{{ entry.provider|title }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="text-muted">{{ entry.get_action_display|default:entry.action }}</span>
+                </td>
+                <td>
+                  <code style="font-size:12px;">{{ entry.ip_address|default:"—" }}</code>
+                </td>
+                <td>
+                  <span>{{ entry.timestamp|date:"M d, Y" }}</span>
+                  <span class="text-muted ms-1" style="font-size:11px;">{{ entry.timestamp|time:"H:i" }}</span>
+                </td>
+                <td>
+                  {% if entry.status == 'success' %}
+                    <span class="badge-linked"><i class="fas fa-check" style="font-size:9px;"></i> Success</span>
+                  {% else %}
+                    <span class="badge" style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;">
+                      <i class="fas fa-times" style="font-size:9px;"></i> {{ entry.status|title }}
+                    </span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-5 text-muted">
+          <i class="fas fa-history fa-3x mb-3 opacity-25"></i>
+          <p class="mb-1 fw-medium">No OAuth login history yet.</p>
+          <p class="small mb-0">Once you connect and use a social account to sign in, it will appear here.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ── RIGHT: Info Sidebar ─────────────────────────────────────────────── -->
+  <div class="col-lg-4">
+
+    <!-- Security Status Card -->
+    <div class="section-card mb-4">
+      <div class="section-header">
+        <i class="fas fa-shield-halved text-primary"></i>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Security Status</h6>
+      </div>
+      <div class="p-4">
+        <!-- Password Status -->
+        <div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-3"
+             style="background:var(--light-bg,#f9fafb);">
+          <div class="d-flex align-items-center justify-content-center rounded-circle"
+               style="width:38px;height:38px;background:{% if has_password %}#dcfce7{% else %}#fee2e2{% endif %};">
+            <i class="fas fa-{% if has_password %}lock text-success{% else %}lock-open text-danger{% endif %}" style="font-size:16px;"></i>
+          </div>
+          <div>
+            <div class="fw-semibold small" style="color:var(--text-primary);">Password</div>
+            <div class="text-muted" style="font-size:12px;">
+              {% if has_password %}Set — account is secure{% else %}Not set — social login only{% endif %}
+            </div>
+          </div>
+          {% if has_password %}
+            <span class="ms-auto badge-linked"><i class="fas fa-check" style="font-size:9px;"></i> OK</span>
+          {% else %}
+            <span class="ms-auto" style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;">
+              <i class="fas fa-exclamation" style="font-size:9px;"></i> Warn
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- Connected Count -->
+        <div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-3"
+             style="background:var(--light-bg,#f9fafb);">
+          <div class="d-flex align-items-center justify-content-center rounded-circle"
+               style="width:38px;height:38px;background:var(--primary-soft);">
+            <i class="fas fa-link text-primary" style="font-size:16px;"></i>
+          </div>
+          <div>
+            <div class="fw-semibold small" style="color:var(--text-primary);">Social Logins</div>
+            <div class="text-muted" style="font-size:12px;">{{ linked_count }} of {{ provider_data|length }} providers linked</div>
+          </div>
+        </div>
+
+        <!-- Disconnect Safety -->
+        <div class="d-flex align-items-center gap-3 p-3 rounded-3"
+             style="background:var(--light-bg,#f9fafb);">
+          <div class="d-flex align-items-center justify-content-center rounded-circle"
+               style="width:38px;height:38px;background:{% if can_disconnect %}#dcfce7{% else %}#fee2e2{% endif %};">
+            <i class="fas fa-{% if can_disconnect %}check-circle text-success{% else %}exclamation-triangle text-danger{% endif %}" style="font-size:16px;"></i>
+          </div>
+          <div>
+            <div class="fw-semibold small" style="color:var(--text-primary);">Can Disconnect</div>
+            <div class="text-muted" style="font-size:12px;">
+              {% if can_disconnect %}You can safely unlink providers{% else %}Set a password first{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-card mb-4">
+      <div class="section-header">
+        <i class="fas fa-bolt text-primary"></i>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Quick Actions</h6>
+      </div>
+      <div class="p-4 d-flex flex-column gap-2">
+        <a href="{% url 'core:profile' %}" class="btn btn-outline-secondary btn-sm text-start">
+          <i class="fas fa-user me-2"></i> Edit Profile
+        </a>
+        <a href="{% url 'core:profile' %}#change-password" class="btn btn-outline-primary btn-sm text-start">
+          <i class="fas fa-key me-2"></i> Change Password
+        </a>
+        <a href="{% url 'core:profile' %}" class="btn btn-outline-secondary btn-sm text-start">
+          <i class="fas fa-clock-rotate-left me-2"></i> View Login History
+        </a>
+      </div>
+    </div>
+
+    <!-- Info Box -->
+    <div class="section-card">
+      <div class="section-header">
+        <i class="fas fa-circle-info text-primary"></i>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);">How it works</h6>
+      </div>
+      <div class="p-4">
+        <ul class="list-unstyled small text-muted mb-0 d-flex flex-column gap-3">
+          <li class="d-flex gap-2">
+            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <span>Linking a social account lets you <strong>sign in without a password</strong> using that provider.</span>
+          </li>
+          <li class="d-flex gap-2">
+            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <span>You can link <strong>multiple providers</strong> (e.g., both Google and GitHub) to the same account.</span>
+          </li>
+          <li class="d-flex gap-2">
+            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <span>Disconnecting is safe as long as you have a <strong>password set</strong> or another provider linked.</span>
+          </li>
+          <li class="d-flex gap-2">
+            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <span>Your FreelanceTrack data is <strong>never shared</strong> with social providers.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
