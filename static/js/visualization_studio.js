@@ -4,7 +4,10 @@ window.VisualizationStudio = (function () {
   document.addEventListener('DOMContentLoaded', function () {
     initRevenueGoalTracker();
     initAnalyticsFilters();
-    loadDashboardAnalytics();
+    // Only auto-load analytics if analytics form or specific analytics charts exist
+    if (document.getElementById('analyticsFilterForm') || document.getElementById('incomeVsExpenseChart')) {
+      loadDashboardAnalytics();
+    }
   });
 
   function initRevenueGoalTracker() {
