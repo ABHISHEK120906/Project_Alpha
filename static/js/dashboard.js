@@ -1,251 +1,406 @@
 /**
- * FreelanceTrack — Dashboard Dynamic Manager
- * Fetches analytics and renders Chart.js charts via /api/v1/dashboard/stats/.
+ * FreelanceTrack — Dashboard Analytics Engine v2
+ * ─────────────────────────────────────────────────
+ * Renders Chart.js 4 charts with:
+ *  • Beautiful canvas gradient fills
+ *  • Live dark/light theme switching (MutationObserver)
+ *  • Server-side data hydration (instant load)
+ *  • Async API refresh for live KPI counters
+ *  • Chart type switcher: line / bar / area
  *
  * Canvas IDs (must match dashboard.html):
- *   - financialTrendChart  → Monthly Revenue Line Chart
- *   - statusDistChart      → Project Status Doughnut Chart
+ *   financialTrendChart  →  Revenue/Expense Line/Bar/Area Chart
+ *   statusDistChart      →  Project Status Doughnut Chart
  */
 
-document.addEventListener('DOMContentLoaded', function () {
-  // Detect dashboard page by a stat element that only exists there
-  const isDashboardPage = document.getElementById('totalRevenueStat') !== null;
-  if (!isDashboardPage) return;
+'use strict';
 
-  loadDashboardStats();
+// ── Design Tokens ──────────────────────────────────────────────────────────────
+
+function isDark() {
+  return document.documentElement.getAttribute('data-theme') === 'dark';
+}
+
+function getTokens() {
+  const dark = isDark();
+  return {
+    // Financial chart
+    revenueLine:   dark ? '#f0c470' : '#c8881e',
+    revenueBg:     dark ? 'rgba(240,196,112,0.18)' : 'rgba(200,136,30,0.10)',
+    expenseLine:   dark ? '#e04b2a' : '#ae2c11',
+    expenseBg:     dark ? 'rgba(224,75,42,0.15)' : 'rgba(174,44,17,0.08)',
+    // Donut palette
+    donut: dark
+      ? ['#f0c470', '#3daa60', '#e04b2a', '#60a8fb', '#94a3b8']
+      : ['#c8881e', '#276640', '#ae2c11', '#2563eb', '#64748b'],
+    // Grid & text
+    grid:   dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+    text:   dark ? '#c8baa8' : '#3a4450',
+    tick:   dark ? '#8a8070' : '#6a7480',
+    // Tooltip
+    tooltipBg:     dark ? '#131f2b' : '#ffffff',
+    tooltipBorder: dark ? 'rgba(219,153,65,0.3)' : '#e2e8f0',
+    tooltipTitle:  dark ? '#e5e5df' : '#1a2530',
+    tooltipBody:   dark ? '#c8baa8' : '#3a4450',
+  };
+}
+
+// ── Chart instance registry ────────────────────────────────────────────────────
+
+window._dashCharts = window._dashCharts || {};
+
+function safeDestroy(id) {
+  const existing = Chart.getChart(id);
+  if (existing) existing.destroy();
+  if (window._dashCharts[id]) { try { window._dashCharts[id].destroy(); } catch(e){} }
+  delete window._dashCharts[id];
+}
+
+// ── Canvas gradient helper ─────────────────────────────────────────────────────
+
+function makeGradient(ctx, color1, color2) {
+  const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height || 260);
+  gradient.addColorStop(0, color1);
+  gradient.addColorStop(1, color2);
+  return gradient;
+}
+
+// ── Global Chart.js defaults (applied once) ────────────────────────────────────
+
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.animation.duration = 700;
+Chart.defaults.animation.easing = 'easeInOutQuart';
+
+// ── Boot on DOM ready ──────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Always render charts from server-side data first (instant)
+  initChartsFromServerData();
+
+  // Then refresh KPI counters and optionally update charts via API
+  if (document.getElementById('totalRevenueStat')) {
+    loadDashboardStatsAPI();
+  }
+
+  // Live theme toggle — re-render charts when user switches dark/light
+  const themeObserver = new MutationObserver(function (mutations) {
+    mutations.forEach(function (m) {
+      if (m.attributeName === 'data-theme') {
+        // Small delay lets CSS vars settle before re-drawing
+        setTimeout(function () {
+          initChartsFromServerData();
+        }, 80);
+      }
+    });
+  });
+  themeObserver.observe(document.documentElement, { attributes: true });
 });
 
-async function loadDashboardStats() {
+// ── Server-side chart data bootstrap ──────────────────────────────────────────
+
+function initChartsFromServerData() {
+  // Data injected by Django template into window.DASH_* globals (set in dashboard.html)
+  const monthly  = window.DASH_MONTHLY  || { labels: [], revenue: [], income: [], expenses: [] };
+  const statusD  = window.DASH_STATUS   || {};
+
+  renderFinancialChart(monthly, window._dashChartType || 'line');
+  renderStatusChart(statusD);
+}
+
+// ── Chart type switcher (called by template buttons) ──────────────────────────
+
+window.switchDashboardChart = function (type, btnEl) {
+  if (btnEl && btnEl.parentNode) {
+    btnEl.parentNode.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+  window._dashChartType = type;
+  const monthly = window.DASH_MONTHLY || { labels: [], revenue: [], income: [], expenses: [] };
+  renderFinancialChart(monthly, type);
+};
+
+// ── Async API KPI refresh ──────────────────────────────────────────────────────
+
+async function loadDashboardStatsAPI() {
   try {
     const data = await window.apiFetch('/api/v1/dashboard/stats/');
 
-    // ── Update KPI counters ──────────────────────────────────────────────────
-    updateStatElement('totalRevenueStat',   data.total_revenue,                               '₹', '');
-    updateStatElement('pendingAmountStat',  data.pending_amount,                              '₹', '');
-    updateStatElement('totalProjectsStat',  data.total_projects_count ?? data.active_projects_count, '', '');
-    updateStatElement('totalClientsStat',   data.total_clients_count,                         '', '');
-    updateStatElement('pendingTasksStat',   data.pending_tasks_count,                         '', '');
+    updateStat('totalRevenueStat',  data.total_revenue,   '₹');
+    updateStat('pendingAmountStat', data.pending_amount,  '₹');
+    updateStat('totalProjectsStat', data.total_projects_count ?? data.active_projects_count, '');
+    updateStat('totalClientsStat',  data.total_clients_count, '');
+    updateStat('pendingTasksStat',  data.pending_tasks_count, '');
 
-    // ── Store monthly data for chart-type switching ──────────────────────────
-    window.dashboardMonthlyData = data.monthly_chart;
-
-    // ── Render charts ────────────────────────────────────────────────────────
-    renderFinancialTrendChart(data.monthly_chart);
-    renderStatusDistChart(data.status_chart);
-
+    // Update global data and re-render with fresh API data
+    if (data.monthly_chart) {
+      window.DASH_MONTHLY = {
+        labels:   data.monthly_chart.labels || [],
+        revenue:  data.monthly_chart.data   || [],
+        income:   data.monthly_chart.income   || data.monthly_chart.data || [],
+        expenses: data.monthly_chart.expenses || [],
+      };
+      renderFinancialChart(window.DASH_MONTHLY, window._dashChartType || 'line');
+    }
+    if (data.status_chart) {
+      window.DASH_STATUS = data.status_chart;
+      renderStatusChart(data.status_chart);
+    }
   } catch (err) {
-    console.error('[Dashboard] Failed to load analytics:', err);
-    renderChartsEmpty();
+    console.warn('[Dashboard] API refresh failed, keeping server-rendered charts:', err.message);
   }
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-function updateStatElement(elementId, value, prefix = '', suffix = '') {
-  const el = document.getElementById(elementId);
+function updateStat(id, value, prefix) {
+  const el = document.getElementById(id);
   if (!el) return;
   el.dataset.target = value;
-  el.dataset.prefix = prefix;
-  el.dataset.suffix = suffix;
+  el.dataset.prefix = prefix || '';
   if (window.animateNumber) {
     window.animateNumber(el);
   } else {
-    el.textContent = `${prefix}${Number(value).toLocaleString('en-IN')}${suffix}`;
+    el.textContent = `${prefix || ''}${Number(value).toLocaleString('en-IN')}`;
   }
 }
 
-function isDarkTheme() {
-  return document.documentElement.getAttribute('data-theme') === 'dark';
-}
+// ── Chart: Financial Trend ─────────────────────────────────────────────────────
 
-function chartColors() {
-  const dark = isDarkTheme();
-  return {
-    primary:      dark ? '#60d9d4' : '#0f766e',
-    primaryBg:    dark ? 'rgba(96,217,212,0.15)' : 'rgba(15,118,110,0.12)',
-    grid:         dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-    text:         dark ? '#cbd5e1' : '#374151',
-    donut: [
-      dark ? '#60d9d4' : '#0d9488',   // in_progress
-      dark ? '#34d399' : '#16a34a',   // completed
-      dark ? '#fb923c' : '#ea580c',   // on_hold
-      dark ? '#a78bfa' : '#7c3aed',   // planning
-      dark ? '#94a3b8' : '#64748b',   // pending / other
-    ]
-  };
-}
-
-// Destroy previous Chart instance on a canvas before re-rendering
-function destroyChart(canvasId) {
-  const existing = Chart.getChart(canvasId);
-  if (existing) existing.destroy();
-}
-
-// ── Chart: Financial Trend (Line) ──────────────────────────────────────────────
-
-function renderFinancialTrendChart(chartData) {
+function renderFinancialChart(monthly, chartType) {
   const canvas = document.getElementById('financialTrendChart');
-  if (!canvas) {
-    console.warn('[Dashboard] Canvas #financialTrendChart not found.');
-    return;
-  }
+  if (!canvas) return;
+  safeDestroy('financialTrendChart');
+  const t = getTokens();
+  const ctx = canvas.getContext('2d');
 
-  destroyChart('financialTrendChart');
-  const c = chartColors();
+  const labels   = monthly.labels   || [];
+  const revenue  = monthly.revenue  || monthly.income || [];
+  const expenses = monthly.expenses || [];
+
+  const hasExpenses = expenses.some(v => v > 0);
+
+  // Build gradient fills for line/area charts
+  const revGrad  = makeGradient(ctx, t.revenueBg.replace('0.18', '0.35').replace('0.10','0.28'), t.revenueBg.replace('0.18','0.04').replace('0.10','0.02'));
+  const expGrad  = makeGradient(ctx, t.expenseBg.replace('0.15','0.30').replace('0.08','0.22'), t.expenseBg.replace('0.15','0.04').replace('0.08','0.02'));
+
+  const isFilled = (chartType === 'line' || chartType === 'area');
+  const resolvedType = (chartType === 'area') ? 'line' : chartType;
+
+  const datasets = [];
+
+  if (chartType === 'bar') {
+    datasets.push({
+      label: 'Revenue',
+      data: revenue,
+      backgroundColor: t.revenueLine + 'CC',
+      hoverBackgroundColor: t.revenueLine,
+      borderRadius: 8,
+      borderSkipped: false,
+      barPercentage: 0.65,
+    });
+    if (hasExpenses) {
+      datasets.push({
+        label: 'Expenses',
+        data: expenses,
+        backgroundColor: t.expenseLine + 'AA',
+        hoverBackgroundColor: t.expenseLine,
+        borderRadius: 8,
+        borderSkipped: false,
+        barPercentage: 0.65,
+      });
+    }
+  } else {
+    datasets.push({
+      label: 'Revenue',
+      data: revenue,
+      borderColor: t.revenueLine,
+      backgroundColor: isFilled ? revGrad : 'transparent',
+      borderWidth: 2.5,
+      fill: isFilled,
+      tension: 0.42,
+      pointBackgroundColor: t.revenueLine,
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 8,
+    });
+    if (hasExpenses) {
+      datasets.push({
+        label: 'Expenses',
+        data: expenses,
+        borderColor: t.expenseLine,
+        backgroundColor: isFilled ? expGrad : 'transparent',
+        borderWidth: 2,
+        fill: isFilled,
+        tension: 0.42,
+        pointBackgroundColor: t.expenseLine,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        borderDash: [6, 3],
+      });
+    }
+  }
 
   const chart = new Chart(canvas, {
-    type: 'line',
-    data: {
-      labels: chartData?.labels || [],
-      datasets: [{
-        label: 'Monthly Revenue',
-        data: chartData?.data || [],
-        borderColor:       c.primary,
-        backgroundColor:   c.primaryBg,
-        borderWidth:       2.5,
-        fill:              true,
-        tension:           0.42,
-        pointBackgroundColor: c.primary,
-        pointBorderColor:     'transparent',
-        pointRadius:       5,
-        pointHoverRadius:  7,
-      }]
-    },
+    type: resolvedType,
+    data: { labels, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display: false },
+        legend: {
+          display: hasExpenses,
+          position: 'top',
+          align: 'end',
+          labels: {
+            color: t.text,
+            font: { family: 'Inter', size: 12, weight: '500' },
+            usePointStyle: true,
+            pointStyleWidth: 12,
+            boxHeight: 6,
+            padding: 16,
+          }
+        },
         tooltip: {
-          backgroundColor: isDarkTheme() ? '#1e293b' : '#fff',
-          borderColor:      isDarkTheme() ? '#334155' : '#e2e8f0',
+          backgroundColor: t.tooltipBg,
+          borderColor:      t.tooltipBorder,
           borderWidth:      1,
-          titleColor:       c.text,
-          bodyColor:        c.text,
+          titleColor:       t.tooltipTitle,
+          bodyColor:        t.tooltipBody,
+          padding:          12,
+          cornerRadius:     10,
           callbacks: {
-            label: (ctx) => ` ₹${ctx.parsed.y.toLocaleString('en-IN', { minimumFractionDigits: 0 })}`
+            label: (ctx) => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN', { minimumFractionDigits: 0 })}`
           }
         }
       },
       scales: {
         x: {
-          grid:  { color: c.grid, drawBorder: false },
-          ticks: { color: c.text, font: { family: 'Inter', size: 12 } }
+          grid:  { color: t.grid, drawBorder: false },
+          ticks: { color: t.tick, font: { family: 'Inter', size: 11 }, maxRotation: 0 },
+          border: { color: 'transparent' },
         },
         y: {
-          grid:  { color: c.grid, drawBorder: false },
+          grid:  { color: t.grid, drawBorder: false },
           ticks: {
-            color: c.text,
-            font:  { family: 'Inter', size: 12 },
-            callback: (val) => '₹' + val.toLocaleString('en-IN')
+            color: t.tick,
+            font:  { family: 'Inter', size: 11 },
+            callback: (v) => '₹' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v),
           },
-          beginAtZero: true
+          border: { color: 'transparent' },
+          beginAtZero: true,
         }
       }
     }
   });
 
-  window.dashboardCharts = window.dashboardCharts || {};
-  window.dashboardCharts.financialTrendChart = chart;
+  window._dashCharts.financialTrendChart = chart;
 }
 
-// ── Chart: Project Status Distribution (Doughnut) ─────────────────────────────
+// ── Chart: Project Status Doughnut ────────────────────────────────────────────
 
-function renderStatusDistChart(statusData) {
+function renderStatusChart(statusData) {
   const canvas = document.getElementById('statusDistChart');
-  if (!canvas) {
-    console.warn('[Dashboard] Canvas #statusDistChart not found.');
-    return;
-  }
+  if (!canvas) return;
+  safeDestroy('statusDistChart');
+  const t = getTokens();
 
-  destroyChart('statusDistChart');
-  const c = chartColors();
+  const labelMap = {
+    in_progress: 'In Progress',
+    completed:   'Completed',
+    pending:     'Pending',
+    on_hold:     'On Hold',
+    cancelled:   'Cancelled',
+  };
+  const labels = Object.keys(labelMap).map(k => labelMap[k]);
+  const values = Object.keys(labelMap).map(k => (statusData[k] || 0));
+  const total  = values.reduce((a, b) => a + b, 0);
 
-  const labels = ['In Progress', 'Completed', 'On Hold', 'Planning', 'Pending'];
-  const values = [
-    statusData?.in_progress || 0,
-    statusData?.completed   || 0,
-    statusData?.on_hold     || 0,
-    statusData?.planning    || 0,
-    statusData?.pending     || 0,
-  ];
+  // If no data, show placeholder
+  const displayValues = total > 0 ? values : [1, 0, 0, 0, 0];
+  const displayLabels = total > 0 ? labels : ['No Data'];
 
-  // If ALL zeros, show placeholder
-  const total = values.reduce((a, b) => a + b, 0);
-  if (total === 0) {
-    values[0] = 1;
-    labels[0] = 'No Data';
-  }
+  // Center text plugin
+  const centerTextPlugin = {
+    id: 'centerText',
+    afterDraw(chart) {
+      const { ctx, chartArea: { width, height, left, top } } = chart;
+      ctx.save();
+      const cx = left + width / 2;
+      const cy = top + height / 2;
+      const num = total > 0 ? total : 0;
+      ctx.font = `700 ${Math.min(width, height) * 0.14}px Inter, sans-serif`;
+      ctx.fillStyle = t.text;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(num.toString(), cx, cy - 8);
+      ctx.font = `400 ${Math.min(width, height) * 0.07}px Inter, sans-serif`;
+      ctx.fillStyle = t.tick;
+      ctx.fillText('Projects', cx, cy + 12);
+      ctx.restore();
+    }
+  };
 
   const chart = new Chart(canvas, {
     type: 'doughnut',
     data: {
-      labels,
+      labels: displayLabels,
       datasets: [{
-        data:            values,
-        backgroundColor: c.donut,
-        borderWidth:     0,
-        hoverOffset:     6
+        data: displayValues,
+        backgroundColor: t.donut,
+        borderWidth: 0,
+        hoverOffset: 8,
       }]
     },
+    plugins: [centerTextPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutout: '70%',
+      cutout: '72%',
       plugins: {
         legend: {
           position: 'bottom',
           labels: {
-            color:      c.text,
-            font:       { family: 'Inter', size: 11 },
-            padding:    12,
-            boxWidth:   12,
-            boxHeight:  12,
+            color: t.text,
+            font: { family: 'Inter', size: 11 },
+            padding: 10,
+            boxWidth: 10,
+            boxHeight: 10,
             usePointStyle: true,
           }
         },
         tooltip: {
-          backgroundColor: isDarkTheme() ? '#1e293b' : '#fff',
-          borderColor:      isDarkTheme() ? '#334155' : '#e2e8f0',
+          backgroundColor: t.tooltipBg,
+          borderColor:      t.tooltipBorder,
           borderWidth:      1,
-          titleColor:       c.text,
-          bodyColor:        c.text,
+          titleColor:       t.tooltipTitle,
+          bodyColor:        t.tooltipBody,
+          padding:          10,
+          cornerRadius:     10,
           callbacks: {
-            label: (ctx) => ` ${ctx.label}: ${ctx.parsed} project${ctx.parsed !== 1 ? 's' : ''}`
+            label: (ctx) => `  ${ctx.label}: ${ctx.parsed} project${ctx.parsed !== 1 ? 's' : ''}`
           }
         }
       }
     }
   });
 
-  window.dashboardCharts = window.dashboardCharts || {};
-  window.dashboardCharts.statusDistChart = chart;
+  window._dashCharts.statusDistChart = chart;
 }
 
-// ── Graceful empty state when API fails ──────────────────────────────────────
+// ── Graceful empty state ───────────────────────────────────────────────────────
 
 function renderChartsEmpty() {
   ['financialTrendChart', 'statusDistChart'].forEach(id => {
     const canvas = document.getElementById(id);
     if (!canvas) return;
-    const parent = canvas.parentElement;
-    parent.innerHTML = `
-      <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height:200px;">
-        <i class="fas fa-chart-bar fa-2x mb-2 opacity-25"></i>
-        <small>Chart data unavailable</small>
+    canvas.parentElement.innerHTML = `
+      <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height:200px;gap:8px;">
+        <i class="fas fa-chart-bar fa-2x opacity-25"></i>
+        <small style="font-size:0.78rem;">Chart data unavailable</small>
       </div>`;
   });
 }
-
-// ── Chart type switcher (used by buttons in template) ─────────────────────────
-
-window.switchDashboardChart = function (type, btnEl) {
-  if (btnEl?.parentNode) {
-    btnEl.parentNode.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
-    btnEl.classList.add('active');
-  }
-  if (window.VisualizationStudio && window.dashboardMonthlyData) {
-    window.VisualizationStudio.renderChart('financialTrendChart', type, window.dashboardMonthlyData);
-  }
-};

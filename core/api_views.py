@@ -6,9 +6,9 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, date as _date
 
-from .models import Client, Project, Payment, Task, Note, ActivityLog
+from .models import Client, Project, Payment, Task, Note, ActivityLog, Income, Expense
 from .serializers import (
     ClientSerializer, ProjectSerializer, PaymentSerializer,
     TaskSerializer, ActivityLogSerializer
@@ -33,33 +33,56 @@ def api_dashboard_stats(request):
     user_payments = Payment.objects.filter(user=user)
     user_clients = Client.objects.filter(user=user)
     user_tasks = Task.objects.filter(user=user)
+    user_incomes = Income.objects.filter(user=user)
 
-    total_revenue = user_payments.filter(status='paid').aggregate(t=Sum('amount'))['t'] or 0
+    # Total revenue = paid payments + income records
+    paid_payments_total = user_payments.filter(status='paid').aggregate(t=Sum('amount'))['t'] or 0
+    income_total = user_incomes.aggregate(t=Sum('amount'))['t'] or 0
+    total_revenue = float(paid_payments_total) + float(income_total)
+
     pending_amount = user_payments.filter(status='pending').aggregate(t=Sum('amount'))['t'] or 0
     active_projects_count = user_projects.filter(status='in_progress').count()
-    total_clients_count = user_clients.filter(status='active').count()
-    pending_tasks_count = user_tasks.filter(Q(status='pending') | Q(status='in_progress')).count()
+    total_clients_count = user_clients.count()
+    pending_tasks_count = user_tasks.filter(Q(status='todo') | Q(status='in_progress')).count()
 
+    # Monthly revenue — last 6 calendar months (stable month boundary)
     months_labels = []
     monthly_data = []
+    monthly_income_data = []
+    monthly_expense_data = []
+    user_expenses = Expense.objects.filter(user=user)
     for i in range(5, -1, -1):
-        month_date = (today.replace(day=1) - timedelta(days=i * 30))
-        m_total = user_payments.filter(
+        # Walk back by replacing month, avoiding day-of-month drift
+        month_offset = (today.month - 1 - i) % 12 + 1
+        year_offset = today.year + ((today.month - 1 - i) // 12)
+        m_pay = float(user_payments.filter(
             status='paid',
-            paid_date__year=month_date.year,
-            paid_date__month=month_date.month
-        ).aggregate(t=Sum('amount'))['t'] or 0
-        months_labels.append(month_date.strftime('%b'))
-        monthly_data.append(float(m_total))
+            paid_date__year=year_offset,
+            paid_date__month=month_offset
+        ).aggregate(t=Sum('amount'))['t'] or 0)
+        m_inc = float(user_incomes.filter(
+            date__year=year_offset,
+            date__month=month_offset
+        ).aggregate(t=Sum('amount'))['t'] or 0)
+        m_exp = float(user_expenses.filter(
+            date__year=year_offset,
+            date__month=month_offset
+        ).aggregate(t=Sum('amount'))['t'] or 0)
+        m_total = m_pay + m_inc
+        months_labels.append(_date(year_offset, month_offset, 1).strftime("%b'%y"))
+        monthly_data.append(m_total)
+        monthly_income_data.append(m_total)
+        monthly_expense_data.append(m_exp)
 
+    # Project status distribution — all 5 statuses
     status_counts = user_projects.values('status').annotate(count=Count('id'))
     status_dict = {item['status']: item['count'] for item in status_counts}
-    
     status_distribution = {
         'in_progress': status_dict.get('in_progress', 0),
-        'completed': status_dict.get('completed', 0),
-        'on_hold': status_dict.get('on_hold', 0),
-        'planning': status_dict.get('planning', 0),
+        'completed':   status_dict.get('completed', 0),
+        'pending':     status_dict.get('pending', 0),
+        'on_hold':     status_dict.get('on_hold', 0),
+        'cancelled':   status_dict.get('cancelled', 0),
     }
 
     scatter_data = []
@@ -88,21 +111,21 @@ def api_dashboard_stats(request):
             })
         heatmap_matrix.append(week_row)
 
-
     # Client Revenue Breakdown (Top Clients)
     client_labels = []
     client_revenues = []
-    for client in user_clients[:6]:
-        c_rev = user_payments.filter(project__client=client, status='paid').aggregate(t=Sum('amount'))['t'] or 0
+    for client in user_clients.order_by('-created_at')[:6]:
+        c_rev = float(user_payments.filter(project__client=client, status='paid').aggregate(t=Sum('amount'))['t'] or 0)
+        c_inc = float(user_incomes.filter(client=client).aggregate(t=Sum('amount'))['t'] or 0)
         client_labels.append(client.name)
-        client_revenues.append(float(c_rev))
+        client_revenues.append(c_rev + c_inc)
 
     # Recent Projects (Serialized)
     recent_projects_qs = user_projects.select_related('client').order_by('-created_at')[:5]
     recent_projects_serialized = ProjectSerializer(recent_projects_qs, many=True).data
 
     payload = {
-        "total_revenue": float(total_revenue),
+        "total_revenue": total_revenue,
         "pending_amount": float(pending_amount),
         "active_projects_count": active_projects_count,
         "total_projects_count": user_projects.count(),
@@ -110,7 +133,9 @@ def api_dashboard_stats(request):
         "pending_tasks_count": pending_tasks_count,
         "monthly_chart": {
             "labels": months_labels,
-            "data": monthly_data
+            "data": monthly_data,
+            "income": monthly_income_data,
+            "expenses": monthly_expense_data,
         },
         "status_chart": status_distribution,
         "scatter_chart": scatter_data,
@@ -261,15 +286,19 @@ def api_dashboard_analytics(request):
     profit_trend = []
 
     for i in range(5, -1, -1):
-        m_date = (today.replace(day=1) - timedelta(days=i * 30))
-        m_income = (incomes.filter(date__year=m_date.year, date__month=m_date.month).aggregate(t=Sum('amount'))['t'] or 0) + \
-                   (payments.filter(status='paid', paid_date__year=m_date.year, paid_date__month=m_date.month).aggregate(t=Sum('amount'))['t'] or 0)
-        m_expense = expenses.filter(date__year=m_date.year, date__month=m_date.month).aggregate(t=Sum('amount'))['t'] or 0
-        
-        monthly_labels.append(m_date.strftime('%b %Y'))
-        income_trend.append(float(m_income))
-        expense_trend.append(float(m_expense))
-        profit_trend.append(float(m_income) - float(m_expense))
+        # Use stable calendar month calculation without day-of-month drift
+        month_offset = (today.month - 1 - i) % 12 + 1
+        year_offset = today.year + ((today.month - 1 - i) // 12)
+        m_income = float(
+            (incomes.filter(date__year=year_offset, date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
+        ) + float(
+            (payments.filter(status='paid', paid_date__year=year_offset, paid_date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
+        )
+        m_expense = float(expenses.filter(date__year=year_offset, date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
+        monthly_labels.append(_date(year_offset, month_offset, 1).strftime("%b'%y"))
+        income_trend.append(m_income)
+        expense_trend.append(m_expense)
+        profit_trend.append(m_income - m_expense)
 
     # 4. Client Revenue Distribution
     client_rev_labels = []

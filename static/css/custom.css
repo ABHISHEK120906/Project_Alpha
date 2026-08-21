@@ -1676,3 +1676,67 @@ body, .card, .topbar, .sidebar, .table, .form-control, .form-select,
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(219, 153, 65, 0.6);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   DASHBOARD CHART CARDS — Premium Analytics UI
+   ══════════════════════════════════════════════════════════════ */
+
+/* Chart Card Container */
+.dash-chart-card {
+  border-radius: var(--radius) !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.dash-chart-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Accent top-border strip */
+.dash-chart-card-strip {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--amber-light) 50%, var(--accent) 100%);
+  flex-shrink: 0;
+}
+
+/* Inner padding for chart card body */
+.dash-chart-card-body {
+  padding: 1.1rem 1.25rem 1rem;
+}
+
+/* ── Chart type switcher btn-group inside chart cards ── */
+.dash-chart-card .btn-group .btn-outline-primary,
+.btn-group .btn-outline-primary {
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  transition: var(--transition-fast);
+}
+.dash-chart-card .btn-group .btn-outline-primary:first-child,
+.btn-group .btn-outline-primary:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+.dash-chart-card .btn-group .btn-outline-primary:last-child,
+.btn-group .btn-outline-primary:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.dash-chart-card .btn-group .btn-outline-primary:hover,
+.dash-chart-card .btn-group .btn-outline-primary.active,
+.btn-group .btn-outline-primary:hover,
+.btn-group .btn-outline-primary.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--bg-card);
+}
+
+/* Reports page chart card header strip */
+.dash-chart-card > .card-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+}

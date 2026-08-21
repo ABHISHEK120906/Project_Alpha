@@ -39,19 +39,20 @@
 </div>
 
 <!-- Interactive Analytics Chart Card -->
-<div class="card mb-4 border-0 shadow-sm" style="border-radius:18px;">
-  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2 py-3">
+<div class="card mb-4 border-0 shadow-sm dash-chart-card" style="border-radius:18px;">
+  <div class="dash-chart-card-strip" style="border-radius:18px 18px 0 0;"></div>
+  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2 py-3 border-0 bg-transparent">
     <div>
-      <h5 class="mb-0 fw-bold" style="color:var(--text-primary);"><i class="fas fa-chart-area text-primary me-2"></i> Monthly Revenue & Earnings</h5>
-      <p class="mb-0 small text-muted">Visual representation of earnings across months</p>
+      <h5 class="mb-0 fw-bold" style="color:var(--text-primary);"><i class="fas fa-chart-area text-warning me-2"></i>Monthly Revenue & Earnings</h5>
+      <p class="mb-0 small" style="color:var(--text-muted);">Visual representation of earnings across the last 12 months</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
       <div class="btn-group btn-group-sm" role="group" aria-label="Chart Switcher">
-        <button type="button" class="btn btn-outline-primary active" onclick="switchReportChart('bar', this)" title="Bar Chart"><i class="fas fa-chart-bar me-1"></i> Bar</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('line', this)" title="Line Chart"><i class="fas fa-chart-line me-1"></i> Line</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('pie', this)" title="Pie Chart"><i class="fas fa-chart-pie me-1"></i> Pie</button>
+        <button type="button" class="btn btn-outline-primary active" onclick="switchReportChart('bar', this)" title="Bar Chart"><i class="fas fa-chart-bar me-1"></i>Bar</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('line', this)" title="Line Chart"><i class="fas fa-chart-line me-1"></i>Line</button>
+        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('area', this)" title="Area Chart"><i class="fas fa-wave-square me-1"></i>Area</button>
       </div>
-      <button class="btn btn-sm btn-outline-success" onclick="exportReportCSV()" title="Export CSV Data"><i class="fas fa-file-csv me-1"></i> CSV Data</button>
+      <button class="btn btn-sm btn-outline-success" onclick="exportReportCSV()" title="Export CSV Data"><i class="fas fa-file-csv me-1"></i>Export CSV</button>
     </div>
   </div>
   <div class="card-body">

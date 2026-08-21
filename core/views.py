@@ -363,6 +363,7 @@ def load_sample_data(request):
 def dashboard(request):
     """Main dashboard with KPI cards, charts data, and recent records."""
     user = request.user
+    today = timezone.now().date()
 
     # ── KPI Statistics ──────────────────────────────────────
     total_clients = Client.objects.filter(user=user, is_archived=False).count()
@@ -410,6 +411,47 @@ def dashboard(request):
 
     announcements = Announcement.objects.filter(Q(target_type='all') | Q(target_users=user)).distinct()[:5]
 
+    # ── Server-side Chart JSON (for instant page load render) ──
+    user_payments = Payment.objects.filter(user=user)
+    user_incomes = Income.objects.filter(user=user)
+    user_expenses_qs = Expense.objects.filter(user=user)
+
+    chart_months = []
+    chart_revenue = []
+    chart_income = []
+    chart_expense = []
+    for i in range(5, -1, -1):
+        month_offset = (today.month - 1 - i) % 12 + 1
+        year_offset = today.year + ((today.month - 1 - i) // 12)
+        m_pay = float(user_payments.filter(
+            status='paid',
+            paid_date__year=year_offset,
+            paid_date__month=month_offset
+        ).aggregate(t=Sum('amount'))['t'] or 0)
+        m_inc = float(user_incomes.filter(
+            date__year=year_offset,
+            date__month=month_offset
+        ).aggregate(t=Sum('amount'))['t'] or 0)
+        m_exp = float(user_expenses_qs.filter(
+            date__year=year_offset,
+            date__month=month_offset
+        ).aggregate(t=Sum('amount'))['t'] or 0)
+        chart_months.append(date(year_offset, month_offset, 1).strftime("%b'%y"))
+        chart_revenue.append(m_pay + m_inc)
+        chart_income.append(m_pay + m_inc)
+        chart_expense.append(m_exp)
+
+    # Project status chart
+    status_counts_qs = Project.objects.filter(user=user, is_archived=False).values('status').annotate(c=Count('id'))
+    status_dict_ss = {row['status']: row['c'] for row in status_counts_qs}
+    chart_status = {
+        'in_progress': status_dict_ss.get('in_progress', 0),
+        'completed':   status_dict_ss.get('completed', 0),
+        'pending':     status_dict_ss.get('pending', 0),
+        'on_hold':     status_dict_ss.get('on_hold', 0),
+        'cancelled':   status_dict_ss.get('cancelled', 0),
+    }
+
     context = {
         'total_clients': total_clients,
         'total_projects': total_projects,
@@ -433,6 +475,12 @@ def dashboard(request):
         'recent_payments': recent_payments,
         'total_earnings': total_income,
         'announcements': announcements,
+        # Server-side chart data
+        'chart_months_json': json.dumps(chart_months),
+        'chart_revenue_json': json.dumps(chart_revenue),
+        'chart_income_json': json.dumps(chart_income),
+        'chart_expense_json': json.dumps(chart_expense),
+        'chart_status_json': json.dumps(chart_status),
     }
 
     return render(request, 'dashboard.html', context)

@@ -286,31 +286,48 @@
   </div>
 </div>
 
-<!-- ── Analytics Visualizations Grid (2 Core Charts) ── -->
+<!-- ── Analytics Visualizations Grid ── -->
 <div class="row g-4 mb-4">
-  <!-- Revenue Trend -->
+  <!-- Financial Performance Chart (8 cols) -->
   <div class="col-lg-8">
-    <div class="card p-3 h-100 reveal-up delay-1">
-      <div class="chart-card-header-strip"></div>
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-line text-primary me-2"></i> Financial Performance</h6>
-        <span class="badge bg-primary-soft text-primary small">Monthly Revenue</span>
-      </div>
-      <div style="height:260px;position:relative;">
-        <canvas id="financialTrendChart"></canvas>
+    <div class="card p-0 h-100 reveal-up delay-1 dash-chart-card">
+      <div class="dash-chart-card-strip"></div>
+      <div class="dash-chart-card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+          <div>
+            <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-chart-line text-warning me-2"></i>Financial Performance</h6>
+            <p class="mb-0 small" style="color:var(--text-muted);">Monthly revenue & expenses trend</p>
+          </div>
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Chart type switcher">
+              <button type="button" class="btn btn-outline-primary active" onclick="switchDashboardChart('line', this)" title="Line Chart"><i class="fas fa-chart-line me-1"></i>Line</button>
+              <button type="button" class="btn btn-outline-primary" onclick="switchDashboardChart('bar', this)" title="Bar Chart"><i class="fas fa-chart-bar me-1"></i>Bar</button>
+              <button type="button" class="btn btn-outline-primary" onclick="switchDashboardChart('area', this)" title="Area Chart"><i class="fas fa-wave-square me-1"></i>Area</button>
+            </div>
+          </div>
+        </div>
+        <div style="height:260px;position:relative;">
+          <canvas id="financialTrendChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Project Status Distribution -->
+  <!-- Project Status Doughnut (4 cols) -->
   <div class="col-lg-4">
-    <div class="card p-3 h-100 reveal-up delay-2">
-      <div class="chart-card-header-strip"></div>
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0"><i class="fas fa-chart-pie text-primary me-2"></i> Project Statuses</h6>
-      </div>
-      <div style="height:260px;position:relative;">
-        <canvas id="statusDistChart"></canvas>
+    <div class="card p-0 h-100 reveal-up delay-2 dash-chart-card">
+      <div class="dash-chart-card-strip" style="background:linear-gradient(90deg,var(--success),var(--primary));"></div>
+      <div class="dash-chart-card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-chart-pie text-success me-2"></i>Project Status</h6>
+            <p class="mb-0 small" style="color:var(--text-muted);">Distribution overview</p>
+          </div>
+          <span class="badge" style="background:var(--primary-soft);color:var(--primary);font-size:0.7rem;">{{ total_projects }} total</span>
+        </div>
+        <div style="height:240px;position:relative;">
+          <canvas id="statusDistChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -319,5 +336,16 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Inject server-side chart data as global JS constants for instant chart render -->
+<script>
+  window.DASH_MONTHLY = {
+    labels:   JSON.parse('{{ chart_months_json|escapejs }}'),
+    revenue:  JSON.parse('{{ chart_revenue_json|escapejs }}'),
+    income:   JSON.parse('{{ chart_income_json|escapejs }}'),
+    expenses: JSON.parse('{{ chart_expense_json|escapejs }}'),
+  };
+  window.DASH_STATUS = JSON.parse('{{ chart_status_json|escapejs }}');
+  window._dashChartType = 'line';
+</script>
 <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
