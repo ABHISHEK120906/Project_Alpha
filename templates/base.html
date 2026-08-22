@@ -37,10 +37,8 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer">
 
-  <!-- Chart.js (SRI verified) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
-          integrity="sha384-6VjfMTYLUm5VpGbNAJXCpWUYTI2cIFlFBKgWqWMXQK8UQ0d7e2GFNBQW+Y5sCX8"
-          crossorigin="anonymous"></script>
+  <!-- Chart.js 4.4.0 (no SRI hash — jsDelivr reprocesses files causing hash drift that silently blocks the script) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- Paper-Cut Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
