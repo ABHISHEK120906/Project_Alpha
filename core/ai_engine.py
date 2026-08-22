@@ -26,8 +26,18 @@ def process_chat_message(user, user_message, chat_history=None):
     Main entry point for TrackBot AI.
     Analyzes user message, extracts context, and generates a structured LLM response.
     """
-    engine = TrackBotEngine(user, user_message, chat_history or [])
-    return engine.generate_response()
+    try:
+        engine = TrackBotEngine(user, user_message, chat_history or [])
+        return engine.generate_response()
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).exception(f"Error in TrackBotEngine: {e}")
+        return (
+            "🤖 **TrackBot AI Assistant**\n\n"
+            "I am your AI Freelancing Copilot. I can help you manage your projects, track tasks, "
+            "calculate rates, draft proposals, and advise on your freelance business.\n\n"
+            "How can I assist you right now?"
+        )
 
 
 class TrackBotEngine:
@@ -118,11 +128,16 @@ class TrackBotEngine:
 
     def _is_advice_or_pricing_query(self):
         keywords = ['rate', 'pricing', 'charge', 'how much to charge', 'hourly rate', 'fixed price', 
-                    'advice', 'tip', 'grow', 'more clients', 'contract', 'scope creep', 'price my', 'how to price']
+                    'advice', 'tip', 'grow', 'more clients', 'contract', 'scope creep', 'price my', 'how to price',
+                    'what is freelancing', 'freelanc', 'freelancing', 'how to start freelancing', 'get clients']
         return any(k in self.msg for k in keywords)
 
     def _is_project_query(self):
         keywords = ['project', 'prakalp', 'progress', 'status', 'active project', 'projects']
+        return any(k in self.msg for k in keywords)
+
+    def _is_client_query(self):
+        keywords = ['client', 'customer', 'clients', 'grahak', 'buyer', 'client list', 'who are my clients']
         return any(k in self.msg for k in keywords)
 
     # ── Response Generators ─────────────────────────────────────────────────────
@@ -376,6 +391,29 @@ Need help adapting this to your specific project file or model? Just let me know
         return "\n".join(lines)
 
     def _generate_business_advice(self):
+        msg = self.msg
+        if 'what is freelancing' in msg or 'what is freelance' in msg or 'freelance kya' in msg or 'freelancing kya' in msg:
+            return """💼 **What is Freelancing?**
+
+**Freelancing** is a form of self-employment where you offer your specialized skills, services, or expertise to clients on a flexible, per-project or contract basis—rather than being employed full-time by a single employer.
+
+---
+
+### 🚀 Core Pillars of Freelancing:
+1. **Autonomy & Freedom:** You choose the projects you work on, set your own schedule, and can work remotely from anywhere.
+2. **Flexible Pricing Models:** Charge hourly rates, flat per-project fees, milestone-based payments, or retainers.
+3. **Diverse Disciplines:** Web/Software development, UI/UX design, technical writing, digital marketing, AI integration, and consulting.
+4. **Client Acquisition:** Win clients through platforms like Upwork, Fiverr, and LinkedIn, or through direct portfolio outreach and referrals.
+
+---
+
+### 🛠️ Freelancer Best Practices:
+* **Always Use Milestones:** Break large deliverables into checkpoints and require a **30%–50% upfront deposit**.
+* **Prevent Scope Creep:** Keep written scopes of work and contracts.
+* **Track Everything:** Keep your active projects, tasks, invoices, and expenses organized right here in FreelanceTrack!
+
+Need help calculating your hourly rate or drafting a winning client proposal? Just ask me!"""
+
         return f"""💼 **Freelance Growth & Pricing Strategy Guide**
 
 ### 1. 💰 How to Price Your Services:

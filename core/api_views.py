@@ -378,8 +378,9 @@ def _build_user_context(user):
     for p in projects:
         deadline_str = p.deadline.strftime('%b %d, %Y') if p.deadline else 'No deadline'
         overdue = ' [OVERDUE]' if p.is_overdue() else ''
+        client_name = p.client.name if p.client else 'None'
         project_lines.append(
-            f"  • {p.name} | Client: {p.client.name} | Status: {p.get_status_display()} | "
+            f"  • {p.name} | Client: {client_name} | Status: {p.get_status_display()} | "
             f"Priority: {p.get_priority_display()} | Progress: {p.progress}% | Deadline: {deadline_str}{overdue}"
         )
 
@@ -391,8 +392,9 @@ def _build_user_context(user):
     for t in pending_tasks:
         due_str = t.due_date.strftime('%b %d, %Y') if t.due_date else 'No due date'
         overdue = ' [OVERDUE]' if t.is_overdue() else ''
+        proj_name = t.project.name if t.project else 'General'
         task_lines.append(
-            f"  • {t.title} | Project: {t.project.name} | "
+            f"  • {t.title} | Project: {proj_name} | "
             f"Priority: {t.get_priority_display()} | Due: {due_str}{overdue}"
         )
 
