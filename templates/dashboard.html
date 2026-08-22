@@ -339,12 +339,12 @@
 <!-- Inject server-side chart data as global JS constants for instant chart render -->
 <script>
   window.DASH_MONTHLY = {
-    labels:   JSON.parse('{{ chart_months_json|escapejs }}'),
-    revenue:  JSON.parse('{{ chart_revenue_json|escapejs }}'),
-    income:   JSON.parse('{{ chart_income_json|escapejs }}'),
-    expenses: JSON.parse('{{ chart_expense_json|escapejs }}'),
+    labels:   {{ chart_months_json|safe }},
+    revenue:  {{ chart_revenue_json|safe }},
+    income:   {{ chart_income_json|safe }},
+    expenses: {{ chart_expense_json|safe }},
   };
-  window.DASH_STATUS = JSON.parse('{{ chart_status_json|escapejs }}');
+  window.DASH_STATUS = {{ chart_status_json|safe }};
   window._dashChartType = 'line';
 </script>
 <script src="{% static 'js/dashboard.js' %}"></script>
