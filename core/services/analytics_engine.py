@@ -103,7 +103,11 @@ def compute_descriptive_stats(numbers):
     q1 = compute_percentile(sorted_nums, 25)
     q2 = val_median
     q3 = compute_percentile(sorted_nums, 75)
+    p10 = compute_percentile(sorted_nums, 10)
+    p90 = compute_percentile(sorted_nums, 90)
     iqr = (q3 - q1) if (q3 is not None and q1 is not None) else 0.0
+    lower_whisker = max(val_min, q1 - 1.5 * iqr) if q1 is not None else val_min
+    upper_whisker = min(val_max, q3 + 1.5 * iqr) if q3 is not None else val_max
     
     # Skewness classification based on mean vs median
     if std_dev > 0.0001:
@@ -127,10 +131,14 @@ def compute_descriptive_stats(numbers):
         'mode': round(val_mode, 2) if val_mode is not None else 'No unique mode',
         'variance': round(variance, 2),
         'std_dev': round(std_dev, 2),
+        'p10': round(p10, 2) if p10 is not None else None,
         'q1': round(q1, 2) if q1 is not None else None,
         'q2': round(q2, 2) if q2 is not None else None,
         'q3': round(q3, 2) if q3 is not None else None,
+        'p90': round(p90, 2) if p90 is not None else None,
         'iqr': round(iqr, 2) if iqr is not None else None,
+        'lower_whisker': round(lower_whisker, 2),
+        'upper_whisker': round(upper_whisker, 2),
         'skewness': skew_label,
         'is_sufficient': n >= 2
     }
@@ -582,6 +590,18 @@ class DataAnalyticsEngine:
                 'status': p.status
             })
 
+        # --- Bivariate 3: Project Duration vs Contract Value ---
+        duration_bivariate = []
+        for p in self.projects_qs:
+            if p.start_date and p.deadline:
+                dur_days = max(1, (p.deadline - p.start_date).days)
+                duration_bivariate.append({
+                    'name': p.name,
+                    'duration_days': dur_days,
+                    'budget': to_float(p.budget),
+                    'status': p.status
+                })
+
         return {
             'budget_stats': budget_stats,
             'budget_histogram': budget_histogram,
@@ -591,6 +611,7 @@ class DataAnalyticsEngine:
             'priority_distribution': priority_dist,
             'client_bivariate': client_bivariate,
             'scatter_budget_vs_paid': scatter_budget_vs_paid,
+            'duration_bivariate': duration_bivariate,
         }
 
     def _compute_histogram_bins(self, values, num_bins=5):

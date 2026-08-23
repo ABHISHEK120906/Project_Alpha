@@ -444,12 +444,83 @@
         </div>
       </div>
     </div>
+
+    <!-- Priority & Duration Bivariate Row -->
+    <div class="row g-4 mb-4">
+      <!-- Priority Distribution -->
+      <div class="col-lg-6">
+        <div class="card p-3 border-0 shadow-sm h-100" style="border-radius:18px;">
+          <h6 class="fw-bold mb-2" style="color:var(--text-primary);"><i class="fas fa-flag text-danger me-2"></i>Project Priority Distribution</h6>
+          <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle mb-0 small">
+              <thead>
+                <tr class="text-muted">
+                  <th>Priority</th>
+                  <th>Count</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for pr in eda.priority_distribution %}
+                <tr>
+                  <td class="fw-bold">{{ pr.label }}</td>
+                  <td>{{ pr.count }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="progress flex-grow-1" style="height:6px;">
+                        <div class="progress-bar bg-warning" style="width:{{ pr.percentage }}%;"></div>
+                      </div>
+                      <span>{{ pr.percentage }}%</span>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Duration vs Contract Value Table -->
+      <div class="col-lg-6">
+        <div class="card p-3 border-0 shadow-sm h-100" style="border-radius:18px;">
+          <h6 class="fw-bold mb-2" style="color:var(--text-primary);"><i class="fas fa-stopwatch text-primary me-2"></i>Project Duration vs Contract Value</h6>
+          {% if eda.duration_bivariate %}
+          <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle mb-0 small">
+              <thead>
+                <tr class="text-muted">
+                  <th>Project</th>
+                  <th>Duration (Days)</th>
+                  <th>Contract Value</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for dur in eda.duration_bivariate|slice:":5" %}
+                <tr>
+                  <td class="fw-bold">{{ dur.name|truncatechars:20 }}</td>
+                  <td><span class="badge bg-secondary">{{ dur.duration_days }} days</span></td>
+                  <td class="text-success fw-bold">${{ dur.budget|floatformat:0 }}</td>
+                  <td><span class="badge bg-info bg-opacity-10 text-info">{{ dur.status }}</span></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-muted small p-3 text-center">Set start date and deadline on projects to compute duration metrics.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
        TAB 4: DESCRIPTIVE STATISTICS
        ══════════════════════════════════════════════════════════ -->
   <div class="tab-pane fade" id="tab-stats" role="tabpanel">
+    <!-- Project Budget Statistical Matrix -->
     <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:18px;">
       <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-calculator text-primary me-2"></i>Project Budget Statistical Matrix</h6>
       <div class="row g-3">
@@ -460,10 +531,31 @@
         <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.budget_stats.max|default:'N/A' }}</div><div class="lbl">Maximum</div></div></div>
         <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.budget_stats.range|default:'N/A' }}</div><div class="lbl">Range</div></div></div>
         <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">{{ eda.budget_stats.std_dev|default:'N/A' }}</div><div class="lbl">Std. Deviation</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.budget_stats.p10|default:'N/A' }}</div><div class="lbl">10th Percentile (P10)</div></div></div>
         <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.budget_stats.q1|default:'N/A' }}</div><div class="lbl">25th Pct (Q1)</div></div></div>
         <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.budget_stats.q3|default:'N/A' }}</div><div class="lbl">75th Pct (Q3)</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.budget_stats.p90|default:'N/A' }}</div><div class="lbl">90th Percentile (P90)</div></div></div>
         <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.budget_stats.iqr|default:'N/A' }}</div><div class="lbl">IQR (Q3-Q1)</div></div></div>
-        <div class="col-12 col-md-6 col-lg-4"><div class="stat-matrix-cell"><div class="val" style="font-size:14px;">{{ eda.budget_stats.skewness }}</div><div class="lbl">Distribution Symmetry</div></div></div>
+        <div class="col-12 col-md-6 col-lg-6"><div class="stat-matrix-cell"><div class="val" style="font-size:14px;">[${{ eda.budget_stats.lower_whisker|default:'0' }} &mdash; ${{ eda.budget_stats.upper_whisker|default:'0' }}]</div><div class="lbl">Box Plot Whisker Bounds ($1.5 \times IQR$)</div></div></div>
+        <div class="col-12 col-md-6 col-lg-6"><div class="stat-matrix-cell"><div class="val" style="font-size:14px;">{{ eda.budget_stats.skewness }}</div><div class="lbl">Distribution Symmetry</div></div></div>
+      </div>
+    </div>
+
+    <!-- Payment Realization Statistical Matrix -->
+    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:18px;">
+      <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-coins text-success me-2"></i>Payment Collection Statistical Matrix</h6>
+      <div class="row g-3">
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">{{ eda.payment_stats.count }}</div><div class="lbl">Payment Count</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.mean|default:'N/A' }}</div><div class="lbl">Mean Payment</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.median|default:'N/A' }}</div><div class="lbl">Median (Q2)</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.min|default:'N/A' }}</div><div class="lbl">Minimum</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.max|default:'N/A' }}</div><div class="lbl">Maximum</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.range|default:'N/A' }}</div><div class="lbl">Range</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">{{ eda.payment_stats.std_dev|default:'N/A' }}</div><div class="lbl">Std. Deviation</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.q1|default:'N/A' }}</div><div class="lbl">25th Pct (Q1)</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.q3|default:'N/A' }}</div><div class="lbl">75th Pct (Q3)</div></div></div>
+        <div class="col-6 col-md-3 col-lg-2"><div class="stat-matrix-cell"><div class="val">${{ eda.payment_stats.iqr|default:'N/A' }}</div><div class="lbl">IQR (Q3-Q1)</div></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="stat-matrix-cell"><div class="val" style="font-size:14px;">{{ eda.payment_stats.skewness }}</div><div class="lbl">Distribution Symmetry</div></div></div>
       </div>
     </div>
   </div>
