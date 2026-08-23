@@ -424,9 +424,10 @@ def dashboard(request):
         month_offset = (today.month - 1 - i) % 12 + 1
         year_offset = today.year + ((today.month - 1 - i) // 12)
         m_pay = float(user_payments.filter(
-            status='paid',
-            paid_date__year=year_offset,
-            paid_date__month=month_offset
+            status='paid'
+        ).filter(
+            Q(paid_date__year=year_offset, paid_date__month=month_offset) |
+            Q(paid_date__isnull=True, created_at__year=year_offset, created_at__month=month_offset)
         ).aggregate(t=Sum('amount'))['t'] or 0)
         m_inc = float(user_incomes.filter(
             date__year=year_offset,
@@ -1117,15 +1118,23 @@ def reports_dashboard(request):
     monthly_data = []
     today = timezone.now().date()
     for i in range(11, -1, -1):
-        month_date = (today.replace(day=1) - timedelta(days=i * 30))
-        month_total = Payment.objects.filter(
-            user=user, status='paid',
-            paid_date__year=month_date.year,
-            paid_date__month=month_date.month
-        ).aggregate(t=Sum('amount'))['t'] or 0
+        month_offset = (today.month - 1 - i) % 12 + 1
+        year_offset = today.year + ((today.month - 1 - i) // 12)
+        month_date = date(year_offset, month_offset, 1)
+        month_pay = float(Payment.objects.filter(
+            user=user, status='paid'
+        ).filter(
+            Q(paid_date__year=year_offset, paid_date__month=month_offset) |
+            Q(paid_date__isnull=True, created_at__year=year_offset, created_at__month=month_offset)
+        ).aggregate(t=Sum('amount'))['t'] or 0)
+        month_inc = float(Income.objects.filter(
+            user=user,
+            date__year=year_offset,
+            date__month=month_offset
+        ).aggregate(t=Sum('amount'))['t'] or 0)
         monthly_data.append({
             'month': month_date.strftime('%b %Y'),
-            'total': float(month_total),
+            'total': month_pay + month_inc,
         })
 
     # Client report

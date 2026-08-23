@@ -56,9 +56,10 @@ def api_dashboard_stats(request):
         month_offset = (today.month - 1 - i) % 12 + 1
         year_offset = today.year + ((today.month - 1 - i) // 12)
         m_pay = float(user_payments.filter(
-            status='paid',
-            paid_date__year=year_offset,
-            paid_date__month=month_offset
+            status='paid'
+        ).filter(
+            Q(paid_date__year=year_offset, paid_date__month=month_offset) |
+            Q(paid_date__isnull=True, created_at__year=year_offset, created_at__month=month_offset)
         ).aggregate(t=Sum('amount'))['t'] or 0)
         m_inc = float(user_incomes.filter(
             date__year=year_offset,
@@ -285,16 +286,31 @@ def api_dashboard_analytics(request):
     expense_trend = []
     profit_trend = []
 
+    # Base querysets for 6-month historical trend (scoped by client/project if filtered)
+    trend_payments = Payment.objects.filter(user=user, status='paid')
+    trend_incomes = Income.objects.filter(user=user)
+    trend_expenses = Expense.objects.filter(user=user)
+    if client_id:
+        trend_payments = trend_payments.filter(project__client_id=client_id)
+        trend_incomes = trend_incomes.filter(client_id=client_id)
+    if project_id:
+        trend_payments = trend_payments.filter(project_id=project_id)
+        trend_incomes = trend_incomes.filter(project_id=project_id)
+        trend_expenses = trend_expenses.filter(project_id=project_id)
+
     for i in range(5, -1, -1):
         # Use stable calendar month calculation without day-of-month drift
         month_offset = (today.month - 1 - i) % 12 + 1
         year_offset = today.year + ((today.month - 1 - i) // 12)
         m_income = float(
-            (incomes.filter(date__year=year_offset, date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
+            (trend_incomes.filter(date__year=year_offset, date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
         ) + float(
-            (payments.filter(status='paid', paid_date__year=year_offset, paid_date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
+            (trend_payments.filter(
+                Q(paid_date__year=year_offset, paid_date__month=month_offset) |
+                Q(paid_date__isnull=True, created_at__year=year_offset, created_at__month=month_offset)
+            ).aggregate(t=Sum('amount'))['t'] or 0)
         )
-        m_expense = float(expenses.filter(date__year=year_offset, date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
+        m_expense = float(trend_expenses.filter(date__year=year_offset, date__month=month_offset).aggregate(t=Sum('amount'))['t'] or 0)
         monthly_labels.append(_date(year_offset, month_offset, 1).strftime("%b'%y"))
         income_trend.append(m_income)
         expense_trend.append(m_expense)

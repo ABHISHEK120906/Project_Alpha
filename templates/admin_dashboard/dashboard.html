@@ -195,96 +195,138 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const chartData = {{ charts_json|safe }};
+(function() {
+  function initAdminCharts() {
+    if (typeof Chart === 'undefined') {
+      setTimeout(initAdminCharts, 150);
+      return;
+    }
 
-  // Helper Chart Builder
-  function createLineChart(id, label, labels, data, color) {
-    const ctx = document.getElementById(id);
-    if (!ctx) return;
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: label,
-          data: data,
-          borderColor: color,
-          backgroundColor: color + '22',
-          fill: true,
-          tension: 0.35
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
+    const chartData = {{ charts_json|safe }} || {};
+
+    function safeDestroy(id) {
+      try {
+        const existing = Chart.getChart(id);
+        if (existing) existing.destroy();
+      } catch (e) {}
+    }
+
+    // Helper Chart Builder
+    function createLineChart(id, label, labels, data, color) {
+      const ctx = document.getElementById(id);
+      if (!ctx) return;
+      safeDestroy(id);
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels || [],
+          datasets: [{
+            label: label,
+            data: data || [],
+            borderColor: color,
+            backgroundColor: color + '22',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function createBarChart(id, label, labels, data, color, isHorizontal = false) {
+      const ctx = document.getElementById(id);
+      if (!ctx) return;
+      safeDestroy(id);
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels || [],
+          datasets: [{
+            label: label,
+            data: data || [],
+            backgroundColor: color,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: isHorizontal ? 'y' : 'x',
+          plugins: { legend: { display: false } },
+          scales: {
+            [isHorizontal ? 'x' : 'y']: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // 1. Monthly Revenue Trend (Line Chart)
+    createLineChart('chartMonthlyRevenue', 'Revenue ($)', chartData.months, chartData.revenue, '#007F7F');
+
+    // 2. Project Status (Donut Chart)
+    const ctxStatus = document.getElementById('chartProjectStatus');
+    if (ctxStatus) {
+      safeDestroy('chartProjectStatus');
+      const statusData = chartData.project_status || [0,0,0,0,0];
+      const hasStatusData = statusData.some(v => v > 0);
+      new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+          labels: ['Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled'],
+          datasets: [{
+            data: hasStatusData ? statusData : [1, 0, 0, 0, 0],
+            backgroundColor: hasStatusData ? ['#007F7F', '#126962', '#003333', '#A4F0EA', '#D2F7F4'] : ['rgba(150,150,150,0.25)'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } },
+          cutout: '70%'
+        }
+      });
+    }
+
+    // 3. Income vs Expenses (Bar Chart)
+    const ctxInEx = document.getElementById('chartIncomeVsExpense');
+    if (ctxInEx) {
+      safeDestroy('chartIncomeVsExpense');
+      new Chart(ctxInEx, {
+        type: 'bar',
+        data: {
+          labels: chartData.months || [],
+          datasets: [
+            { label: 'Revenue ($)', data: chartData.revenue || [], backgroundColor: '#007F7F', borderRadius: 4 },
+            { label: 'Expenses ($)', data: chartData.expenses || [], backgroundColor: '#e04b2a', borderRadius: 4 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    // 4. Top Clients (Horizontal Bar Chart)
+    createBarChart('chartTopClients', 'Spent ($)', chartData.top_clients_names, chartData.top_clients_spent, '#007F7F', true);
   }
 
-  function createBarChart(id, label, labels, data, color, isHorizontal = false) {
-    const ctx = document.getElementById(id);
-    if (!ctx) return;
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: label,
-          data: data,
-          backgroundColor: color,
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: isHorizontal ? 'y' : 'x',
-        plugins: { legend: { display: false } }
-      }
-    });
+  if (document.readyState !== 'loading') {
+    initAdminCharts();
+  } else {
+    document.addEventListener('DOMContentLoaded', initAdminCharts);
   }
-
-  // 1. Monthly Revenue Trend (Line Chart)
-  createLineChart('chartMonthlyRevenue', 'Revenue ($)', chartData.months, chartData.revenue, '#007F7F');
-
-  // 2. Project Status (Donut Chart)
-  const ctxStatus = document.getElementById('chartProjectStatus');
-  if (ctxStatus) {
-    new Chart(ctxStatus, {
-      type: 'doughnut',
-      data: {
-        labels: ['Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled'],
-        datasets: [{
-          data: chartData.project_status,
-          backgroundColor: ['#007F7F', '#126962', '#003333', '#A4F0EA', '#D2F7F4'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } },
-        cutout: '70%'
-      }
-    });
-  }
-
-  // 3. Income vs Expenses (Bar Chart)
-  const ctxInEx = document.getElementById('chartIncomeVsExpense');
-  if (ctxInEx) {
-    new Chart(ctxInEx, {
-      type: 'bar',
-      data: {
-        labels: chartData.months,
-        datasets: [
-          { label: 'Revenue ($)', data: chartData.revenue, backgroundColor: '#007F7F', borderRadius: 4 },
-          { label: 'Expenses ($)', data: chartData.expenses, backgroundColor: '#126962', borderRadius: 4 }
-        ]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-  }
-
-  // 4. Top Clients (Horizontal Bar Chart)
-  createBarChart('chartTopClients', 'Spent ($)', chartData.top_clients_names, chartData.top_clients_spent, '#007F7F', true);
-});
+})();
 </script>
 {% endblock %}

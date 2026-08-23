@@ -8,6 +8,7 @@
  *  • Gradient support for line/area charts
  *  • Revenue goal tracker
  *  • CSV export helper
+ *  • Bulletproof error handling
  */
 
 'use strict';
@@ -15,9 +16,17 @@
 window.VisualizationStudio = (function () {
   const _charts = {};
 
+  function onDocReady(fn) {
+    if (document.readyState !== 'loading') {
+      fn();
+    } else {
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+  }
+
   // ── Boot ─────────────────────────────────────────────────────────────────────
 
-  document.addEventListener('DOMContentLoaded', function () {
+  onDocReady(function () {
     initRevenueGoalTracker();
     initAnalyticsFilters();
     if (document.getElementById('analyticsFilterForm') || document.getElementById('incomeVsExpenseChart')) {
@@ -54,8 +63,12 @@ window.VisualizationStudio = (function () {
   // ── Safe canvas destroy ───────────────────────────────────────────────────────
 
   function safeDestroy(canvasId) {
-    const existing = Chart.getChart(canvasId);
-    if (existing) existing.destroy();
+    try {
+      if (typeof Chart !== 'undefined' && Chart.getChart) {
+        const existing = Chart.getChart(canvasId);
+        if (existing) existing.destroy();
+      }
+    } catch (e) {}
     if (_charts[canvasId]) {
       try { _charts[canvasId].destroy(); } catch (e) {}
       delete _charts[canvasId];
@@ -65,15 +78,25 @@ window.VisualizationStudio = (function () {
   // ── Gradient helper ───────────────────────────────────────────────────────────
 
   function makeGradient(ctx, colorTop, colorBottom) {
-    const grad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height || 300);
-    grad.addColorStop(0, colorTop);
-    grad.addColorStop(1, colorBottom);
-    return grad;
+    try {
+      const h = (ctx && ctx.canvas) ? (ctx.canvas.clientHeight || ctx.canvas.height || 300) : 300;
+      const grad = ctx.createLinearGradient(0, 0, 0, Math.max(h, 120));
+      grad.addColorStop(0, colorTop);
+      grad.addColorStop(1, colorBottom);
+      return grad;
+    } catch (e) {
+      return colorTop;
+    }
   }
 
   // ── Main renderChart ──────────────────────────────────────────────────────────
 
   function renderChart(canvasId, chartType, configData) {
+    if (typeof Chart === 'undefined') {
+      setTimeout(function () { renderChart(canvasId, chartType, configData); }, 150);
+      return;
+    }
+
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     safeDestroy(canvasId);
@@ -85,6 +108,8 @@ window.VisualizationStudio = (function () {
     const isArea  = chartType === 'area';
     const resolvedType = isArea ? 'line' : chartType;
     const isFilled = isLine || isArea;
+
+    configData = configData || {};
 
     // Build datasets
     let datasets;
@@ -113,17 +138,18 @@ window.VisualizationStudio = (function () {
     } else {
       // Simple single-dataset mode
       const color = (configData.colors || t.donut)[0] || t.primary;
+      const dataVals = configData.data || [];
       if (isDoughnut) {
         datasets = [{
-          data: configData.data || [],
-          backgroundColor: configData.colors || t.donut,
+          data: dataVals.length > 0 ? dataVals : [1],
+          backgroundColor: dataVals.length > 0 ? (configData.colors || t.donut) : ['rgba(150,150,150,0.25)'],
           borderWidth: 0,
-          hoverOffset: 6,
+          hoverOffset: dataVals.length > 0 ? 6 : 0,
         }];
       } else if (chartType === 'bar') {
         datasets = [{
           label: configData.label || 'Amount',
-          data: configData.data || [],
+          data: dataVals,
           backgroundColor: t.primary + 'CC',
           hoverBackgroundColor: t.primary,
           borderRadius: 8,
@@ -134,7 +160,7 @@ window.VisualizationStudio = (function () {
         const grad = makeGradient(ctx, t.primaryBg.replace('0.20','0.30').replace('0.12','0.22'), t.primaryBg.replace('0.20','0.02').replace('0.12','0.02'));
         datasets = [{
           label: configData.label || 'Amount',
-          data: configData.data || [],
+          data: dataVals,
           borderColor: t.primary,
           backgroundColor: isFilled ? grad : 'transparent',
           borderWidth: 2.5,
@@ -182,6 +208,12 @@ window.VisualizationStudio = (function () {
             bodyColor:        t.tick,
             padding:          12,
             cornerRadius:     10,
+            callbacks: {
+              label: function (c) {
+                const val = c.parsed && typeof c.parsed.y !== 'undefined' ? c.parsed.y : (c.parsed && typeof c.parsed.x !== 'undefined' ? c.parsed.x : c.raw);
+                return ` ${c.dataset.label || ''}: ₹${Number(val || 0).toLocaleString('en-IN')}`;
+              }
+            }
           }
         },
         scales: isDoughnut ? {} : {
@@ -263,7 +295,10 @@ window.VisualizationStudio = (function () {
     }
 
     fetch('/api/v1/dashboard/analytics/' + query, { credentials: 'same-origin' })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
       .then(data => {
         if (data.financial_trend) {
           renderChart('financialTrendChart', 'line', {
@@ -318,6 +353,8 @@ window.VisualizationStudio = (function () {
   // ── CSV Export ────────────────────────────────────────────────────────────────
 
   function exportCSV(filename, labels, data) {
+    labels = labels || [];
+    data = data || [];
     let csv = 'Label,Value\n';
     labels.forEach((lbl, idx) => { csv += `"${lbl}",${data[idx] || 0}\n`; });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

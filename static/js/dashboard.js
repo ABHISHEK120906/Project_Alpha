@@ -7,6 +7,7 @@
  *  • Server-side data hydration (instant load)
  *  • Async API refresh for live KPI counters
  *  • Chart type switcher: line / bar / area
+ *  • Bulletproof error handling & null guards
  *
  * Canvas IDs (must match dashboard.html):
  *   financialTrendChart  →  Revenue/Expense Line/Bar/Area Chart
@@ -14,6 +15,16 @@
  */
 
 'use strict';
+
+// ── Helper: Ready State Listener ───────────────────────────────────────────────
+
+function onDocReady(fn) {
+  if (document.readyState !== 'loading') {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
 
 // ── Design Tokens ──────────────────────────────────────────────────────────────
 
@@ -50,30 +61,49 @@ function getTokens() {
 window._dashCharts = window._dashCharts || {};
 
 function safeDestroy(id) {
-  const existing = Chart.getChart(id);
-  if (existing) existing.destroy();
-  if (window._dashCharts[id]) { try { window._dashCharts[id].destroy(); } catch(e){} }
+  try {
+    if (typeof Chart !== 'undefined' && Chart.getChart) {
+      const existing = Chart.getChart(id);
+      if (existing) existing.destroy();
+    }
+  } catch (e) {
+    console.warn('[Dashboard] Chart destroy exception for', id, e);
+  }
+  if (window._dashCharts[id]) {
+    try { window._dashCharts[id].destroy(); } catch (e) {}
+  }
   delete window._dashCharts[id];
 }
 
 // ── Canvas gradient helper ─────────────────────────────────────────────────────
 
 function makeGradient(ctx, color1, color2) {
-  const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height || 260);
-  gradient.addColorStop(0, color1);
-  gradient.addColorStop(1, color2);
-  return gradient;
+  try {
+    const h = (ctx && ctx.canvas) ? (ctx.canvas.clientHeight || ctx.canvas.height || 260) : 260;
+    const gradient = ctx.createLinearGradient(0, 0, 0, Math.max(h, 120));
+    gradient.addColorStop(0, color1);
+    gradient.addColorStop(1, color2);
+    return gradient;
+  } catch (e) {
+    return color1;
+  }
 }
 
-// ── Global Chart.js defaults (applied once) ────────────────────────────────────
+// ── Global Chart.js defaults ───────────────────────────────────────────────────
 
-Chart.defaults.font.family = "'Inter', sans-serif";
-Chart.defaults.animation.duration = 700;
-Chart.defaults.animation.easing = 'easeInOutQuart';
+function applyGlobalDefaults() {
+  if (typeof Chart !== 'undefined' && Chart.defaults) {
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.animation.duration = 700;
+    Chart.defaults.animation.easing = 'easeInOutQuart';
+  }
+}
 
 // ── Boot on DOM ready ──────────────────────────────────────────────────────────
 
-document.addEventListener('DOMContentLoaded', function () {
+onDocReady(function () {
+  applyGlobalDefaults();
+
   // Always render charts from server-side data first (instant)
   initChartsFromServerData();
 
@@ -99,9 +129,17 @@ document.addEventListener('DOMContentLoaded', function () {
 // ── Server-side chart data bootstrap ──────────────────────────────────────────
 
 function initChartsFromServerData() {
+  if (typeof Chart === 'undefined') {
+    // Retry if Chart.js is still loading asynchronously
+    setTimeout(initChartsFromServerData, 150);
+    return;
+  }
+
+  applyGlobalDefaults();
+
   // Data injected by Django template into window.DASH_* globals (set in dashboard.html)
-  const monthly  = window.DASH_MONTHLY  || { labels: [], revenue: [], income: [], expenses: [] };
-  const statusD  = window.DASH_STATUS   || {};
+  const monthly = window.DASH_MONTHLY || { labels: [], revenue: [], income: [], expenses: [] };
+  const statusD = window.DASH_STATUS  || {};
 
   renderFinancialChart(monthly, window._dashChartType || 'line');
   renderStatusChart(statusD);
@@ -123,7 +161,9 @@ window.switchDashboardChart = function (type, btnEl) {
 
 async function loadDashboardStatsAPI() {
   try {
+    if (!window.apiFetch) return;
     const data = await window.apiFetch('/api/v1/dashboard/stats/');
+    if (!data) return;
 
     updateStat('totalRevenueStat',  data.total_revenue,   '₹');
     updateStat('pendingAmountStat', data.pending_amount,  '₹');
@@ -146,7 +186,7 @@ async function loadDashboardStatsAPI() {
       renderStatusChart(data.status_chart);
     }
   } catch (err) {
-    console.warn('[Dashboard] API refresh failed, keeping server-rendered charts:', err.message);
+    console.warn('[Dashboard] API refresh non-fatal error:', err.message);
   }
 }
 
@@ -167,17 +207,25 @@ function updateStat(id, value, prefix) {
 // ── Chart: Financial Trend ─────────────────────────────────────────────────────
 
 function renderFinancialChart(monthly, chartType) {
+  if (typeof Chart === 'undefined') return;
   const canvas = document.getElementById('financialTrendChart');
   if (!canvas) return;
   safeDestroy('financialTrendChart');
+
   const t = getTokens();
   const ctx = canvas.getContext('2d');
 
-  const labels   = monthly.labels   || [];
-  const revenue  = monthly.revenue  || monthly.income || [];
-  const expenses = monthly.expenses || [];
+  let labels   = (monthly && monthly.labels && monthly.labels.length > 0) ? [...monthly.labels] : [];
+  let revenue  = (monthly && (monthly.revenue || monthly.income)) ? [...(monthly.revenue || monthly.income)] : [];
+  let expenses = (monthly && monthly.expenses) ? [...monthly.expenses] : [];
 
-  const hasExpenses = expenses.some(v => v > 0);
+  if (labels.length === 0) {
+    labels = ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6"];
+    revenue = [0, 0, 0, 0, 0, 0];
+    expenses = [0, 0, 0, 0, 0, 0];
+  }
+
+  const hasExpenses = expenses.some(v => Number(v) > 0);
 
   // Build gradient fills for line/area charts
   const revGrad  = makeGradient(ctx, t.revenueBg.replace('0.18', '0.35').replace('0.10','0.28'), t.revenueBg.replace('0.18','0.04').replace('0.10','0.02'));
@@ -252,7 +300,7 @@ function renderFinancialChart(monthly, chartType) {
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: {
-          display: hasExpenses,
+          display: hasExpenses || datasets.length > 1,
           position: 'top',
           align: 'end',
           labels: {
@@ -273,7 +321,7 @@ function renderFinancialChart(monthly, chartType) {
           padding:          12,
           cornerRadius:     10,
           callbacks: {
-            label: (ctx) => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString('en-IN', { minimumFractionDigits: 0 })}`
+            label: (ctx) => ` ${ctx.dataset.label}: ₹${Number(ctx.parsed.y || 0).toLocaleString('en-IN', { minimumFractionDigits: 0 })}`
           }
         }
       },
@@ -303,6 +351,7 @@ function renderFinancialChart(monthly, chartType) {
 // ── Chart: Project Status Doughnut ────────────────────────────────────────────
 
 function renderStatusChart(statusData) {
+  if (typeof Chart === 'undefined') return;
   const canvas = document.getElementById('statusDistChart');
   if (!canvas) return;
   safeDestroy('statusDistChart');
@@ -316,30 +365,33 @@ function renderStatusChart(statusData) {
     cancelled:   'Cancelled',
   };
   const labels = Object.keys(labelMap).map(k => labelMap[k]);
-  const values = Object.keys(labelMap).map(k => (statusData[k] || 0));
+  const values = Object.keys(labelMap).map(k => Number(statusData && statusData[k] ? statusData[k] : 0));
   const total  = values.reduce((a, b) => a + b, 0);
 
-  // If no data, show placeholder
-  const displayValues = total > 0 ? values : [1, 0, 0, 0, 0];
-  const displayLabels = total > 0 ? labels : ['No Data'];
+  const hasData = total > 0;
+  const displayValues = hasData ? values : [1, 0, 0, 0, 0];
+  const displayLabels = hasData ? labels : ['No Projects'];
 
-  // Center text plugin
+  // Center text plugin with strict boundary checking
   const centerTextPlugin = {
     id: 'centerText',
     afterDraw(chart) {
-      const { ctx, chartArea: { width, height, left, top } } = chart;
+      if (!chart || !chart.chartArea) return;
+      const { ctx, chartArea } = chart;
+      if (!chartArea || typeof chartArea.width === 'undefined' || typeof chartArea.height === 'undefined') return;
+      const { width, height, left, top } = chartArea;
       ctx.save();
       const cx = left + width / 2;
       const cy = top + height / 2;
       const num = total > 0 ? total : 0;
-      ctx.font = `700 ${Math.min(width, height) * 0.14}px Inter, sans-serif`;
+      ctx.font = `700 ${Math.max(12, Math.min(width, height) * 0.14)}px 'Inter', sans-serif`;
       ctx.fillStyle = t.text;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(num.toString(), cx, cy - 8);
-      ctx.font = `400 ${Math.min(width, height) * 0.07}px Inter, sans-serif`;
+      ctx.font = `500 ${Math.max(10, Math.min(width, height) * 0.07)}px 'Inter', sans-serif`;
       ctx.fillStyle = t.tick;
-      ctx.fillText('Projects', cx, cy + 12);
+      ctx.fillText(num === 1 ? 'Project' : 'Projects', cx, cy + 12);
       ctx.restore();
     }
   };
@@ -347,12 +399,12 @@ function renderStatusChart(statusData) {
   const chart = new Chart(canvas, {
     type: 'doughnut',
     data: {
-      labels: displayLabels,
+      labels: hasData ? displayLabels : ['No Projects'],
       datasets: [{
-        data: displayValues,
-        backgroundColor: t.donut,
+        data: hasData ? displayValues : [1],
+        backgroundColor: hasData ? t.donut : ['rgba(150,150,150,0.25)'],
         borderWidth: 0,
-        hoverOffset: 8,
+        hoverOffset: hasData ? 8 : 0,
       }]
     },
     plugins: [centerTextPlugin],
@@ -362,6 +414,7 @@ function renderStatusChart(statusData) {
       cutout: '72%',
       plugins: {
         legend: {
+          display: hasData,
           position: 'bottom',
           labels: {
             color: t.text,
@@ -373,6 +426,7 @@ function renderStatusChart(statusData) {
           }
         },
         tooltip: {
+          enabled: hasData,
           backgroundColor: t.tooltipBg,
           borderColor:      t.tooltipBorder,
           borderWidth:      1,
@@ -389,18 +443,4 @@ function renderStatusChart(statusData) {
   });
 
   window._dashCharts.statusDistChart = chart;
-}
-
-// ── Graceful empty state ───────────────────────────────────────────────────────
-
-function renderChartsEmpty() {
-  ['financialTrendChart', 'statusDistChart'].forEach(id => {
-    const canvas = document.getElementById(id);
-    if (!canvas) return;
-    canvas.parentElement.innerHTML = `
-      <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height:200px;gap:8px;">
-        <i class="fas fa-chart-bar fa-2x opacity-25"></i>
-        <small style="font-size:0.78rem;">Chart data unavailable</small>
-      </div>`;
-  });
 }

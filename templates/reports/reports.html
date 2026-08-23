@@ -193,14 +193,39 @@
 const reportLabels = JSON.parse('{{ monthly_labels_json|escapejs }}' || '[]');
 const reportValues = JSON.parse('{{ monthly_values_json|escapejs }}' || '[]');
 
-document.addEventListener('DOMContentLoaded', function () {
+function initReportsChart() {
   if (window.VisualizationStudio) {
     window.VisualizationStudio.renderChart('monthlyChart', 'bar', {
       labels: reportLabels,
       data: reportValues
     });
+  } else if (typeof Chart !== 'undefined') {
+    const ctx = document.getElementById('monthlyChart');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: reportLabels,
+          datasets: [{
+            label: 'Monthly Earnings',
+            data: reportValues,
+            backgroundColor: '#007F7F',
+            borderRadius: 6
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+  } else {
+    setTimeout(initReportsChart, 150);
   }
-});
+}
+
+if (document.readyState !== 'loading') {
+  initReportsChart();
+} else {
+  document.addEventListener('DOMContentLoaded', initReportsChart);
+}
 
 function switchReportChart(type, btnEl) {
   if (btnEl && btnEl.parentNode) {
