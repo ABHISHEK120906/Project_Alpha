@@ -112,10 +112,13 @@ urlpatterns = [
     # ── Activity Log ──────────────────────────────────────
     path('activities/', views.activity_list, name='activity_list'),
 
-    # ── Reports ───────────────────────────────────────────
+    # ── Reports & Comprehensive Exports ────────────────────
     path('reports/', views.reports_dashboard, name='reports_dashboard'),
     path('reports/export/pdf/<str:report_type>/', views.export_pdf_report, name='export_pdf_report'),
     path('reports/export/excel/<str:report_type>/', views.export_excel_report, name='export_excel_report'),
+    path('reports/comprehensive/pdf/', views.export_comprehensive_pdf_report, name='export_comprehensive_pdf_report'),
+    path('reports/comprehensive/excel/', views.export_comprehensive_excel_report, name='export_comprehensive_excel_report'),
+    path('reports/export/csv/<str:dataset_type>/', views.export_analytics_csv, name='export_analytics_csv'),
 
     # ── Settings ──────────────────────────────────────────
     path('settings/', views.user_settings, name='settings'),

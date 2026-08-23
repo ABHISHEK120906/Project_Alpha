@@ -1768,3 +1768,31 @@ body, .card, .topbar, .sidebar, .table, .form-control, .form-select,
   padding: 2px 6px;
   border-radius: 4px;
 }
+
+/* ═════════════════════════════════════════════════════════════
+   FREELANCER INTELLIGENCE PLATFORM — DATA SCIENCE ENHANCEMENTS
+   ═════════════════════════════════════════════════════════════ */
+
+.analytics-tabs .nav-link {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition: var(--transition-fast);
+}
+
+.analytics-tabs .nav-link:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.analytics-tabs .nav-link.active {
+  background: var(--primary) !important;
+  color: #07111D !important;
+  border-color: var(--primary) !important;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(219, 153, 65, 0.25);
+}

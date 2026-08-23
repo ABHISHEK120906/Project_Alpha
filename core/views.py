@@ -2392,3 +2392,180 @@ def chat_conversation(request, pk):
         'initial_messages': messages_qs,
         'page_title': f'TrackBot — {conv.title}',
     })
+
+
+# ════════════════════════════════════════════════════════════════
+# INTELLIGENCE WORKSPACES (DATA ANALYTICS & DATA SCIENCE)
+# ════════════════════════════════════════════════════════════════
+
+@login_required
+def analytics_workspace(request):
+    """
+    Complete 10-phase Data Analytics workspace:
+    Data profiling, quality scorecard, EDA, descriptive statistics,
+    visualizations, Pearson correlation matrix, outlier detection,
+    trend analysis, and algorithmic key business insights.
+    """
+    from core.services.analytics_engine import AnalyticsEngine
+    
+    filters = {
+        'client': request.GET.get('client', ''),
+        'status': request.GET.get('status', ''),
+        'start_date': request.GET.get('start_date', ''),
+        'end_date': request.GET.get('end_date', ''),
+    }
+
+    engine = AnalyticsEngine(request.user, filters=filters)
+    profiles = engine.get_data_profiles()
+    quality = engine.get_data_quality_audit()
+    eda = engine.get_exploratory_analysis()
+    correlation = engine.compute_correlation_matrix()
+    outliers = engine.detect_outliers()
+    trends = engine.get_trend_analysis()
+    insights = engine.generate_automated_insights()
+    clients_list = Client.objects.filter(user=request.user, is_archived=False).values_list('name', flat=True)
+
+    return render(request, 'analytics/workspace.html', {
+        'profiles': profiles,
+        'quality': quality,
+        'eda': eda,
+        'correlation': correlation,
+        'outliers': outliers,
+        'trends': trends,
+        'insights': insights,
+        'clients_list': clients_list,
+        'filters': filters,
+        'page_title': 'Data Analytics Workspace',
+    })
+
+
+@login_required
+@require_POST
+def apply_data_clean_action(request):
+    """
+    Executes safe 1-click normalization action from data quality audit.
+    """
+    from core.services.analytics_engine import AnalyticsEngine
+    action_type = request.POST.get('action_type')
+    engine = AnalyticsEngine(request.user)
+    result = engine.apply_safe_clean_action(action_type)
+
+    if result.get('success'):
+        messages.success(request, result.get('message', 'Data cleaning applied successfully.'))
+    else:
+        messages.warning(request, result.get('message', 'No changes applied.'))
+
+    return redirect('core:analytics_workspace')
+
+
+@login_required
+def data_science_workspace(request):
+    """
+    Complete 8-tab Data Science & Predictive Analytics workspace:
+    Data prep, hypothesis testing, time-series forecasting (Holt-Winters),
+    predictive regression & classification evaluation, live scenario simulator.
+    """
+    from core.services.data_science_service import DataScienceService
+    ds = DataScienceService(request.user)
+
+    readiness = ds.get_readiness_status()
+    features = ds.get_feature_pipeline_data() if readiness['is_ready'] else []
+    inference = ds.get_statistical_inference() if readiness['is_ready'] else {}
+    forecast = ds.get_time_series_forecast(forecast_months=3) if readiness['is_ready'] else {'is_sufficient': False}
+    models = ds.get_predictive_models_evaluation() if readiness['is_ready'] else {'is_ready': False}
+
+    return render(request, 'data_science/workspace.html', {
+        'readiness': readiness,
+        'features': features,
+        'inference': inference,
+        'forecast': forecast,
+        'models': models,
+        'page_title': 'Data Science & Predictive Analytics',
+    })
+
+
+# ════════════════════════════════════════════════════════════════
+# ENTERPRISE REPORT GENERATOR & EXPORTS (PDF, EXCEL, CSV)
+# ════════════════════════════════════════════════════════════════
+
+@login_required
+def export_comprehensive_pdf_report(request):
+    """
+    Streams a presentation-ready executive BI report in PDF format via ReportLab.
+    """
+    from django.http import HttpResponse
+    from core.services.report_generator import ReportGeneratorService
+
+    filters = {
+        'client': request.GET.get('client', ''),
+        'status': request.GET.get('status', ''),
+        'start_date': request.GET.get('start_date', ''),
+        'end_date': request.GET.get('end_date', ''),
+    }
+
+    try:
+        service = ReportGeneratorService(request.user, filters=filters)
+        pdf_buffer = service.generate_comprehensive_pdf()
+        filename = f"freelancer_intelligence_report_{timezone.now().strftime('%Y%m%d_%H%M')}.pdf"
+        response = HttpResponse(pdf_buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    except Exception as e:
+        messages.error(request, f'Failed to generate PDF report: {e}')
+        return redirect('core:reports_dashboard')
+
+
+@login_required
+def export_comprehensive_excel_report(request):
+    """
+    Streams a formatted multi-sheet Excel workbook (.xlsx) via openpyxl.
+    """
+    from django.http import HttpResponse
+    from core.services.report_generator import ReportGeneratorService
+
+    filters = {
+        'client': request.GET.get('client', ''),
+        'status': request.GET.get('status', ''),
+        'start_date': request.GET.get('start_date', ''),
+        'end_date': request.GET.get('end_date', ''),
+    }
+
+    try:
+        service = ReportGeneratorService(request.user, filters=filters)
+        excel_buffer = service.generate_comprehensive_excel()
+        filename = f"freelancer_intelligence_bi_{timezone.now().strftime('%Y%m%d_%H%M')}.xlsx"
+        response = HttpResponse(
+            excel_buffer.getvalue(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    except Exception as e:
+        messages.error(request, f'Failed to generate Excel report: {e}')
+        return redirect('core:reports_dashboard')
+
+
+@login_required
+def export_analytics_csv(request, dataset_type):
+    """
+    Streams clean CSV data for specified dataset ('projects', 'payments', 'clients').
+    """
+    from django.http import HttpResponse
+    from core.services.report_generator import ReportGeneratorService
+
+    valid_types = ['projects', 'payments', 'clients']
+    if dataset_type not in valid_types:
+        messages.error(request, 'Invalid dataset requested for CSV export.')
+        return redirect('core:reports_dashboard')
+
+    try:
+        service = ReportGeneratorService(request.user)
+        csv_buffer = service.generate_csv_stream(dataset_type)
+        filename = f"{dataset_type}_{timezone.now().strftime('%Y%m%d')}.csv"
+        response = HttpResponse(csv_buffer.getvalue(), content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    except Exception as e:
+        messages.error(request, f'Failed to export CSV: {e}')
+        return redirect('core:reports_dashboard')
+
