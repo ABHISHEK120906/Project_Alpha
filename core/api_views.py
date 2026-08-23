@@ -19,7 +19,29 @@ from .serializers import (
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def api_health(request):
-    return Response({"status": "ok", "service": "FreelanceTrack API Proxy", "version": "v1.0"}, status=status.HTTP_200_OK)
+    return Response({
+        "status": "ok",
+        "service": "Freelancer Intelligence Platform API",
+        "version": "v2.0",
+        "positioning": "Full-Stack Web Development + Data Analytics + Data Science + Business Intelligence"
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def api_analytics_drilldown(request):
+    """
+    Returns granular records for interactive chart slice drill-down.
+    Query params: dimension (client/status/payment_status), value.
+    """
+    from .services.analytics_engine import DataAnalyticsEngine
+    dimension = request.GET.get('dimension', 'client')
+    value = request.GET.get('value', '')
+    
+    engine = DataAnalyticsEngine(user=request.user)
+    result = engine.get_drilldown_data(dimension=dimension, value=value)
+    return Response(result, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

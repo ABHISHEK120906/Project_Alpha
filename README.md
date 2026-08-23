@@ -1,16 +1,20 @@
-# FreelanceTrack — Freelancer Project Management System
+# Freelancer Intelligence Platform
 
-A production-ready, feature-rich project management and productivity platform built specifically for freelancers and independent contractors. Track clients, projects, payments, tasks, financial flows, invoices, deadlines, and get AI-assisted insights with TrackBot — all in one unified workspace.
+### **Manage. Analyze. Predict. Grow.**
+**Full-Stack Web Development + Data Analytics + Data Science + Business Intelligence**
+
+A production-ready, feature-rich enterprise platform built specifically for freelancers and independent contractors. Unifies client relationship management, financial accounting, dynamic data profiling, statistical exploratory analysis, and predictive intelligence into one workspace.
 
 ## 🚀 Tech Stack
 
 - **Backend**: Django 6.0.7 + Django REST Framework (DRF)
 - **Database**: PostgreSQL (Neon) via `dj-database-url` (SQLite for local fallback)
 - **Authentication**: Custom Role-Based Authentication with Audit Logging & IP Security Controls
+- **Data Analytics & BI Engine**: In-memory statistical profiling, quality scoring, correlation matrices, outlier detection, and Chart.js 4.4 visualizations
 - **Static Files**: WhiteNoise with compression and caching
 - **Deployment**: Vercel (Serverless Python) & WSGI Support
 - **Reports & Invoicing**: ReportLab (PDF generation) + openpyxl (Excel exports)
-- **Frontend**: Vanilla CSS + Glassmorphism UI + Chart.js Data Visualizations + Dark/Light Theme
+- **Frontend**: Vanilla CSS Design System + Dark/Light Theme + Responsive Glassmorphism Grid
 
 ---
 

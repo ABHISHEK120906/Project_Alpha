@@ -1,25 +1,34 @@
 {% extends 'auth_base.html' %}
 {% load static %}
-{% block title %}FreelanceTrack — Manage Your Freelance Business{% endblock %}
+{% block title %}Freelancer Intelligence Platform — Manage. Analyze. Predict. Grow.{% endblock %}
 
 {% block content %}
 
-<h1 class="auth-heading" style="font-size:27px;">Get started free</h1>
-<p class="auth-subheading">Your all-in-one freelance management platform</p>
+<div class="text-center mb-4">
+  <span class="badge" style="background:rgba(219,153,65,0.15);color:#DB9941;border:1px solid rgba(219,153,65,0.35);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700;">
+    Manage &bull; Analyze &bull; Predict &bull; Grow
+  </span>
+  <h1 class="auth-heading mt-2" style="font-size:24px;">Freelancer Intelligence Platform</h1>
+  <p class="auth-subheading mb-3" style="font-size:13px;">Full-Stack Web Development + Data Analytics + Data Science + Business Intelligence</p>
+</div>
 
-<!-- Quick stats row -->
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px;">
-  <div style="background:#FDF3E3;border:1px solid rgba(219,153,65,0.35);border-radius:12px;padding:14px;text-align:center;">
-    <div style="font-size:22px;font-weight:800;color:#B8791F;">6+</div>
-    <div style="font-size:11.5px;font-weight:600;color:#8A5C10;margin-top:2px;">Modules</div>
+<!-- 4 Core Pillars Grid -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+  <div style="background:rgba(219,153,65,0.08);border:1px solid rgba(219,153,65,0.25);border-radius:12px;padding:12px;">
+    <div style="font-size:12px;font-weight:800;color:#DB9941;"><i class="fas fa-layer-group me-1"></i>Full-Stack</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Auth, Projects, Clients, Invoices &amp; Security</div>
   </div>
-  <div style="background:#FDF3E3;border:1px solid rgba(219,153,65,0.35);border-radius:12px;padding:14px;text-align:center;">
-    <div style="font-size:22px;font-weight:800;color:#DB9941;">PDF</div>
-    <div style="font-size:11.5px;font-weight:600;color:#B8791F;margin-top:2px;">&amp; Excel</div>
+  <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.25);border-radius:12px;padding:12px;">
+    <div style="font-size:12px;font-weight:800;color:#2563eb;"><i class="fas fa-chart-pie me-1"></i>Data Analytics</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Profiling, EDA, Statistics &amp; Correlation</div>
   </div>
-  <div style="background:#E8F5ED;border:1px solid rgba(46,125,71,0.3);border-radius:12px;padding:14px;text-align:center;">
-    <div style="font-size:22px;font-weight:800;color:#2E7D47;">100%</div>
-    <div style="font-size:11.5px;font-weight:600;color:#1A6632;margin-top:2px;">Free</div>
+  <div style="background:rgba(111,66,193,0.08);border:1px solid rgba(111,66,193,0.25);border-radius:12px;padding:12px;">
+    <div style="font-size:12px;font-weight:800;color:#6f42c1;"><i class="fas fa-microchip me-1"></i>Data Science</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Forecasting &amp; Predictive Risk Models</div>
+  </div>
+  <div style="background:rgba(46,125,71,0.08);border:1px solid rgba(46,125,71,0.25);border-radius:12px;padding:12px;">
+    <div style="font-size:12px;font-weight:800;color:#2E7D47;"><i class="fas fa-brain me-1"></i>Intelligence</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Executive Dashboard &amp; TrackBot AI</div>
   </div>
 </div>
 
@@ -31,23 +40,23 @@
 
 <a href="{% url 'core:login' %}" style="
   display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;padding:14px;
+  width:100%;padding:13px;
   background:transparent;
   border:1.5px solid rgba(93,93,93,0.25);
   border-radius:12px;
-  color:#39444D;
+  color:var(--text-primary);
   font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
   text-decoration:none;
   transition:all 0.2s ease;
 "
 onmouseover="this.style.background='rgba(219,153,65,0.08)';this.style.borderColor='rgba(219,153,65,0.4)';this.style.color='#B8791F';"
-onmouseout="this.style.background='transparent';this.style.borderColor='rgba(93,93,93,0.25)';this.style.color='#39444D';">
+onmouseout="this.style.background='transparent';this.style.borderColor='rgba(93,93,93,0.25)';this.style.color='inherit';">
   <i class="fas fa-sign-in-alt"></i>
   Sign In to Existing Account
 </a>
 
-<div class="auth-footer-text" style="margin-top:28px;">
+<div class="auth-footer-text" style="margin-top:24px;">
   <i class="fas fa-shield-alt" style="color:#DB9941;margin-right:6px;"></i>
-  Secure &amp; private — your data, your control
+  Role-based security &bull; Private data isolation &bull; Real analytics
 </div>
 {% endblock %}

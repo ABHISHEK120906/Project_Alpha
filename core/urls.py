@@ -120,11 +120,17 @@ urlpatterns = [
     # ── Settings ──────────────────────────────────────────
     path('settings/', views.user_settings, name='settings'),
 
+    # ── Intelligence & Data Analytics Workspaces ───────────
+    path('analytics/', views.analytics_workspace, name='analytics_workspace'),
+    path('analytics/clean/', views.apply_data_clean_action, name='apply_data_clean_action'),
+    path('data-science/', views.data_science_workspace, name='data_science_workspace'),
+
     # ── Backend Proxy API Endpoints (/api/v1/) ───────────
     path('api/v1/health/', api_views.api_health, name='api_health'),
     path('api/v1/dashboard/stats/', api_views.api_dashboard_stats, name='api_dashboard_stats'),
     path('api/v1/dashboard/analytics/', api_views.api_dashboard_analytics, name='api_dashboard_analytics'),
     path('api/v1/dashboard/activity/', api_views.api_activity_log, name='api_activity_log'),
+    path('api/v1/analytics/drilldown/', api_views.api_analytics_drilldown, name='api_analytics_drilldown'),
     path('api/v1/tasks/<uuid:pk>/toggle/', api_views.api_toggle_task, name='api_toggle_task'),
     path('api/v1/projects/<uuid:pk>/quick-status/', api_views.api_update_project_status, name='api_update_project_status'),
     path('api/v1/notifications/unread-count/', api_views.api_unread_notification_count, name='api_unread_notification_count'),

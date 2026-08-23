@@ -1,23 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Dashboard — FreelanceTrack{% endblock %}
-{% block page_title %}Freelancer Dashboard{% endblock %}
+{% block title %}Executive Dashboard — Freelancer Intelligence Platform{% endblock %}
+{% block page_title %}Executive Dashboard{% endblock %}
 
 {% block content %}
 
-<!-- Welcome Banner -->
-<div class="welcome-banner mb-4">
+<!-- Executive Header / Welcome Banner -->
+<div class="welcome-banner mb-4 reveal-up">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <span class="badge" style="background:rgba(219,153,65,0.2);color:#DB9941;border:1px solid rgba(219,153,65,0.4);font-size:11px;letter-spacing:1px;text-transform:uppercase;">Executive Overview</span>
+      </div>
       <h2 class="welcome-banner-title gradient-text">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
-      <p class="welcome-banner-sub">Here is your freelance business performance, projects, and pending tasks overview.</p>
+      <p class="welcome-banner-sub">Here is your comprehensive business performance, operational velocity, and revenue health summary.</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
+      <a href="{% url 'core:analytics_workspace' %}" class="welcome-banner-btn" style="background:var(--primary);border:none;font-weight:700;" title="Open Data Analytics Workspace">
+        <i class="fas fa-chart-pie me-1"></i> Data Analytics
+      </a>
       <a href="{% url 'core:project_create' %}" class="welcome-banner-btn" title="Create Project">
         <i class="fas fa-plus"></i> New Project
-      </a>
-      <a href="{% url 'core:client_create' %}" class="welcome-banner-btn" style="background:rgba(255,255,255,0.25);color:#fff;border:none;" title="Add Client">
-        <i class="fas fa-user-plus me-1"></i> Add Client
       </a>
       <a href="{% url 'core:payment_create' %}" class="welcome-banner-btn" title="Record Payment">
         <i class="fas fa-dollar-sign"></i> Log Payment
@@ -47,73 +50,105 @@
   {% endfor %}
 {% endif %}
 
-<!-- ── 8 Core KPI Cards ── -->
+<!-- ── Executive Real KPI Cards ── -->
 <div class="row g-3 mb-4">
-  <!-- 1. Total Projects -->
-  <div class="col-6 col-md-3">
+  <!-- 1. Total Realized Revenue -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-1">
-      <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-folder"></i></div>
-      <div class="stat-value fw-bold fs-4 stat-number" id="totalProjectsStat" data-target="{{ total_projects }}">{{ total_projects }}</div>
-      <div class="stat-label small text-muted">Total Projects</div>
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
+        <span class="badge bg-success bg-opacity-10 text-success small" style="font-size:10px;">Realized</span>
+      </div>
+      <div class="stat-value fw-bold fs-4 text-success stat-number" id="totalRevenueStat" data-target="{{ total_earnings|floatformat:0 }}" data-prefix="$">${{ total_earnings|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Total Revenue</div>
     </div>
   </div>
-  <!-- 2. Active Projects -->
-  <div class="col-6 col-md-3">
+
+  <!-- 2. Pending Payments (Accounts Receivable) -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-2">
-      <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-spinner"></i></div>
-      <div class="stat-value fw-bold fs-4 stat-number" data-target="{{ active_projects }}">{{ active_projects }}</div>
-      <div class="stat-label small text-muted">Active Projects</div>
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
+        <span class="badge bg-warning bg-opacity-10 text-warning small" style="font-size:10px;">Receivable</span>
+      </div>
+      <div class="stat-value fw-bold fs-4 text-warning stat-number" id="pendingAmountStat" data-target="{{ pending_payments|floatformat:0 }}" data-prefix="$">${{ pending_payments|floatformat:0 }}</div>
+      <div class="stat-label small text-muted">Pending Invoices</div>
     </div>
   </div>
-  <!-- 3. Completed Projects -->
-  <div class="col-6 col-md-3">
+
+  <!-- 3. Average Project Value -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-3">
-      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-check-circle"></i></div>
-      <div class="stat-value fw-bold fs-4 stat-number" data-target="{{ completed_projects }}">{{ completed_projects }}</div>
-      <div class="stat-label small text-muted">Completed Projects</div>
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-scale-balanced"></i></div>
+        <span class="badge bg-primary bg-opacity-10 text-primary small" style="font-size:10px;">Empirical</span>
+      </div>
+      <div class="stat-value fw-bold fs-4 text-primary">
+        {% if avg_project_value is not None %}
+          ${{ avg_project_value|floatformat:0 }}
+        {% else %}
+          <span class="text-muted fs-5">N/A</span>
+        {% endif %}
+      </div>
+      <div class="stat-label small text-muted">Avg. Project Value</div>
     </div>
   </div>
-  <!-- 4. Total Clients -->
-  <div class="col-6 col-md-3">
+
+  <!-- 4. Portfolio Completion Rate -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-4">
-      <div class="stat-icon mb-2" style="background:var(--purple-soft, rgba(111,66,193,0.15));color:var(--purple, #6f42c1);"><i class="fas fa-users"></i></div>
-      <div class="stat-value fw-bold fs-4 stat-number" id="totalClientsStat" data-target="{{ total_clients }}">{{ total_clients }}</div>
-      <div class="stat-label small text-muted">Total Clients</div>
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-trophy"></i></div>
+        <span class="badge bg-info bg-opacity-10 text-info small" style="font-size:10px;">Velocity</span>
+      </div>
+      <div class="stat-value fw-bold fs-4 text-info">
+        {% if completion_rate is not None %}
+          {{ completion_rate }}%
+        {% else %}
+          <span class="text-muted fs-5">N/A</span>
+        {% endif %}
+      </div>
+      <div class="stat-label small text-muted">Completion Rate</div>
     </div>
   </div>
 </div>
 
 <div class="row g-3 mb-4">
-  <!-- 5. Total Earnings -->
-  <div class="col-6 col-md-3">
+  <!-- 5. Active Projects -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-1">
-      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
-      <div class="stat-value fw-bold fs-5 text-success stat-number" id="totalRevenueStat" data-target="{{ total_earnings|floatformat:0 }}" data-prefix="$">${{ total_earnings|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Total Earnings</div>
+      <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-spinner"></i></div>
+      <div class="stat-value fw-bold fs-5 stat-number" data-target="{{ active_projects }}">{{ active_projects }}</div>
+      <div class="stat-label small text-muted">Active Projects (of {{ total_projects }})</div>
     </div>
   </div>
-  <!-- 6. Pending Payments -->
-  <div class="col-6 col-md-3">
+
+  <!-- 6. Active Clients -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-2">
-      <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
-      <div class="stat-value fw-bold fs-5 text-warning stat-number" id="pendingAmountStat" data-target="{{ pending_payments|floatformat:0 }}" data-prefix="$">${{ pending_payments|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Pending Payments</div>
+      <div class="stat-icon mb-2" style="background:rgba(111,66,193,0.15);color:#6f42c1;"><i class="fas fa-users"></i></div>
+      <div class="stat-value fw-bold fs-5 stat-number" data-target="{{ active_clients }}">{{ active_clients }}</div>
+      <div class="stat-label small text-muted">Active Clients (of {{ total_clients }})</div>
     </div>
   </div>
-  <!-- 7. Pending Tasks -->
-  <div class="col-6 col-md-3">
+
+  <!-- 7. Net Profit -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-3">
-      <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-tasks"></i></div>
-      <div class="stat-value fw-bold fs-5 text-info stat-number" data-target="{{ pending_tasks_count }}">{{ pending_tasks_count }}</div>
-      <div class="stat-label small text-muted">Pending Tasks</div>
+      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-chart-line"></i></div>
+      <div class="stat-value fw-bold fs-5 {% if net_profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+        ${{ net_profit|floatformat:0 }}
+      </div>
+      <div class="stat-label small text-muted">Net Operating Profit</div>
     </div>
   </div>
-  <!-- 8. Overdue Tasks -->
-  <div class="col-6 col-md-3">
+
+  <!-- 8. Pending Tasks -->
+  <div class="col-6 col-lg-3">
     <div class="stat-card h-100 p-3 reveal-up delay-4">
-      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-exclamation-triangle"></i></div>
-      <div class="stat-value fw-bold fs-5 text-danger stat-number" data-target="{{ overdue_tasks_count }}">{{ overdue_tasks_count }}</div>
-      <div class="stat-label small text-muted">Overdue Tasks</div>
+      <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-tasks"></i></div>
+      <div class="stat-value fw-bold fs-5 text-warning stat-number" data-target="{{ pending_tasks_count }}">{{ pending_tasks_count }}</div>
+      <div class="stat-label small text-muted">Pending Tasks ({{ overdue_tasks_count }} Overdue)</div>
     </div>
   </div>
 </div>

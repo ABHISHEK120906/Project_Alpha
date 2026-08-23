@@ -25,6 +25,8 @@ from .forms import (ClientForm, ProjectForm, PaymentForm, TaskForm,
                     IncomeForm, ExpenseForm, InvoiceForm, InvoiceItemForm,
                     CalendarEventForm, ProjectFileForm, ProjectCommentForm,
                     UserRegistrationForm)
+from .services.analytics_engine import DataAnalyticsEngine
+from .services.data_science_service import DataScienceService
 
 
 
@@ -356,24 +358,35 @@ def load_sample_data(request):
 
 
 # ============================================================
-# DASHBOARD VIEW
+# EXECUTIVE DASHBOARD & INTELLIGENCE VIEWS
 # ============================================================
 
 @login_required
 def dashboard(request):
-    """Main dashboard with KPI cards, charts data, and recent records."""
+    """
+    Executive Business Dashboard answering 'How is my business performing?'
+    Calculates empirical KPIs from real database entities.
+    """
     user = request.user
     today = timezone.now().date()
 
-    # ── KPI Statistics ──────────────────────────────────────
-    total_clients = Client.objects.filter(user=user, is_archived=False).count()
-    total_projects = Project.objects.filter(user=user, is_archived=False).count()
-    active_projects = Project.objects.filter(user=user, status='in_progress', is_archived=False).count()
-    pending_projects = Project.objects.filter(user=user, status='pending', is_archived=False).count()
-    completed_projects = Project.objects.filter(user=user, status='completed', is_archived=False).count()
-    cancelled_projects = Project.objects.filter(user=user, status='cancelled', is_archived=False).count()
+    # ── Projects & Clients KPIs ─────────────────────────────
+    user_projects = Project.objects.filter(user=user, is_archived=False)
+    total_projects = user_projects.count()
+    active_projects = user_projects.filter(status='in_progress').count()
+    pending_projects = user_projects.filter(status='pending').count()
+    completed_projects = user_projects.filter(status='completed').count()
+    cancelled_projects = user_projects.filter(status='cancelled').count()
 
-    # ── Financial KPI Statistics ────────────────────────────
+    total_clients = Client.objects.filter(user=user, is_archived=False).count()
+    active_clients = Client.objects.filter(
+        user=user,
+        is_archived=False,
+        projects__status='in_progress',
+        projects__is_archived=False
+    ).distinct().count()
+
+    # ── Financial KPIs ──────────────────────────────────────
     income_from_models = Income.objects.filter(user=user).aggregate(total=Sum('amount'))['total'] or 0
     paid_payments = Payment.objects.filter(user=user, status='paid').aggregate(total=Sum('amount'))['total'] or 0
     total_income = float(income_from_models) + float(paid_payments)
@@ -383,21 +396,33 @@ def dashboard(request):
 
     pending_payments = Payment.objects.filter(user=user, status='pending').aggregate(total=Sum('amount'))['total'] or 0
     completed_payments = paid_payments
-    overdue_payments = Payment.objects.filter(user=user, status='pending', due_date__lt=timezone.now().date()).aggregate(total=Sum('amount'))['total'] or 0
+    overdue_payments = Payment.objects.filter(user=user, status='pending', due_date__lt=today).aggregate(total=Sum('amount'))['total'] or 0
+
+    # ── Executive Performance Rates ─────────────────────────
+    # Average Project Value (N/A if no projects with budget)
+    projects_with_budget = user_projects.filter(budget__isnull=False, budget__gt=0)
+    if projects_with_budget.exists():
+        avg_project_value = float(projects_with_budget.aggregate(avg=Avg('budget'))['avg'] or 0)
+    else:
+        avg_project_value = None
+
+    # Completion Rate (N/A if 0 total projects)
+    if total_projects > 0:
+        completion_rate = round((completed_projects / total_projects) * 100.0, 1)
+    else:
+        completion_rate = None
 
     # ── Deadlines & Tasks ──────────────────────────────────
-    upcoming_deadlines = Project.objects.filter(
-        user=user,
-        deadline__gte=timezone.now().date(),
-        deadline__lte=timezone.now().date() + timedelta(days=7),
-        status__in=['pending', 'in_progress'],
-        is_archived=False
+    upcoming_deadlines = user_projects.filter(
+        deadline__gte=today,
+        deadline__lte=today + timedelta(days=7),
+        status__in=['pending', 'in_progress']
     ).select_related('client').order_by('deadline')[:5]
 
     pending_tasks_count = Task.objects.filter(user=user, status__in=['todo', 'in_progress'], is_archived=False).count()
     overdue_tasks_count = Task.objects.filter(
         user=user,
-        due_date__lt=timezone.now().date(),
+        due_date__lt=today,
         is_archived=False
     ).exclude(status__in=['completed', 'cancelled']).count()
     pending_tasks_list = Task.objects.filter(user=user, status__in=['todo', 'in_progress'], is_archived=False).select_related('project').order_by('due_date')[:5]
@@ -406,7 +431,7 @@ def dashboard(request):
 
     # ── Recent Activities, Projects & Payments ─────────────
     recent_activities = ActivityLog.objects.filter(user=user).order_by('-timestamp')[:10]
-    recent_projects = Project.objects.filter(user=user, is_archived=False).select_related('client').order_by('-created_at')[:5]
+    recent_projects = user_projects.select_related('client').order_by('-created_at')[:5]
     recent_payments = Payment.objects.filter(user=user).select_related('project', 'project__client').order_by('-created_at')[:5]
 
     announcements = Announcement.objects.filter(Q(target_type='all') | Q(target_users=user)).distinct()[:5]
@@ -443,7 +468,7 @@ def dashboard(request):
         chart_expense.append(m_exp)
 
     # Project status chart
-    status_counts_qs = Project.objects.filter(user=user, is_archived=False).values('status').annotate(c=Count('id'))
+    status_counts_qs = user_projects.values('status').annotate(c=Count('id'))
     status_dict_ss = {row['status']: row['c'] for row in status_counts_qs}
     chart_status = {
         'in_progress': status_dict_ss.get('in_progress', 0),
@@ -455,6 +480,7 @@ def dashboard(request):
 
     context = {
         'total_clients': total_clients,
+        'active_clients': active_clients,
         'total_projects': total_projects,
         'active_projects': active_projects,
         'pending_projects': pending_projects,
@@ -466,6 +492,8 @@ def dashboard(request):
         'pending_payments': pending_payments,
         'completed_payments': completed_payments,
         'overdue_payments': overdue_payments,
+        'avg_project_value': avg_project_value,
+        'completion_rate': completion_rate,
         'upcoming_deadlines': upcoming_deadlines,
         'pending_tasks_count': pending_tasks_count,
         'overdue_tasks_count': overdue_tasks_count,
@@ -485,6 +513,129 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard.html', context)
+
+
+# ============================================================
+# DATA ANALYTICS WORKSPACE (TASK 2)
+# ============================================================
+
+@login_required
+def analytics_workspace(request):
+    """
+    Complete Professional Data Analytics Workspace.
+    Executes Data Profiling, Quality Audit, EDA, Statistics,
+    Correlation Heatmap, Outlier Analysis, Trend Trajectory,
+    and Automated Business Insights on real user records.
+    """
+    user = request.user
+    engine = DataAnalyticsEngine(user=user, filters=request.GET)
+
+    # 1. Profiling
+    profiles = engine.get_data_profiles()
+
+    # 2. Data Quality
+    quality = engine.evaluate_data_quality()
+
+    # 3. Exploratory Data Analysis & Distributions
+    eda = engine.get_exploratory_analysis()
+
+    # 4. Correlation Matrix
+    correlation = engine.calculate_correlation_matrix()
+
+    # 5. Outlier Detection
+    outliers = engine.detect_outliers()
+
+    # 6. Trends
+    trends = engine.analyze_trends()
+
+    # 7. Insights & Recommendations
+    insights_pkg = engine.generate_insights_and_recommendations()
+
+    # Available filter options
+    available_clients = Client.objects.filter(user=user, is_archived=False)
+
+    context = {
+        'profiles': profiles,
+        'quality': quality,
+        'eda': eda,
+        'correlation': correlation,
+        'outliers': outliers,
+        'trends': trends,
+        'insights': insights_pkg['insights'],
+        'recommendations': insights_pkg['recommendations'],
+        'available_clients': available_clients,
+        'selected_client': request.GET.get('client', ''),
+        'selected_status': request.GET.get('status', ''),
+        'selected_date_from': request.GET.get('date_from', ''),
+        'selected_date_to': request.GET.get('date_to', ''),
+        # JSON serializations for interactive Chart.js widgets
+        'eda_json': json.dumps({
+            'budget_histogram': eda['budget_histogram'],
+            'payment_histogram': eda['payment_histogram'],
+            'status_distribution': eda['status_distribution'],
+            'priority_distribution': eda['priority_distribution'],
+            'client_bivariate': eda['client_bivariate'],
+            'scatter_budget_vs_paid': eda['scatter_budget_vs_paid'],
+        }),
+        'correlation_json': json.dumps(correlation),
+        'trends_json': json.dumps(trends),
+    }
+
+    return render(request, 'analytics/workspace.html', context)
+
+
+@login_required
+@require_POST
+def apply_data_clean_action(request):
+    """
+    Safe Data Cleaning Action Handler.
+    Applies explicit, user-confirmed normalization without silent data modification.
+    """
+    user = request.user
+    action_type = request.POST.get('action_type')
+
+    if action_type == 'sync_completed_status':
+        # Synchronize projects with 100% progress to 'completed'
+        updated = Project.objects.filter(user=user, progress=100).exclude(status='completed').update(status='completed')
+        log_activity(user, 'update', 'project', user.id, f'Data Cleaning: Synchronized {updated} completed projects', request)
+        messages.success(request, f'Successfully synchronized {updated} project(s) with 100% progress to "Completed" status.')
+
+    elif action_type == 'fill_missing_budgets_median':
+        # Calculate median of existing budgets
+        budgets = list(Project.objects.filter(user=user, budget__isnull=False).values_list('budget', flat=True))
+        if budgets:
+            from .services.analytics_engine import compute_median, to_float
+            med_val = compute_median(sorted([to_float(b) for b in budgets]))
+            if med_val:
+                updated = Project.objects.filter(user=user, budget__isnull=True).update(budget=med_val)
+                log_activity(user, 'update', 'project', user.id, f'Data Cleaning: Imputed median budget (${med_val}) on {updated} projects', request)
+                messages.success(request, f'Applied median benchmark budget (${med_val:,.2f}) to {updated} project(s).')
+        else:
+            messages.warning(request, 'No reference budgets found to compute a median value.')
+
+    else:
+        messages.error(request, 'Unknown data cleaning action requested.')
+
+    return redirect('core:analytics_workspace')
+
+
+# ============================================================
+# DATA SCIENCE WORKSPACE (TASK 3 PREPARATION)
+# ============================================================
+
+@login_required
+def data_science_workspace(request):
+    """
+    Data Science & Predictive Modeling Workspace.
+    Displays model readiness, data pipeline validation, and planned ML modules.
+    """
+    ds_service = DataScienceService(request.user)
+    readiness = ds_service.get_readiness_status()
+
+    context = {
+        'readiness': readiness
+    }
+    return render(request, 'data_science/workspace.html', context)
 
 
 # ============================================================

@@ -16,8 +16,8 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Freelancer Project Tracker — Modern project, client, payment and task management.">
-  <title>{% block title %}FreelanceTrack — Dashboard{% endblock %}</title>
+  <meta name="description" content="Freelancer Intelligence Platform — Manage. Analyze. Predict. Grow. Full-Stack Web Development, Data Analytics, Data Science, and Business Intelligence.">
+  <title>{% block title %}Freelancer Intelligence Platform — Executive Workspace{% endblock %}</title>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,22 +69,31 @@
   <!-- Brand Header -->
   <a href="{% url 'core:dashboard' %}" class="sidebar-brand">
     <div class="sidebar-brand-icon">
-      <i class="fas fa-wallet"></i>
+      <i class="fas fa-brain"></i>
     </div>
     <div>
-      <div class="sidebar-brand-text">FreelanceTrack</div>
-      <div class="sidebar-brand-sub">Project Manager</div>
+      <div class="sidebar-brand-text">Freelancer Intelligence</div>
+      <div class="sidebar-brand-sub">Platform &bull; BI Engine</div>
     </div>
   </a>
 
-  <!-- Navigation Links -->
+  <!-- Navigation Links (5 Structured Groups) -->
   <nav class="sidebar-nav" aria-label="Main navigation">
-    <p class="sidebar-section-label">Main Menu</p>
-
+    
+    <!-- 1. OVERVIEW -->
+    <p class="sidebar-section-label">Overview</p>
     <a href="{% url 'core:dashboard' %}"
        class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <i class="fas fa-home nav-icon"></i>
-      <span>Dashboard</span>
+      <i class="fas fa-chart-line nav-icon"></i>
+      <span>Executive Dashboard</span>
+    </a>
+
+    <!-- 2. MANAGEMENT -->
+    <p class="sidebar-section-label">Management</p>
+    <a href="{% url 'core:project_list' %}"
+       class="sidebar-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-folder nav-icon"></i>
+      <span>Projects</span>
     </a>
 
     <a href="{% url 'core:client_list' %}"
@@ -93,36 +102,10 @@
       <span>Clients</span>
     </a>
 
-    <a href="{% url 'core:project_list' %}"
-       class="sidebar-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-folder nav-icon"></i>
-      <span>Projects</span>
-    </a>
-
-    <a href="{% url 'core:task_list' %}"
-       class="sidebar-link {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-check-circle nav-icon"></i>
-      <span>Tasks</span>
-    </a>
-
-    <a href="{% url 'core:calendar_view' %}"
-       class="sidebar-link {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-calendar-alt nav-icon"></i>
-      <span>Calendar</span>
-    </a>
-
-    <p class="sidebar-section-label">Finance & Assets</p>
-
     <a href="{% url 'core:payment_list' %}"
        class="sidebar-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
       <i class="fas fa-dollar-sign nav-icon"></i>
       <span>Payments</span>
-    </a>
-
-    <a href="{% url 'core:income_expense_tracker' %}"
-       class="sidebar-link {% if 'income' in request.resolver_match.url_name or 'finances' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-wallet nav-icon"></i>
-      <span>Income & Expenses</span>
     </a>
 
     <a href="{% url 'core:invoice_list' %}"
@@ -131,30 +114,64 @@
       <span>Invoices</span>
     </a>
 
+    <a href="{% url 'core:task_list' %}"
+       class="sidebar-link {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-check-circle nav-icon"></i>
+      <span>Tasks</span>
+    </a>
+
+    <a href="{% url 'core:income_expense_tracker' %}"
+       class="sidebar-link {% if 'income' in request.resolver_match.url_name or 'finances' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-wallet nav-icon"></i>
+      <span>Finances</span>
+    </a>
+
+    <a href="{% url 'core:calendar_view' %}"
+       class="sidebar-link {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-calendar-alt nav-icon"></i>
+      <span>Calendar</span>
+    </a>
+
     <a href="{% url 'core:file_manager' %}"
        class="sidebar-link {% if 'file' in request.resolver_match.url_name %}active{% endif %}">
       <i class="fas fa-paperclip nav-icon"></i>
       <span>File Manager</span>
     </a>
 
+    <!-- 3. INTELLIGENCE -->
+    <p class="sidebar-section-label">Intelligence</p>
+    <a href="{% url 'core:analytics_workspace' %}"
+       class="sidebar-link {% if 'analytics' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-chart-pie nav-icon"></i>
+      <span>Data Analytics</span>
+    </a>
+
+    <a href="{% url 'core:data_science_workspace' %}"
+       class="sidebar-link {% if 'data_science' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-microchip nav-icon"></i>
+      <span>Data Science</span>
+    </a>
+
+    <a href="{% url 'core:chat_home' %}"
+       class="sidebar-link {% if 'chat' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-robot nav-icon"></i>
+      <span>AI Assistant (TrackBot)</span>
+    </a>
+
+    <!-- 4. REPORTING -->
+    <p class="sidebar-section-label">Reporting</p>
     <a href="{% url 'core:reports_dashboard' %}"
        class="sidebar-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-chart-line nav-icon"></i>
-      <span>Reports</span>
+      <i class="fas fa-file-waveform nav-icon"></i>
+      <span>Reports Hub</span>
     </a>
 
-    <p class="sidebar-section-label">Account & Tools</p>
-
-    <a href="{% url 'core:profile_view' %}"
-       class="sidebar-link {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-user-circle nav-icon"></i>
-      <span>My Profile</span>
-    </a>
-
-    <a href="{% url 'core:notifications_list' %}"
-       class="sidebar-link {% if 'notification' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-bell nav-icon"></i>
-      <span>Notifications</span>
+    <!-- 5. SYSTEM -->
+    <p class="sidebar-section-label">System</p>
+    <a href="{% url 'core:activity_list' %}"
+       class="sidebar-link {% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-history nav-icon"></i>
+      <span>Activity Log</span>
     </a>
 
     <a href="{% url 'core:note_list' %}"
@@ -163,10 +180,10 @@
       <span>Notes</span>
     </a>
 
-    <a href="{% url 'core:activity_list' %}"
-       class="sidebar-link {% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-history nav-icon"></i>
-      <span>Activity Log</span>
+    <a href="{% url 'core:profile_view' %}"
+       class="sidebar-link {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fas fa-user-circle nav-icon"></i>
+      <span>My Profile</span>
     </a>
 
     <a href="{% url 'core:settings' %}"
@@ -174,18 +191,12 @@
       <i class="fas fa-cog nav-icon"></i>
       <span>Settings</span>
     </a>
-
-    <a href="{% url 'core:chat_home' %}"
-       class="sidebar-link {% if 'chat' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-robot nav-icon"></i>
-      <span>AI Assistant</span>
-    </a>
   </nav>
 
-  <!-- Sidebar Promo Card -->
-  <div class="sidebar-promo">
-    <h6>FreelanceTrack Pro</h6>
-    <p>Advanced Analytics & Invoicing Active</p>
+  <!-- Sidebar Intelligence Positioning Card -->
+  <div class="sidebar-promo" style="background:rgba(219,153,65,0.08);border:1px solid rgba(219,153,65,0.25);border-radius:12px;padding:12px;margin:16px 12px;">
+    <h6 style="color:#DB9941;font-size:12px;font-weight:700;margin-bottom:2px;">Intelligence Engine Active</h6>
+    <p style="color:var(--text-muted);font-size:11px;margin:0;">Manage &bull; Analyze &bull; Predict &bull; Grow</p>
   </div>
 
   <!-- Sidebar User Profile Footer -->
