@@ -1,0 +1,82 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Support Ticket #{{ ticket.id|slice:":8" }} — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <a href="{% url 'marketplace_admin:support_list' %}" class="btn btn-outline-secondary btn-sm mb-2"><i class="fas fa-arrow-left me-1"></i>Back to Support</a>
+      <h2 class="fw-bold mb-0"><i class="fas fa-headset text-success me-2"></i>Support Ticket: {{ ticket.subject }}</h2>
+    </div>
+    <span class="badge {% if ticket.status == 'open' %}bg-danger{% elif ticket.status == 'in_progress' %}bg-warning text-dark{% elif ticket.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %} fs-6">
+      Status: {{ ticket.get_status_display }}
+    </span>
+  </div>
+
+  <div class="row g-4">
+    <!-- Response Form -->
+    <div class="col-lg-5">
+      <div class="glass-card border-success mb-4">
+        <h5 class="fw-bold text-success border-bottom border-light border-opacity-10 pb-2 mb-3">
+          <i class="fas fa-reply me-2"></i>Official Support Response
+        </h5>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase">Ticket Status</label>
+            {{ form.status }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase">Response to User</label>
+            {{ form.admin_response }}
+            <small class="text-muted">This response is sent to the user.</small>
+          </div>
+
+          <button type="submit" class="btn btn-success btn-sm w-100">
+            <i class="fas fa-paper-plane me-1"></i>Send Response & Update Status
+          </button>
+        </form>
+      </div>
+
+      <!-- User Card -->
+      <div class="glass-card mb-4">
+        <h5 class="fw-bold border-bottom border-light border-opacity-10 pb-2 mb-3">User Information</h5>
+        <div class="mb-2"><span class="text-muted small">Username:</span> <a href="{% url 'marketplace_admin:user_detail' ticket.user.id %}" class="text-info">@{{ ticket.user.username }}</a></div>
+        <div class="mb-2"><span class="text-muted small">Email:</span> <span class="text-white">{{ ticket.user.email }}</span></div>
+        <div class="mb-2"><span class="text-muted small">Role:</span> <span class="badge bg-primary">{{ ticket.get_role_display }}</span></div>
+        <div class="mb-0"><span class="text-muted small">Ticket Category:</span> <span class="badge bg-secondary">{{ ticket.get_category_display }}</span></div>
+      </div>
+    </div>
+
+    <!-- Ticket Inquiry Message -->
+    <div class="col-lg-7">
+      <div class="glass-card mb-4">
+        <div class="d-flex justify-content-between align-items-center border-bottom border-light border-opacity-10 pb-2 mb-3">
+          <h5 class="fw-bold mb-0">Ticket Inquiry</h5>
+          <small class="text-muted">Submitted {{ ticket.created_at|date:"M d, Y H:i" }}</small>
+        </div>
+        <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary border-opacity-25 mb-3">
+          <label class="text-muted small text-uppercase fw-bold mb-1">User Message</label>
+          <div class="text-white small" style="white-space: pre-wrap;">{{ ticket.message }}</div>
+        </div>
+      </div>
+
+      {% if ticket.admin_response %}
+        <div class="glass-card border-success">
+          <div class="d-flex justify-content-between align-items-center border-bottom border-light border-opacity-10 pb-2 mb-3">
+            <h5 class="fw-bold text-success mb-0"><i class="fas fa-check-circle me-1"></i>Previous Admin Response</h5>
+            <small class="text-muted">Updated {{ ticket.updated_at|date:"M d, Y H:i" }}</small>
+          </div>
+          <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary border-opacity-25 text-white small" style="white-space: pre-wrap;">
+            {{ ticket.admin_response }}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

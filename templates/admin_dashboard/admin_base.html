@@ -197,49 +197,55 @@
       </div>
     </a>
 
-    <nav class="admin-nav">
-      <div class="admin-nav-label">Core Dashboard</div>
-      <a href="{% url 'core:admin_dashboard' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-        <i class="fas fa-chart-pie text-primary"></i> <span>Overview</span>
+      <div class="admin-nav-label">Marketplace Admin (Stage 3)</div>
+      <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="fas fa-store-alt text-primary"></i> <span>Marketplace Overview</span>
+      </a>
+      <a href="{% url 'marketplace_admin:users_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'users' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-users-cog text-info"></i> <span>Clients & Freelancers</span>
+      </a>
+      <a href="{% url 'marketplace_admin:projects_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'projects' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-briefcase text-warning"></i> <span>Marketplace Projects</span>
+      </a>
+      <a href="{% url 'marketplace_admin:applications_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'applications' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-paper-plane text-cyan"></i> <span>Proposals & Bids</span>
+      </a>
+      <a href="{% url 'marketplace_admin:reports_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'reports' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-flag text-danger"></i> <span>Incident Reports</span>
+      </a>
+      <a href="{% url 'marketplace_admin:disputes_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'disputes' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-gavel text-warning"></i> <span>Disputes & Arbitration</span>
+      </a>
+      <a href="{% url 'marketplace_admin:support_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'support' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-headset text-success"></i> <span>Support Desk</span>
+      </a>
+      <a href="{% url 'marketplace_admin:analytics' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and request.resolver_match.url_name == 'analytics' %}active{% endif %}">
+        <i class="fas fa-chart-line text-purple"></i> <span>Platform Analytics</span>
+      </a>
+      <a href="{% url 'marketplace_admin:exports_hub' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'export' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-file-export text-secondary"></i> <span>Reports & Exports</span>
       </a>
 
-      <div class="admin-nav-label">Management</div>
-      <a href="{% url 'core:admin_users_list' %}" class="admin-nav-item {% if 'users' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-users-cog text-info"></i> <span>User Management</span>
+      <div class="admin-nav-label">Core CRM & System</div>
+      <a href="{% url 'core:admin_dashboard' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+        <i class="fas fa-chart-pie text-muted"></i> <span>CRM Overview</span>
       </a>
-      <a href="{% url 'core:admin_projects_list' %}" class="admin-nav-item {% if 'projects' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-folder-open text-warning"></i> <span>Projects</span>
-      </a>
-      <a href="{% url 'core:admin_clients_list' %}" class="admin-nav-item {% if 'clients' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-user-tie text-success"></i> <span>Clients</span>
-      </a>
-      <a href="{% url 'core:admin_finances' %}" class="admin-nav-item {% if 'finances' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-coins text-danger"></i> <span>Finances & Refunds</span>
-      </a>
-
-      <div class="admin-nav-label">System & Security</div>
-      <a href="{% url 'core:admin_notifications' %}" class="admin-nav-item {% if 'notifications' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-bullhorn text-primary"></i> <span>Broadcast Center</span>
-      </a>
-      <a href="{% url 'core:admin_activity_logs' %}" class="admin-nav-item {% if 'activities' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'core:admin_activity_logs' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and 'activities' in request.resolver_match.url_name %}active{% endif %}">
         <i class="fas fa-history text-light"></i> <span>Audit Logs</span>
       </a>
-      <a href="{% url 'core:admin_security' %}" class="admin-nav-item {% if 'security' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'core:admin_security' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and 'security' in request.resolver_match.url_name %}active{% endif %}">
         <i class="fas fa-shield-virus text-danger"></i> <span>Security Center</span>
       </a>
-      <a href="{% url 'core:admin_settings' %}" class="admin-nav-item {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
+      <a href="{% url 'core:admin_settings' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and 'settings' in request.resolver_match.url_name %}active{% endif %}">
         <i class="fas fa-sliders-h text-secondary"></i> <span>System Settings</span>
-      </a>
-      <a href="{% url 'core:admin_database' %}" class="admin-nav-item {% if 'database' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-database text-warning"></i> <span>Database & Backups</span>
-      </a>
-      <a href="{% url 'core:admin_reports' %}" class="admin-nav-item {% if 'reports' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-file-invoice-dollar text-success"></i> <span>Reports & Analytics</span>
       </a>
 
       <div class="admin-nav-label">Shortcuts</div>
-      <a href="{% url 'core:dashboard' %}" class="admin-nav-item" target="_blank">
-        <i class="fas fa-external-link-alt text-muted"></i> <span>User View Mode</span>
+      <a href="{% url 'marketplace:client_dashboard' %}" class="admin-nav-item" target="_blank">
+        <i class="fas fa-external-link-alt text-muted"></i> <span>Client Portal</span>
+      </a>
+      <a href="{% url 'freelancer:dashboard' %}" class="admin-nav-item" target="_blank">
+        <i class="fas fa-external-link-alt text-muted"></i> <span>Freelancer Portal</span>
       </a>
     </nav>
   </aside>

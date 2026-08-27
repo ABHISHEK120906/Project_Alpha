@@ -1,0 +1,109 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Reports & Exports Center — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fas fa-file-export text-secondary me-2"></i>Reports & Multi-Format Exports Center</h2>
+      <p class="text-muted small mb-0">Generate executive PDF summaries, detailed Excel data sheets, and raw CSV files for all marketplace entities.</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Platform Summary -->
+    <div class="col-md-6 col-lg-4">
+      <div class="glass-card h-100 d-flex flex-column justify-content-between">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fas fa-chart-pie text-primary fs-4"></i>
+            <h5 class="fw-bold text-white mb-0">Platform Executive Summary</h5>
+          </div>
+          <p class="small text-muted mb-3">Complete overview of platform KPIs, totals, user distribution, escrow volume, and dispute metrics.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'marketplace_admin:export_data' 'summary' 'pdf' %}" class="btn btn-outline-danger btn-sm flex-fill"><i class="fas fa-file-pdf me-1"></i>PDF</a>
+          <a href="{% url 'marketplace_admin:export_data' 'summary' 'xlsx' %}" class="btn btn-outline-success btn-sm flex-fill"><i class="fas fa-file-excel me-1"></i>Excel</a>
+          <a href="{% url 'marketplace_admin:export_data' 'summary' 'csv' %}" class="btn btn-outline-secondary btn-sm flex-fill"><i class="fas fa-file-csv me-1"></i>CSV</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects Report -->
+    <div class="col-md-6 col-lg-4">
+      <div class="glass-card h-100 d-flex flex-column justify-content-between">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fas fa-briefcase text-warning fs-4"></i>
+            <h5 class="fw-bold text-white mb-0">Marketplace Projects</h5>
+          </div>
+          <p class="small text-muted mb-3">All employer project postings, budgets, client owners, assigned freelancers, and progress.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'marketplace_admin:export_data' 'projects' 'pdf' %}" class="btn btn-outline-danger btn-sm flex-fill"><i class="fas fa-file-pdf me-1"></i>PDF</a>
+          <a href="{% url 'marketplace_admin:export_data' 'projects' 'xlsx' %}" class="btn btn-outline-success btn-sm flex-fill"><i class="fas fa-file-excel me-1"></i>Excel</a>
+          <a href="{% url 'marketplace_admin:export_data' 'projects' 'csv' %}" class="btn btn-outline-secondary btn-sm flex-fill"><i class="fas fa-file-csv me-1"></i>CSV</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Report -->
+    <div class="col-md-6 col-lg-4">
+      <div class="glass-card h-100 d-flex flex-column justify-content-between">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fas fa-users text-info fs-4"></i>
+            <h5 class="fw-bold text-white mb-0">Users & Account Status</h5>
+          </div>
+          <p class="small text-muted mb-3">All registered Clients and Freelancers, account active/suspended state, and activity counts.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'marketplace_admin:export_data' 'users' 'pdf' %}" class="btn btn-outline-danger btn-sm flex-fill"><i class="fas fa-file-pdf me-1"></i>PDF</a>
+          <a href="{% url 'marketplace_admin:export_data' 'users' 'xlsx' %}" class="btn btn-outline-success btn-sm flex-fill"><i class="fas fa-file-excel me-1"></i>Excel</a>
+          <a href="{% url 'marketplace_admin:export_data' 'users' 'csv' %}" class="btn btn-outline-secondary btn-sm flex-fill"><i class="fas fa-file-csv me-1"></i>CSV</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications Report -->
+    <div class="col-md-6 col-lg-4">
+      <div class="glass-card h-100 d-flex flex-column justify-content-between">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fas fa-paper-plane text-cyan fs-4"></i>
+            <h5 class="fw-bold text-white mb-0">Applications & Proposals</h5>
+          </div>
+          <p class="small text-muted mb-3">All submitted freelancer proposals, proposed prices, projects, and acceptance status.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'marketplace_admin:export_data' 'applications' 'pdf' %}" class="btn btn-outline-danger btn-sm flex-fill"><i class="fas fa-file-pdf me-1"></i>PDF</a>
+          <a href="{% url 'marketplace_admin:export_data' 'applications' 'xlsx' %}" class="btn btn-outline-success btn-sm flex-fill"><i class="fas fa-file-excel me-1"></i>Excel</a>
+          <a href="{% url 'marketplace_admin:export_data' 'applications' 'csv' %}" class="btn btn-outline-secondary btn-sm flex-fill"><i class="fas fa-file-csv me-1"></i>CSV</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disputes & Arbitration Report -->
+    <div class="col-md-6 col-lg-4">
+      <div class="glass-card h-100 d-flex flex-column justify-content-between">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fas fa-gavel text-warning fs-4"></i>
+            <h5 class="fw-bold text-white mb-0">Disputes & Arbitration</h5>
+          </div>
+          <p class="small text-muted mb-3">Formal arbitration cases, parties involved, categories, and recorded administrative rulings.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'marketplace_admin:export_data' 'disputes' 'pdf' %}" class="btn btn-outline-danger btn-sm flex-fill"><i class="fas fa-file-pdf me-1"></i>PDF</a>
+          <a href="{% url 'marketplace_admin:export_data' 'disputes' 'xlsx' %}" class="btn btn-outline-success btn-sm flex-fill"><i class="fas fa-file-excel me-1"></i>Excel</a>
+          <a href="{% url 'marketplace_admin:export_data' 'disputes' 'csv' %}" class="btn btn-outline-secondary btn-sm flex-fill"><i class="fas fa-file-csv me-1"></i>CSV</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

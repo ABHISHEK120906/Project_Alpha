@@ -1,0 +1,96 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Support Ticket Desk — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fas fa-headset text-success me-2"></i>Platform Support Ticket Desk</h2>
+      <p class="text-muted small mb-0">Help Clients and Freelancers resolve account, payment, project, and technical difficulties.</p>
+    </div>
+    <span class="badge bg-success fs-6">{{ total_count }} Tickets in Queue</span>
+  </div>
+
+  <!-- Filters -->
+  <div class="glass-card mb-4">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-md-5">
+        <select name="status" class="form-select form-select-sm bg-dark text-white border-secondary">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Ticket Statuses</option>
+          {% for val, label in statuses %}
+            <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-5">
+        <select name="category" class="form-select form-select-sm bg-dark text-white border-secondary">
+          <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Ticket Categories</option>
+          {% for val, label in categories %}
+            <option value="{{ val }}" {% if category_filter == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="fas fa-filter me-1"></i>Filter</button>
+        <a href="{% url 'marketplace_admin:support_list' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-redo"></i></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tickets Table -->
+  <div class="glass-card">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead>
+          <tr class="text-muted small text-uppercase">
+            <th>Subject</th>
+            <th>User</th>
+            <th>Role</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Assigned Admin</th>
+            <th>Submitted Date</th>
+            <th class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tickets %}
+            <tr>
+              <td>
+                <div class="fw-bold text-white">{{ t.subject }}</div>
+                <small class="text-muted text-truncate d-inline-block" style="max-width: 250px;">{{ t.message }}</small>
+              </td>
+              <td>
+                <div class="text-white small">@{{ t.user.username }}</div>
+                <small class="text-muted">{{ t.user.email }}</small>
+              </td>
+              <td><span class="badge {% if t.role == 'client' %}bg-primary{% else %}bg-info{% endif %}">{{ t.get_role_display }}</span></td>
+              <td><span class="badge bg-dark border border-secondary">{{ t.get_category_display }}</span></td>
+              <td>
+                <span class="badge {% if t.status == 'open' %}bg-danger{% elif t.status == 'in_progress' %}bg-warning text-dark{% elif t.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %}">
+                  {{ t.get_status_display }}
+                </span>
+              </td>
+              <td class="small text-muted">
+                {% if t.assigned_admin %}@{{ t.assigned_admin.username }}{% else %}Unassigned{% endif %}
+              </td>
+              <td class="small text-muted">{{ t.created_at|date:"M d, Y H:i" }}</td>
+              <td class="text-end">
+                <a href="{% url 'marketplace_admin:support_detail' t.id %}" class="btn btn-outline-success btn-sm py-0 px-2">
+                  <i class="fas fa-reply me-1"></i>Respond
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="8" class="text-center text-muted py-4"><i class="fas fa-check-circle text-success me-1"></i>No support tickets currently pending.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

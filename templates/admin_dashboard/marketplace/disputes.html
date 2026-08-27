@@ -1,0 +1,108 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Dispute Arbitration & Resolution — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fas fa-gavel text-warning me-2"></i>Marketplace Disputes Arbitration Hub</h2>
+      <p class="text-muted small mb-0">Arbitrate formal contract disagreements between Clients and Freelancers, review evidence, enforce payment resolutions.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'marketplace_admin:dispute_create' %}" class="btn btn-warning btn-sm"><i class="fas fa-plus me-1"></i>Open New Dispute</a>
+      <span class="badge bg-danger fs-6 align-self-center">{{ total_count }} Total Disputes</span>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="glass-card mb-4">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-md-5">
+        <select name="status" class="form-select form-select-sm bg-dark text-white border-secondary">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Dispute Statuses</option>
+          {% for val, label in statuses %}
+            <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-5">
+        <select name="category" class="form-select form-select-sm bg-dark text-white border-secondary">
+          <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Dispute Categories</option>
+          {% for val, label in categories %}
+            <option value="{{ val }}" {% if category_filter == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="fas fa-filter me-1"></i>Filter</button>
+        <a href="{% url 'marketplace_admin:disputes_list' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-redo"></i></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Disputes Table -->
+  <div class="glass-card">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead>
+          <tr class="text-muted small text-uppercase">
+            <th>Dispute Title</th>
+            <th>Project</th>
+            <th>Client</th>
+            <th>Freelancer</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Resolution</th>
+            <th>Opened Date</th>
+            <th class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in disputes %}
+            <tr>
+              <td>
+                <div class="fw-bold text-white">{{ d.title }}</div>
+                <small class="text-muted">By @{{ d.opened_by.username }}</small>
+              </td>
+              <td>
+                <a href="{% url 'marketplace_admin:project_detail' d.project.id %}" class="text-white text-truncate d-inline-block" style="max-width: 150px;">
+                  {{ d.project.title }}
+                </a>
+              </td>
+              <td class="small">{{ d.client.display_name }}</td>
+              <td class="small">
+                {% if d.freelancer %}{{ d.freelancer.display_name }}{% else %}<span class="text-muted">Unassigned</span>{% endif %}
+              </td>
+              <td><span class="badge bg-dark border border-warning text-warning">{{ d.get_category_display }}</span></td>
+              <td>
+                <span class="badge {% if d.status == 'open' %}bg-danger{% elif d.status == 'under_investigation' %}bg-warning text-dark{% elif d.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %}">
+                  {{ d.get_status_display }}
+                </span>
+              </td>
+              <td class="small">
+                {% if d.resolution_type != 'pending' %}
+                  <span class="text-info fw-bold">{{ d.get_resolution_type_display }}</span>
+                {% else %}
+                  <span class="text-muted">Pending Verdict</span>
+                {% endif %}
+              </td>
+              <td class="small text-muted">{{ d.created_at|date:"M d, Y" }}</td>
+              <td class="text-end">
+                <a href="{% url 'marketplace_admin:dispute_detail' d.id %}" class="btn btn-outline-warning btn-sm py-0 px-2">
+                  <i class="fas fa-balance-scale me-1"></i>Arbitrate
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="9" class="text-center text-muted py-4"><i class="fas fa-check-circle text-success me-1"></i>No disputes registered on the platform.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

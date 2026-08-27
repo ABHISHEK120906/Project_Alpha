@@ -66,12 +66,12 @@ def home(request):
             role = request.user.profile.role
         except Exception:
             role = 'user'
+        if role in ('admin',) or request.user.is_staff or request.user.is_superuser:
+            return redirect('marketplace_admin:dashboard')
         if role == 'client':
             return redirect('marketplace:client_dashboard')
         if role == 'freelancer':
             return redirect('freelancer:dashboard')
-        if role in ('admin',) or request.user.is_staff or request.user.is_superuser:
-            return redirect('core:admin_dashboard')
         return redirect('core:dashboard')
 
     return render(request, 'home.html')
@@ -113,7 +113,7 @@ def custom_login(request):
     """
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser or (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
-            return redirect('core:admin_dashboard')
+            return redirect('marketplace_admin:dashboard')
         if hasattr(request.user, 'profile') and request.user.profile.role == 'client':
             return redirect('marketplace:client_dashboard')
         if hasattr(request.user, 'profile') and request.user.profile.role == 'freelancer':

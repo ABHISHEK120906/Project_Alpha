@@ -28,6 +28,9 @@ class UserRestrictionMiddleware:
                         (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'))
 
             if not is_admin:
+                if '/api/' in path:
+                    from django.http import JsonResponse
+                    return JsonResponse({'error': '403 Forbidden: Administrator access required.'}, status=403)
                 messages.error(request, "403 Forbidden: You do not have permission to access the Super Admin Dashboard.")
                 return redirect('core:forbidden')
 

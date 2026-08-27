@@ -1,0 +1,180 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Platform Analytics & Predictive Insights — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fas fa-chart-line text-purple me-2"></i>Marketplace Platform Analytics & Risk Intelligence</h2>
+      <p class="text-muted small mb-0">Platform volume trends, project completion analytics, category distributions, and predictive project delay forecasts.</p>
+    </div>
+    <a href="{% url 'marketplace_admin:exports_hub' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-file-export me-1"></i>Export Analytics</a>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">Hire Conversion Rate</div>
+        <div class="h2 fw-bold text-info mb-0">{{ kpi.hire_conversion_rate }}%</div>
+        <small class="text-muted">{{ kpi.accepted_applications }} hired of {{ kpi.total_applications }} bids</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">Project Completion Rate</div>
+        <div class="h2 fw-bold text-success mb-0">{{ kpi.completion_rate }}%</div>
+        <small class="text-muted">{{ kpi.completed_projects }} completed</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">Gross Budget Volume</div>
+        <div class="h2 fw-bold text-white mb-0">${{ kpi.total_budget_volume|floatformat:0 }}</div>
+        <small class="text-muted">${{ kpi.total_paid_volume|floatformat:0 }} settled</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">High-Risk Projects</div>
+        <div class="h2 fw-bold text-danger mb-0">{{ risk_analysis.high_risk_count }}</div>
+        <small class="text-warning">{{ risk_analysis.overdue_count }} overdue</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row g-4 mb-4">
+    <div class="col-lg-6">
+      <div class="glass-card h-100">
+        <h5 class="fw-bold mb-3"><i class="fas fa-tags text-primary me-2"></i>Projects by Category</h5>
+        <div style="height: 260px;">
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="glass-card h-100">
+        <h5 class="fw-bold mb-3"><i class="fas fa-tasks text-info me-2"></i>Project Lifecycle Distribution</h5>
+        <div style="height: 260px;">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Predictive Project Delay Risk Table -->
+  <div class="glass-card mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-light border-opacity-10 pb-2">
+      <h5 class="fw-bold mb-0"><i class="fas fa-exclamation-circle text-warning me-2"></i>Predictive Project Delay & Risk Analysis</h5>
+      {% if risk_analysis.is_ready %}
+        <span class="badge bg-success bg-opacity-20 text-success">Statistically Significant Model ({{ risk_analysis.total_analyzed }} projects)</span>
+      {% else %}
+        <span class="badge bg-secondary bg-opacity-20 text-muted">Small Dataset Safety Guard Enforced (requires &ge; 5 records)</span>
+      {% endif %}
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-dark table-hover table-sm align-middle mb-0">
+        <thead>
+          <tr class="text-muted small text-uppercase">
+            <th>Project</th>
+            <th>Client</th>
+            <th>Freelancer</th>
+            <th>Budget</th>
+            <th>Deadline</th>
+            <th>Progress</th>
+            <th>Calculated Risk</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in risk_analysis.high_risk_projects %}
+            <tr>
+              <td class="fw-bold text-white">{{ p.title }}</td>
+              <td class="small">{{ p.client }}</td>
+              <td class="small text-info">{{ p.freelancer }}</td>
+              <td class="small text-success">${{ p.budget|floatformat:2 }}</td>
+              <td class="small {% if p.is_overdue %}text-danger fw-bold{% else %}text-muted{% endif %}">{{ p.deadline }}</td>
+              <td>
+                <div class="progress bg-dark" style="height: 6px; width: 60px;">
+                  <div class="progress-bar bg-info" style="width: {{ p.progress }}%;"></div>
+                </div>
+                <small class="text-muted">{{ p.progress }}%</small>
+              </td>
+              <td>
+                <span class="badge {% if p.risk_score >= 80 %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                  {{ p.risk_score }}% Risk
+                </span>
+              </td>
+              <td>
+                <a href="{% url 'marketplace_admin:project_detail' p.id %}" class="btn btn-outline-warning btn-sm py-0 px-2">Inspect</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="8" class="text-center text-success py-3"><i class="fas fa-check-circle me-1"></i>No elevated delay risk detected across active projects.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Category Chart
+    var catLabels = {{ category_labels_json|safe }};
+    var catCounts = {{ category_counts_json|safe }};
+    var ctxCat = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctxCat, {
+      type: 'bar',
+      data: {
+        labels: catLabels.length ? catLabels : ['Web Dev', 'Mobile', 'Design', 'Data/AI', 'Writing', 'Other'],
+        datasets: [{
+          label: 'Projects',
+          data: catCounts.length ? catCounts : [0, 0, 0, 0, 0, 0],
+          backgroundColor: '#6f42c1',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+        }
+      }
+    });
+
+    // 2. Status Chart
+    var statusCounts = {{ status_counts_json|safe }};
+    var ctxStatus = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctxStatus, {
+      type: 'doughnut',
+      data: {
+        labels: ['Open', 'Apps Received', 'Assigned', 'In Progress', 'Completed', 'Closed'],
+        datasets: [{
+          data: statusCounts,
+          backgroundColor: ['#28a745', '#17a2b8', '#6f42c1', '#007bff', '#20c997', '#6c757d'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { color: '#e2e8f0', font: { family: 'Inter' } } }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

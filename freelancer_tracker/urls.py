@@ -12,6 +12,7 @@ urlpatterns = [
     path('', include('core.urls', namespace='core')),
     path('client/', include('marketplace.urls', namespace='marketplace')),
     path('freelancer/', include('marketplace.urls_freelancer', namespace='freelancer')),
+    path('admin-dashboard/marketplace/', include('marketplace.urls_admin', namespace='marketplace_admin')),
 ]
 
 if settings.DEBUG:

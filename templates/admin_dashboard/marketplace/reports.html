@@ -1,0 +1,144 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Incident & Scam Reports — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fas fa-flag text-danger me-2"></i>Platform Incident & Fraud Reports</h2>
+      <p class="text-muted small mb-0">Investigate user reports regarding non-performance, scam attempts, policy violations, harassment, and payment issues.</p>
+    </div>
+    <span class="badge bg-danger fs-6">{{ total_reports }} Total Incidents</span>
+  </div>
+
+  <!-- Filter -->
+  <div class="glass-card mb-4">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-md-5">
+        <select name="type" class="form-select form-select-sm bg-dark text-white border-secondary">
+          <option value="all" {% if type_filter == 'all' %}selected{% endif %}>All Report Origins (Clients & Freelancers)</option>
+          <option value="client" {% if type_filter == 'client' %}selected{% endif %}>Client Reports (Against Freelancers/Platform)</option>
+          <option value="freelancer" {% if type_filter == 'freelancer' %}selected{% endif %}>Freelancer Reports (Against Clients)</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <select name="status" class="form-select form-select-sm bg-dark text-white border-secondary">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Incident Statuses</option>
+          <option value="open" {% if status_filter == 'open' %}selected{% endif %}>Open</option>
+          <option value="under_review" {% if status_filter == 'under_review' %}selected{% endif %}>Under Review</option>
+          <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
+          <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected / Dismissed</option>
+          <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="fas fa-filter me-1"></i>Filter</button>
+        <a href="{% url 'marketplace_admin:reports_list' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-redo"></i></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Reports Table -->
+  <div class="glass-card">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead>
+          <tr class="text-muted small text-uppercase">
+            <th>Origin</th>
+            <th>Reporter</th>
+            <th>Reported User / Party</th>
+            <th>Project</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Client Reports -->
+          {% for r in client_reports %}
+            <tr>
+              <td><span class="badge bg-primary">Client Report</span></td>
+              <td>
+                <div class="text-white fw-bold">{{ r.reporter.display_name }}</div>
+                <small class="text-muted">{{ r.reporter.user.email }}</small>
+              </td>
+              <td>
+                {% if r.reported_user %}
+                  <a href="{% url 'marketplace_admin:user_detail' r.reported_user.id %}" class="text-info">@{{ r.reported_user.username }}</a>
+                {% else %}
+                  <span class="text-muted">General Platform</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if r.project %}
+                  <a href="{% url 'marketplace_admin:project_detail' r.project.id %}" class="text-white text-truncate d-inline-block" style="max-width:160px;">{{ r.project.title }}</a>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td><span class="badge bg-dark border border-danger text-danger">{{ r.get_reason_display }}</span></td>
+              <td>
+                <span class="badge {% if r.status == 'open' %}bg-danger{% elif r.status == 'under_review' %}bg-warning text-dark{% elif r.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %}">
+                  {{ r.get_status_display }}
+                </span>
+              </td>
+              <td class="small text-muted">{{ r.created_at|date:"M d, Y" }}</td>
+              <td class="text-end">
+                <a href="{% url 'marketplace_admin:report_detail' 'client' r.id %}" class="btn btn-outline-danger btn-sm py-0 px-2">
+                  <i class="fas fa-search-plus me-1"></i>Investigate
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+
+          <!-- Freelancer Reports -->
+          {% for fr in freelancer_reports %}
+            <tr>
+              <td><span class="badge bg-info">Freelancer Report</span></td>
+              <td>
+                <div class="text-white fw-bold">{{ fr.freelancer.display_name }}</div>
+                <small class="text-muted">{{ fr.freelancer.user.email }}</small>
+              </td>
+              <td>
+                {% if fr.reported_client %}
+                  <a href="{% url 'marketplace_admin:user_detail' fr.reported_client.user.id %}" class="text-info">{{ fr.reported_client.display_name }}</a>
+                {% else %}
+                  <span class="text-muted">General Platform</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if fr.project %}
+                  <a href="{% url 'marketplace_admin:project_detail' fr.project.id %}" class="text-white text-truncate d-inline-block" style="max-width:160px;">{{ fr.project.title }}</a>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td><span class="badge bg-dark border border-warning text-warning">{{ fr.get_reason_display }}</span></td>
+              <td>
+                <span class="badge {% if fr.status == 'open' %}bg-danger{% elif fr.status == 'under_review' %}bg-warning text-dark{% elif fr.status == 'resolved' %}bg-success{% else %}bg-secondary{% endif %}">
+                  {{ fr.get_status_display }}
+                </span>
+              </td>
+              <td class="small text-muted">{{ fr.created_at|date:"M d, Y" }}</td>
+              <td class="text-end">
+                <a href="{% url 'marketplace_admin:report_detail' 'freelancer' fr.id %}" class="btn btn-outline-danger btn-sm py-0 px-2">
+                  <i class="fas fa-search-plus me-1"></i>Investigate
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+
+          {% if not client_reports and not freelancer_reports %}
+            <tr><td colspan="8" class="text-center text-muted py-4"><i class="fas fa-check-circle text-success me-1"></i>No incident reports matching filters. Platform is clear.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

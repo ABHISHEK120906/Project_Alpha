@@ -1,0 +1,55 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Open Administrative Dispute — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <a href="{% url 'marketplace_admin:disputes_list' %}" class="btn btn-outline-secondary btn-sm mb-2"><i class="fas fa-arrow-left me-1"></i>Back to Disputes</a>
+      <h2 class="fw-bold mb-0"><i class="fas fa-gavel text-warning me-2"></i>Initiate Formal Project Dispute</h2>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase">Target Marketplace Project</label>
+            {{ form.project }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase">Dispute Category</label>
+            {{ form.category }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase">Dispute Subject / Title</label>
+            {{ form.title }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase">Dispute Details & Statement</label>
+            {{ form.description }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase">Supporting Evidence / Logs / References</label>
+            {{ form.evidence }}
+          </div>
+          <div class="mb-4">
+            <label class="form-label text-muted small text-uppercase">Internal Administrative Audit Notes</label>
+            {{ form.admin_notes }}
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-warning flex-fill"><i class="fas fa-gavel me-1"></i>Create Formal Dispute</button>
+            <a href="{% url 'marketplace_admin:disputes_list' %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

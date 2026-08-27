@@ -1,0 +1,403 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Marketplace Admin Dashboard — FreelanceTrack{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <!-- Header Bar -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fas fa-store-alt text-primary me-2"></i>Platform Administration & Moderation</h2>
+      <p class="text-muted small mb-0">Stage 3 Admin Control: Monitor Clients, Freelancers, Projects, Disputes, and Incidents</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'marketplace_admin:exports_hub' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-download me-1"></i>Export Reports</a>
+      <a href="{% url 'marketplace_admin:dispute_create' %}" class="btn btn-warning btn-sm"><i class="fas fa-gavel me-1"></i>Open Dispute</a>
+    </div>
+  </div>
+
+  <!-- Row 1: KPI Stats Grid -->
+  <div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+      <div class="glass-card kpi-card border-primary">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="kpi-title">Total Clients</div>
+            <div class="kpi-value text-primary">{{ kpi.total_clients }}</div>
+            <div class="small text-muted mt-1"><i class="fas fa-user-tie text-info me-1"></i>Active Employers</div>
+          </div>
+          <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary fs-3">
+            <i class="fas fa-briefcase"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="glass-card kpi-card border-info">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="kpi-title">Total Freelancers</div>
+            <div class="kpi-value text-info">{{ kpi.total_freelancers }}</div>
+            <div class="small text-muted mt-1"><i class="fas fa-code text-success me-1"></i>Verified Talent</div>
+          </div>
+          <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info fs-3">
+            <i class="fas fa-laptop-code"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="glass-card kpi-card border-warning">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="kpi-title">Marketplace Projects</div>
+            <div class="kpi-value text-warning">{{ kpi.total_projects }}</div>
+            <div class="small text-muted mt-1">
+              <span class="text-success fw-bold">{{ kpi.open_projects }} Open</span> | {{ kpi.active_projects }} Active
+            </div>
+          </div>
+          <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning fs-3">
+            <i class="fas fa-project-diagram"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="glass-card kpi-card border-danger">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="kpi-title">Disputes & Incidents</div>
+            <div class="kpi-value text-danger">{{ kpi.open_disputes|add:kpi.open_reports }}</div>
+            <div class="small text-muted mt-1">
+              <span class="text-danger">{{ kpi.open_disputes }} Disputes</span> | {{ kpi.open_reports }} Reports
+            </div>
+          </div>
+          <div class="bg-danger bg-opacity-10 p-3 rounded-circle text-danger fs-3">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Secondary KPI Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">Total Applications</div>
+        <div class="h3 fw-bold text-white mb-0">{{ kpi.total_applications }}</div>
+        <small class="text-info">{{ kpi.hire_conversion_rate }}% Conversion Rate</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">Platform Budget Volume</div>
+        <div class="h3 fw-bold text-success mb-0">${{ kpi.total_budget_volume|floatformat:2 }}</div>
+        <small class="text-muted">${{ kpi.total_paid_volume|floatformat:2 }} Paid</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">Pending Support</div>
+        <div class="h3 fw-bold text-purple mb-0">{{ kpi.open_support_tickets }}</div>
+        <small class="text-muted">Tickets in queue</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass-card text-center py-3">
+        <div class="text-muted small text-uppercase">Suspended Accounts</div>
+        <div class="h3 fw-bold text-danger mb-0">{{ kpi.suspended_users }}</div>
+        <small class="text-warning">{{ kpi.reported_users }} Reported Users</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: Charts & Trends -->
+  <div class="row g-3 mb-4">
+    <div class="col-lg-8">
+      <div class="glass-card h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0"><i class="fas fa-chart-area text-primary me-2"></i>Platform Activity & Volume Trend</h5>
+          <span class="badge bg-primary bg-opacity-20 text-primary">Last 12 Months</span>
+        </div>
+        <div style="height: 280px;">
+          <canvas id="marketplaceTrendChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="glass-card h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0"><i class="fas fa-exclamation-triangle text-warning me-2"></i>Project Risk & Delays</h5>
+          {% if risk_analysis.is_ready %}
+            <span class="badge bg-success bg-opacity-20 text-success">Predictive Model Active</span>
+          {% else %}
+            <span class="badge bg-secondary bg-opacity-20 text-muted">Safety Guard Active</span>
+          {% endif %}
+        </div>
+        <div>
+          <div class="d-flex justify-content-between py-2 border-bottom border-light border-opacity-10">
+            <span>Overdue Projects</span>
+            <span class="badge bg-danger">{{ risk_analysis.overdue_count }}</span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom border-light border-opacity-10">
+            <span>High Delay Risk</span>
+            <span class="badge bg-warning text-dark">{{ risk_analysis.high_risk_count }}</span>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom border-light border-opacity-10">
+            <span>Completion Rate</span>
+            <span class="fw-bold text-success">{{ kpi.completion_rate }}%</span>
+          </div>
+          <div class="mt-3">
+            <h6 class="small text-uppercase text-muted">Top High-Risk Projects</h6>
+            {% for rp in risk_analysis.high_risk_projects|slice:":3" %}
+              <div class="d-flex justify-content-between align-items-center small py-1">
+                <a href="{% url 'marketplace_admin:project_detail' rp.id %}" class="text-white text-decoration-none text-truncate" style="max-width:180px;">
+                  {{ rp.title }}
+                </a>
+                <span class="badge {% if rp.risk_score >= 80 %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ rp.risk_score }}% Risk</span>
+              </div>
+            {% empty %}
+              <p class="text-muted small mb-0">No elevated risk projects detected.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 4: Action Queues: Reports & Disputes -->
+  <div class="row g-3 mb-4">
+    <!-- Active Disputes -->
+    <div class="col-lg-6">
+      <div class="glass-card h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0"><i class="fas fa-gavel text-warning me-2"></i>Active Disputes</h5>
+          <a href="{% url 'marketplace_admin:disputes_list' %}" class="btn btn-link btn-sm text-info p-0">View All ({{ kpi.total_disputes }})</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-dark table-hover table-sm align-middle mb-0">
+            <thead>
+              <tr class="text-muted small">
+                <th>Dispute</th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in recent_disputes %}
+                <tr>
+                  <td>
+                    <div class="fw-bold text-white text-truncate" style="max-width:150px;">{{ d.title }}</div>
+                    <small class="text-muted">{{ d.get_category_display }}</small>
+                  </td>
+                  <td>
+                    <div class="small text-truncate" style="max-width:140px;">{{ d.project.title }}</div>
+                    <small class="text-muted">{{ d.client.display_name }} vs {{ d.freelancer.display_name|default:"Unassigned" }}</small>
+                  </td>
+                  <td>
+                    <span class="badge {% if d.status == 'open' %}bg-danger{% elif d.status == 'under_investigation' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                      {{ d.get_status_display }}
+                    </span>
+                  </td>
+                  <td>
+                    <a href="{% url 'marketplace_admin:dispute_detail' d.id %}" class="btn btn-outline-primary btn-sm py-0 px-2">Investigate</a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="4" class="text-center text-muted py-3">No active disputes requiring arbitration.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Incident Reports -->
+    <div class="col-lg-6">
+      <div class="glass-card h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0"><i class="fas fa-flag text-danger me-2"></i>Incident & Scam Reports</h5>
+          <a href="{% url 'marketplace_admin:reports_list' %}" class="btn btn-link btn-sm text-info p-0">View All</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-dark table-hover table-sm align-middle mb-0">
+            <thead>
+              <tr class="text-muted small">
+                <th>Type</th>
+                <th>Reporter / Target</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in recent_reports_client %}
+                <tr>
+                  <td><span class="badge bg-primary">Client</span></td>
+                  <td>
+                    <div class="small text-white">{{ r.reporter.display_name }}</div>
+                    <small class="text-muted">vs {{ r.reported_user.username|default:"General" }}</small>
+                  </td>
+                  <td class="small">{{ r.get_reason_display }}</td>
+                  <td>
+                    <span class="badge {% if r.status == 'open' %}bg-danger{% elif r.status == 'under_review' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                      {{ r.get_status_display }}
+                    </span>
+                  </td>
+                  <td>
+                    <a href="{% url 'marketplace_admin:report_detail' 'client' r.id %}" class="btn btn-outline-danger btn-sm py-0 px-2">Review</a>
+                  </td>
+                </tr>
+              {% endfor %}
+              {% for fr in recent_reports_freelancer %}
+                <tr>
+                  <td><span class="badge bg-info">Freelancer</span></td>
+                  <td>
+                    <div class="small text-white">{{ fr.freelancer.display_name }}</div>
+                    <small class="text-muted">vs {{ fr.reported_client.display_name|default:"General" }}</small>
+                  </td>
+                  <td class="small">{{ fr.get_reason_display }}</td>
+                  <td>
+                    <span class="badge {% if fr.status == 'open' %}bg-danger{% elif fr.status == 'under_review' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                      {{ fr.get_status_display }}
+                    </span>
+                  </td>
+                  <td>
+                    <a href="{% url 'marketplace_admin:report_detail' 'freelancer' fr.id %}" class="btn btn-outline-danger btn-sm py-0 px-2">Review</a>
+                  </td>
+                </tr>
+              {% endfor %}
+              {% if not recent_reports_client and not recent_reports_freelancer %}
+                <tr><td colspan="5" class="text-center text-muted py-3">No incident reports submitted.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 5: Recent Projects & Support Desk -->
+  <div class="row g-3">
+    <div class="col-lg-7">
+      <div class="glass-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0"><i class="fas fa-briefcase text-info me-2"></i>Recently Posted Marketplace Projects</h5>
+          <a href="{% url 'marketplace_admin:projects_list' %}" class="btn btn-link btn-sm text-info p-0">View All Projects</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-dark table-hover table-sm align-middle mb-0">
+            <thead>
+              <tr class="text-muted small">
+                <th>Title</th>
+                <th>Client</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in recent_projects %}
+                <tr>
+                  <td class="fw-bold text-white text-truncate" style="max-width:200px;">{{ p.title }}</td>
+                  <td class="small">{{ p.client.display_name }}</td>
+                  <td class="small text-success">${{ p.budget|default:"0.00" }}</td>
+                  <td>
+                    <span class="badge {% if p.status == 'open' %}bg-success{% elif p.status == 'in_progress' %}bg-primary{% elif p.status == 'completed' %}bg-info{% else %}bg-secondary{% endif %}">
+                      {{ p.get_status_display }}
+                    </span>
+                  </td>
+                  <td>
+                    <a href="{% url 'marketplace_admin:project_detail' p.id %}" class="btn btn-outline-light btn-sm py-0 px-2">Manage</a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-3">No projects posted yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="glass-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0"><i class="fas fa-headset text-success me-2"></i>Support Tickets Queue</h5>
+          <a href="{% url 'marketplace_admin:support_list' %}" class="btn btn-link btn-sm text-info p-0">All Tickets</a>
+        </div>
+        <div class="list-group list-group-flush bg-transparent">
+          {% for t in recent_tickets %}
+            <a href="{% url 'marketplace_admin:support_detail' t.id %}" class="list-group-item list-group-item-action bg-transparent text-white border-light border-opacity-10 px-0 py-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold text-truncate" style="max-width:220px;">{{ t.subject }}</span>
+                <span class="badge {% if t.status == 'open' %}bg-danger{% elif t.status == 'in_progress' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                  {{ t.get_status_display }}
+                </span>
+              </div>
+              <div class="small text-muted mt-1 d-flex justify-content-between">
+                <span>{{ t.user.username }} ({{ t.get_role_display }})</span>
+                <span>{{ t.created_at|timesince }} ago</span>
+              </div>
+            </a>
+          {% empty %}
+            <p class="text-muted small text-center py-3 mb-0">Support queue is clear.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var trendsData = {{ trends_json|safe }};
+    var ctx = document.getElementById('marketplaceTrendChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: trendsData.labels,
+        datasets: [
+          {
+            label: 'Projects Posted',
+            data: trendsData.projects,
+            borderColor: '#6f42c1',
+            backgroundColor: 'rgba(111, 66, 193, 0.15)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Applications / Bids',
+            data: trendsData.applications,
+            borderColor: '#00d2ff',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#e2e8f0', font: { family: 'Inter' } } }
+        },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

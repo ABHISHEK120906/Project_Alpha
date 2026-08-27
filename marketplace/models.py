@@ -480,6 +480,7 @@ class ProjectReport(models.Model):
         ('open', 'Open'),
         ('under_review', 'Under Review'),
         ('resolved', 'Resolved'),
+        ('rejected', 'Rejected'),
         ('closed', 'Closed'),
     ]
 
@@ -543,6 +544,7 @@ class FreelancerReport(models.Model):
         ('open', 'Open'),
         ('under_review', 'Under Review'),
         ('resolved', 'Resolved'),
+        ('rejected', 'Rejected'),
         ('closed', 'Closed'),
     ]
 
@@ -580,4 +582,151 @@ class FreelancerReport(models.Model):
 
     def __str__(self):
         return f"Freelancer Report #{str(self.id)[:8]} — {self.reason} ({self.status})"
+
+
+# ---------------------------------------------------------------------------
+# MarketplaceDispute (Stage 3: Dispute Management)
+# ---------------------------------------------------------------------------
+
+class MarketplaceDispute(models.Model):
+    """
+    Dedicated Dispute model for arbitration between Clients and Freelancers.
+    Admin investigates project status, payments, messages, evidence, and records resolution.
+    """
+    CATEGORY_CHOICES = [
+        ('payment', 'Payment & Milestones'),
+        ('delivery', 'Non-Performance & Delivery Failure'),
+        ('quality', 'Scope & Quality Discrepancy'),
+        ('communication', 'Unresponsive / Abandonment'),
+        ('terms_breach', 'Terms & Policy Breach'),
+        ('scam', 'Suspected Fraud / Scam'),
+        ('other', 'Other Dispute'),
+    ]
+
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('under_investigation', 'Under Investigation'),
+        ('resolved', 'Resolved'),
+        ('closed', 'Closed'),
+    ]
+
+    RESOLUTION_CHOICES = [
+        ('pending', 'Pending Resolution'),
+        ('favor_client', 'Resolved in Favor of Client (Refund Recommended)'),
+        ('favor_freelancer', 'Resolved in Favor of Freelancer (Payment Release)'),
+        ('mutual_settlement', 'Mutual Settlement / Partial Split'),
+        ('dismissed', 'Dismissed / No Action Required'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    project = models.ForeignKey(
+        MarketplaceProject,
+        on_delete=models.CASCADE,
+        related_name='disputes'
+    )
+    opened_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='marketplace_disputes_opened'
+    )
+    client = models.ForeignKey(
+        ClientProfile,
+        on_delete=models.CASCADE,
+        related_name='disputes'
+    )
+    freelancer = models.ForeignKey(
+        FreelancerProfile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='disputes'
+    )
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default='delivery')
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    evidence = models.TextField(blank=True, null=True, help_text="Links, logs, or detailed evidence statements")
+    
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='open')
+    resolution_type = models.CharField(max_length=30, choices=RESOLUTION_CHOICES, default='pending')
+    resolution = models.TextField(blank=True, null=True, help_text="Final verdict and resolution rationale")
+    resolved_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='resolved_marketplace_disputes'
+    )
+    admin_notes = models.TextField(blank=True, null=True, help_text="Confidential administrative notes")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Marketplace Dispute'
+        verbose_name_plural = 'Marketplace Disputes'
+
+    def __str__(self):
+        return f"Dispute #{str(self.id)[:8]} — {self.title} ({self.status})"
+
+
+# ---------------------------------------------------------------------------
+# PlatformSupportTicket (Stage 3: Support Desk)
+# ---------------------------------------------------------------------------
+
+class PlatformSupportTicket(models.Model):
+    """
+    General platform support ticket submitted by Clients or Freelancers.
+    """
+    ROLE_CHOICES = [
+        ('client', 'Client'),
+        ('freelancer', 'Freelancer'),
+        ('other', 'Other / General User'),
+    ]
+
+    CATEGORY_CHOICES = [
+        ('account_problem', 'Account & Authentication Problem'),
+        ('project_problem', 'Project & Workspace Issue'),
+        ('payment_problem', 'Payment & Milestone Issue'),
+        ('scam_report', 'Scam / Security Alert'),
+        ('technical_issue', 'Technical Issue / Bug'),
+        ('other', 'Other Support Request'),
+    ]
+
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+        ('closed', 'Closed'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='marketplace_support_tickets'
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='client')
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default='other')
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
+    admin_response = models.TextField(blank=True, null=True)
+    assigned_admin = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_support_tickets'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Platform Support Ticket'
+        verbose_name_plural = 'Platform Support Tickets'
+
+    def __str__(self):
+        return f"Support Ticket #{str(self.id)[:8]} — {self.subject} ({self.status})"
+
 

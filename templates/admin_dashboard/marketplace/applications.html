@@ -1,0 +1,90 @@
+{% extends 'admin_dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Application Monitoring — FreelanceTrack Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fas fa-paper-plane text-cyan me-2"></i>Platform Applications & Proposals Monitoring</h2>
+      <p class="text-muted small mb-0">Review bids, detect suspicious bidding or spam, monitor marketplace application conversion.</p>
+    </div>
+    <span class="badge bg-primary fs-6">{{ total_count }} Total Proposals</span>
+  </div>
+
+  <!-- Filters -->
+  <div class="glass-card mb-4">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-md-6">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-dark border-secondary text-muted"><i class="fas fa-search"></i></span>
+          <input type="text" name="q" value="{{ search_query }}" class="form-control bg-dark text-white border-secondary" placeholder="Search by project, freelancer, proposal keywords...">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <select name="status" class="form-select form-select-sm bg-dark text-white border-secondary">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Application Statuses</option>
+          {% for val, label in statuses %}
+            <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="fas fa-filter me-1"></i>Filter</button>
+        <a href="{% url 'marketplace_admin:applications_list' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-redo"></i></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Applications Table -->
+  <div class="glass-card">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead>
+          <tr class="text-muted small text-uppercase">
+            <th>Project</th>
+            <th>Client</th>
+            <th>Freelancer</th>
+            <th>Proposed Bid</th>
+            <th>Proposal Preview</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in applications %}
+            <tr>
+              <td>
+                <a href="{% url 'marketplace_admin:project_detail' a.project.id %}" class="fw-bold text-white text-decoration-none">
+                  {{ a.project.title }}
+                </a>
+              </td>
+              <td class="small">{{ a.project.client.display_name }}</td>
+              <td>
+                <a href="{% url 'marketplace_admin:user_detail' a.freelancer.id %}" class="text-info small fw-bold">
+                  @{{ a.freelancer.username }}
+                </a>
+              </td>
+              <td class="text-success fw-bold">${{ a.proposed_price|default:"0.00" }}</td>
+              <td class="small text-muted text-truncate" style="max-width: 250px;">
+                {{ a.proposal }}
+              </td>
+              <td>
+                <span class="badge {% if a.status == 'accepted' %}bg-success{% elif a.status == 'rejected' %}bg-danger{% elif a.status == 'withdrawn' %}bg-secondary{% else %}bg-warning text-dark{% endif %}">
+                  {{ a.get_status_display }}
+                </span>
+              </td>
+              <td class="small text-muted">{{ a.created_at|date:"M d, Y" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="7" class="text-center text-muted py-4">No applications found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
