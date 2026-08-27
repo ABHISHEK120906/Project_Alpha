@@ -22,8 +22,17 @@ def client_avatar_path(instance, filename):
     return f'client_avatars/{instance.user.id}{ext}'
 
 
+def freelancer_avatar_path(instance, filename):
+    ext = os.path.splitext(filename)[1].lower()
+    return f'freelancer_avatars/{instance.user.id}{ext}'
+
+
 def project_attachment_path(instance, filename):
     return f'project_attachments/{instance.id}/{filename}'
+
+
+def project_message_attachment_path(instance, filename):
+    return f'project_messages/{instance.project.id}/{filename}'
 
 
 # ---------------------------------------------------------------------------
@@ -73,6 +82,94 @@ class ClientProfile(models.Model):
     @property
     def display_name(self):
         return self.full_name or self.user.username
+
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        return None
+
+
+# ---------------------------------------------------------------------------
+# FreelancerProfile (Stage 2)
+# ---------------------------------------------------------------------------
+
+class FreelancerProfile(models.Model):
+    """
+    Marketplace Freelancer account profile.
+    One-to-one with Django's built-in User.
+    Created when a user registers as a Freelancer.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='freelancer_profile'
+    )
+    # Basic info
+    full_name = models.CharField(max_length=200)
+    professional_title = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+        help_text="e.g. Full-Stack Developer | Python & AI Specialist"
+    )
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
+    # Professional skills & background
+    skills = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Comma-separated list of skills (e.g., Python, Django, React, PostgreSQL)"
+    )
+    experience = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Years of experience or background summary"
+    )
+    bio = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Detailed summary of professional strengths and services"
+    )
+    # Portfolio & links
+    portfolio_website = models.URLField(blank=True, null=True)
+    github_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    hourly_rate = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0)]
+    )
+    # Avatar
+    avatar = models.ImageField(
+        upload_to=freelancer_avatar_path,
+        blank=True,
+        null=True,
+    )
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Freelancer Profile'
+        verbose_name_plural = 'Freelancer Profiles'
+
+    def __str__(self):
+        return f"{self.full_name} ({self.user.email})"
+
+    @property
+    def display_name(self):
+        return self.full_name or self.user.username
+
+    @property
+    def skills_list(self):
+        if self.skills:
+            return [s.strip() for s in self.skills.split(',') if s.strip()]
+        return []
 
     @property
     def avatar_url(self):
