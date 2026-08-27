@@ -1,0 +1,102 @@
+{% extends 'marketplace/base_freelancer.html' %}
+
+{% block title %}My Projects{% endblock %}
+{% block page_title %}My Assigned Projects{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Header & Status Filter Pills -->
+  <div class="glass-card" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 4px;">
+        My Project Workspaces
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 13.5px; margin: 0;">
+        All projects where clients have accepted your proposal and assigned you as the project developer.
+      </p>
+    </div>
+
+    <!-- Status Tabs -->
+    <div style="display: flex; gap: 8px;">
+      <a href="{% url 'freelancer:my_projects' %}" class="btn {% if not status_filter %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        All Projects
+      </a>
+      <a href="{% url 'freelancer:my_projects' %}?status=active" class="btn {% if status_filter == 'active' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        Active Work
+      </a>
+      <a href="{% url 'freelancer:my_projects' %}?status=completed" class="btn {% if status_filter == 'completed' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        Completed
+      </a>
+    </div>
+  </div>
+
+  <!-- Projects Grid -->
+  {% if projects %}
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+    {% for proj in projects %}
+    <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 22px;">
+
+      <!-- Top Section -->
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span class="badge badge-{{ proj.status }}">{{ proj.get_status_display }}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">
+            {% if proj.deadline %}Deadline: {{ proj.deadline|date:"M d, Y" }}{% else %}No set deadline{% endif %}
+          </span>
+        </div>
+
+        <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; line-height: 1.4; margin-bottom: 6px;">
+          <a href="{% url 'freelancer:workspace' pk=proj.pk %}" style="color: var(--text-primary);">
+            {{ proj.title }}
+          </a>
+        </h3>
+
+        <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;">
+          <i class="bi bi-building"></i> Client: <strong style="color: var(--text-secondary);">{{ proj.client.company_name|default:proj.client.display_name }}</strong>
+        </div>
+
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
+          {{ proj.description|truncatechars:110 }}
+        </p>
+
+        <!-- Progress meter -->
+        <div style="margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+            <span style="color: var(--text-muted);">Completion Progress</span>
+            <span style="color: var(--accent); font-weight: 700;">{{ proj.progress }}%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {{ proj.progress }}%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Card Info & Workspace CTA -->
+      <div style="border-top: 1px solid var(--border); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Agreed Budget</div>
+          <div style="font-size: 16px; font-weight: 800; color: var(--accent);">₹{{ proj.budget|default:'0' }}</div>
+        </div>
+
+        <a href="{% url 'freelancer:workspace' pk=proj.pk %}" class="btn btn-primary btn-sm">
+          <i class="bi bi-box-arrow-in-right"></i> Open Workspace
+        </a>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="glass-card" style="text-align: center; padding: 60px 20px;">
+    <i class="bi bi-kanban" style="font-size: 48px; color: var(--text-muted); opacity: 0.4; display: block; margin-bottom: 16px;"></i>
+    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">No assigned projects</h3>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+      When clients accept your proposals, your active projects will appear here.
+    </p>
+    <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary">Find Projects to Apply</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

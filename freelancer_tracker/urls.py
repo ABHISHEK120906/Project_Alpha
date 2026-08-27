@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('social_auth.urls', namespace='social_auth')),
     path('', include('core.urls', namespace='core')),
     path('client/', include('marketplace.urls', namespace='marketplace')),
+    path('freelancer/', include('marketplace.urls_freelancer', namespace='freelancer')),
 ]
 
 if settings.DEBUG:

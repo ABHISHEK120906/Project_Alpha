@@ -4,10 +4,12 @@ Marketplace admin registration
 from django.contrib import admin
 from .models import (
     ClientProfile,
+    FreelancerProfile,
     MarketplaceProject,
     ProjectApplication,
     ProjectPaymentRecord,
     ProjectReport,
+    FreelancerReport,
 )
 
 
@@ -58,3 +60,21 @@ class ProjectReportAdmin(admin.ModelAdmin):
     search_fields = ['reporter__full_name', 'description']
     raw_id_fields = ['reporter', 'reported_user', 'project']
     readonly_fields = ['created_at', 'updated_at']
+
+
+@admin.register(FreelancerProfile)
+class FreelancerProfileAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'user', 'professional_title', 'location', 'hourly_rate', 'created_at']
+    search_fields = ['full_name', 'user__email', 'skills', 'professional_title']
+    list_filter = ['created_at']
+    raw_id_fields = ['user']
+
+
+@admin.register(FreelancerReport)
+class FreelancerReportAdmin(admin.ModelAdmin):
+    list_display = ['freelancer', 'reported_client', 'reason', 'status', 'created_at']
+    list_filter = ['reason', 'status']
+    search_fields = ['freelancer__full_name', 'description']
+    raw_id_fields = ['freelancer', 'reported_client', 'project']
+    readonly_fields = ['created_at', 'updated_at']
+

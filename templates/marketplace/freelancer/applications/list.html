@@ -1,0 +1,141 @@
+{% extends 'marketplace/base_freelancer.html' %}
+
+{% block title %}My Applications{% endblock %}
+{% block page_title %}My Applications{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Header & Status Filter Pills -->
+  <div class="glass-card" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 4px;">
+        Proposal History
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 13.5px; margin: 0;">
+        Track all the proposals you've submitted to clients and their current review status.
+      </p>
+    </div>
+
+    <!-- Status Filter Buttons -->
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <a href="{% url 'freelancer:my_applications' %}" class="btn {% if not status_filter %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        All ({{ applications.count }})
+      </a>
+      <a href="{% url 'freelancer:my_applications' %}?status=pending" class="btn {% if status_filter == 'pending' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        Pending
+      </a>
+      <a href="{% url 'freelancer:my_applications' %}?status=accepted" class="btn {% if status_filter == 'accepted' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        Accepted
+      </a>
+      <a href="{% url 'freelancer:my_applications' %}?status=rejected" class="btn {% if status_filter == 'rejected' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        Rejected
+      </a>
+      <a href="{% url 'freelancer:my_applications' %}?status=withdrawn" class="btn {% if status_filter == 'withdrawn' %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+        Withdrawn
+      </a>
+    </div>
+  </div>
+
+  <!-- Applications Table / Cards -->
+  {% if applications %}
+  <div class="glass-card" style="padding: 0; overflow: hidden;">
+    <div style="overflow-x: auto;">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Project & Client</th>
+            <th>Proposed Bid</th>
+            <th>Est. Duration</th>
+            <th>Applied On</th>
+            <th>Status</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for app in applications %}
+          <tr>
+            <!-- Project Title & Client -->
+            <td style="max-width: 280px;">
+              <a href="{% url 'freelancer:project_detail' pk=app.project.pk %}" style="font-weight: 700; color: var(--text-primary); font-size: 14.5px; display: block; margin-bottom: 3px;">
+                {{ app.project.title }}
+              </a>
+              <div style="font-size: 12px; color: var(--text-muted);">
+                Client: <strong style="color: var(--text-secondary);">{{ app.project.client.company_name|default:app.project.client.display_name }}</strong>
+              </div>
+            </td>
+
+            <!-- Bid Price -->
+            <td>
+              <div style="font-size: 15px; font-weight: 800; color: var(--accent);">
+                ₹{{ app.proposed_price|default:app.project.budget|default:'—' }}
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted);">
+                Budget: ₹{{ app.project.budget|default:'Open' }}
+              </div>
+            </td>
+
+            <!-- Duration -->
+            <td style="font-size: 13px; color: var(--text-secondary);">
+              {{ app.estimated_duration|default:'Not specified' }}
+            </td>
+
+            <!-- Applied On -->
+            <td style="font-size: 13px; color: var(--text-muted);">
+              {{ app.created_at|date:"M d, Y" }}
+              <div style="font-size: 11px;">{{ app.created_at|time:"h:i A" }}</div>
+            </td>
+
+            <!-- Status -->
+            <td>
+              <span class="badge badge-{{ app.status }}">
+                {% if app.status == 'pending' %}<i class="bi bi-clock"></i>
+                {% elif app.status == 'accepted' %}<i class="bi bi-check-circle-fill"></i>
+                {% elif app.status == 'rejected' %}<i class="bi bi-x-circle-fill"></i>
+                {% elif app.status == 'withdrawn' %}<i class="bi bi-dash-circle"></i>{% endif %}
+                {{ app.get_status_display }}
+              </span>
+            </td>
+
+            <!-- Actions -->
+            <td style="text-align: right;">
+              <div style="display: inline-flex; align-items: center; gap: 8px;">
+                {% if app.status == 'accepted' %}
+                  <a href="{% url 'freelancer:workspace' pk=app.project.pk %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-kanban-fill"></i> Workspace
+                  </a>
+                {% else %}
+                  <a href="{% url 'freelancer:project_detail' pk=app.project.pk %}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-eye"></i> View
+                  </a>
+                {% endif %}
+
+                {% if app.status == 'pending' %}
+                  <form method="POST" action="{% url 'freelancer:application_withdraw' app_pk=app.pk %}" onsubmit="return confirm('Are you sure you want to withdraw this application?');" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" title="Withdraw Application">
+                      <i class="bi bi-x-lg"></i> Withdraw
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="glass-card" style="text-align: center; padding: 60px 20px;">
+    <i class="bi bi-send" style="font-size: 48px; color: var(--text-muted); opacity: 0.4; display: block; margin-bottom: 16px;"></i>
+    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">No applications found</h3>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+      {% if status_filter %}No applications match the "{{ status_filter }}" filter.{% else %}You haven't submitted any project applications yet.{% endif %}
+    </p>
+    <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary">Find Projects to Apply</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

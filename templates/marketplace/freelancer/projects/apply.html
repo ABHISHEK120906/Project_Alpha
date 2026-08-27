@@ -1,0 +1,108 @@
+{% extends 'marketplace/base_freelancer.html' %}
+
+{% block title %}Apply to {{ project.title }}{% endblock %}
+{% block page_title %}Submit Proposal{% endblock %}
+
+{% block content %}
+<div style="max-width: 840px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Breadcrumb -->
+  <div>
+    <a href="{% url 'freelancer:project_detail' pk=project.pk %}" class="btn btn-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back to Project Details
+    </a>
+  </div>
+
+  <!-- Project Summary Mini-Card -->
+  <div class="glass-card" style="border-left: 4px solid var(--accent);">
+    <span style="font-size: 11.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px;">
+      Applying to Project
+    </span>
+    <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; margin: 6px 0 8px;">
+      {{ project.title }}
+    </h2>
+    <div style="display: flex; gap: 16px; font-size: 13px; color: var(--text-muted); flex-wrap: wrap;">
+      <span><i class="bi bi-building"></i> Client: <strong style="color: var(--text-secondary);">{{ project.client.company_name|default:project.client.display_name }}</strong></span>
+      <span>&bull;</span>
+      <span><i class="bi bi-currency-rupee"></i> Client Budget: <strong style="color: var(--accent);">₹{{ project.budget|default:'Negotiable' }}</strong></span>
+      {% if project.deadline %}
+        <span>&bull;</span>
+        <span><i class="bi bi-calendar-event"></i> Deadline: <strong style="color: var(--yellow);">{{ project.deadline|date:"M d, Y" }}</strong></span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Proposal Application Form -->
+  <div class="glass-card">
+    <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 20px;">
+      Your Proposal & Terms
+    </h3>
+
+    {% if form.non_field_errors %}
+    <div style="background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13.5px;">
+      {% for err in form.non_field_errors %}{{ err }}<br/>{% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'freelancer:project_apply' pk=project.pk %}">
+      {% csrf_token %}
+
+      <!-- Proposed Price & Duration Row -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px;">
+        <div class="form-group" style="margin: 0;">
+          <label for="{{ form.proposed_price.id_for_label }}" class="form-label">
+            Your Bid / Proposed Price (INR ₹) *
+          </label>
+          {{ form.proposed_price }}
+          <span style="font-size: 11.5px; color: var(--text-muted);">Total fee you will receive upon successful completion.</span>
+          {% if form.proposed_price.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ form.proposed_price.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group" style="margin: 0;">
+          <label for="{{ form.estimated_duration.id_for_label }}" class="form-label">
+            Estimated Delivery Time *
+          </label>
+          {{ form.estimated_duration }}
+          <span style="font-size: 11.5px; color: var(--text-muted);">e.g. 10 days, 3 weeks, 1 month.</span>
+          {% if form.estimated_duration.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ form.estimated_duration.errors.0 }}</div>{% endif %}
+        </div>
+      </div>
+
+      <!-- Cover Letter / Proposal Textarea -->
+      <div class="form-group">
+        <label for="{{ form.proposal.id_for_label }}" class="form-label">
+          Cover Letter & Proposal *
+        </label>
+        {{ form.proposal }}
+        <span style="font-size: 11.5px; color: var(--text-muted);">
+          Describe your relevant background, understanding of the client's needs, proposed architecture/tools, and why you are the best fit.
+        </span>
+        {% if form.proposal.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ form.proposal.errors.0 }}</div>{% endif %}
+      </div>
+
+      <!-- Tips Box -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; margin: 24px 0; font-size: 12.5px; color: var(--text-secondary);">
+        <strong style="color: var(--accent); display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+          <i class="bi bi-lightbulb-fill"></i> Pro Tips for Winning Clients:
+        </strong>
+        <ul style="margin-left: 20px; line-height: 1.6;">
+          <li>Highlight direct experience with the technologies requested ({{ project.required_skills|default:'relevant skills' }}).</li>
+          <li>Keep your proposal specific to the client's requirements rather than sending a generic pitch.</li>
+          <li>Mention your portfolio links or past completed projects.</li>
+        </ul>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <a href="{% url 'freelancer:project_detail' pk=project.pk %}" class="btn btn-secondary">
+          Cancel
+        </a>
+        <button type="submit" class="btn btn-primary" style="padding: 11px 26px; font-size: 14.5px;" id="submit-proposal-btn">
+          <i class="bi bi-send-fill"></i> Submit Proposal
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join as Freelancer — FreelanceHub</title>
+  <meta name="description" content="Register as a Freelancer on FreelanceHub to discover high-paying projects, collaborate with top clients, and get paid securely." />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <style>
+    :root {
+      --bg-base:     #0a0d14;
+      --bg-surface:  #111622;
+      --bg-elevated: #182030;
+      --bg-card:     #1e273d;
+      --accent:      #10b981;
+      --accent-soft: rgba(16, 185, 129, 0.12);
+      --text-primary:#f1f5f9;
+      --text-muted:  #64748b;
+      --border:      rgba(255,255,255,0.08);
+      --radius:      14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .reg-container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .brand-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .col-span-2 { grid-column: span 2; }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-1px);
+    }
+    .error-feedback {
+      color: #f43f5e;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .footer-links {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .footer-links a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .col-span-2 { grid-column: span 1; }
+      .reg-container { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reg-container">
+    <div class="brand-header">
+      <div class="brand-badge"><i class="bi bi-person-workspace"></i> Freelancer Registration</div>
+      <h1>Create Your Freelancer Profile</h1>
+      <p class="subtitle">Showcase your skills, browse open client projects, and start earning.</p>
+    </div>
+
+    {% if form.non_field_errors %}
+    <div style="background: rgba(244,63,94,0.12); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13.5px;">
+      {% for err in form.non_field_errors %}{{ err }}<br/>{% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'freelancer:register' %}">
+      {% csrf_token %}
+
+      <div class="form-grid">
+        <div class="form-group col-span-2">
+          <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }} *</label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}<div class="error-feedback">{{ form.full_name.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.email.id_for_label }}">{{ form.email.label }} *</label>
+          {{ form.email }}
+          {% if form.email.errors %}<div class="error-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+          {{ form.phone }}
+          {% if form.phone.errors %}<div class="error-feedback">{{ form.phone.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group col-span-2">
+          <label for="{{ form.professional_title.id_for_label }}">{{ form.professional_title.label }}</label>
+          {{ form.professional_title }}
+          {% if form.professional_title.errors %}<div class="error-feedback">{{ form.professional_title.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group col-span-2">
+          <label for="{{ form.skills.id_for_label }}">{{ form.skills.label }}</label>
+          {{ form.skills }}
+          <span style="font-size: 11px; color: var(--text-muted);">Separate skills with commas (e.g., Python, Django, React, AI/ML, PostgreSQL)</span>
+          {% if form.skills.errors %}<div class="error-feedback">{{ form.skills.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.experience.id_for_label }}">{{ form.experience.label }}</label>
+          {{ form.experience }}
+          {% if form.experience.errors %}<div class="error-feedback">{{ form.experience.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.hourly_rate.id_for_label }}">{{ form.hourly_rate.label }}</label>
+          {{ form.hourly_rate }}
+          {% if form.hourly_rate.errors %}<div class="error-feedback">{{ form.hourly_rate.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.portfolio_website.id_for_label }}">{{ form.portfolio_website.label }}</label>
+          {{ form.portfolio_website }}
+          {% if form.portfolio_website.errors %}<div class="error-feedback">{{ form.portfolio_website.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.github_url.id_for_label }}">{{ form.github_url.label }}</label>
+          {{ form.github_url }}
+          {% if form.github_url.errors %}<div class="error-feedback">{{ form.github_url.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group col-span-2">
+          <label for="{{ form.linkedin_url.id_for_label }}">{{ form.linkedin_url.label }}</label>
+          {{ form.linkedin_url }}
+          {% if form.linkedin_url.errors %}<div class="error-feedback">{{ form.linkedin_url.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group col-span-2">
+          <label for="{{ form.bio.id_for_label }}">{{ form.bio.label }}</label>
+          {{ form.bio }}
+          {% if form.bio.errors %}<div class="error-feedback">{{ form.bio.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }} *</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}<div class="error-feedback">{{ form.password1.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }} *</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}<div class="error-feedback">{{ form.password2.errors.0 }}</div>{% endif %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i class="bi bi-rocket-takeoff-fill"></i> Create Freelancer Account
+      </button>
+    </form>
+
+    <div class="footer-links">
+      Already have an account? <a href="{% url 'core:login' %}">Log In</a> &bull;
+      Looking to hire? <a href="{% url 'marketplace:client_register' %}">Register as Client</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -34,6 +34,18 @@ class UserRestrictionMiddleware:
         # Client Route Protection — require login (public register exempted; role check in views)
         if any(path.startswith(prefix) for prefix in client_prefixes):
             if not request.user.is_authenticated and not path.startswith('/client/register'):
+                if '/api/' in path:
+                    from django.http import JsonResponse
+                    return JsonResponse({'error': 'Authentication required.'}, status=403)
+                return redirect(f"{reverse('core:login')}?next={request.path}")
+
+        # Freelancer Route Protection — require login (public register exempted; role check in views)
+        freelancer_prefixes = ['/freelancer/']
+        if any(path.startswith(prefix) for prefix in freelancer_prefixes):
+            if not request.user.is_authenticated and not path.startswith('/freelancer/register'):
+                if '/api/' in path:
+                    from django.http import JsonResponse
+                    return JsonResponse({'error': 'Authentication required.'}, status=403)
                 return redirect(f"{reverse('core:login')}?next={request.path}")
 
         # Maintenance Mode Interceptor

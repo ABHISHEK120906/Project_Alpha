@@ -1,0 +1,112 @@
+{% extends 'marketplace/base_freelancer.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+{% block page_title %}Edit Freelancer Profile{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+
+  <div>
+    <a href="{% url 'freelancer:profile_view' %}" class="btn btn-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back to Profile
+    </a>
+  </div>
+
+  <div class="glass-card">
+    <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 20px;">
+      Update Profile Information
+    </h2>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'freelancer:profile_edit' %}">
+      {% csrf_token %}
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label class="form-label">{{ profile_form.full_name.label }} *</label>
+          {{ profile_form.full_name }}
+          {% if profile_form.full_name.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.full_name.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ email_form.email.label }} *</label>
+          {{ email_form.email }}
+          {% if email_form.email.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ email_form.email.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group" style="grid-column: span 2;">
+          <label class="form-label">{{ profile_form.professional_title.label }}</label>
+          {{ profile_form.professional_title }}
+          {% if profile_form.professional_title.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.professional_title.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ profile_form.phone.label }}</label>
+          {{ profile_form.phone }}
+          {% if profile_form.phone.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.phone.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ profile_form.location.label }}</label>
+          {{ profile_form.location }}
+          {% if profile_form.location.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.location.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ profile_form.hourly_rate.label }}</label>
+          {{ profile_form.hourly_rate }}
+          {% if profile_form.hourly_rate.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.hourly_rate.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ profile_form.experience.label }}</label>
+          {{ profile_form.experience }}
+          {% if profile_form.experience.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.experience.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group" style="grid-column: span 2;">
+          <label class="form-label">{{ profile_form.skills.label }}</label>
+          {{ profile_form.skills }}
+          <span style="font-size: 11px; color: var(--text-muted);">Comma-separated (e.g. Python, Django, React, AI, PostgreSQL)</span>
+          {% if profile_form.skills.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.skills.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ profile_form.portfolio_website.label }}</label>
+          {{ profile_form.portfolio_website }}
+          {% if profile_form.portfolio_website.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.portfolio_website.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">{{ profile_form.github_url.label }}</label>
+          {{ profile_form.github_url }}
+          {% if profile_form.github_url.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.github_url.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group" style="grid-column: span 2;">
+          <label class="form-label">{{ profile_form.linkedin_url.label }}</label>
+          {{ profile_form.linkedin_url }}
+          {% if profile_form.linkedin_url.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.linkedin_url.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group" style="grid-column: span 2;">
+          <label class="form-label">{{ profile_form.bio.label }}</label>
+          {{ profile_form.bio }}
+          {% if profile_form.bio.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.bio.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group" style="grid-column: span 2;">
+          <label class="form-label">{{ profile_form.avatar.label }}</label>
+          {{ profile_form.avatar }}
+          {% if profile_form.avatar.errors %}<div style="color: #f43f5e; font-size: 12px; margin-top: 4px;">{{ profile_form.avatar.errors.0 }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
+        <a href="{% url 'freelancer:profile_view' %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

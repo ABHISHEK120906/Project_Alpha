@@ -68,6 +68,8 @@ def home(request):
             role = 'user'
         if role == 'client':
             return redirect('marketplace:client_dashboard')
+        if role == 'freelancer':
+            return redirect('freelancer:dashboard')
         if role in ('admin',) or request.user.is_staff or request.user.is_superuser:
             return redirect('core:admin_dashboard')
         return redirect('core:dashboard')
@@ -112,6 +114,10 @@ def custom_login(request):
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser or (hasattr(request.user, 'profile') and request.user.profile.role == 'admin'):
             return redirect('core:admin_dashboard')
+        if hasattr(request.user, 'profile') and request.user.profile.role == 'client':
+            return redirect('marketplace:client_dashboard')
+        if hasattr(request.user, 'profile') and request.user.profile.role == 'freelancer':
+            return redirect('freelancer:dashboard')
         return redirect('core:dashboard')
 
     if request.method == 'POST':
@@ -187,6 +193,9 @@ def custom_login(request):
             # Route client-role users to marketplace dashboard
             if profile.role == 'client':
                 return redirect('marketplace:client_dashboard')
+            # Route freelancer-role users to freelancer dashboard
+            if profile.role == 'freelancer':
+                return redirect('freelancer:dashboard')
             return redirect('core:dashboard')
         else:
             LoginHistory.objects.create(

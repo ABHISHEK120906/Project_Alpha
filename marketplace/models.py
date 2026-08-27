@@ -518,3 +518,66 @@ class ProjectReport(models.Model):
 
     def __str__(self):
         return f"Report #{str(self.id)[:8]} — {self.reason} ({self.status})"
+
+
+# ---------------------------------------------------------------------------
+# FreelancerReport (Freelancer Support)
+# ---------------------------------------------------------------------------
+
+class FreelancerReport(models.Model):
+    """
+    Freelancer support / report ticket.
+    Freelancer can report a client scam, non-payment, misleading project, abuse, or general issue.
+    Admin handling implemented in Stage 3.
+    """
+    REASON_CHOICES = [
+        ('scam', 'Client Scam'),
+        ('non_payment', 'Non-Payment / Milestone Issue'),
+        ('misleading_project', 'Misleading Project / Scope Creep'),
+        ('abuse', 'Abuse / Harassment'),
+        ('suspicious_activity', 'Suspicious Activity'),
+        ('other', 'Other Issue'),
+    ]
+
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('under_review', 'Under Review'),
+        ('resolved', 'Resolved'),
+        ('closed', 'Closed'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    freelancer = models.ForeignKey(
+        FreelancerProfile,
+        on_delete=models.CASCADE,
+        related_name='reports_filed'
+    )
+    reported_client = models.ForeignKey(
+        ClientProfile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reports_received'
+    )
+    project = models.ForeignKey(
+        MarketplaceProject,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='freelancer_reports'
+    )
+    reason = models.CharField(max_length=30, choices=REASON_CHOICES)
+    description = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
+    admin_notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Freelancer Report'
+        verbose_name_plural = 'Freelancer Reports'
+
+    def __str__(self):
+        return f"Freelancer Report #{str(self.id)[:8]} — {self.reason} ({self.status})"
+

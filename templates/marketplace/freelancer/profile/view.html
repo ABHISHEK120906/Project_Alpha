@@ -1,0 +1,140 @@
+{% extends 'marketplace/base_freelancer.html' %}
+
+{% block title %}My Profile{% endblock %}
+{% block page_title %}Freelancer Profile{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px; max-width: 960px; margin: 0 auto;">
+
+  <!-- Profile Header Card -->
+  <div class="glass-card">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+      <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+        {% if freelancer_profile.avatar %}
+          <img src="{{ freelancer_profile.avatar.url }}" alt="{{ freelancer_profile.display_name }}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(16,185,129,0.4);" />
+        {% else %}
+          <div class="user-avatar-sm" style="width: 80px; height: 80px; font-size: 32px; border-width: 3px;">
+            {{ freelancer_profile.display_name|make_list|first|upper }}
+          </div>
+        {% endif %}
+
+        <div>
+          <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 4px;">
+            {{ freelancer_profile.full_name }}
+          </h1>
+          {% if freelancer_profile.professional_title %}
+            <div style="font-size: 14.5px; font-weight: 600; color: var(--accent); margin-bottom: 6px;">
+              {{ freelancer_profile.professional_title }}
+            </div>
+          {% endif %}
+          <div style="display: flex; gap: 14px; font-size: 13px; color: var(--text-muted); flex-wrap: wrap;">
+            <span><i class="bi bi-envelope"></i> {{ user.email }}</span>
+            {% if freelancer_profile.phone %}<span>&bull;</span><span><i class="bi bi-telephone"></i> {{ freelancer_profile.phone }}</span>{% endif %}
+            {% if freelancer_profile.location %}<span>&bull;</span><span><i class="bi bi-geo-alt"></i> {{ freelancer_profile.location }}</span>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <a href="{% url 'freelancer:profile_edit' %}" class="btn btn-primary">
+        <i class="bi bi-pencil-square"></i> Edit Profile
+      </a>
+    </div>
+
+    <!-- Rate & Stats Row -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+      <div>
+        <span style="font-size: 11.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Hourly Rate</span>
+        <div style="font-size: 18px; font-weight: 800; color: var(--accent); margin-top: 2px;">
+          {% if freelancer_profile.hourly_rate %}₹{{ freelancer_profile.hourly_rate }} / hr{% else %}Not specified{% endif %}
+        </div>
+      </div>
+
+      <div>
+        <span style="font-size: 11.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Proposals Submitted</span>
+        <div style="font-size: 18px; font-weight: 800; color: var(--text-primary); margin-top: 2px;">
+          {{ applications_count }}
+        </div>
+      </div>
+
+      <div>
+        <span style="font-size: 11.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Completed Projects</span>
+        <div style="font-size: 18px; font-weight: 800; color: var(--green); margin-top: 2px;">
+          {{ completed_projects_count }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bio & Experience -->
+  <div class="glass-card">
+    <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 12px;">
+      About Me / Professional Summary
+    </h3>
+    <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.8; white-space: pre-line;">
+      {{ freelancer_profile.bio|default:"No bio summary provided yet. Click 'Edit Profile' to add one." }}
+    </div>
+
+    {% if freelancer_profile.experience %}
+    <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border);">
+      <h4 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+        Experience & Background
+      </h4>
+      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+        {{ freelancer_profile.experience }}
+      </p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Skills & Portfolio Links -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <!-- Skills -->
+    <div class="glass-card">
+      <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 14px;">
+        Core Skills
+      </h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+        {% for skill in freelancer_profile.skills_list %}
+          <span class="skill-tag" style="padding: 6px 12px; font-size: 13px;">{{ skill }}</span>
+        {% empty %}
+          <span style="font-size: 13px; color: var(--text-muted);">No skills added yet.</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Portfolio Links -->
+    <div class="glass-card">
+      <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 14px;">
+        Portfolio & Socials
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13.5px;">
+        {% if freelancer_profile.portfolio_website %}
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="bi bi-globe" style="color: var(--accent); font-size: 16px;"></i>
+            <a href="{{ freelancer_profile.portfolio_website }}" target="_blank" style="font-weight: 600;">Portfolio Website</a>
+          </div>
+        {% endif %}
+
+        {% if freelancer_profile.github_url %}
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="bi bi-github" style="color: var(--text-primary); font-size: 16px;"></i>
+            <a href="{{ freelancer_profile.github_url }}" target="_blank" style="font-weight: 600;">GitHub Profile</a>
+          </div>
+        {% endif %}
+
+        {% if freelancer_profile.linkedin_url %}
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="bi bi-linkedin" style="color: #0ea5e9; font-size: 16px;"></i>
+            <a href="{{ freelancer_profile.linkedin_url }}" target="_blank" style="font-weight: 600;">LinkedIn Profile</a>
+          </div>
+        {% endif %}
+
+        {% if not freelancer_profile.portfolio_website and not freelancer_profile.github_url and not freelancer_profile.linkedin_url %}
+          <span style="color: var(--text-muted); font-size: 13px;">No portfolio links added yet.</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
