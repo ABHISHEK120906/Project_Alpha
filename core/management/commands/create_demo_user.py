@@ -24,10 +24,10 @@ class Command(BaseCommand):
                 'password': 'team@1234',
             },
             {
-                'username': 'admin',
-                'email': 'admin@example.com',
-                'password': 'team@1234',
-            }
+                'username': 'Svathi',
+                'email': 'svathi@example.com',
+                'password': 'Abhishek@1296',
+            },
         ]
 
         for udata in users_to_create:
