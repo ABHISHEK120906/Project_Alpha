@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'core',
     'social_auth',
+    'marketplace',   # Stage 1: Freelancing Marketplace — Client Side
 ]
 
 

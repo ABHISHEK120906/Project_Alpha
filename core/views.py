@@ -60,8 +60,16 @@ def get_client_ip(request):
 
 
 def home(request):
-    """Landing page — redirects authenticated users to dashboard."""
+    """Landing page — redirects authenticated users to their role-appropriate dashboard."""
     if request.user.is_authenticated:
+        try:
+            role = request.user.profile.role
+        except Exception:
+            role = 'user'
+        if role == 'client':
+            return redirect('marketplace:client_dashboard')
+        if role in ('admin',) or request.user.is_staff or request.user.is_superuser:
+            return redirect('core:admin_dashboard')
         return redirect('core:dashboard')
 
     return render(request, 'home.html')
@@ -176,6 +184,9 @@ def custom_login(request):
 
             if is_admin_user:
                 return redirect('core:admin_dashboard')
+            # Route client-role users to marketplace dashboard
+            if profile.role == 'client':
+                return redirect('marketplace:client_dashboard')
             return redirect('core:dashboard')
         else:
             LoginHistory.objects.create(
@@ -2406,7 +2417,7 @@ def analytics_workspace(request):
     visualizations, Pearson correlation matrix, outlier detection,
     trend analysis, and algorithmic key business insights.
     """
-    from core.services.analytics_engine import AnalyticsEngine
+    from core.services.analytics_engine import DataAnalyticsEngine
     
     filters = {
         'client': request.GET.get('client', ''),
@@ -2415,14 +2426,14 @@ def analytics_workspace(request):
         'end_date': request.GET.get('end_date', ''),
     }
 
-    engine = AnalyticsEngine(request.user, filters=filters)
+    engine = DataAnalyticsEngine(request.user, filters=filters)
     profiles = engine.get_data_profiles()
-    quality = engine.get_data_quality_audit()
+    quality = engine.evaluate_data_quality()
     eda = engine.get_exploratory_analysis()
-    correlation = engine.compute_correlation_matrix()
+    correlation = engine.calculate_correlation_matrix()
     outliers = engine.detect_outliers()
-    trends = engine.get_trend_analysis()
-    insights = engine.generate_automated_insights()
+    trends = engine.analyze_trends()
+    insights = engine.generate_insights_and_recommendations()
     clients_list = Client.objects.filter(user=request.user, is_archived=False).values_list('name', flat=True)
 
     return render(request, 'analytics/workspace.html', {
@@ -2445,9 +2456,9 @@ def apply_data_clean_action(request):
     """
     Executes safe 1-click normalization action from data quality audit.
     """
-    from core.services.analytics_engine import AnalyticsEngine
+    from core.services.analytics_engine import DataAnalyticsEngine
     action_type = request.POST.get('action_type')
-    engine = AnalyticsEngine(request.user)
+    engine = DataAnalyticsEngine(request.user)
     result = engine.apply_safe_clean_action(action_type)
 
     if result.get('success'):

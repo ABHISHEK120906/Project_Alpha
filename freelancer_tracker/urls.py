@@ -10,6 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('social_auth.urls', namespace='social_auth')),
     path('', include('core.urls', namespace='core')),
+    path('client/', include('marketplace.urls', namespace='marketplace')),
 ]
 
 if settings.DEBUG:

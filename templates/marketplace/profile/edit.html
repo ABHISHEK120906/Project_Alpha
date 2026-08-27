@@ -1,0 +1,99 @@
+{% extends "marketplace/base_client.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+{% block page_title %}Edit Profile{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">Update your client account information</div>{% endblock %}
+{% block nav_profile %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'marketplace:client_profile_view' %}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> Cancel
+  </a>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+  <!-- Left: Personal Info -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Personal Information</div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ profile_form.full_name.id_for_label }}">Full Name</label>
+        {{ profile_form.full_name }}
+        {% if profile_form.full_name.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ profile_form.full_name.errors|first }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ email_form.email.id_for_label }}">Email Address</label>
+        {{ email_form.email }}
+        {% if email_form.email.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ email_form.email.errors|first }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ profile_form.phone.id_for_label }}">Phone Number</label>
+        {{ profile_form.phone }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ profile_form.location.id_for_label }}">Location</label>
+        {{ profile_form.location }}
+        <div class="form-hint">City, Country — e.g. Mumbai, India</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ profile_form.bio.id_for_label }}">About You</label>
+        {{ profile_form.bio }}
+        <div class="form-hint">Brief description shown to freelancers on active projects</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Company + Avatar -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Company / Organisation</div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ profile_form.company_name.id_for_label }}">Company Name</label>
+        {{ profile_form.company_name }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ profile_form.company_description.id_for_label }}">Company Description</label>
+        {{ profile_form.company_description }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Profile Photo</div>
+
+      {% if client_profile.avatar %}
+      <div style="margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+        <img src="{{ client_profile.avatar.url }}" alt="Current avatar"
+             style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);" />
+        <div style="font-size:0.8rem;color:var(--text-muted);">Current avatar</div>
+      </div>
+      {% endif %}
+
+      <div class="form-group">
+        <label class="form-label" for="{{ profile_form.avatar.id_for_label }}">Upload New Photo</label>
+        {{ profile_form.avatar }}
+        <div class="form-hint">JPG, PNG, WEBP — max 10MB</div>
+        {% if profile_form.avatar.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ profile_form.avatar.errors|first }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <a href="{% url 'marketplace:client_profile_view' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg"></i> Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+</form>
+{% endblock %}

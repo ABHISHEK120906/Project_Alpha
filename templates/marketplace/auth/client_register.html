@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Registration — FreelanceHub</title>
+  <meta name="description" content="Join FreelanceHub as a Client and hire top freelancers for your projects." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:#0d0f14;color:#f1f5f9;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    :root{
+      --accent:#6c63ff;--accent-hover:#5a52e0;--accent-soft:rgba(108,99,255,0.12);--accent-glow:rgba(108,99,255,0.35);
+      --bg-surface:#13161d;--bg-card:#1e2330;--bg-elevated:#1a1f2b;
+      --border:rgba(255,255,255,0.07);--border-active:rgba(108,99,255,0.5);
+      --text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;
+      --green:#22d3a0;--red:#f43f5e;
+    }
+    .page{width:100%;min-height:100vh;display:flex;}
+    /* Left panel */
+    .panel-left{
+      flex:1;background:linear-gradient(135deg,#0d0f14 0%,#13161d 50%,#1a1f2b 100%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:60px 48px;position:relative;overflow:hidden;
+    }
+    .panel-left::before{
+      content:'';position:absolute;top:-30%;left:-20%;width:60%;height:60%;
+      background:radial-gradient(circle,rgba(108,99,255,0.15),transparent 60%);
+      pointer-events:none;
+    }
+    .panel-left::after{
+      content:'';position:absolute;bottom:-20%;right:-10%;width:50%;height:50%;
+      background:radial-gradient(circle,rgba(167,139,250,0.1),transparent 60%);
+      pointer-events:none;
+    }
+    .brand{font-family:'Plus Jakarta Sans',sans-serif;font-size:2rem;font-weight:800;margin-bottom:8px;
+      background:linear-gradient(135deg,#6c63ff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-tagline{font-size:1rem;color:var(--text-muted);margin-bottom:48px;}
+    .feature-list{list-style:none;display:flex;flex-direction:column;gap:16px;max-width:340px;}
+    .feature-item{display:flex;align-items:flex-start;gap:12px;font-size:0.9rem;color:var(--text-secondary);}
+    .feature-icon{width:32px;height:32px;background:var(--accent-soft);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0;font-size:0.9rem;}
+    .feature-title{font-weight:600;color:var(--text-primary);display:block;margin-bottom:2px;}
+
+    /* Right panel */
+    .panel-right{
+      width:480px;background:var(--bg-surface);border-left:1px solid var(--border);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:48px 40px;overflow-y:auto;
+    }
+    .auth-header{text-align:center;margin-bottom:32px;}
+    .auth-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:6px;}
+    .auth-subtitle{font-size:0.875rem;color:var(--text-muted);}
+
+    .form-group{margin-bottom:18px;}
+    .form-label{display:block;font-size:0.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;}
+    .form-control{width:100%;padding:11px 14px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:0.9rem;font-family:inherit;transition:border-color 0.2s,box-shadow 0.2s;outline:none;}
+    .form-control:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+    .form-control::placeholder{color:var(--text-muted);}
+    .form-error{color:var(--red);font-size:0.75rem;margin-top:4px;display:flex;align-items:center;gap:4px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+    .btn-submit{
+      width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+      color:white;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;
+      cursor:pointer;transition:all 0.2s;font-family:inherit;box-shadow:0 4px 15px var(--accent-glow);
+    }
+    .btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--accent-glow);}
+
+    .divider{text-align:center;margin:20px 0;position:relative;color:var(--text-muted);font-size:0.8rem;}
+    .divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);}
+    .divider::before{left:0;} .divider::after{right:0;}
+
+    .login-link{text-align:center;font-size:0.875rem;color:var(--text-muted);}
+    .login-link a{color:var(--accent);font-weight:600;}
+
+    .alert{padding:12px 16px;border-radius:8px;font-size:0.85rem;margin-bottom:18px;display:flex;align-items:center;gap:8px;border:1px solid;}
+    .alert-danger{background:rgba(244,63,94,0.1);color:#f43f5e;border-color:rgba(244,63,94,0.2);}
+    .alert-success{background:rgba(34,211,160,0.1);color:#22d3a0;border-color:rgba(34,211,160,0.2);}
+    .step-indicator{display:flex;justify-content:center;gap:6px;margin-bottom:24px;}
+    .step{width:8px;height:8px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border);}
+    .step.active{background:var(--accent);border-color:var(--accent);}
+
+    @media(max-width:768px){
+      .panel-left{display:none;}
+      .panel-right{width:100%;padding:32px 24px;}
+      .form-row{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- Left Feature Panel -->
+  <div class="panel-left">
+    <div class="brand">🚀 FreelanceHub</div>
+    <div class="brand-tagline">Find & hire world-class freelancers</div>
+    <ul class="feature-list">
+      <li class="feature-item">
+        <div class="feature-icon"><i class="bi bi-lightning-charge"></i></div>
+        <div>
+          <span class="feature-title">Post in Minutes</span>
+          Describe your project and receive proposals from talented freelancers quickly.
+        </div>
+      </li>
+      <li class="feature-item">
+        <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+        <div>
+          <span class="feature-title">Secure Platform</span>
+          Your data and projects are protected with enterprise-grade security.
+        </div>
+      </li>
+      <li class="feature-item">
+        <div class="feature-icon"><i class="bi bi-people"></i></div>
+        <div>
+          <span class="feature-title">Top Talent</span>
+          Review profiles, proposals, and portfolios to select the best fit.
+        </div>
+      </li>
+      <li class="feature-item">
+        <div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
+        <div>
+          <span class="feature-title">Track Progress</span>
+          Monitor your active projects from a beautiful client dashboard.
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Right Form Panel -->
+  <div class="panel-right">
+    <div class="auth-header">
+      <div class="step-indicator">
+        <div class="step active"></div>
+        <div class="step active"></div>
+        <div class="step"></div>
+      </div>
+      <h1 class="auth-title">Create Client Account</h1>
+      <p class="auth-subtitle">Start hiring freelancers in minutes</p>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        <i class="bi bi-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" novalidate style="width:100%;">
+      {% csrf_token %}
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="{{ form.full_name.id_for_label }}">Full Name *</label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}
+            <div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.full_name.errors|first }}</div>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="{{ form.phone.id_for_label }}">Phone</label>
+          {{ form.phone }}
+          {% if form.phone.errors %}
+            <div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.phone.errors|first }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.email.id_for_label }}">Email Address *</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.email.errors|first }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.company_name.id_for_label }}">Company / Organisation</label>
+        {{ form.company_name }}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="{{ form.password1.id_for_label }}">Password *</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+            <div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.password1.errors|first }}</div>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm Password *</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+            <div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.password2.errors|first }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-circle"></i> {{ form.non_field_errors|first }}
+        </div>
+      {% endif %}
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <i class="bi bi-person-plus"></i> &nbsp; Create Client Account
+      </button>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="login-link">
+      Already have an account? <a href="{% url 'core:login' %}">Sign in</a>
+    </div>
+    <div class="login-link" style="margin-top:8px;">
+      Are you a freelancer? <a href="{% url 'core:register' %}">Register here</a>
+    </div>
+  </div>
+</div>
+<script>
+  // Show loading on submit
+  document.getElementById('submitBtn')?.closest('form')?.addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<i class="bi bi-hourglass-split"></i> &nbsp; Creating Account...';
+    btn.disabled = true;
+  });
+</script>
+</body>
+</html>

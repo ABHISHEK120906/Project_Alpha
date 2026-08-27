@@ -216,6 +216,10 @@
       const ctx = document.getElementById(id);
       if (!ctx) return;
       safeDestroy(id);
+      const gradCtx = ctx.getContext('2d');
+      const gradient = gradCtx.createLinearGradient(0, 0, 0, ctx.clientHeight || 200);
+      gradient.addColorStop(0, color + '44');
+      gradient.addColorStop(1, color + '06');
       new Chart(ctx, {
         type: 'line',
         data: {
@@ -224,19 +228,26 @@
             label: label,
             data: data || [],
             borderColor: color,
-            backgroundColor: color + '22',
+            backgroundColor: gradient,
             fill: true,
             tension: 0.35,
             pointRadius: 4,
-            pointHoverRadius: 6
+            pointHoverRadius: 7,
+            pointBackgroundColor: color,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            borderWidth: 2.5
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          spanGaps: true,
+          interaction: { mode: 'index', intersect: false },
           plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true }
+            x: { grid: { display: false }, ticks: { font: { size: 11 } }, border: { display: false } },
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, border: { display: false } }
           }
         }
       });

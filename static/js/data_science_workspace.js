@@ -77,9 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
             label: '95% Upper Bound',
             data: upperData,
             borderColor: 'transparent',
-            backgroundColor: 'rgba(219, 153, 65, 0.08)',
+            backgroundColor: 'rgba(219, 153, 65, 0.12)',
             pointRadius: 0,
-            fill: '+1'
+            fill: 3,
+            tension: 0.2
           },
           {
             label: '95% Lower Bound',
@@ -87,7 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
             borderColor: 'transparent',
             backgroundColor: 'transparent',
             pointRadius: 0,
-            fill: false
+            fill: false,
+            tension: 0.2
           }
         ]
       },
@@ -105,9 +107,10 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         },
         scales: {
-          x: { grid: { display: false }, ticks: { color: textColor } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v.toLocaleString() } }
-        }
+          x: { grid: { display: false }, ticks: { color: textColor }, border: { display: false } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v.toLocaleString() }, border: { display: false } }
+        },
+        spanGaps: true
       }
     });
   }

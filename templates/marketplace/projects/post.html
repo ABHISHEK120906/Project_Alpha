@@ -1,0 +1,121 @@
+{% extends "marketplace/base_client.html" %}
+
+{% block title %}Post a Project{% endblock %}
+{% block page_title %}Post a Project{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">Describe your project to attract the right freelancers</div>{% endblock %}
+{% block nav_post %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'marketplace:project_list' %}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> My Projects
+  </a>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
+
+  <!-- Main form -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Project Details</div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.title.id_for_label }}">Project Title <span style="color:var(--red)">*</span></label>
+        {{ form.title }}
+        <div class="form-hint">A clear, concise title helps freelancers understand the work</div>
+        {% if form.title.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.title.errors|first }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.description.id_for_label }}">Project Description <span style="color:var(--red)">*</span></label>
+        {{ form.description }}
+        <div class="form-hint">Describe your goals, requirements, and expected deliverables in detail</div>
+        {% if form.description.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.description.errors|first }}</div>{% endif %}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-group">
+          <label class="form-label" for="{{ form.category.id_for_label }}">Category <span style="color:var(--red)">*</span></label>
+          {{ form.category }}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="{{ form.experience_level.id_for_label }}">Experience Level</label>
+          {{ form.experience_level }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.required_skills.id_for_label }}">Required Skills</label>
+        {{ form.required_skills }}
+        <div class="form-hint">Comma-separated — e.g. HTML, CSS, Django, React</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Attachments</div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.attachment.id_for_label }}">Upload File (optional)</label>
+        {{ form.attachment }}
+        <div class="form-hint">Wireframes, design references, or specifications (PDF, ZIP, images — max 10MB)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sidebar -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Budget & Timeline</div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.budget_type.id_for_label }}">Budget Type</label>
+        {{ form.budget_type }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.budget.id_for_label }}">Budget (₹) <span style="color:var(--red)">*</span></label>
+        {{ form.budget }}
+        <div class="form-hint">Total budget in Indian Rupees</div>
+        {% if form.budget.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.budget.errors|first }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.expected_duration.id_for_label }}">Expected Duration</label>
+        {{ form.expected_duration }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.deadline.id_for_label }}">Deadline</label>
+        {{ form.deadline }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">Visibility</div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.status.id_for_label }}">Project Status</label>
+        {{ form.status }}
+        <div class="form-hint">
+          <strong>Open</strong> — visible & accepting applications<br>
+          <strong>Draft</strong> — saved but not yet published
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg btn-block">
+      <i class="bi bi-send"></i> Post Project
+    </button>
+
+    <div style="font-size:0.75rem;color:var(--text-muted);text-align:center;">
+      By posting you agree to our <a href="#">Terms of Service</a>.
+    </div>
+  </div>
+
+</div>
+</form>
+{% endblock %}
