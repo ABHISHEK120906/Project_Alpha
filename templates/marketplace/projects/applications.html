@@ -1,0 +1,133 @@
+{% extends "marketplace/base_client.html" %}
+
+{% block title %}Applications — {{ project.title }}{% endblock %}
+{% block page_title %}Applications{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">{{ project.title|truncatechars:50 }}</div>{% endblock %}
+{% block nav_projects %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> Project Details
+  </a>
+{% endblock %}
+
+{% block content %}
+
+<!-- Project Summary Banner -->
+<div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div style="font-size:1.05rem;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;">{{ project.title }}</div>
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">
+        <span class="badge badge-{{ project.status }}">{{ project.get_status_display }}</span>
+        &nbsp;·&nbsp;
+        {% if project.budget %}₹{{ project.budget|floatformat:0 }} Budget&nbsp;·&nbsp;{% endif %}
+        {{ applications.count }} Application{{ applications.count|pluralize }}
+      </div>
+    </div>
+    {% if project.assigned_freelancer %}
+    <div style="background:var(--green-soft);padding:8px 14px;border-radius:var(--radius-sm);font-size:0.875rem;color:var(--green);font-weight:600;">
+      <i class="bi bi-person-check"></i> Freelancer Assigned
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Filter -->
+<div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+  <a href="?status=" class="btn {% if not status_filter %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">All</a>
+  {% for value, label in status_choices %}
+  <a href="?status={{ value }}" class="btn {% if status_filter == value %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
+    {{ label }}
+  </a>
+  {% endfor %}
+</div>
+
+{% if applications %}
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    {% for app in applications %}
+    <div class="application-card">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+
+        <!-- Avatar -->
+        <div class="applicant-avatar">{{ app.freelancer.username|first|upper }}</div>
+
+        <!-- Info -->
+        <div style="flex:1;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:1rem;font-weight:700;">
+                {{ app.freelancer.get_full_name|default:app.freelancer.username }}
+              </div>
+              <div style="font-size:0.78rem;color:var(--text-muted);">@{{ app.freelancer.username }} · Applied {{ app.created_at|date:"d M Y" }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              {% if app.proposed_price %}
+              <div style="font-size:1.1rem;font-weight:800;color:var(--green);">₹{{ app.proposed_price|floatformat:0 }}</div>
+              {% endif %}
+              <span class="badge badge-{{ app.status }}">{{ app.get_status_display }}</span>
+            </div>
+          </div>
+
+          {% if app.estimated_duration %}
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-top:6px;">
+            <i class="bi bi-clock"></i> Estimated duration: {{ app.estimated_duration }}
+          </div>
+          {% endif %}
+
+          <!-- Proposal -->
+          <div style="margin-top:12px;padding:14px;background:var(--bg-elevated);border-radius:var(--radius-sm);font-size:0.875rem;color:var(--text-secondary);line-height:1.7;border-left:3px solid var(--accent);">
+            {{ app.proposal|truncatechars:400 }}
+          </div>
+
+          <!-- Actions -->
+          {% if app.status == 'pending' and not project.assigned_freelancer %}
+          <div style="display:flex;gap:10px;margin-top:14px;">
+            <form method="post" action="{% url 'marketplace:application_accept' app_pk=app.pk %}"
+                  onsubmit="return confirm('Accept {{ app.freelancer.username }}? Other pending applications will be automatically rejected.')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Accept Freelancer
+              </button>
+            </form>
+            <form method="post" action="{% url 'marketplace:application_reject' app_pk=app.pk %}"
+                  onsubmit="return confirm('Reject this application?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">
+                <i class="bi bi-x-circle"></i> Reject
+              </button>
+            </form>
+          </div>
+          {% elif app.status == 'accepted' %}
+          <div style="margin-top:12px;">
+            <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn btn-primary btn-sm">
+              <i class="bi bi-briefcase"></i> Open Project Workspace
+            </a>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card">
+    <div class="empty-state">
+      <span class="empty-icon">📭</span>
+      <div class="empty-title">No applications{% if status_filter %} with status "{{ status_filter }}"{% endif %}</div>
+      <div class="empty-desc">
+        {% if project.status == 'open' %}
+          Your project is live. Freelancers can submit proposals now.
+        {% elif not status_filter %}
+          No one has applied yet.
+        {% endif %}
+      </div>
+      {% if status_filter %}
+      <a href="?" class="btn btn-secondary">Show All Applications</a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

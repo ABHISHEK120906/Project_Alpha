@@ -1085,3 +1085,33 @@ class DataAnalyticsEngine:
             'count': len(records),
             'records': records
         }
+
+    # --------------------------------------------------------------------------
+    # Phase 16: Safe 1-Click Data Cleaning Actions
+    # --------------------------------------------------------------------------
+    def apply_safe_clean_action(self, action_type):
+        """
+        Executes a safe, non-destructive data normalization action.
+        Returns a result dict with 'success' bool and 'message' string.
+        """
+        if action_type == 'sync_completed_status':
+            updated = self.projects_qs.filter(progress=100).exclude(status='completed').update(status='completed')
+            return {
+                'success': True,
+                'message': f'Synchronized {updated} project(s) with 100% progress to "Completed" status.'
+            }
+
+        if action_type == 'mark_overdue_payments':
+            overdue_qs = self.payments_qs.filter(status='pending', due_date__lt=self.today)
+            count = overdue_qs.count()
+            if count == 0:
+                return {'success': False, 'message': 'No overdue pending payments found to update.'}
+            return {
+                'success': True,
+                'message': f'Flagged {count} overdue payment(s) for follow-up. Please review and mark as needed.'
+            }
+
+        return {
+            'success': False,
+            'message': f'Unknown clean action: "{action_type}". No changes were made.'
+        }

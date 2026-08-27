@@ -1,0 +1,186 @@
+{% extends "marketplace/base_client.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+{% block meta_description %}Your FreelanceHub client dashboard — manage projects and applications.{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">Welcome back, {{ client_profile.display_name }} 👋</div>{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div class="stat-grid">
+
+  <div class="stat-card" style="--stat-color:var(--accent);--stat-bg:var(--accent-soft);">
+    <div class="stat-icon"><i class="bi bi-folder2-open"></i></div>
+    <div class="stat-value">{{ total_projects }}</div>
+    <div class="stat-label">Total Projects</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--green);--stat-bg:var(--green-soft);">
+    <div class="stat-icon"><i class="bi bi-broadcast"></i></div>
+    <div class="stat-value">{{ open_projects }}</div>
+    <div class="stat-label">Open Projects</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--yellow);--stat-bg:var(--yellow-soft);">
+    <div class="stat-icon"><i class="bi bi-people"></i></div>
+    <div class="stat-value">{{ pending_applications }}</div>
+    <div class="stat-label">Pending Applications</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--blue);--stat-bg:var(--blue-soft);">
+    <div class="stat-icon"><i class="bi bi-lightning-charge"></i></div>
+    <div class="stat-value">{{ active_projects }}</div>
+    <div class="stat-label">Active Projects</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--green);--stat-bg:var(--green-soft);">
+    <div class="stat-icon"><i class="bi bi-trophy"></i></div>
+    <div class="stat-value">{{ completed_projects }}</div>
+    <div class="stat-label">Completed</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--purple);--stat-bg:var(--purple-soft);">
+    <div class="stat-icon"><i class="bi bi-credit-card"></i></div>
+    <div class="stat-value">₹{{ total_budget|floatformat:0 }}</div>
+    <div class="stat-label">Total Budget</div>
+  </div>
+
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
+
+  <!-- Recent Projects -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Recent Projects</div>
+        <div class="card-subtitle">Your latest posted projects</div>
+      </div>
+      <a href="{% url 'marketplace:project_list' %}" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+
+    {% if recent_projects %}
+      {% for project in recent_projects %}
+      <div class="project-card" style="margin-bottom:12px;">
+        <div class="project-card-header">
+          <div>
+            <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="project-card-title">
+              {{ project.title }}
+            </a>
+            <div class="project-card-meta">
+              <span class="meta-item"><i class="bi bi-currency-rupee"></i> {{ project.budget|floatformat:0|default:"TBD" }}</span>
+              <span class="meta-item"><i class="bi bi-people"></i> {{ project.app_count }} application{{ project.app_count|pluralize }}</span>
+              {% if project.deadline %}
+              <span class="meta-item"><i class="bi bi-calendar3"></i> {{ project.deadline|date:"d M Y" }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <span class="badge badge-{{ project.status }}">{{ project.get_status_display }}</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn btn-secondary btn-sm">
+            <i class="bi bi-eye"></i> View
+          </a>
+          {% if project.app_count > 0 %}
+          <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn btn-warning btn-sm">
+            <i class="bi bi-inbox"></i> {{ project.app_count }} Application{{ project.app_count|pluralize }}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <span class="empty-icon">📂</span>
+        <div class="empty-title">No projects yet</div>
+        <div class="empty-desc">Post your first project to start receiving proposals from talented freelancers.</div>
+        <a href="{% url 'marketplace:project_post' %}" class="btn btn-primary">
+          <i class="bi bi-plus-lg"></i> Post Your First Project
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Right Column -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Quick Actions</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a href="{% url 'marketplace:project_post' %}" class="btn btn-primary btn-block">
+          <i class="bi bi-plus-circle"></i> Post New Project
+        </a>
+        <a href="{% url 'marketplace:project_list' %}" class="btn btn-secondary btn-block">
+          <i class="bi bi-folder2-open"></i> My Projects
+        </a>
+        <a href="{% url 'marketplace:client_payments' %}" class="btn btn-secondary btn-block">
+          <i class="bi bi-credit-card"></i> View Payments
+        </a>
+        <a href="{% url 'marketplace:client_profile_edit' %}" class="btn btn-secondary btn-block">
+          <i class="bi bi-pencil"></i> Edit Profile
+        </a>
+      </div>
+    </div>
+
+    <!-- Payment Summary -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Payment Summary</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.8rem;color:var(--text-muted);">Total Budget</span>
+          <span style="font-weight:700;">₹{{ total_budget|floatformat:0 }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.8rem;color:var(--text-muted);">Amount Paid</span>
+          <span style="font-weight:700;color:var(--green);">₹{{ total_paid|floatformat:0 }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.8rem;color:var(--text-muted);">Pending</span>
+          <span style="font-weight:700;color:var(--yellow);">₹{{ total_pending|floatformat:0 }}</span>
+        </div>
+        {% if total_budget > 0 %}
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;">Payment Progress</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" style="width:{% widthratio total_paid total_budget 100 %}%;"></div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Pending Applications -->
+    {% if recent_applications %}
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">New Applications</div>
+      </div>
+      {% for app in recent_applications %}
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div class="applicant-avatar" style="width:36px;height:36px;font-size:0.8rem;">
+          {{ app.freelancer.username|first|upper }}
+        </div>
+        <div style="flex:1;overflow:hidden;">
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">{{ app.freelancer.username }}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ app.project.title }}</div>
+        </div>
+        <a href="{% url 'marketplace:project_applications' pk=app.project.pk %}" class="btn btn-secondary btn-sm">
+          Review
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

@@ -137,12 +137,13 @@ document.addEventListener('DOMContentLoaded', function () {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        spanGaps: true,
         plugins: {
           legend: { position: 'top', labels: { color: textColor, font: { size: 11 } } }
         },
         scales: {
-          x: { grid: { display: false }, ticks: { color: textColor } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v.toLocaleString() } }
+          x: { grid: { display: false }, ticks: { color: textColor }, border: { display: false } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v.toLocaleString() }, border: { display: false }, beginAtZero: true }
         }
       }
     });

@@ -268,12 +268,13 @@ function initReportsChart() {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        spanGaps: true,
         plugins: {
           legend: { display: false }
         },
         scales: {
-          x: { grid: { display: false } },
-          y: { ticks: { callback: v => '$' + Number(v).toLocaleString() } }
+          x: { grid: { display: false }, border: { display: false } },
+          y: { ticks: { callback: v => '$' + Number(v).toLocaleString() }, border: { display: false }, beginAtZero: true }
         }
       }
     });
@@ -292,13 +293,43 @@ function switchReportChart(type, btnEl) {
     btnEl.classList.add('active');
   }
   if (reportChartInstance) {
-    reportChartInstance.config.type = (type === 'area') ? 'line' : type;
+    const ds = reportChartInstance.data.datasets[0];
     if (type === 'area') {
-      reportChartInstance.data.datasets[0].fill = true;
-      reportChartInstance.data.datasets[0].backgroundColor = 'rgba(219, 153, 65, 0.2)';
+      reportChartInstance.config.type = 'line';
+      ds.fill = true;
+      ds.tension = 0.4;
+      ds.borderWidth = 2.5;
+      ds.pointRadius = 4;
+      ds.pointHoverRadius = 7;
+      // Create gradient fill
+      const canvas = reportChartInstance.canvas;
+      const gradCtx = canvas.getContext('2d');
+      const grad = gradCtx.createLinearGradient(0, 0, 0, canvas.clientHeight || 300);
+      grad.addColorStop(0, 'rgba(219, 153, 65, 0.35)');
+      grad.addColorStop(1, 'rgba(219, 153, 65, 0.02)');
+      ds.backgroundColor = grad;
+      ds.borderColor = '#B8791F';
+      ds.borderRadius = 0;
+    } else if (type === 'line') {
+      reportChartInstance.config.type = 'line';
+      ds.fill = false;
+      ds.tension = 0.4;
+      ds.borderWidth = 2.5;
+      ds.pointRadius = 4;
+      ds.pointHoverRadius = 7;
+      ds.backgroundColor = 'transparent';
+      ds.borderColor = '#DB9941';
+      ds.borderRadius = 0;
     } else {
-      reportChartInstance.data.datasets[0].fill = false;
-      reportChartInstance.data.datasets[0].backgroundColor = (type === 'line') ? '#DB9941' : 'rgba(219, 153, 65, 0.75)';
+      // bar
+      reportChartInstance.config.type = 'bar';
+      ds.fill = false;
+      ds.tension = 0;
+      ds.borderWidth = 1.5;
+      ds.pointRadius = 0;
+      ds.backgroundColor = 'rgba(219, 153, 65, 0.75)';
+      ds.borderColor = '#B8791F';
+      ds.borderRadius = 6;
     }
     reportChartInstance.update();
   }

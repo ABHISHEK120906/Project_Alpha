@@ -282,11 +282,16 @@
   </button>
 </form>
 
-<div class="ft-divider">or</div>
+<div class="ft-divider">or register as</div>
 
-<a href="{% url 'core:register' %}" class="btn-create-account">
-  <i class="fas fa-user-plus"></i> Create New Account
-</a>
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <a href="{% url 'marketplace:client_register' %}" class="btn-create-account" style="border-color:rgba(108,99,255,0.4); color:#a78bfa !important;">
+    <i class="fas fa-briefcase"></i> Register as Client (Hire Talent)
+  </a>
+  <a href="{% url 'core:register' %}" class="btn-create-account">
+    <i class="fas fa-user-plus"></i> Register as Freelancer
+  </a>
+</div>
 
 <!-- Admin Login link -->
 <div class="admin-login-link-row">

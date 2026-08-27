@@ -1,0 +1,271 @@
+{% extends "marketplace/base_client.html" %}
+
+{% block title %}Workspace — {{ project.title }}{% endblock %}
+{% block page_title %}Active Workspace{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">{{ project.title|truncatechars:50 }}</div>{% endblock %}
+{% block nav_projects %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> Project Details
+  </a>
+{% endblock %}
+
+{% block content %}
+<!-- Project Status Header -->
+<div class="card" style="margin-bottom:24px; background:linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);">
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+    <div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <h1 style="font-size:1.35rem; font-weight:800; font-family:'Plus Jakarta Sans', sans-serif;">
+          {{ project.title }}
+        </h1>
+        <span class="badge badge-{{ project.status }}">{{ project.get_status_display }}</span>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:18px; font-size:0.85rem; color:var(--text-muted);">
+        <span><i class="bi bi-currency-rupee" style="color:var(--accent);"></i> Budget: <strong>₹{{ project.budget|floatformat:0|default:"0" }}</strong> ({{ project.get_budget_type_display }})</span>
+        {% if project.deadline %}
+        <span {% if project.is_overdue %}style="color:var(--red);"{% endif %}>
+          <i class="bi bi-calendar3" style="color:var(--accent);"></i> Deadline: <strong>{{ project.deadline|date:"d M Y" }}</strong>
+          {% if project.is_overdue %}<strong>(Overdue)</strong>{% endif %}
+        </span>
+        {% endif %}
+        <span><i class="bi bi-clock" style="color:var(--accent);"></i> Duration: {{ project.get_expected_duration_display|default:"Ongoing" }}</span>
+      </div>
+    </div>
+
+    <!-- Status Change Actions -->
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      {% if project.status == 'assigned' %}
+      <form method="post" action="{% url 'marketplace:project_mark_in_progress' pk=project.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="bi bi-play-circle"></i> Start Project (In Progress)
+        </button>
+      </form>
+      {% endif %}
+
+      {% if project.status in 'assigned in_progress' %}
+      <form method="post" action="{% url 'marketplace:project_mark_completed' pk=project.pk %}"
+            onsubmit="return confirm('Mark project as Completed? This confirms all deliverables were accepted.')">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success btn-sm">
+          <i class="bi bi-check-circle-fill"></i> Complete Project
+        </button>
+      </form>
+      {% endif %}
+
+      <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-secondary btn-sm">
+        <i class="bi bi-flag"></i> Report Issue
+      </a>
+    </div>
+  </div>
+
+  <!-- Overall Progress Bar -->
+  <div style="margin-top:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+      <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Project Completion Progress</span>
+      <span style="font-size:0.85rem; font-weight:700; color:var(--accent);">{{ project.progress }}%</span>
+    </div>
+    <div class="progress-bar-wrap" style="height:10px;">
+      <div class="progress-bar-fill" style="width:{{ project.progress }}%;"></div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
+
+  <!-- Main Left: Collaboration & Work Details -->
+  <div style="display:flex; flex-direction:column; gap:20px;">
+
+    <!-- Accepted Proposal & Deliverables -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title"><i class="bi bi-file-earmark-text"></i> Accepted Proposal Details</div>
+          <div class="card-subtitle">Terms agreed upon during freelancer selection</div>
+        </div>
+      </div>
+      {% if accepted_application %}
+      <div style="background:var(--bg-elevated); padding:16px; border-radius:var(--radius-sm); border-left:3px solid var(--accent); margin-bottom:14px;">
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Freelancer Proposal:</div>
+        <p style="color:var(--text-secondary); line-height:1.7; white-space:pre-line; font-size:0.9rem;">
+          {{ accepted_application.proposal }}
+        </p>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.85rem;">
+        <div style="background:var(--bg-elevated); padding:12px; border-radius:var(--radius-sm);">
+          <span style="color:var(--text-muted); display:block; font-size:0.75rem;">Agreed Price</span>
+          <strong style="color:var(--green); font-size:1.1rem;">₹{{ accepted_application.proposed_price|floatformat:0|default:project.budget }}</strong>
+        </div>
+        <div style="background:var(--bg-elevated); padding:12px; border-radius:var(--radius-sm);">
+          <span style="color:var(--text-muted); display:block; font-size:0.75rem;">Est. Timeline</span>
+          <strong style="font-size:1.1rem;">{{ accepted_application.estimated_duration|default:project.get_expected_duration_display }}</strong>
+        </div>
+      </div>
+      {% else %}
+      <p style="color:var(--text-muted); font-size:0.875rem;">Proposal details logged with direct assignment.</p>
+      {% endif %}
+    </div>
+
+    <!-- Project Requirements & Scope -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="bi bi-card-checklist"></i> Scope & Requirements</div>
+      </div>
+      <div style="color:var(--text-secondary); line-height:1.7; font-size:0.9rem; white-space:pre-line;">
+        {{ project.description }}
+      </div>
+
+      {% if project.skills_list %}
+      <div style="margin-top:16px;">
+        <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">Target Skills</div>
+        <div class="skills-row">
+          {% for skill in project.skills_list %}
+          <span class="skill-tag">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if project.attachment %}
+      <div style="margin-top:16px; padding:12px; background:var(--bg-elevated); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i class="bi bi-paperclip" style="color:var(--accent); font-size:1.1rem;"></i>
+          <span style="font-size:0.85rem; font-weight:500;">Project Spec Attachment</span>
+        </div>
+        <a href="{{ project.attachment.url }}" target="_blank" class="btn btn-secondary btn-sm">
+          <i class="bi bi-download"></i> Download
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Project Communication Guidance -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title"><i class="bi bi-chat-dots"></i> Project Communication</div>
+          <div class="card-subtitle">Connect with your assigned freelancer</div>
+        </div>
+      </div>
+      <div style="background:var(--bg-elevated); padding:16px; border-radius:var(--radius-sm); font-size:0.875rem; color:var(--text-secondary);">
+        <p style="margin-bottom:10px;">
+          <i class="bi bi-info-circle" style="color:var(--blue);"></i>
+          You can coordinate project milestones, deliverables, and queries directly with your assigned freelancer using their authorized contact information shown on the right panel.
+        </p>
+        <div style="font-size:0.78rem; color:var(--text-muted);">
+          All project interactions are logged for safety and compliance. For support or dispute escalation, visit the <a href="{% url 'marketplace:client_support_create' %}">Support Desk</a>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sidebar: Freelancer Contact & Payment Status -->
+  <div style="display:flex; flex-direction:column; gap:20px;">
+
+    <!-- Assigned Freelancer Profile Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="bi bi-person-badge"></i> Assigned Freelancer</div>
+      </div>
+
+      {% if freelancer %}
+      <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:10px 0;">
+        <div class="applicant-avatar" style="width:64px; height:64px; font-size:1.5rem; margin-bottom:12px; background:linear-gradient(135deg, var(--accent), var(--purple));">
+          {{ freelancer.username|first|upper }}
+        </div>
+        <div style="font-size:1.1rem; font-weight:700; font-family:'Plus Jakarta Sans', sans-serif;">
+          {{ freelancer.get_full_name|default:freelancer.username }}
+        </div>
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
+          @{{ freelancer.username }} · Freelancer
+        </div>
+        <span class="badge badge-assigned" style="margin-bottom:16px;">Active Hire</span>
+      </div>
+
+      <!-- Allowed Professional & Contact Info -->
+      <div style="border-top:1px solid var(--border); padding-top:16px; display:flex; flex-direction:column; gap:12px; font-size:0.85rem;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <i class="bi bi-envelope" style="color:var(--accent); font-size:1rem; width:18px;"></i>
+          <span style="color:var(--text-secondary); word-break:break-all;">{{ freelancer.email|default:"Available upon request" }}</span>
+        </div>
+
+        {% if freelancer_profile and freelancer_profile.phone_number %}
+        <div style="display:flex; align-items:center; gap:10px;">
+          <i class="bi bi-telephone" style="color:var(--accent); font-size:1rem; width:18px;"></i>
+          <span style="color:var(--text-secondary);">{{ freelancer_profile.phone_number }}</span>
+        </div>
+        {% endif %}
+
+        {% if freelancer_profile and freelancer_profile.skills %}
+        <div style="margin-top:6px;">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; display:block; margin-bottom:6px;">Freelancer Skills</span>
+          <div style="color:var(--text-secondary); font-size:0.8rem;">{{ freelancer_profile.skills }}</div>
+        </div>
+        {% endif %}
+
+        {% if freelancer_profile and freelancer_profile.portfolio_website %}
+        <div style="display:flex; align-items:center; gap:10px; margin-top:4px;">
+          <i class="bi bi-globe" style="color:var(--accent); font-size:1rem; width:18px;"></i>
+          <a href="{{ freelancer_profile.portfolio_website }}" target="_blank" style="color:var(--accent); text-decoration:underline;">View Portfolio</a>
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding:20px 0;">
+        <div style="color:var(--text-muted); font-size:0.85rem;">Waiting for Freelancer Selection</div>
+        <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn btn-primary btn-sm" style="margin-top:10px;">
+          Review Applications
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Workspace Payment Summary -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="bi bi-cash-stack"></i> Project Payment</div>
+      </div>
+      {% if payment_record %}
+      <div style="margin-bottom:12px;">
+        <span class="badge badge-{{ payment_record.status }}">{{ payment_record.get_status_display }}</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem;">
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--text-muted);">Contract Budget:</span>
+          <span style="font-weight:700;">₹{{ payment_record.total_budget|floatformat:0 }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--text-muted);">Amount Paid:</span>
+          <span style="font-weight:700; color:var(--green);">₹{{ payment_record.amount_paid|floatformat:0 }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--text-muted);">Pending:</span>
+          <span style="font-weight:700; color:var(--yellow);">₹{{ payment_record.amount_pending|floatformat:0 }}</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <a href="{% url 'marketplace:client_payments' %}" class="btn btn-secondary btn-sm btn-block">
+          <i class="bi bi-credit-card"></i> Manage Payments
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Quick Help / Support -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;"><i class="bi bi-shield-check"></i> Client Protection</div>
+      <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
+        Need to report non-performance, scam, or quality issues? Our dispute resolution desk is available 24/7.
+      </p>
+      <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-danger btn-sm btn-block">
+        <i class="bi bi-exclamation-triangle"></i> File a Report
+      </a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

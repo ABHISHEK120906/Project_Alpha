@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.db.models import Sum, Avg, Count, Min, Max, Q, F
 
 from core.models import Client, Project, Payment, Task, Income, Expense, Invoice
-from core.services.analytics_engine import AnalyticsEngine
+from core.services.analytics_engine import DataAnalyticsEngine
 from core.services.data_science_service import DataScienceService
 
 
@@ -36,7 +36,7 @@ class ReportGeneratorService:
     def __init__(self, user, filters=None):
         self.user = user
         self.filters = filters or {}
-        self.analytics_engine = AnalyticsEngine(user, filters=self.filters)
+        self.analytics_engine = DataAnalyticsEngine(user, filters=self.filters)
         self.ds_service = DataScienceService(user)
 
     # --------------------------------------------------------------------------

@@ -327,18 +327,18 @@ function renderFinancialChart(monthly, chartType) {
       },
       scales: {
         x: {
-          grid:  { color: t.grid, drawBorder: false },
+          grid:  { color: t.grid, display: true },
           ticks: { color: t.tick, font: { family: 'Inter', size: 11 }, maxRotation: 0 },
-          border: { color: 'transparent' },
+          border: { display: false },
         },
         y: {
-          grid:  { color: t.grid, drawBorder: false },
+          grid:  { color: t.grid, display: true },
           ticks: {
             color: t.tick,
             font:  { family: 'Inter', size: 11 },
             callback: (v) => '₹' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v),
           },
-          border: { color: 'transparent' },
+          border: { display: false },
           beginAtZero: true,
         }
       }

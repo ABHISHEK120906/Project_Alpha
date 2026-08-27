@@ -314,6 +314,8 @@ class UserProfile(models.Model):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('user', 'User'),
+        ('client', 'Client'),      # Stage 1: Marketplace Client
+        ('freelancer', 'Freelancer'),  # Stage 2: Marketplace Freelancer (stub)
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

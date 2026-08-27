@@ -1,0 +1,106 @@
+{% extends "marketplace/base_client.html" %}
+
+{% block title %}Edit — {{ project.title }}{% endblock %}
+{% block page_title %}Edit Project{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">{{ project.title|truncatechars:50 }}</div>{% endblock %}
+{% block nav_projects %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> Back
+  </a>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
+
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Project Details</div>
+
+      <div class="form-group">
+        <label class="form-label">Project Title</label>
+        {{ form.title }}
+        {% if form.title.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.title.errors|first }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        {{ form.description }}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          {{ form.category }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Experience Level</label>
+          {{ form.experience_level }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Required Skills</label>
+        {{ form.required_skills }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">Attachment</div>
+      {% if project.attachment %}
+      <div style="margin-bottom:12px;font-size:0.85rem;color:var(--text-secondary);">
+        <i class="bi bi-paperclip"></i> Current: <a href="{{ project.attachment.url }}" target="_blank">{{ project.attachment.name }}</a>
+      </div>
+      {% endif %}
+      <div class="form-group">
+        <label class="form-label">Upload New File</label>
+        {{ form.attachment }}
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:20px;">Budget & Timeline</div>
+
+      <div class="form-group">
+        <label class="form-label">Budget Type</label>
+        {{ form.budget_type }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Budget (₹)</label>
+        {{ form.budget }}
+        {% if form.budget.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.budget.errors|first }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Expected Duration</label>
+        {{ form.expected_duration }}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deadline</label>
+        {{ form.deadline }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px;">Status</div>
+      <div class="form-group">
+        <label class="form-label">Project Status</label>
+        {{ form.status }}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;">
+      <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn btn-secondary" style="flex:1;justify-content:center;">Cancel</a>
+      <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;">
+        <i class="bi bi-check-lg"></i> Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+</form>
+{% endblock %}

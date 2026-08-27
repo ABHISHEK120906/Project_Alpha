@@ -1,0 +1,93 @@
+{% extends "marketplace/base_client.html" %}
+
+{% block title %}Support & Reports — FreelanceHub{% endblock %}
+{% block page_title %}Support Desk{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">File and track reports, dispute tickets, and platform support requests</div>{% endblock %}
+{% block nav_support %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> File New Report
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">My Support & Dispute Reports</div>
+      <div class="card-subtitle">All incident reports filed by your client account</div>
+    </div>
+    <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-primary btn-sm">
+      <i class="bi bi-flag"></i> New Report
+    </a>
+  </div>
+
+  {% if reports %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Report ID</th>
+          <th>Reason</th>
+          <th>Project</th>
+          <th>Reported Freelancer</th>
+          <th>Status</th>
+          <th>Date Filed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <td style="font-family:monospace; font-weight:700; color:var(--accent);">
+            #{{ report.id|stringformat:".8s" }}
+          </td>
+          <td>
+            <span style="font-weight:600; color:var(--text-primary);">{{ report.get_reason_display }}</span>
+            <div style="font-size:0.78rem; color:var(--text-muted); max-width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+              {{ report.description }}
+            </div>
+          </td>
+          <td>
+            {% if report.project %}
+            <a href="{% url 'marketplace:project_detail' pk=report.project.pk %}" style="color:var(--text-primary); font-size:0.85rem;">
+              {{ report.project.title }}
+            </a>
+            {% else %}
+            <span style="color:var(--text-muted); font-size:0.8rem;">General Platform</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if report.reported_user %}
+            <span style="font-size:0.85rem; color:var(--red);">
+              <i class="bi bi-person-x"></i> {{ report.reported_user.get_full_name|default:report.reported_user.username }}
+            </span>
+            {% else %}
+            <span style="color:var(--text-muted); font-size:0.8rem;">None specified</span>
+            {% endif %}
+          </td>
+          <td>
+            <span class="badge badge-{% if report.status == 'resolved' %}completed{% elif report.status == 'under_review' %}in_progress{% else %}draft{% endif %}">
+              {{ report.get_status_display }}
+            </span>
+          </td>
+          <td style="font-size:0.8rem; color:var(--text-muted);">
+            {{ report.created_at|date:"d M Y, H:i" }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">🛡️</span>
+    <div class="empty-title">No support reports filed</div>
+    <div class="empty-desc">If you experience any issues with freelancer non-performance, scams, or payment inquiries, you can file a report here.</div>
+    <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-primary">
+      <i class="bi bi-flag"></i> File a Report
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "marketplace/base_client.html" %}
+
+{% block title %}Payments — FreelanceHub{% endblock %}
+{% block page_title %}Payments{% endblock %}
+{% block page_subtitle %}<div class="page-subtitle">Track project budgets, payments made, and pending balances</div>{% endblock %}
+{% block nav_payments %}active{% endblock %}
+
+{% block content %}
+<!-- Payment Metric Cards -->
+<div class="stat-grid">
+  <div class="stat-card" style="--stat-color:var(--accent); --stat-bg:var(--accent-soft);">
+    <div class="stat-icon"><i class="bi bi-wallet2"></i></div>
+    <div class="stat-value">₹{{ total_budget|floatformat:0 }}</div>
+    <div class="stat-label">Total Contracted Budget</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--green); --stat-bg:var(--green-soft);">
+    <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
+    <div class="stat-value">₹{{ total_paid|floatformat:0 }}</div>
+    <div class="stat-label">Total Amount Paid</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--yellow); --stat-bg:var(--yellow-soft);">
+    <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+    <div class="stat-value">₹{{ total_pending|floatformat:0 }}</div>
+    <div class="stat-label">Total Pending Balance</div>
+  </div>
+
+  <div class="stat-card" style="--stat-color:var(--blue); --stat-bg:var(--blue-soft);">
+    <div class="stat-icon"><i class="bi bi-pie-chart"></i></div>
+    <div class="stat-value">{{ payment_records.count }}</div>
+    <div class="stat-label">Project Invoices / Records</div>
+  </div>
+</div>
+
+<!-- Payments Breakdown Table -->
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Project Payment Records</div>
+      <div class="card-subtitle">Detailed payment breakdown per marketplace project</div>
+    </div>
+  </div>
+
+  {% if payment_records %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Budget</th>
+          <th>Amount Paid</th>
+          <th>Pending</th>
+          <th>Status</th>
+          <th>Assigned Freelancer</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rec in payment_records %}
+        <tr>
+          <td>
+            <a href="{% url 'marketplace:project_detail' pk=rec.project.pk %}" style="font-weight:600; color:var(--text-primary);">
+              {{ rec.project.title }}
+            </a>
+          </td>
+          <td style="font-weight:600;">₹{{ rec.total_budget|floatformat:0 }}</td>
+          <td style="color:var(--green); font-weight:600;">₹{{ rec.amount_paid|floatformat:0 }}</td>
+          <td style="color:var(--yellow); font-weight:600;">₹{{ rec.amount_pending|floatformat:0 }}</td>
+          <td>
+            <span class="badge badge-{{ rec.status }}">{{ rec.get_status_display }}</span>
+          </td>
+          <td>
+            {% if rec.project.assigned_freelancer %}
+              <span style="font-size:0.85rem; color:var(--text-secondary);">
+                <i class="bi bi-person"></i> {{ rec.project.assigned_freelancer.get_full_name|default:rec.project.assigned_freelancer.username }}
+              </span>
+            {% else %}
+              <span style="font-size:0.8rem; color:var(--text-muted);">Unassigned</span>
+            {% endif %}
+          </td>
+          <td style="font-size:0.8rem; color:var(--text-muted);">
+            {{ rec.created_at|date:"d M Y" }}
+          </td>
+          <td>
+            {% if rec.project.assigned_freelancer %}
+            <a href="{% url 'marketplace:project_workspace' pk=rec.project.pk %}" class="btn btn-secondary btn-sm">
+              <i class="bi bi-briefcase"></i> Workspace
+            </a>
+            {% else %}
+            <a href="{% url 'marketplace:project_detail' pk=rec.project.pk %}" class="btn btn-secondary btn-sm">
+              <i class="bi bi-eye"></i> View
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">💳</span>
+    <div class="empty-title">No payment records yet</div>
+    <div class="empty-desc">Payment records are automatically initialized whenever you post a new project with a budget.</div>
+    <a href="{% url 'marketplace:project_post' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Post a Project
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
