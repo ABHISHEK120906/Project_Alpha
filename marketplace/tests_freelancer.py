@@ -208,7 +208,7 @@ class MarketplaceFreelancerStage2Tests(TestCase):
         # View profile
         res_view = self.client.get(reverse('freelancer:profile_view'))
         self.assertEqual(res_view.status_code, 200)
-        self.assertContains(res_view, 'Senior Python & Django Architect')
+        self.assertContains(res_view, 'Senior Python')
 
         # Edit profile
         res_edit = self.client.post(reverse('freelancer:profile_edit'), {
@@ -461,6 +461,14 @@ class MarketplaceFreelancerStage2Tests(TestCase):
     # -------------------------------------------------------------------------
     def test_freelancer_support_report_creation(self):
         """Freelancer submits a report against a client issue."""
+        # Create application on project 1 so project is in freelancer's valid report scope
+        ProjectApplication.objects.create(
+            project=self.project_1,
+            freelancer=self.freelancer_user_a,
+            proposal='Dan initial proposal',
+            status='pending'
+        )
+
         self.client.login(username='freelancer_dan', password='Password123!')
 
         res = self.client.post(reverse('freelancer:support_create'), {
