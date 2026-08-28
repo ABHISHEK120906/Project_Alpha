@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="flBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="flCardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="shadowFL" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Organic Background Shape -->
+  <path d="M440 120 C480 220, 460 340, 340 360 C220 380, 60 360, 40 240 C20 120, 120 40, 240 50 C360 60, 400 80, 440 120 Z" fill="url(#flBg)"/>
+
+  <!-- Freelancer Main Card (Talent Profile & Application) -->
+  <g transform="translate(100, 70)" filter="url(#shadowFL)">
+    <rect width="300" height="250" rx="16" fill="url(#flCardBg)" stroke="#10b981" stroke-width="1.5"/>
+    
+    <!-- Top Talent Banner -->
+    <rect x="20" y="24" width="130" height="12" rx="6" fill="#10b981"/>
+    <rect x="20" y="44" width="170" height="8" rx="4" fill="#64748b"/>
+
+    <!-- Verification Badges Row -->
+    <g transform="translate(20, 68)">
+      <rect width="76" height="22" rx="6" fill="#10b981" opacity="0.15"/>
+      <text x="38" y="15" fill="#10b981" font-family="'Inter', sans-serif" font-size="8.5" font-weight="700" text-anchor="middle">✓ ID Verified</text>
+      
+      <rect x="84" width="80" height="22" rx="6" fill="#6366f1" opacity="0.15"/>
+      <text x="124" y="15" fill="#a5b4fc" font-family="'Inter', sans-serif" font-size="8.5" font-weight="700" text-anchor="middle">★ Pro Profile</text>
+
+      <rect x="172" width="88" height="22" rx="6" fill="#f59e0b" opacity="0.15"/>
+      <text x="216" y="15" fill="#fbbf24" font-family="'Inter', sans-serif" font-size="8.5" font-weight="700" text-anchor="middle">⚡ Fast Deliver</text>
+    </g>
+
+    <!-- Available Projects Match Simulator -->
+    <g transform="translate(20, 106)">
+      <rect width="260" height="74" rx="8" fill="#0f172a" stroke="#334155"/>
+      <rect x="14" y="12" width="120" height="8" rx="4" fill="#f8fafc"/>
+      <rect x="14" y="26" width="70" height="6" rx="3" fill="#64748b"/>
+      
+      <!-- Skill Pills -->
+      <rect x="14" y="42" width="45" height="16" rx="4" fill="#334155"/>
+      <text x="36" y="53" fill="#cbd5e1" font-family="'Inter', sans-serif" font-size="8" text-anchor="middle">React</text>
+
+      <rect x="65" y="42" width="50" height="16" rx="4" fill="#334155"/>
+      <text x="90" y="53" fill="#cbd5e1" font-family="'Inter', sans-serif" font-size="8" text-anchor="middle">Python</text>
+
+      <!-- Apply Action -->
+      <rect x="180" y="22" width="68" height="28" rx="6" fill="#059669"/>
+      <text x="214" y="39" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" text-anchor="middle">APPLY</text>
+    </g>
+
+    <!-- Find Work CTA inside card -->
+    <g transform="translate(20, 196)">
+      <rect width="260" height="34" rx="8" fill="#059669"/>
+      <text x="130" y="21" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" text-anchor="middle">EXPLORE MATCHING PROJECTS</text>
+    </g>
+  </g>
+
+  <!-- Floating Badge -->
+  <g transform="translate(330, 210) rotate(8)" filter="url(#shadowFL)">
+    <rect width="140" height="50" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="25" cy="25" r="12" fill="#10b981" opacity="0.2"/>
+    <path d="M20 25 L24 29 L31 21" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+    <text x="46" y="21" fill="#f8fafc" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700">Verified Payout</text>
+    <text x="46" y="34" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="8">Direct &amp; Fast</text>
+  </g>
+</svg>

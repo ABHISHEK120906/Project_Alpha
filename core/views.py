@@ -60,7 +60,7 @@ def get_client_ip(request):
 
 
 def home(request):
-    """Landing page — redirects authenticated users to their role-appropriate dashboard."""
+    """Landing page — redirects authenticated users to their role-appropriate dashboard, or renders public marketplace landing with real data."""
     if request.user.is_authenticated:
         try:
             role = request.user.profile.role
@@ -74,7 +74,21 @@ def home(request):
             return redirect('freelancer:dashboard')
         return redirect('core:dashboard')
 
-    return render(request, 'home.html')
+    # Query real marketplace items safely
+    open_projects = []
+    freelancers = []
+    try:
+        from marketplace.models import MarketplaceProject, FreelancerProfile
+        open_projects = list(MarketplaceProject.objects.filter(status__in=['open', 'applications_received']).select_related('client').order_by('-created_at')[:6])
+        freelancers = list(FreelancerProfile.objects.all().order_by('-created_at')[:6])
+    except Exception:
+        pass
+
+    context = {
+        'open_projects': open_projects,
+        'freelancers': freelancers,
+    }
+    return render(request, 'home.html', context)
 
 
 def register(request):
