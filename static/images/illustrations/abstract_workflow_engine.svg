@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="flowGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8076a3" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#9bc400" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#f9c5bd" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="shieldFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8076a3"/>
+      <stop offset="50%" stop-color="#7c677f"/>
+      <stop offset="100%" stop-color="#9bc400"/>
+    </linearGradient>
+    <filter id="wfShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <circle cx="300" cy="200" r="180" fill="url(#flowGlow)"/>
+
+  <!-- Concentric Security Rings -->
+  <circle cx="300" cy="200" r="150" stroke="#8076a3" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.4"/>
+  <circle cx="300" cy="200" r="110" stroke="#9bc400" stroke-width="2" stroke-dasharray="8 8" opacity="0.5"/>
+  <circle cx="300" cy="200" r="70" stroke="#f9c5bd" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Central Crest / Geometric Core -->
+  <g transform="translate(250, 140)" filter="url(#wfShadow)">
+    <polygon points="50,0 95,25 95,85 50,115 5,85 5,25" fill="#181424" stroke="#9bc400" stroke-width="3"/>
+    <circle cx="50" cy="55" r="28" fill="url(#shieldFill)" opacity="0.8"/>
+    <!-- Abstract Lock / Checkmark -->
+    <path d="M40 55 L47 62 L62 46" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- 3 Satellites representing the 3 Roles -->
+  <!-- Client Satellite (Top Left) -->
+  <g transform="translate(100, 90)" filter="url(#wfShadow)">
+    <rect width="140" height="48" rx="12" fill="#181424" stroke="#7d3cff" stroke-width="1.5"/>
+    <circle cx="24" cy="24" r="10" fill="#7d3cff"/>
+    <text x="44" y="22" fill="#f8fafc" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700">Client Engine</text>
+    <text x="44" y="34" fill="#fceed1" font-family="'Inter', sans-serif" font-size="8.5">Post &amp; Hire</text>
+  </g>
+
+  <!-- Freelancer Satellite (Top Right) -->
+  <g transform="translate(360, 90)" filter="url(#wfShadow)">
+    <rect width="140" height="48" rx="12" fill="#181424" stroke="#ff5e6c" stroke-width="1.5"/>
+    <circle cx="24" cy="24" r="10" fill="#ff5e6c"/>
+    <text x="44" y="22" fill="#f8fafc" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700">Talent Engine</text>
+    <text x="44" y="34" fill="#fff5d7" font-family="'Inter', sans-serif" font-size="8.5">Verified &amp; Apply</text>
+  </g>
+
+  <!-- Admin Satellite (Bottom Center) -->
+  <g transform="translate(230, 290)" filter="url(#wfShadow)">
+    <rect width="140" height="48" rx="12" fill="#181424" stroke="#9bc400" stroke-width="1.5"/>
+    <circle cx="24" cy="24" r="10" fill="#9bc400"/>
+    <text x="44" y="22" fill="#f8fafc" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700">Admin Control</text>
+    <text x="44" y="34" fill="#f9c5bd" font-family="'Inter', sans-serif" font-size="8.5">Oversight &amp; Safety</text>
+  </g>
+</svg>
