@@ -1,302 +1,110 @@
 {% extends 'auth_base.html' %}
-{% block title %}Sign In — Freelancer Intelligence Platform{% endblock %}
+{% block title %}Sign In — FreelanceHub{% endblock %}
+{% block meta_description %}Sign in to your FreelanceHub account. Access your Client or Freelancer dashboard.{% endblock %}
 
 {% block content %}
 
-<style>
-  /* ── Panel Header ── */
-  .panel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-
-  .panel-header-icon {
-    width: 42px; height: 42px; border-radius: 11px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
-    background: linear-gradient(135deg, rgba(219,153,65,0.2), rgba(200,136,30,0.1));
-    color: #DB9941; border: 1px solid rgba(219,153,65,0.25);
-  }
-  [data-theme="dark"] .panel-header-icon {
-    background: linear-gradient(135deg, rgba(219,153,65,0.15), rgba(200,136,30,0.08));
-  }
-
-  .panel-header-text h2 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 18px; font-weight: 800;
-    margin: 0 0 2px; line-height: 1; color: #1A2530;
-  }
-  [data-theme="dark"] .panel-header-text h2 { color: #E5E5DF; }
-
-  .panel-header-text p {
-    font-size: 12.5px; font-weight: 500; margin: 0;
-    color: #6A7480; font-family: 'Inter', sans-serif;
-  }
-  [data-theme="dark"] .panel-header-text p { color: rgba(229,229,223,0.4); }
-
-  /* ── Inputs ── */
-  .ft-input-group { margin-bottom: 16px; }
-
-  .ft-input-label {
-    display: block; font-family: 'DM Sans', sans-serif;
-    font-size: 11px; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    color: #6A7480; margin-bottom: 6px;
-  }
-  [data-theme="dark"] .ft-input-label { color: rgba(229,229,223,0.5); }
-
-  .ft-input-wrap {
-    position: relative; display: flex; align-items: center;
-    background: #EFECE2;
-    border: 1.5px solid rgba(57,68,77,0.18);
-    border-radius: 11px; overflow: hidden;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  [data-theme="dark"] .ft-input-wrap {
-    background: rgba(255,255,255,0.04);
-    border-color: rgba(255,255,255,0.08);
-  }
-
-  .ft-input-wrap:focus-within {
-    border-color: #C8881E;
-    box-shadow: 0 0 0 3px rgba(200,136,30,0.15);
-    background: #F7F4EC;
-  }
-  [data-theme="dark"] .ft-input-wrap:focus-within {
-    border-color: rgba(219,153,65,0.5);
-    box-shadow: 0 0 0 3px rgba(200,136,30,0.12);
-    background: rgba(219,153,65,0.04);
-  }
-
-  .ft-input-icon {
-    padding: 0 12px 0 14px; color: #9AA0A8;
-    font-size: 13px; flex-shrink: 0; pointer-events: none;
-    transition: color 0.25s ease;
-  }
-  [data-theme="dark"] .ft-input-icon { color: rgba(229,229,223,0.25); }
-  .ft-input-wrap:focus-within .ft-input-icon { color: #DB9941; }
-
-  .ft-input {
-    flex: 1; background: transparent !important;
-    border: none !important; box-shadow: none !important; outline: none;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px; font-weight: 500;
-    color: #1A2530 !important;
-    padding: 13px 14px 13px 0;
-  }
-  [data-theme="dark"] .ft-input { color: #E5E5DF !important; }
-  .ft-input::placeholder { color: #9AA0A8 !important; }
-  [data-theme="dark"] .ft-input::placeholder { color: rgba(229,229,223,0.22) !important; }
-
-  .ft-eye-btn {
-    background: none; border: none;
-    padding: 0 14px; color: #9AA0A8;
-    font-size: 13px; cursor: pointer; transition: color 0.2s;
-  }
-  [data-theme="dark"] .ft-eye-btn { color: rgba(229,229,223,0.25); }
-  .ft-eye-btn:hover { color: #DB9941; }
-
-  /* ── Forgot Password row ── */
-  .ft-forgot-row {
-    display: flex; justify-content: flex-end;
-    margin-bottom: 20px; margin-top: -4px;
-  }
-  .ft-forgot-link {
-    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
-    color: #9AA0A8; text-decoration: none; transition: color 0.2s ease;
-  }
-  .ft-forgot-link:hover { color: #C8881E; }
-  [data-theme="dark"] .ft-forgot-link { color: rgba(229,229,223,0.35); }
-  [data-theme="dark"] .ft-forgot-link:hover { color: #DB9941; }
-
-  /* ── Primary Login Button ── */
-  .btn-user-login {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 14px 24px;
-    background: linear-gradient(135deg, #F0A830 0%, #DB9941 40%, #C8881E 70%, #B87818 100%);
-    color: #07111D !important;
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 800;
-    letter-spacing: 2px; text-transform: uppercase;
-    border: none; border-radius: 12px; cursor: pointer;
-    position: relative; overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 6px 24px rgba(200,136,30,0.4), inset 0 1px 0 rgba(255,255,255,0.22);
-  }
-  .btn-user-login::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 55%);
-    pointer-events: none;
-  }
-  .btn-user-login:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 12px 36px rgba(200,136,30,0.55); filter: brightness(1.05);
-  }
-  .btn-user-login:active { transform: translateY(0) scale(0.99); }
-
-  /* ── Divider ── */
-  .ft-divider {
-    display: flex; align-items: center; gap: 12px; margin: 22px 0 18px;
-    font-family: 'DM Sans', sans-serif; font-size: 10.5px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; color: rgba(57,68,77,0.3);
-  }
-  .ft-divider::before, .ft-divider::after {
-    content: ''; flex: 1; height: 1px; background: rgba(57,68,77,0.12);
-  }
-  [data-theme="dark"] .ft-divider { color: rgba(229,229,223,0.2); }
-  [data-theme="dark"] .ft-divider::before,
-  [data-theme="dark"] .ft-divider::after { background: rgba(255,255,255,0.07); }
-
-  /* ── Create Account Button ── */
-  .btn-create-account {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 13px 24px;
-    background: transparent; color: #6A7480 !important;
-    font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    border: 1.5px solid rgba(57,68,77,0.18); border-radius: 12px;
-    text-decoration: none; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .btn-create-account:hover {
-    background: rgba(219,153,65,0.07); border-color: rgba(219,153,65,0.35);
-    color: #C8881E !important; transform: translateY(-1px);
-  }
-  [data-theme="dark"] .btn-create-account {
-    color: rgba(229,229,223,0.45) !important;
-    border-color: rgba(255,255,255,0.08);
-  }
-  [data-theme="dark"] .btn-create-account:hover {
-    background: rgba(219,153,65,0.07); border-color: rgba(219,153,65,0.3);
-    color: #DB9941 !important;
-  }
-
-  /* ── Admin Login Link ── */
-  .admin-login-link-row {
-    display: flex; justify-content: center; align-items: center;
-    margin-top: 22px; gap: 8px;
-  }
-  .admin-login-link {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
-    color: #9AA0A8; text-decoration: none;
-    padding: 7px 14px; border-radius: 8px;
-    border: 1px solid rgba(57,68,77,0.12);
-    background: rgba(57,68,77,0.04);
-    transition: all 0.2s ease;
-    letter-spacing: 0.3px;
-  }
-  .admin-login-link:hover {
-    color: #64A0FF; border-color: rgba(100,160,255,0.25);
-    background: rgba(100,160,255,0.06);
-  }
-  .admin-login-link i { font-size: 11px; }
-  [data-theme="dark"] .admin-login-link {
-    color: rgba(229,229,223,0.3);
-    border-color: rgba(255,255,255,0.07);
-    background: rgba(255,255,255,0.02);
-  }
-  [data-theme="dark"] .admin-login-link:hover {
-    color: #64A0FF; border-color: rgba(100,160,255,0.2);
-    background: rgba(100,160,255,0.05);
-  }
-
-  /* ── Alert ── */
-  .ft-alert {
-    display: flex; align-items: flex-start; gap: 9px;
-    padding: 12px 14px; border-radius: 10px;
-    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
-    margin-bottom: 18px; text-align: left; line-height: 1.4;
-  }
-  .ft-alert i { margin-top: 1px; flex-shrink: 0; }
-  .ft-alert-error   { background: rgba(220,38,38,0.08);  border: 1px solid rgba(220,38,38,0.2);  color: #DC2626; }
-  .ft-alert-success { background: rgba(34,197,94,0.08);  border: 1px solid rgba(34,197,94,0.2);  color: #16a34a; }
-  .ft-alert-warning { background: rgba(234,179,8,0.08);  border: 1px solid rgba(234,179,8,0.2);  color: #ca8a04; }
-  [data-theme="dark"] .ft-alert-error   { color: #EF6666; }
-  [data-theme="dark"] .ft-alert-success { color: #4ADE80; }
-  [data-theme="dark"] .ft-alert-warning { color: #FDE047; }
-</style>
-
-{% if messages %}
-  {% for message in messages %}
-  <div class="ft-alert ft-alert-{{ message.tags }}">
-    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-exclamation-circle{% endif %}"></i>
-    <span>{{ message }}</span>
-  </div>
-  {% endfor %}
-{% endif %}
-
-<!-- Panel Header -->
-<div class="panel-header">
-  <div class="panel-header-icon"><i class="fas fa-user"></i></div>
-  <div class="panel-header-text">
-    <h2>Welcome back</h2>
-    <p>Sign in to your Freelancer Intelligence account</p>
-  </div>
-</div>
+<h1 class="auth-heading">Welcome back</h1>
+<p class="auth-subheading">Sign in to your FreelanceHub account</p>
 
 <form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate>
   {% csrf_token %}
   <input type="hidden" name="login_type" value="user">
 
+  {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <div class="auth-alert auth-alert-error">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ error }}</span>
+    </div>
+    {% endfor %}
+  {% endif %}
+
   <!-- Username -->
-  <div class="ft-input-group">
-    <label class="ft-input-label" for="id_username">Username</label>
-    <div class="ft-input-wrap">
-      <span class="ft-input-icon"><i class="fas fa-user"></i></span>
+  <div class="auth-form-group">
+    <label class="auth-label" for="id_username">Username</label>
+    <div style="position:relative;">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;">
+        <i class="bi bi-person-fill"></i>
+      </span>
       <input
         type="text"
         name="username"
         id="id_username"
-        class="ft-input"
-        placeholder="Enter your username"
+        class="auth-input"
+        style="padding-left: 38px;"
+        placeholder="Your username"
         required
         autocomplete="username"
         autofocus
         value="{{ request.POST.username|default:'' }}"
       >
     </div>
+    {% if form.username.errors %}
+      <div style="color:#f43f5e;font-size:12px;margin-top:4px;">{{ form.username.errors.0 }}</div>
+    {% endif %}
   </div>
 
   <!-- Password -->
-  <div class="ft-input-group">
-    <label class="ft-input-label" for="id_password">Password</label>
-    <div class="ft-input-wrap">
-      <span class="ft-input-icon"><i class="fas fa-lock"></i></span>
+  <div class="auth-form-group">
+    <label class="auth-label" for="id_password">Password</label>
+    <div style="position:relative;">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;">
+        <i class="bi bi-lock-fill"></i>
+      </span>
       <input
         type="password"
         name="password"
         id="id_password"
-        class="ft-input"
-        placeholder="Enter your password"
+        class="auth-input"
+        style="padding-left: 38px; padding-right: 42px;"
+        placeholder="Your password"
         required
         autocomplete="current-password"
       >
-      <button type="button" class="ft-eye-btn" id="togglePwd" aria-label="Toggle password visibility">
-        <i class="fas fa-eye" id="pwdIcon"></i>
+      <button type="button" id="togglePwd" aria-label="Toggle password visibility"
+              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:15px;padding:0;">
+        <i class="bi bi-eye" id="pwdIcon"></i>
       </button>
     </div>
+    {% if form.password.errors %}
+      <div style="color:#f43f5e;font-size:12px;margin-top:4px;">{{ form.password.errors.0 }}</div>
+    {% endif %}
   </div>
 
-  <div class="ft-forgot-row">
-    <a href="{% url 'core:password_reset' %}" class="ft-forgot-link">Forgot password?</a>
+  <!-- Forgot password -->
+  <div style="text-align:right;margin-top:-10px;margin-bottom:18px;">
+    <a href="{% url 'core:password_reset' %}" style="font-size:12.5px;color:#64748b;font-weight:600;transition:color 0.2s;"
+       onmouseover="this.style.color='#6c63ff'" onmouseout="this.style.color='#64748b'">Forgot password?</a>
   </div>
 
-  <button type="submit" class="btn-user-login" id="loginSubmitBtn">
-    <i class="fas fa-arrow-right-to-bracket"></i> Sign In
+  <button type="submit" class="auth-btn" id="loginSubmitBtn">
+    <i class="bi bi-box-arrow-in-right"></i>
+    Sign In
   </button>
 </form>
 
-<div class="ft-divider">or register as</div>
+<div class="auth-divider"><span>or register as</span></div>
 
-<div style="display:flex; flex-direction:column; gap:10px;">
-  <a href="{% url 'marketplace:client_register' %}" class="btn-create-account" style="border-color:rgba(108,99,255,0.4); color:#a78bfa !important;">
-    <i class="fas fa-briefcase"></i> Register as Client (Hire Talent)
+<div style="display:flex;flex-direction:column;gap:10px;">
+  <a href="{% url 'marketplace:client_register' %}" class="btn-create-account"
+     style="border-color:rgba(108,99,255,0.35);color:#a78bfa;">
+    <i class="bi bi-briefcase-fill"></i>
+    Register as Client — Post Projects
   </a>
   <a href="{% url 'core:register' %}" class="btn-create-account">
-    <i class="fas fa-user-plus"></i> Register as Freelancer
+    <i class="bi bi-person-check-fill"></i>
+    Register as Freelancer — Find Work
   </a>
 </div>
 
-<!-- Admin Login link -->
-<div class="admin-login-link-row">
-  <a href="{% url 'core:admin_login' %}" class="admin-login-link" id="adminLoginPageLink">
-    <i class="fas fa-shield-halved"></i> Admin Login
+<!-- Admin login -->
+<div style="text-align:center;margin-top:20px;">
+  <a href="{% url 'core:admin_login' %}"
+     style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#475569;padding:6px 14px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;transition:all 0.2s;"
+     onmouseover="this.style.color='#38bdf8';this.style.borderColor='rgba(56,189,248,0.25)'"
+     onmouseout="this.style.color='#475569';this.style.borderColor='rgba(255,255,255,0.07)'">
+    <i class="bi bi-shield-lock-fill"></i> Platform Admin Login
   </a>
 </div>
 
@@ -309,7 +117,7 @@
     btn.addEventListener('click', function() {
       const visible = input.type === 'text';
       input.type = visible ? 'password' : 'text';
-      icon.className = visible ? 'fas fa-eye' : 'fas fa-eye-slash';
+      icon.className = visible ? 'bi bi-eye' : 'bi bi-eye-slash';
     });
   }
 
@@ -318,7 +126,7 @@
   const submitBtn = document.getElementById('loginSubmitBtn');
   if (form && submitBtn) {
     form.addEventListener('submit', function() {
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In…';
+      submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Signing in…';
       submitBtn.style.pointerEvents = 'none';
     });
   }

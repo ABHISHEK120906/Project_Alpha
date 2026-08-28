@@ -1,252 +1,117 @@
 {% extends 'auth_base.html' %}
-{% block title %}Create Account — Freelancer Intelligence Platform{% endblock %}
+{% block title %}Join as Freelancer — FreelanceHub{% endblock %}
+{% block meta_description %}Create your FreelanceHub Freelancer account. Get verified and start applying to client projects.{% endblock %}
 
 {% block content %}
 
-<style>
-  /* ── Title ── */
-  .register-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 18px; font-weight: 800;
-    color: #1A2530; margin-bottom: 4px;
-  }
-  [data-theme="dark"] .register-title { color: #E5E5DF; }
+<!-- Role indicator banner -->
+<div style="background:rgba(34,211,160,0.1);border:1px solid rgba(34,211,160,0.25);border-radius:10px;padding:12px 16px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
+  <i class="bi bi-person-check-fill" style="color:#22d3a0;font-size:18px;flex-shrink:0;"></i>
+  <div>
+    <div style="font-size:13px;font-weight:700;color:#22d3a0;">Joining as a Freelancer</div>
+    <div style="font-size:12px;color:#64748b;margin-top:1px;">
+      Are you a Client?
+      <a href="{% url 'marketplace:client_register' %}" style="color:#6c63ff;font-weight:600;">Register here instead →</a>
+    </div>
+  </div>
+</div>
 
-  .register-subtitle {
-    font-size: 13px; color: #6A7480;
-    font-family: 'Inter', sans-serif; margin-bottom: 26px;
-  }
-  [data-theme="dark"] .register-subtitle { color: #8A8070; }
-
-  /* ── Input wrapper ── */
-  .auth-input-wrapper {
-    background: #EFECE2 !important;
-    border: 1.5px solid rgba(57, 68, 77, 0.15) !important;
-    border-radius: 11px !important;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    display: flex; align-items: center;
-  }
-  [data-theme="dark"] .auth-input-wrapper {
-    background: rgba(255,255,255,0.04) !important;
-    border-color: rgba(255,255,255,0.08) !important;
-  }
-  .auth-input-wrapper:focus-within {
-    border-color: #C8881E !important;
-    box-shadow: 0 0 0 3px rgba(200,136,30,0.15) !important;
-    background: #F7F4EC !important;
-  }
-  [data-theme="dark"] .auth-input-wrapper:focus-within {
-    border-color: rgba(219,153,65,0.5) !important;
-    box-shadow: 0 0 0 3px rgba(200,136,30,0.12) !important;
-    background: rgba(219,153,65,0.04) !important;
-  }
-
-  .auth-input-icon {
-    padding: 0 12px 0 14px; color: #9AA0A8;
-    font-size: 13px; flex-shrink: 0; pointer-events: none;
-    transition: color 0.25s ease;
-  }
-  [data-theme="dark"] .auth-input-icon { color: rgba(229,229,223,0.25); }
-  .auth-input-wrapper:focus-within .auth-input-icon { color: #DB9941; }
-
-  /* ── Auth label ── */
-  .auth-label {
-    display: block; font-size: 11px; font-weight: 700;
-    color: #6A7480; letter-spacing: 1.5px;
-    text-transform: uppercase; margin-bottom: 6px;
-    text-align: left;
-    font-family: 'DM Sans', sans-serif;
-  }
-  [data-theme="dark"] .auth-label { color: rgba(229,229,223,0.5); }
-
-  /* ── Field widget inputs ── */
-  .field-widget-container input[type="text"],
-  .field-widget-container input[type="password"] {
-    flex: 1;
-    padding: 13px 14px 13px 0;
-    background: transparent;
-    border: none !important;
-    box-shadow: none !important;
-    color: #1A2530;
-    font-size: 14px; font-weight: 500;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    -webkit-appearance: none;
-  }
-  [data-theme="dark"] .field-widget-container input { color: #E5E5DF !important; }
-  .field-widget-container input::placeholder { color: #9AA0A8 !important; }
-  [data-theme="dark"] .field-widget-container input::placeholder { color: rgba(229,229,223,0.22) !important; }
-
-  /* ── Password field — room for toggle btn ── */
-  .field-widget-container input[type="password"] { padding-right: 44px; }
-
-  .auth-input-suffix {
-    position: absolute; right: 0; top: 0; bottom: 0;
-    display: flex; align-items: center; padding-right: 12px;
-  }
-  .toggle-pwd-btn {
-    background: none; border: none; cursor: pointer;
-    color: #9AA0A8; padding: 4px;
-    font-size: 13px; line-height: 1;
-    transition: color 0.2s;
-  }
-  .toggle-pwd-btn:hover { color: #DB9941; }
-
-  /* ── Field errors & help ── */
-  .field-error {
-    color: #DC2626; font-size: 12px; font-weight: 500;
-    margin-top: 5px; display: flex; align-items: center; gap: 4px;
-    text-align: left;
-  }
-  .field-help {
-    color: #9AA0A8; font-size: 11.5px; margin-top: 4px; text-align: left;
-  }
-
-  /* ── Submit button ── */
-  .btn-register-submit {
-    width: 100%; padding: 14px;
-    background: linear-gradient(135deg, #DB9941 0%, #C8881E 50%, #B87818 100%);
-    color: #07111D !important;
-    font-size: 13px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 2px;
-    border: none; border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    margin-top: 10px;
-    box-shadow: 0 4px 18px rgba(200,136,30,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
-    cursor: pointer; position: relative; overflow: hidden;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .btn-register-submit::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .btn-register-submit:hover {
-    background: linear-gradient(135deg, #C8881E 0%, #A86810 100%);
-    box-shadow: 0 10px 28px rgba(200,136,30,0.5);
-    transform: translateY(-2px) scale(1.01);
-    color: #07111D !important;
-  }
-  .btn-register-submit:active { transform: translateY(0) scale(0.99); }
-
-  /* ── Bottom sign-in link ── */
-  .auth-footer-text {
-    font-size: 13.5px; color: #6A7480; margin-top: 22px;
-    text-align: center; font-family: 'DM Sans', sans-serif;
-  }
-  .auth-footer-text a { color: #C8881E; font-weight: 600; text-decoration: none; }
-  .auth-footer-text a:hover { text-decoration: underline; }
-  [data-theme="dark"] .auth-footer-text { color: #8A8070; }
-  [data-theme="dark"] .auth-footer-text a { color: #DB9941; }
-
-  /* ── Alert ── */
-  .auth-alert {
-    display: flex; align-items: flex-start; gap: 8px;
-    padding: 12px 14px; border-radius: 10px;
-    font-size: 13px; font-weight: 500;
-    margin-bottom: 16px; text-align: left; line-height: 1.4;
-  }
-  .auth-alert-error   { background: rgba(220,38,38,0.08);  border: 1px solid rgba(220,38,38,0.2);  color: #DC2626; }
-  .auth-alert-success { background: rgba(34,197,94,0.08);  border: 1px solid rgba(34,197,94,0.2);  color: #16a34a; }
-  .auth-alert-warning { background: rgba(234,179,8,0.08);  border: 1px solid rgba(234,179,8,0.2);  color: #ca8a04; }
-  [data-theme="dark"] .auth-alert-error   { color: #EF6666; }
-  [data-theme="dark"] .auth-alert-success { color: #4ADE80; }
-  [data-theme="dark"] .auth-alert-warning { color: #FDE047; }
-</style>
-
-<!-- Title -->
-<div class="register-title">Create your account</div>
-<div class="register-subtitle">Join Freelancer Intelligence Platform</div>
+<h1 class="auth-heading">Create your account</h1>
+<p class="auth-subheading">Join FreelanceHub as a Freelancer — find projects &amp; get hired</p>
 
 {% if messages %}
   {% for message in messages %}
-  <div class="auth-alert auth-alert-{{ message.tags }}">
-    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-exclamation-circle{% endif %}" style="flex-shrink:0;margin-top:1px;"></i>
+  <div class="auth-alert auth-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}error{% else %}info{% endif %}">
+    <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %}"></i>
     <span>{{ message }}</span>
   </div>
   {% endfor %}
 {% endif %}
 
-<!-- Registration Form -->
 <form method="post" action="{% url 'core:register' %}" id="registerForm" novalidate>
   {% csrf_token %}
 
   {% for field in form %}
-  <div class="auth-form-group" style="margin-bottom:16px;">
+  <div class="auth-form-group">
     <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-    <div class="auth-input-wrapper position-relative">
-
-      <!-- Icon per field -->
+    <div style="position:relative;">
       {% if field.name == 'username' %}
-        <span class="auth-input-icon"><i class="fas fa-user"></i></span>
-      {% elif 'password' in field.name %}
-        <span class="auth-input-icon"><i class="fas fa-lock"></i></span>
-      {% endif %}
-
-      <div class="field-widget-container" data-field="{{ field.name }}">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;"><i class="bi bi-person-fill"></i></span>
         {{ field }}
-      </div>
-
-      {% if 'password' in field.name %}
-      <div class="auth-input-suffix">
-        <button type="button" class="toggle-pwd-btn" data-target="{{ field.html_name }}" aria-label="Toggle password">
-          <i class="fas fa-eye"></i>
+        <style>#{{ field.id_for_label }} { padding-left: 38px; width:100%; padding:11px 14px 11px 38px; background:rgba(22,27,39,1); border:1.5px solid rgba(255,255,255,0.07); border-radius:8px; color:#f1f5f9; font-size:14.5px; font-family:'Inter',sans-serif; outline:none; transition:border-color 0.2s, box-shadow 0.2s; } #{{ field.id_for_label }}:focus { border-color:#6c63ff; box-shadow:0 0 0 3px rgba(108,99,255,0.12); } #{{ field.id_for_label }}::placeholder { color:#64748b; }</style>
+      {% elif 'password' in field.name %}
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;"><i class="bi bi-lock-fill"></i></span>
+        {{ field }}
+        <style>#{{ field.id_for_label }} { padding-left: 38px; padding-right: 42px; width:100%; padding:11px 42px 11px 38px; background:rgba(22,27,39,1); border:1.5px solid rgba(255,255,255,0.07); border-radius:8px; color:#f1f5f9; font-size:14.5px; font-family:'Inter',sans-serif; outline:none; transition:border-color 0.2s, box-shadow 0.2s; } #{{ field.id_for_label }}:focus { border-color:#6c63ff; box-shadow:0 0 0 3px rgba(108,99,255,0.12); } #{{ field.id_for_label }}::placeholder { color:#64748b; }</style>
+        <button type="button" data-target="{{ field.html_name }}" class="pwd-toggle-btn" aria-label="Toggle password"
+                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:15px;padding:0;">
+          <i class="bi bi-eye"></i>
         </button>
-      </div>
+      {% else %}
+        {{ field }}
+        <style>#{{ field.id_for_label }} { width:100%; padding:11px 14px; background:rgba(22,27,39,1); border:1.5px solid rgba(255,255,255,0.07); border-radius:8px; color:#f1f5f9; font-size:14.5px; font-family:'Inter',sans-serif; outline:none; transition:border-color 0.2s; } #{{ field.id_for_label }}:focus { border-color:#6c63ff; box-shadow:0 0 0 3px rgba(108,99,255,0.12); } #{{ field.id_for_label }}::placeholder { color:#64748b; }</style>
       {% endif %}
     </div>
 
     {% if field.errors %}
-    <div class="mt-1">
+    <div style="margin-top:4px;">
       {% for error in field.errors %}
-      <div class="field-error"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+      <div style="color:#f43f5e;font-size:12px;display:flex;align-items:center;gap:4px;">
+        <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
+      </div>
       {% endfor %}
     </div>
     {% endif %}
 
     {% if field.help_text %}
-    <div class="field-help">{{ field.help_text }}</div>
+    <div style="font-size:11.5px;color:#64748b;margin-top:3px;">{{ field.help_text }}</div>
     {% endif %}
   </div>
   {% endfor %}
 
-  <button type="submit" class="btn-register-submit" id="registerSubmitBtn">
-    <i class="fas fa-user-plus"></i> Create Account
+  <button type="submit" class="auth-btn" id="registerSubmitBtn" style="margin-top:8px;">
+    <i class="bi bi-person-plus-fill"></i>
+    Create Freelancer Account
   </button>
 </form>
 
+<div class="auth-divider"><span>already a member?</span></div>
+
+<a href="{% url 'core:login' %}" class="btn-create-account">
+  <i class="bi bi-box-arrow-in-right"></i>
+  Sign In to Existing Account
+</a>
+
 <div class="auth-footer-text">
-  Already have an account? <a href="{% url 'core:login' %}">Sign in</a>
+  <i class="bi bi-patch-check" style="color:#22d3a0;"></i>
+  After registration, complete <strong>7-step verification</strong> to unlock project applications.
 </div>
 
 <script>
 (function() {
-  // Password toggle buttons
-  document.querySelectorAll('.toggle-pwd-btn').forEach(function(btn) {
+  // Password toggle
+  document.querySelectorAll('.pwd-toggle-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
-      const targetName = this.dataset.target;
-      const input = document.querySelector('[name="' + targetName + '"]');
-      const eye = this.querySelector('i');
+      const input = document.querySelector('[name="' + this.dataset.target + '"]');
+      const icon = this.querySelector('i');
       if (input) {
-        if (input.type === 'password') {
-          input.type = 'text';
-          eye.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-          input.type = 'password';
-          eye.classList.replace('fa-eye-slash', 'fa-eye');
-        }
+        const isPass = input.type === 'password';
+        input.type = isPass ? 'text' : 'password';
+        icon.className = isPass ? 'bi bi-eye-slash' : 'bi bi-eye';
         input.focus();
       }
     });
   });
 
-  // Submit loading state
-  document.getElementById('registerForm').addEventListener('submit', function() {
-    const btn = document.getElementById('registerSubmitBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
-    btn.style.pointerEvents = 'none';
-  });
+  // Submit state
+  const form = document.getElementById('registerForm');
+  const btn = document.getElementById('registerSubmitBtn');
+  if (form && btn) {
+    form.addEventListener('submit', function() {
+      btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating account…';
+      btn.style.pointerEvents = 'none';
+    });
+  }
 })();
 </script>
 

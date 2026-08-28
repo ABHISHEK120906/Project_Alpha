@@ -16,7 +16,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{{ page_title|default:"Super Admin Dashboard" }} — FreelanceTrack{% endblock %}</title>
+  <title>{% block title %}{{ page_title|default:"Platform Administration" }} — FreelanceHub Admin{% endblock %}</title>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -190,14 +190,14 @@
   <!-- Admin Sidebar -->
   <aside class="admin-sidebar" id="adminSidebar">
     <a href="{% url 'core:admin_dashboard' %}" class="admin-brand">
-      <span class="admin-brand-badge"><i class="fas fa-shield-alt me-1"></i> SUPER</span>
+      <span class="admin-brand-badge"><i class="fas fa-shield-alt me-1"></i> ADMIN</span>
       <div>
-        <div style="font-weight:700; line-height:1.2;">Freelancer Intelligence</div>
-        <div style="font-size:11px; color:rgba(255,255,255,0.5);">Admin Module</div>
+        <div style="font-weight:800; line-height:1.2;">FreelanceHub</div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.5);">Platform Administration</div>
       </div>
     </a>
 
-      <div class="admin-nav-label">Marketplace Admin (Stage 3)</div>
+      <div class="admin-nav-label">Marketplace Administration</div>
       <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         <i class="fas fa-store-alt text-primary"></i> <span>Marketplace Overview</span>
       </a>
@@ -226,7 +226,7 @@
         <i class="fas fa-file-export text-secondary"></i> <span>Reports & Exports</span>
       </a>
 
-      <div class="admin-nav-label">Core CRM & System</div>
+      <div class="admin-nav-label">System</div>
       <a href="{% url 'core:admin_dashboard' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
         <i class="fas fa-chart-pie text-muted"></i> <span>CRM Overview</span>
       </a>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Client Registration — FreelanceHub</title>
+  <title>Register as Client — FreelanceHub | Post Projects & Hire Freelancers</title>
   <meta name="description" content="Join FreelanceHub as a Client and hire top freelancers for your projects." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
@@ -89,13 +89,46 @@
       .form-row{grid-template-columns:1fr;}
     }
   </style>
+  <style>
+    .client-navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 56px;
+      background: rgba(13,15,20,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      z-index: 100;
+      display: flex; align-items: center; padding: 0 24px;
+      justify-content: space-between;
+    }
+    .client-navbar-brand {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px; font-weight: 800;
+      color: #f1f5f9; text-decoration: none;
+    }
+    .client-navbar-brand .nb-icon {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #fff;
+    }
+    .page { padding-top: 56px; }
+  </style>
 </head>
 <body>
+<nav class="client-navbar">
+  <a href="{% url 'core:home' %}" class="client-navbar-brand">
+    <div class="nb-icon"><i class="bi bi-briefcase-fill"></i></div>
+    FreelanceHub
+  </a>
+  <a href="{% url 'core:login' %}" style="font-size:13px;color:#64748b;font-weight:600;">Sign In</a>
+</nav>
 <div class="page">
   <!-- Left Feature Panel -->
   <div class="panel-left">
-    <div class="brand">🚀 FreelanceHub</div>
-    <div class="brand-tagline">Find & hire world-class freelancers</div>
+    <div class="brand" style="font-size:1.8rem;">FreelanceHub</div>
+    <div class="brand-tagline">Post projects. Hire verified freelancers.</div>
     <ul class="feature-list">
       <li class="feature-item">
         <div class="feature-icon"><i class="bi bi-lightning-charge"></i></div>
@@ -136,8 +169,15 @@
         <div class="step active"></div>
         <div class="step"></div>
       </div>
-      <h1 class="auth-title">Create Client Account</h1>
-      <p class="auth-subtitle">Start hiring freelancers in minutes</p>
+      <h1 class="auth-title">Register as Client</h1>
+      <p class="auth-subtitle">Post projects and connect with verified freelancers</p>
+      <div style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);border-radius:8px;padding:10px 14px;margin-top:14px;display:flex;align-items:center;gap:10px;">
+        <i class="bi bi-person-workspace" style="color:#6c63ff;font-size:16px;flex-shrink:0;"></i>
+        <div style="text-align:left;">
+          <div style="font-size:12px;font-weight:700;color:#6c63ff;">Joining as a Client</div>
+          <div style="font-size:11px;color:#64748b;">Are you a Freelancer? <a href="{% url 'core:register' %}" style="color:#22d3a0;font-weight:600;">Register here →</a></div>
+        </div>
+      </div>
     </div>
 
     {% if messages %}
