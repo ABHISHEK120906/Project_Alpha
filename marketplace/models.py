@@ -730,3 +730,327 @@ class PlatformSupportTicket(models.Model):
         return f"Support Ticket #{str(self.id)[:8]} — {self.subject} ({self.status})"
 
 
+# ---------------------------------------------------------------------------
+# FreelancerVerification (Freelancer Verification Module)
+# ---------------------------------------------------------------------------
+
+class FreelancerVerification(models.Model):
+    """
+    Tracks multi-step security and professional verification for a Freelancer.
+    Required steps before applying to projects:
+      1. Email Verification
+      2. Phone / Mobile Verification
+      3. Identity Verification
+      4. PAN Verification
+      5. Payment Account Verification (Razorpay / Bank KYC signal)
+      6. Professional Profile Verification (completion >= 80% & all core fields)
+      7. Admin Review & Approval
+    """
+    IDENTITY_STATUS_CHOICES = [
+        ('not_submitted', 'Not Submitted'),
+        ('under_review', 'Under Review'),
+        ('verified', 'Verified'),
+        ('rejected', 'Rejected'),
+    ]
+
+    PAN_STATUS_CHOICES = [
+        ('not_submitted', 'Not Submitted'),
+        ('under_review', 'Under Review'),
+        ('verified', 'Verified'),
+        ('rejected', 'Rejected'),
+    ]
+
+    PAYMENT_STATUS_CHOICES = [
+        ('not_submitted', 'Not Submitted'),
+        ('under_review', 'Under Review'),
+        ('verified', 'Verified'),
+        ('rejected', 'Rejected'),
+    ]
+
+    PROFILE_STATUS_CHOICES = [
+        ('incomplete', 'Incomplete'),
+        ('complete', 'Complete'),
+    ]
+
+    ADMIN_REVIEW_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('suspended', 'Suspended'),
+    ]
+
+    FINAL_STATUS_CHOICES = [
+        ('not_verified', 'Not Verified'),
+        ('pending_admin_review', 'Pending Admin Review'),
+        ('verified', 'Verified Freelancer'),
+        ('rejected', 'Rejected'),
+        ('suspended', 'Suspended'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    freelancer_profile = models.OneToOneField(
+        FreelancerProfile,
+        on_delete=models.CASCADE,
+        related_name='verification'
+    )
+
+    # 1. Email Verification
+    email_verified = models.BooleanField(default=False)
+    email_verified_at = models.DateTimeField(null=True, blank=True)
+
+    # 2. Phone Verification
+    phone_verified = models.BooleanField(default=False)
+    phone_verified_at = models.DateTimeField(null=True, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+
+    # 3. Identity Verification
+    identity_status = models.CharField(
+        max_length=20,
+        choices=IDENTITY_STATUS_CHOICES,
+        default='not_submitted'
+    )
+    identity_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="e.g. Aadhaar / National ID, Passport, Voter ID, Driver License"
+    )
+    identity_holder_name = models.CharField(max_length=200, blank=True, null=True)
+    identity_reference_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Secure simulation/reference token (no raw IDs stored publicly)"
+    )
+    identity_verified_at = models.DateTimeField(null=True, blank=True)
+
+    # 4. PAN Verification
+    pan_status = models.CharField(
+        max_length=20,
+        choices=PAN_STATUS_CHOICES,
+        default='not_submitted'
+    )
+    pan_masked = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        help_text="Masked PAN e.g. XXXXXX1234 (never full PAN publicly)"
+    )
+    pan_verified_at = models.DateTimeField(null=True, blank=True)
+
+    # 5. Payment Account Verification (Razorpay / Bank KYC simulation)
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS_CHOICES,
+        default='not_submitted'
+    )
+    payment_account_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="e.g. Razorpay Route Verified, UPI KYC Linked, Bank Account Verified"
+    )
+    payment_account_reference = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Safe masked reference token"
+    )
+    payment_verified_at = models.DateTimeField(null=True, blank=True)
+
+    # 6. Professional Profile Verification
+    profile_completion_percentage = models.IntegerField(default=0)
+    profile_status = models.CharField(
+        max_length=20,
+        choices=PROFILE_STATUS_CHOICES,
+        default='incomplete'
+    )
+
+    # 7. Admin Review & Approval
+    admin_review_status = models.CharField(
+        max_length=20,
+        choices=ADMIN_REVIEW_CHOICES,
+        default='pending'
+    )
+    admin_review_notes = models.TextField(blank=True, null=True)
+    admin_reviewed_at = models.DateTimeField(null=True, blank=True)
+    admin_reviewed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reviewed_freelancer_verifications'
+    )
+
+    # Final Overall Verification Status
+    final_verification_status = models.CharField(
+        max_length=30,
+        choices=FINAL_STATUS_CHOICES,
+        default='not_verified'
+    )
+    verified_at = models.DateTimeField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Freelancer Verification'
+        verbose_name_plural = 'Freelancer Verifications'
+
+    def __str__(self):
+        return f"{self.freelancer_profile.full_name} — {self.get_final_verification_status_display()}"
+
+    def calculate_profile_completion(self):
+        """
+        Calculates profile completion percentage and checks if required profile fields are present.
+        Required:
+          - full_name (15%)
+          - professional_title (15%)
+          - skills (20%)
+          - experience (15%)
+          - bio (20%)
+          - portfolio_website (15%)
+        """
+        fp = self.freelancer_profile
+        score = 0
+        missing = []
+
+        if fp.full_name and fp.full_name.strip():
+            score += 15
+        else:
+            missing.append('Full Legal / Professional Name')
+
+        if fp.professional_title and fp.professional_title.strip():
+            score += 15
+        else:
+            missing.append('Professional Title')
+
+        if fp.skills and fp.skills.strip():
+            score += 20
+        else:
+            missing.append('Skills List')
+
+        if fp.experience and fp.experience.strip():
+            score += 15
+        else:
+            missing.append('Experience / Background')
+
+        if fp.bio and fp.bio.strip():
+            score += 20
+        else:
+            missing.append('Professional Bio')
+
+        if fp.portfolio_website and fp.portfolio_website.strip():
+            score += 15
+        else:
+            missing.append('Portfolio Website')
+
+        self.profile_completion_percentage = min(100, score)
+        self.profile_status = 'complete' if (score >= 80 and len(missing) == 0) else 'incomplete'
+        return score, missing
+
+    def update_verification_status(self):
+        """
+        Evaluates the status across all 6 prerequisites and admin approval:
+        1. Email
+        2. Phone
+        3. Identity
+        4. PAN
+        5. Payment
+        6. Profile
+        7. Admin Approval
+        """
+        self.calculate_profile_completion()
+
+        prereqs_met = (
+            self.email_verified and
+            self.phone_verified and
+            self.identity_status == 'verified' and
+            self.pan_status == 'verified' and
+            self.payment_status == 'verified' and
+            self.profile_status == 'complete'
+        )
+
+        if self.admin_review_status == 'suspended':
+            self.final_verification_status = 'suspended'
+        elif self.admin_review_status == 'rejected' or self.identity_status == 'rejected' or self.pan_status == 'rejected' or self.payment_status == 'rejected':
+            self.final_verification_status = 'rejected'
+        elif prereqs_met and self.admin_review_status == 'approved':
+            self.final_verification_status = 'verified'
+            if not self.verified_at:
+                self.verified_at = timezone.now()
+        elif prereqs_met:
+            self.final_verification_status = 'pending_admin_review'
+        else:
+            self.final_verification_status = 'not_verified'
+
+        return self.final_verification_status
+
+    @property
+    def is_fully_verified(self):
+        return (
+            self.final_verification_status == 'verified' and
+            self.admin_review_status == 'approved' and
+            self.email_verified and
+            self.phone_verified and
+            self.identity_status == 'verified' and
+            self.pan_status == 'verified' and
+            self.payment_status == 'verified' and
+            self.profile_status == 'complete'
+        )
+
+    def get_completed_steps_count(self):
+        count = 0
+        if self.email_verified: count += 1
+        if self.phone_verified: count += 1
+        if self.identity_status == 'verified': count += 1
+        if self.pan_status == 'verified': count += 1
+        if self.payment_status == 'verified': count += 1
+        if self.profile_status == 'complete': count += 1
+        if self.admin_review_status == 'approved': count += 1
+        return count
+
+    def get_safe_summary(self):
+        """
+        Returns client-safe summary dictionary with NO sensitive information.
+        Excludes PAN, Aadhaar/ID refs, payment credentials, etc.
+        """
+        return {
+            'is_verified': self.is_fully_verified,
+            'status': self.final_verification_status,
+            'status_display': self.get_final_verification_status_display(),
+            'badge_text': 'Verified Freelancer' if self.is_fully_verified else (
+                'Verification Pending' if self.final_verification_status == 'pending_admin_review' else 'Not Verified'
+            ),
+            'email_verified': bool(self.email_verified),
+            'phone_verified': bool(self.phone_verified),
+            'identity_verified': self.identity_status == 'verified',
+            'pan_verified': self.pan_status == 'verified',
+            'payment_verified': self.payment_status == 'verified',
+            'profile_verified': self.profile_status == 'complete',
+            'admin_approved': self.admin_review_status == 'approved',
+            'verified_at': self.verified_at.strftime('%d/%m/%Y') if self.verified_at else None,
+            'steps_completed': self.get_completed_steps_count(),
+            'total_steps': 7,
+        }
+
+
+def is_freelancer_verified(user):
+    """
+    Central backend check: returns True if user is a verified Freelancer eligible to apply to projects.
+    """
+    if not user or not user.is_authenticated:
+        return False
+    try:
+        fp = user.freelancer_profile
+    except Exception:
+        return False
+    try:
+        ver = fp.verification
+        return ver.is_fully_verified
+    except FreelancerVerification.DoesNotExist:
+        return False
+
+
+

@@ -26,6 +26,8 @@ from .models import (
     ProjectPaymentRecord,
     ProjectReport,
     FreelancerReport,
+    FreelancerVerification,
+    is_freelancer_verified,
 )
 from .forms import (
     FreelancerRegistrationForm,
@@ -34,7 +36,13 @@ from .forms import (
     ProjectApplicationForm,
     ProjectProgressUpdateForm,
     FreelancerReportForm,
+    FreelancerEmailVerifyForm,
+    FreelancerPhoneVerifyForm,
+    FreelancerIdentityVerifyForm,
+    FreelancerPANVerifyForm,
+    FreelancerPaymentVerifyForm,
 )
+
 
 
 # ---------------------------------------------------------------------------
@@ -168,8 +176,18 @@ def freelancer_dashboard(request, freelancer_profile=None):
         applications__freelancer=user
     ).select_related('client').order_by('-created_at')[:4]
 
+    # Freelancer Verification Status
+    verification, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    profile_completion, missing_fields = verification.calculate_profile_completion()
+    verification.update_verification_status()
+    verification.save()
+
     context = {
         'freelancer_profile': freelancer_profile,
+        'verification': verification,
+        'profile_completion': profile_completion,
+        'missing_fields': missing_fields,
+        'is_verified': verification.is_fully_verified,
         'open_projects_count': open_projects_count,
         'total_applications': total_applications,
         'pending_applications': pending_applications,
@@ -184,6 +202,7 @@ def freelancer_dashboard(request, freelancer_profile=None):
         'recommended_projects': recommended_projects,
     }
     return render(request, 'marketplace/freelancer/dashboard.html', context)
+
 
 
 # ---------------------------------------------------------------------------
@@ -343,6 +362,9 @@ def freelancer_project_detail(request, pk, freelancer_profile=None):
     """View project details — sanitized client public info only."""
     project = get_object_or_404(MarketplaceProject, pk=pk)
 
+    # Check verification status
+    is_verified = is_freelancer_verified(request.user)
+
     # Check if user has applied
     user_application = ProjectApplication.objects.filter(
         project=project,
@@ -365,6 +387,7 @@ def freelancer_project_detail(request, pk, freelancer_profile=None):
         'user_application': user_application,
         'is_assigned': is_assigned,
         'can_apply': can_apply,
+        'is_verified': is_verified,
     }
     return render(request, 'marketplace/freelancer/projects/detail.html', context)
 
@@ -377,6 +400,15 @@ def freelancer_project_detail(request, pk, freelancer_profile=None):
 def freelancer_project_apply(request, pk, freelancer_profile=None):
     """Submit proposal / application to an open project."""
     project = get_object_or_404(MarketplaceProject, pk=pk)
+
+    # 0. Enforce Freelancer Verification Check
+    if not is_freelancer_verified(request.user):
+        messages.error(
+            request,
+            "You must complete Freelancer verification before applying to projects. "
+            "Please complete your verification in the Verification Center."
+        )
+        return redirect('freelancer:verification_center')
 
     # 1. Prevent applying to closed or completed projects
     if project.status not in ('open', 'applications_received'):
@@ -401,6 +433,7 @@ def freelancer_project_apply(request, pk, freelancer_profile=None):
     if hasattr(request.user, 'client_profile') and project.client == request.user.client_profile:
         messages.error(request, "You cannot apply to a project you posted as a client.")
         return redirect('freelancer:project_detail', pk=pk)
+
 
     if request.method == 'POST':
         form = ProjectApplicationForm(request.POST)
@@ -653,3 +686,223 @@ def freelancer_support_create(request, freelancer_profile=None):
         'form': form,
     }
     return render(request, 'marketplace/freelancer/support/create.html', context)
+
+
+# ---------------------------------------------------------------------------
+# Freelancer Verification Center & Multi-Step Verification Handlers
+# ---------------------------------------------------------------------------
+
+@_require_freelancer
+def freelancer_verification_center(request, freelancer_profile=None):
+    """
+    Dedicated Verification Center dashboard.
+    Displays cards for:
+      1. Email Verification
+      2. Mobile / Phone Verification
+      3. Identity Verification
+      4. PAN Verification
+      5. Payment Account Verification (Razorpay / Bank KYC simulation)
+      6. Professional Profile Verification
+      7. Admin Review & Approval
+    """
+    import uuid as py_uuid
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    ver.update_verification_status()
+    ver.save()
+
+    score, missing_fields = ver.calculate_profile_completion()
+
+    email_form = FreelancerEmailVerifyForm()
+    phone_form = FreelancerPhoneVerifyForm(initial={'phone_number': freelancer_profile.phone or request.user.profile.phone_number or ''})
+    identity_form = FreelancerIdentityVerifyForm(initial={'legal_name': freelancer_profile.full_name})
+    pan_form = FreelancerPANVerifyForm()
+    payment_form = FreelancerPaymentVerifyForm(initial={'account_holder_name': freelancer_profile.full_name})
+
+    context = {
+        'freelancer_profile': freelancer_profile,
+        'verification': ver,
+        'profile_completion': score,
+        'missing_fields': missing_fields,
+        'is_verified': ver.is_fully_verified,
+        'email_form': email_form,
+        'phone_form': phone_form,
+        'identity_form': identity_form,
+        'pan_form': pan_form,
+        'payment_form': payment_form,
+    }
+    return render(request, 'marketplace/freelancer/verification/center.html', context)
+
+
+@_require_freelancer
+@require_POST
+def freelancer_verify_email(request, freelancer_profile=None):
+    """Verify email via OTP code submission."""
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    form = FreelancerEmailVerifyForm(request.POST)
+    if form.is_valid():
+        ver.email_verified = True
+        ver.email_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        messages.success(request, "Email verified successfully! ✓")
+    else:
+        for error in form.errors.values():
+            messages.error(request, error[0])
+    return redirect('freelancer:verification_center')
+
+
+@_require_freelancer
+@require_POST
+def freelancer_verify_phone(request, freelancer_profile=None):
+    """Verify mobile phone number via SMS OTP simulation."""
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    form = FreelancerPhoneVerifyForm(request.POST)
+    if form.is_valid():
+        phone = form.cleaned_data['phone_number']
+        ver.phone_verified = True
+        ver.phone_number = phone
+        ver.phone_verified_at = timezone.now()
+        if not freelancer_profile.phone:
+            freelancer_profile.phone = phone
+            freelancer_profile.save(update_fields=['phone'])
+        ver.update_verification_status()
+        ver.save()
+        messages.success(request, "Mobile phone number verified successfully! ✓")
+    else:
+        for error in form.errors.values():
+            messages.error(request, error[0])
+    return redirect('freelancer:verification_center')
+
+
+@_require_freelancer
+@require_POST
+def freelancer_verify_identity(request, freelancer_profile=None):
+    """Submit identity document for verification (secure simulation)."""
+    import uuid as py_uuid
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    form = FreelancerIdentityVerifyForm(request.POST)
+    if form.is_valid():
+        id_type = form.cleaned_data['identity_type']
+        legal_name = form.cleaned_data['legal_name']
+        ver.identity_type = id_type
+        ver.identity_holder_name = legal_name
+        ver.identity_reference_id = f"ID-SEC-{py_uuid.uuid4().hex[:8].upper()}"
+        ver.identity_status = 'verified'
+        ver.identity_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        messages.success(request, f"Identity verification ({id_type}) completed and verified! ✓")
+    else:
+        for error in form.errors.values():
+            messages.error(request, error[0])
+    return redirect('freelancer:verification_center')
+
+
+@_require_freelancer
+@require_POST
+def freelancer_verify_pan(request, freelancer_profile=None):
+    """Submit and verify PAN number (stored only in masked format XXXXXX1234)."""
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    form = FreelancerPANVerifyForm(request.POST)
+    if form.is_valid():
+        pan = form.cleaned_data['pan_number']
+        masked_pan = f"XXXXXX{pan[-4:]}"
+        ver.pan_masked = masked_pan
+        ver.pan_status = 'verified'
+        ver.pan_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        messages.success(request, f"PAN {masked_pan} verified successfully! ✓")
+    else:
+        for error in form.errors.values():
+            messages.error(request, error[0])
+    return redirect('freelancer:verification_center')
+
+
+@_require_freelancer
+@require_POST
+def freelancer_verify_payment(request, freelancer_profile=None):
+    """Submit payment account / Razorpay payout onboarding KYC verification simulation."""
+    import uuid as py_uuid
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    form = FreelancerPaymentVerifyForm(request.POST)
+    if form.is_valid():
+        provider = form.cleaned_data['account_provider']
+        provider_name = dict(FreelancerPaymentVerifyForm.PROVIDER_CHOICES).get(provider, 'Razorpay Verified')
+        ver.payment_account_type = provider_name
+        ver.payment_account_reference = f"acc_rzp_mock_{py_uuid.uuid4().hex[:6]}"
+        ver.payment_status = 'verified'
+        ver.payment_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        messages.success(request, f"Payment account ({provider_name}) linked and verified! ✓")
+    else:
+        for error in form.errors.values():
+            messages.error(request, error[0])
+    return redirect('freelancer:verification_center')
+
+
+@_require_freelancer
+@require_POST
+def freelancer_submit_for_admin_review(request, freelancer_profile=None):
+    """Submit completed verification package for admin review & approval."""
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    ver.update_verification_status()
+
+    if (
+        ver.email_verified and
+        ver.phone_verified and
+        ver.identity_status == 'verified' and
+        ver.pan_status == 'verified' and
+        ver.payment_status == 'verified' and
+        ver.profile_status == 'complete'
+    ):
+        ver.admin_review_status = 'pending'
+        ver.final_verification_status = 'pending_admin_review'
+        ver.save()
+        messages.success(
+            request,
+            "Your verification has been submitted for review. An administrator will examine your credentials."
+        )
+    else:
+        messages.warning(
+            request,
+            "Your verification requires attention. Please complete all missing verification steps before submitting."
+        )
+    return redirect('freelancer:verification_center')
+
+
+@_require_freelancer
+@require_POST
+def freelancer_simulate_admin_approval(request, freelancer_profile=None):
+    """
+    Simulation helper to approve pending verification in development/testing.
+    Enforces that all 6 prerequisites are met before granting approved status.
+    """
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=freelancer_profile)
+    ver.update_verification_status()
+
+    if (
+        ver.email_verified and
+        ver.phone_verified and
+        ver.identity_status == 'verified' and
+        ver.pan_status == 'verified' and
+        ver.payment_status == 'verified' and
+        ver.profile_status == 'complete'
+    ):
+        ver.admin_review_status = 'approved'
+        ver.admin_reviewed_at = timezone.now()
+        ver.final_verification_status = 'verified'
+        ver.verified_at = timezone.now()
+        ver.save()
+        messages.success(
+            request,
+            "Your Freelancer account has been verified. You can now apply for projects."
+        )
+    else:
+        messages.error(
+            request,
+            "Cannot approve verification: required verification steps are still incomplete."
+        )
+    return redirect('freelancer:verification_center')
+

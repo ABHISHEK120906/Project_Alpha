@@ -7,6 +7,7 @@ from django.urls import reverse
 from decimal import Decimal
 import json
 
+from django.utils import timezone
 from core.models import UserProfile, ActivityLog
 from marketplace.models import (
     ClientProfile,
@@ -18,6 +19,7 @@ from marketplace.models import (
     FreelancerReport,
     MarketplaceDispute,
     PlatformSupportTicket,
+    FreelancerVerification,
 )
 
 
@@ -87,8 +89,23 @@ class MarketplaceAdminStage3Tests(TestCase):
             full_name='Bob Builder',
             professional_title='Senior Full-Stack Engineer',
             hourly_rate=Decimal('50.00'),
-            skills='Python, Django, React, PostgreSQL'
+            skills='Python, Django, React, PostgreSQL',
+            experience='5 years building scalable web systems',
+            bio='Full-stack engineer specializing in web platforms.',
+            portfolio_website='https://bob-builds.dev'
         )
+        ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=self.freelancer_profile)
+        ver.email_verified = True
+        ver.phone_verified = True
+        ver.identity_status = 'verified'
+        ver.pan_status = 'verified'
+        ver.pan_masked = 'XXXXXX1234'
+        ver.payment_status = 'verified'
+        ver.profile_status = 'complete'
+        ver.admin_review_status = 'approved'
+        ver.final_verification_status = 'verified'
+        ver.verified_at = timezone.now()
+        ver.save()
 
         # 5. Sample Project
         self.project = MarketplaceProject.objects.create(

@@ -15,7 +15,9 @@ from marketplace.models import (
     ProjectPaymentRecord,
     ProjectReport,
     FreelancerReport,
+    FreelancerVerification,
 )
+from django.utils import timezone
 
 
 class MarketplaceFreelancerStage2Tests(TestCase):
@@ -90,8 +92,27 @@ class MarketplaceFreelancerStage2Tests(TestCase):
             user=self.freelancer_user_b,
             full_name='Eva Engineer',
             professional_title='UI/UX Designer & Frontend Dev',
-            hourly_rate=Decimal('1800.00')
+            hourly_rate=Decimal('1800.00'),
+            skills='UI/UX, Figma, React, TailwindCSS',
+            experience='3 years designing modern user interfaces',
+            bio='UI/UX specialist creating high-converting dashboards.',
+            portfolio_website='https://eva-design.dev'
         )
+
+        # Mark test freelancers verified for application workflows
+        for fp in (self.freelancer_profile_a, self.freelancer_profile_b):
+            ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=fp)
+            ver.email_verified = True
+            ver.phone_verified = True
+            ver.identity_status = 'verified'
+            ver.pan_status = 'verified'
+            ver.pan_masked = 'XXXXXX1234'
+            ver.payment_status = 'verified'
+            ver.profile_status = 'complete'
+            ver.admin_review_status = 'approved'
+            ver.final_verification_status = 'verified'
+            ver.verified_at = timezone.now()
+            ver.save()
 
         # 4. Create Open Marketplace Projects
         self.project_1 = MarketplaceProject.objects.create(

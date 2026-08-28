@@ -34,7 +34,48 @@ from .models import (
     FreelancerReport,
     MarketplaceDispute,
     PlatformSupportTicket,
+    FreelancerVerification,
 )
+
+
+class AdminVerificationService:
+    """
+    Administrative controls for reviewing and approving freelancer verifications.
+    """
+    @classmethod
+    def approve_verification(cls, verification, admin_user=None, notes=None):
+        verification.calculate_profile_completion()
+        verification.admin_review_status = 'approved'
+        verification.admin_reviewed_at = timezone.now()
+        verification.admin_reviewed_by = admin_user
+        if notes:
+            verification.admin_review_notes = notes
+        verification.update_verification_status()
+        verification.save()
+        return verification
+
+    @classmethod
+    def reject_verification(cls, verification, admin_user=None, notes=None):
+        verification.admin_review_status = 'rejected'
+        verification.admin_reviewed_at = timezone.now()
+        verification.admin_reviewed_by = admin_user
+        if notes:
+            verification.admin_review_notes = notes
+        verification.update_verification_status()
+        verification.save()
+        return verification
+
+    @classmethod
+    def suspend_verification(cls, verification, admin_user=None, notes=None):
+        verification.admin_review_status = 'suspended'
+        verification.admin_reviewed_at = timezone.now()
+        verification.admin_reviewed_by = admin_user
+        if notes:
+            verification.admin_review_notes = notes
+        verification.update_verification_status()
+        verification.save()
+        return verification
+
 
 
 class AdminAnalyticsService:

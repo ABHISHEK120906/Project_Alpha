@@ -16,6 +16,10 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count, Sum, Q
 from decimal import Decimal
 
+from django.utils import timezone
+import re
+import uuid
+
 from core.models import UserProfile
 from .models import (
     ClientProfile,
@@ -24,6 +28,8 @@ from .models import (
     ProjectApplication,
     ProjectPaymentRecord,
     FreelancerReport,
+    FreelancerVerification,
+    is_freelancer_verified,
 )
 from .serializers import (
     FreelancerProfileSerializer,
@@ -33,6 +39,7 @@ from .serializers import (
     FreelancerPaymentSerializer,
     FreelancerReportSerializer,
 )
+
 
 
 def _get_freelancer_profile(request):
@@ -219,7 +226,23 @@ def api_freelancer_apply(request, pk):
     if err:
         return err
 
+    # Gating: Check Freelancer Verification
+    if not is_freelancer_verified(request.user):
+        ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=fp)
+        ver.update_verification_status()
+        return Response(
+            {
+                'error': 'You must complete Freelancer verification before applying to projects.',
+                'verification_required': True,
+                'verification_status': ver.final_verification_status,
+                'verification_summary': ver.get_safe_summary(),
+                'verification_center_url': '/freelancer/verification/'
+            },
+            status=status.HTTP_403_FORBIDDEN
+        )
+
     project = get_object_or_404(MarketplaceProject, pk=pk)
+
 
     if project.status not in ('open', 'applications_received'):
         return Response(
@@ -439,3 +462,146 @@ def api_freelancer_reports(request):
         serializer.save(freelancer=fp)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ---------------------------------------------------------------------------
+# Verification APIs
+# ---------------------------------------------------------------------------
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def api_freelancer_verification_status(request):
+    """GET current freelancer verification status, checklist, profile completion, and masked data."""
+    fp, err = _get_freelancer_profile(request)
+    if err:
+        return err
+
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=fp)
+    score, missing = ver.calculate_profile_completion()
+    ver.update_verification_status()
+    ver.save()
+
+    return Response({
+        'is_verified': ver.is_fully_verified,
+        'final_verification_status': ver.final_verification_status,
+        'final_status_display': ver.get_final_verification_status_display(),
+        'email_verified': ver.email_verified,
+        'phone_verified': ver.phone_verified,
+        'phone_number_masked': f"+XX XXXXXX{ver.phone_number[-4:]}" if ver.phone_number and len(ver.phone_number) >= 4 else None,
+        'identity_status': ver.identity_status,
+        'identity_type': ver.identity_type,
+        'pan_status': ver.pan_status,
+        'pan_masked': ver.pan_masked,
+        'payment_status': ver.payment_status,
+        'payment_account_type': ver.payment_account_type,
+        'profile_completion_percentage': score,
+        'profile_status': ver.profile_status,
+        'missing_profile_fields': missing,
+        'admin_review_status': ver.admin_review_status,
+        'admin_review_notes': ver.admin_review_notes,
+        'verified_at': ver.verified_at,
+        'safe_summary': ver.get_safe_summary(),
+    })
+
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def api_freelancer_verify_step(request):
+    """
+    POST to verify a specific step:
+      step: 'email' | 'phone' | 'identity' | 'pan' | 'payment' | 'submit_review'
+    """
+    fp, err = _get_freelancer_profile(request)
+    if err:
+        return err
+
+    ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=fp)
+    step = request.data.get('step', '').lower()
+
+    if step == 'email':
+        otp = request.data.get('otp', '').strip()
+        if not otp.isdigit() or len(otp) != 6:
+            return Response({'error': 'Valid 6-digit numeric OTP required.'}, status=status.HTTP_400_BAD_REQUEST)
+        ver.email_verified = True
+        ver.email_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        return Response({'message': 'Email verified successfully.', 'status': ver.final_verification_status})
+
+    elif step == 'phone':
+        phone = request.data.get('phone_number', '').strip()
+        otp = request.data.get('otp', '').strip()
+        digits = re.sub(r'\D', '', phone)
+        if len(digits) < 10 or not otp.isdigit() or len(otp) != 6:
+            return Response({'error': 'Valid 10+ digit phone and 6-digit OTP required.'}, status=status.HTTP_400_BAD_REQUEST)
+        ver.phone_verified = True
+        ver.phone_number = phone
+        ver.phone_verified_at = timezone.now()
+        if not fp.phone:
+            fp.phone = phone
+            fp.save(update_fields=['phone'])
+        ver.update_verification_status()
+        ver.save()
+        return Response({'message': 'Phone number verified successfully.', 'status': ver.final_verification_status})
+
+    elif step == 'identity':
+        id_type = request.data.get('identity_type', '').strip()
+        legal_name = request.data.get('legal_name', '').strip()
+        id_number = request.data.get('id_number', '').strip()
+        if not id_type or not legal_name or len(id_number) < 4:
+            return Response({'error': 'Document type, legal name, and ID number required.'}, status=status.HTTP_400_BAD_REQUEST)
+        ver.identity_type = id_type
+        ver.identity_holder_name = legal_name
+        ver.identity_reference_id = f"ID-SEC-{uuid.uuid4().hex[:8].upper()}"
+        ver.identity_status = 'verified'
+        ver.identity_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        return Response({'message': 'Identity verification completed.', 'status': ver.final_verification_status})
+
+    elif step == 'pan':
+        pan = request.data.get('pan_number', '').strip().upper()
+        pan_regex = r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$'
+        if not re.match(pan_regex, pan):
+            return Response({'error': 'Invalid 10-char PAN format (e.g. ABCDE1234F).'}, status=status.HTTP_400_BAD_REQUEST)
+        ver.pan_masked = f"XXXXXX{pan[-4:]}"
+        ver.pan_status = 'verified'
+        ver.pan_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        return Response({'message': 'PAN verified successfully.', 'pan_masked': ver.pan_masked, 'status': ver.final_verification_status})
+
+    elif step == 'payment':
+        provider = request.data.get('provider', 'Razorpay Route Verified').strip()
+        holder = request.data.get('account_holder_name', '').strip()
+        if not holder:
+            return Response({'error': 'Account holder name required.'}, status=status.HTTP_400_BAD_REQUEST)
+        ver.payment_account_type = provider
+        ver.payment_account_reference = f"acc_rzp_mock_{uuid.uuid4().hex[:6]}"
+        ver.payment_status = 'verified'
+        ver.payment_verified_at = timezone.now()
+        ver.update_verification_status()
+        ver.save()
+        return Response({'message': 'Payment account onboarding verified.', 'status': ver.final_verification_status})
+
+    elif step == 'submit_review':
+        ver.update_verification_status()
+        if (
+            ver.email_verified and
+            ver.phone_verified and
+            ver.identity_status == 'verified' and
+            ver.pan_status == 'verified' and
+            ver.payment_status == 'verified' and
+            ver.profile_status == 'complete'
+        ):
+            ver.admin_review_status = 'pending'
+            ver.final_verification_status = 'pending_admin_review'
+            ver.save()
+            return Response({'message': 'Submitted for admin review.', 'status': ver.final_verification_status})
+        else:
+            return Response({'error': 'Incomplete verification prerequisites.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({'error': f"Unknown verification step '{step}'."}, status=status.HTTP_400_BAD_REQUEST)
+

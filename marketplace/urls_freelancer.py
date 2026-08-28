@@ -17,6 +17,16 @@ urlpatterns = [
     path('profile/', views_freelancer.freelancer_profile_view, name='profile_view'),
     path('profile/edit/', views_freelancer.freelancer_profile_edit, name='profile_edit'),
 
+    # ── Verification Center (Security & KYC) ────────────────
+    path('verification/', views_freelancer.freelancer_verification_center, name='verification_center'),
+    path('verification/email/', views_freelancer.freelancer_verify_email, name='verify_email'),
+    path('verification/phone/', views_freelancer.freelancer_verify_phone, name='verify_phone'),
+    path('verification/identity/', views_freelancer.freelancer_verify_identity, name='verify_identity'),
+    path('verification/pan/', views_freelancer.freelancer_verify_pan, name='verify_pan'),
+    path('verification/payment/', views_freelancer.freelancer_verify_payment, name='verify_payment'),
+    path('verification/submit/', views_freelancer.freelancer_submit_for_admin_review, name='verify_submit_admin'),
+    path('verification/simulate-approve/', views_freelancer.freelancer_simulate_admin_approval, name='verify_simulate_approve'),
+
     # ── Find & Browse Projects ──────────────────────────────
     path('find-projects/', views_freelancer.freelancer_find_projects, name='find_projects'),
     path('projects/', views_freelancer.freelancer_find_projects, name='projects_list'),
@@ -42,6 +52,8 @@ urlpatterns = [
     # ── REST API v1 (Freelancer) ────────────────────────────
     path('api/v1/dashboard/stats/', api_views_freelancer.api_freelancer_dashboard_stats, name='api_dashboard_stats'),
     path('api/v1/profile/', api_views_freelancer.api_freelancer_profile, name='api_profile'),
+    path('api/v1/verification/status/', api_views_freelancer.api_freelancer_verification_status, name='api_verification_status'),
+    path('api/v1/verification/verify-step/', api_views_freelancer.api_freelancer_verify_step, name='api_verification_verify_step'),
     path('api/v1/projects/', api_views_freelancer.api_freelancer_find_projects, name='api_find_projects'),
     path('api/v1/projects/<uuid:pk>/', api_views_freelancer.api_freelancer_project_detail, name='api_project_detail'),
     path('api/v1/projects/<uuid:pk>/apply/', api_views_freelancer.api_freelancer_apply, name='api_apply'),
@@ -53,3 +65,4 @@ urlpatterns = [
     path('api/v1/payments/', api_views_freelancer.api_freelancer_payments, name='api_payments'),
     path('api/v1/reports/', api_views_freelancer.api_freelancer_reports, name='api_reports'),
 ]
+

@@ -592,7 +592,11 @@
           <span>Support & Reports</span>
         </a>
 
-        <div class="nav-label" style="margin-top: 14px;">Account</div>
+        <div class="nav-label" style="margin-top: 14px;">Trust & Account</div>
+        <a href="{% url 'freelancer:verification_center' %}" class="nav-item {% if 'verification' in request.path %}active{% endif %}">
+          <i class="bi bi-patch-check-fill"></i>
+          <span>Verification Center</span>
+        </a>
         <a href="{% url 'freelancer:profile_view' %}" class="nav-item {% if 'profile' in request.path %}active{% endif %}">
           <i class="bi bi-person-circle"></i>
           <span>My Profile</span>
@@ -602,6 +606,7 @@
           <span>Logout</span>
         </a>
       </nav>
+
 
       <div class="sidebar-footer">
         <div class="user-snippet">

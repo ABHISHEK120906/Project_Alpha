@@ -26,7 +26,56 @@
     </div>
   </div>
 
+  <!-- Freelancer Verification Card -->
+  <div style="background: var(--bg-surface); border: 1px solid {% if is_verified %}rgba(16,185,129,0.35){% elif verification.final_verification_status == 'pending_admin_review' %}rgba(245,158,11,0.35){% else %}rgba(244,63,94,0.3){% endif %}; border-radius: var(--radius); padding: 20px 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; {% if is_verified %}background: rgba(16,185,129,0.15); color: var(--green);{% elif verification.final_verification_status == 'pending_admin_review' %}background: rgba(245,158,11,0.15); color: var(--yellow);{% else %}background: rgba(244,63,94,0.15); color: var(--red);{% endif %}">
+          <i class="bi {% if is_verified %}bi-patch-check-fill{% elif verification.final_verification_status == 'pending_admin_review' %}bi-hourglass-split{% else %}bi-shield-exclamation{% endif %}"></i>
+        </div>
+        <div>
+          <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">
+            Freelancer Security & KYC Verification
+          </div>
+          <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
+            Status: 
+            {% if is_verified %}
+              <span style="color: var(--green);">✓ VERIFIED FREELANCER</span>
+            {% elif verification.final_verification_status == 'pending_admin_review' %}
+              <span style="color: var(--yellow);">⏳ PENDING ADMIN REVIEW</span>
+            {% else %}
+              <span style="color: var(--red);">⚠ VERIFICATION INCOMPLETE</span>
+            {% endif %}
+          </div>
+          <div style="font-size: 12.5px; color: var(--text-secondary); margin-top: 4px;">
+            Verification: <strong style="color: var(--accent);">{{ verification.get_completed_steps_count }}/7 Completed</strong>
+            &nbsp;&bull;&nbsp;
+            Email {% if verification.email_verified %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
+            Phone {% if verification.phone_verified %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
+            Identity {% if verification.identity_status == 'verified' %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
+            PAN {% if verification.pan_status == 'verified' %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
+            Payment {% if verification.payment_status == 'verified' %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
+            Profile {% if verification.profile_status == 'complete' %}✓{% else %}✕{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        {% if is_verified %}
+          <a href="{% url 'freelancer:verification_center' %}" class="btn btn-secondary btn-sm">
+            <i class="bi bi-shield-check"></i> Verification Center
+          </a>
+        {% else %}
+          <a href="{% url 'freelancer:verification_center' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-arrow-right-circle"></i> Complete Verification
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
   <!-- Metric Stat Cards Grid -->
+
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px;">
     <!-- Available Projects -->
     <div class="stat-card">

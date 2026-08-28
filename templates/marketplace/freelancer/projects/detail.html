@@ -52,15 +52,27 @@
             <a href="{% url 'freelancer:my_applications' %}" style="display: inline-block; font-size: 12px; margin-top: 6px;">View Application</a>
           </div>
         {% elif can_apply %}
-          <a href="{% url 'freelancer:project_apply' pk=project.pk %}" class="btn btn-primary" style="padding: 12px 24px; font-size: 15px;">
-            <i class="bi bi-send-fill"></i> Apply to this Project
-          </a>
+          {% if is_verified %}
+            <a href="{% url 'freelancer:project_apply' pk=project.pk %}" class="btn btn-primary" style="padding: 12px 24px; font-size: 15px;">
+              <i class="bi bi-send-fill"></i> Apply to this Project
+            </a>
+          {% else %}
+            <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+              <a href="{% url 'freelancer:verification_center' %}" class="btn btn-primary" style="padding: 10px 20px; font-size: 14px;">
+                <i class="bi bi-shield-lock-fill"></i> Complete Verification to Apply
+              </a>
+              <span style="font-size: 11.5px; color: var(--yellow);">
+                <i class="bi bi-exclamation-triangle-fill"></i> Verification required
+              </span>
+            </div>
+          {% endif %}
         {% else %}
           <div style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 16px; color: var(--text-muted); font-size: 13px;">
             <i class="bi bi-lock-fill"></i> Not accepting new applications
           </div>
         {% endif %}
       </div>
+
     </div>
 
     <!-- Key Metrics Grid -->

@@ -29,6 +29,8 @@ urlpatterns = [
     path('projects/<uuid:pk>/applications/', views.project_applications, name='project_applications'),
     path('applications/<uuid:app_pk>/accept/', views.application_accept, name='application_accept'),
     path('applications/<uuid:app_pk>/reject/', views.application_reject, name='application_reject'),
+    path('freelancers/<int:freelancer_id>/verification-summary/', views.client_freelancer_verification_safe_api, name='client_freelancer_verification_safe_api'),
+
 
     # ── Active Project Workspace ───────────────────────────
     path('projects/<uuid:pk>/workspace/', views.project_workspace, name='project_workspace'),

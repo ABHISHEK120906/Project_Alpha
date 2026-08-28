@@ -656,3 +656,219 @@ class FreelancerReportForm(forms.ModelForm):
             ).distinct()
         self.fields['reported_client'].queryset = ClientProfile.objects.all()
 
+
+# ---------------------------------------------------------------------------
+# Freelancer Verification Forms
+# ---------------------------------------------------------------------------
+
+class FreelancerEmailVerifyForm(forms.Form):
+    """Form to verify freelancer email with OTP or confirmation code."""
+    otp_code = forms.CharField(
+        label='6-Digit Verification Code',
+        max_length=6,
+        min_length=6,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter 6-digit OTP (e.g. 123456)',
+            'maxlength': '6',
+            'autocomplete': 'one-time-code',
+            'id': 'verify-email-otp',
+        }),
+        help_text='A 6-digit verification code has been generated for your registered email.',
+    )
+
+    def clean_otp_code(self):
+        otp = self.cleaned_data.get('otp_code', '').strip()
+        if not otp.isdigit() or len(otp) != 6:
+            raise forms.ValidationError("Please enter a valid 6-digit numerical OTP code.")
+        return otp
+
+
+class FreelancerPhoneVerifyForm(forms.Form):
+    """Form to verify freelancer mobile number with OTP."""
+    phone_number = forms.CharField(
+        label='Mobile Phone Number',
+        max_length=20,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '+91 98765 43210',
+            'autocomplete': 'tel',
+            'id': 'verify-phone-input',
+        }),
+    )
+    otp_code = forms.CharField(
+        label='SMS Verification Code',
+        max_length=6,
+        min_length=6,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter 6-digit SMS OTP (e.g. 654321)',
+            'maxlength': '6',
+            'autocomplete': 'one-time-code',
+            'id': 'verify-phone-otp',
+        }),
+    )
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data.get('phone_number', '').strip()
+        digits = re.sub(r'\D', '', phone)
+        if len(digits) < 10:
+            raise forms.ValidationError("Please enter a valid phone number with at least 10 digits.")
+        return phone
+
+    def clean_otp_code(self):
+        otp = self.cleaned_data.get('otp_code', '').strip()
+        if not otp.isdigit() or len(otp) != 6:
+            raise forms.ValidationError("Please enter a valid 6-digit numerical OTP code.")
+        return otp
+
+
+class FreelancerIdentityVerifyForm(forms.Form):
+    """Form for submitting identity verification details."""
+    IDENTITY_TYPES = [
+        ('Aadhaar / National ID', 'Aadhaar / National ID Card'),
+        ('Passport', 'Passport'),
+        ('Voter ID', 'Voter Identity Card'),
+        ("Driver's License", "Driver's License"),
+    ]
+
+    identity_type = forms.ChoiceField(
+        choices=IDENTITY_TYPES,
+        label='Government ID Document Type',
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'id': 'verify-id-type',
+        }),
+    )
+    legal_name = forms.CharField(
+        label='Full Legal Name (as printed on ID)',
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'e.g. Abhishek Kumar Sharma',
+            'id': 'verify-id-name',
+        }),
+    )
+    id_number = forms.CharField(
+        label='Document Reference / ID Number',
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'e.g. 1234 5678 9012 or Passport Number',
+            'id': 'verify-id-number',
+        }),
+        help_text='Your document number is encrypted and processed securely. It is NEVER exposed to clients.',
+    )
+
+    def clean_legal_name(self):
+        name = self.cleaned_data.get('legal_name', '').strip()
+        if len(name) < 3:
+            raise forms.ValidationError("Please provide your full legal name as it appears on your ID.")
+        return name
+
+    def clean_id_number(self):
+        val = self.cleaned_data.get('id_number', '').strip()
+        if len(val) < 4:
+            raise forms.ValidationError("Please enter a valid document identification number.")
+        return val
+
+
+class FreelancerPANVerifyForm(forms.Form):
+    """Form for PAN verification with strict Indian PAN format validation."""
+    pan_number = forms.CharField(
+        label='Permanent Account Number (PAN)',
+        max_length=10,
+        min_length=10,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control text-uppercase',
+            'placeholder': 'ABCDE1234F',
+            'maxlength': '10',
+            'id': 'verify-pan-number',
+            'style': 'text-transform: uppercase; letter-spacing: 2px; font-family: monospace; font-weight: 700;',
+        }),
+        help_text='Enter 10-character alphanumeric PAN (e.g. ABCDE1234F). Only masked representation (XXXXXX1234) is retained.',
+    )
+
+    def clean_pan_number(self):
+        pan = self.cleaned_data.get('pan_number', '').strip().upper()
+        pan_regex = r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$'
+        if not re.match(pan_regex, pan):
+            raise forms.ValidationError(
+                "Invalid PAN format. Standard PAN format must be 5 uppercase letters, 4 digits, and 1 letter (e.g., ABCDE1234F)."
+            )
+        return pan
+
+
+class FreelancerPaymentVerifyForm(forms.Form):
+    """Form to simulate secure payment / payout onboarding KYC."""
+    PROVIDER_CHOICES = [
+        ('razorpay', 'Razorpay Linked Account (Verified Payouts)'),
+        ('upi', 'UPI KYC / Virtual Payment Address'),
+        ('bank_account', 'Direct Bank Account KYC (NEFT/IMPS)'),
+    ]
+
+    account_provider = forms.ChoiceField(
+        choices=PROVIDER_CHOICES,
+        label='Payout / Payment Onboarding Method',
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'id': 'verify-payment-provider',
+        }),
+    )
+    account_holder_name = forms.CharField(
+        label='Bank / Account Holder Name',
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Name matching your bank account',
+            'id': 'verify-payment-holder',
+        }),
+    )
+    account_identifier = forms.CharField(
+        label='Account Number / UPI ID / Razorpay ID',
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'e.g. yourname@okhdfcbank or Bank Account No',
+            'id': 'verify-payment-identifier',
+        }),
+        help_text='Payment details are securely masked for KYC verification signals only.',
+    )
+
+    def clean_account_holder_name(self):
+        name = self.cleaned_data.get('account_holder_name', '').strip()
+        if len(name) < 2:
+            raise forms.ValidationError("Please provide the account holder name.")
+        return name
+
+    def clean_account_identifier(self):
+        val = self.cleaned_data.get('account_identifier', '').strip()
+        if len(val) < 4:
+            raise forms.ValidationError("Please provide a valid account or UPI identifier.")
+        return val
+
+
+class AdminVerificationReviewForm(forms.Form):
+    """Form for platform admin to review and approve/reject a freelancer verification."""
+    ACTION_CHOICES = [
+        ('approve', 'Approve Verification (Grant Verified Status)'),
+        ('reject', 'Reject Verification (Request Corrections)'),
+        ('suspend', 'Suspend Verification'),
+    ]
+
+    action = forms.ChoiceField(
+        choices=ACTION_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'admin-ver-action'}),
+    )
+    admin_notes = forms.CharField(
+        label='Administrative Notes / Reason',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Optional explanation or feedback for the freelancer...',
+            'id': 'admin-ver-notes',
+        }),
+    )
+
+

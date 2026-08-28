@@ -14,16 +14,18 @@ from django.contrib import messages
 from django.db.models import Count, Q, Sum
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse
-
 from core.models import UserProfile
 from .models import (
     ClientProfile,
+    FreelancerProfile,
     MarketplaceProject,
+
     ProjectApplication,
     ProjectPaymentRecord,
     ProjectReport,
+    FreelancerVerification,
 )
+
 from .forms import (
     ClientRegistrationForm,
     ClientProfileForm,
@@ -373,7 +375,7 @@ def project_reopen(request, pk, client_profile=None):
 
 @_require_client
 def project_applications(request, pk, client_profile=None):
-    """View all applications for a project."""
+    """View all applications for a project with client-safe verification badges and profiles."""
     project = get_object_or_404(MarketplaceProject, pk=pk, client=client_profile)
 
     status_filter = request.GET.get('status', '')
@@ -386,6 +388,50 @@ def project_applications(request, pk, client_profile=None):
 
     applications = applications.order_by('-created_at')
 
+    # Attach safe verification summaries and profile details for client review
+    for app in applications:
+        try:
+            fp = app.freelancer.freelancer_profile
+            app.freelancer_profile_obj = fp
+            ver = getattr(fp, 'verification', None)
+            if ver:
+                app.verification_summary = ver.get_safe_summary()
+            else:
+                app.verification_summary = {
+                    'is_verified': False,
+                    'badge_text': 'Not Verified',
+                    'status': 'not_verified',
+                    'status_display': 'Not Verified',
+                    'email_verified': False,
+                    'phone_verified': False,
+                    'identity_verified': False,
+                    'pan_verified': False,
+                    'payment_verified': False,
+                    'profile_verified': False,
+                    'admin_approved': False,
+                    'verified_at': None,
+                    'steps_completed': 0,
+                    'total_steps': 7,
+                }
+        except Exception:
+            app.freelancer_profile_obj = None
+            app.verification_summary = {
+                'is_verified': False,
+                'badge_text': 'Not Verified',
+                'status': 'not_verified',
+                'status_display': 'Not Verified',
+                'email_verified': False,
+                'phone_verified': False,
+                'identity_verified': False,
+                'pan_verified': False,
+                'payment_verified': False,
+                'profile_verified': False,
+                'admin_approved': False,
+                'verified_at': None,
+                'steps_completed': 0,
+                'total_steps': 7,
+            }
+
     context = {
         'client_profile': client_profile,
         'project': project,
@@ -394,6 +440,39 @@ def project_applications(request, pk, client_profile=None):
         'status_choices': ProjectApplication.STATUS_CHOICES,
     }
     return render(request, 'marketplace/projects/applications.html', context)
+
+
+@_require_client
+def client_freelancer_verification_safe_api(request, freelancer_id, client_profile=None):
+    """
+    Client-safe API returning verification status of a freelancer.
+    Guarantees that private KYC, full PAN, or financial credentials are never leaked.
+    """
+    freelancer_user = get_object_or_404(User, pk=freelancer_id)
+    try:
+        fp = freelancer_user.freelancer_profile
+        ver, _ = FreelancerVerification.objects.get_or_create(freelancer_profile=fp)
+        ver.update_verification_status()
+        summary = ver.get_safe_summary()
+    except Exception:
+        summary = {
+            'is_verified': False,
+            'badge_text': 'Not Verified',
+            'status': 'not_verified',
+            'status_display': 'Not Verified',
+            'email_verified': False,
+            'phone_verified': False,
+            'identity_verified': False,
+            'pan_verified': False,
+            'payment_verified': False,
+            'profile_verified': False,
+            'admin_approved': False,
+            'verified_at': None,
+            'steps_completed': 0,
+            'total_steps': 7,
+        }
+    return JsonResponse(summary)
+
 
 
 @_require_client
