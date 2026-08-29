@@ -1,217 +1,206 @@
 {% extends 'marketplace/base_freelancer.html' %}
+{% load static %}
 
-{% block title %}Find Projects{% endblock %}
-{% block page_title %}Find & Browse Projects{% endblock %}
+{% block title %}Browse Projects — Freelancer Portal{% endblock %}
+{% block page_title %}Browse Projects Catalog{% endblock %}
+{% block page_subtitle %}<p>Discover open marketplace opportunities matching your skills, hourly rates, and domain expertise.</p>{% endblock %}
+{% block nav_find_projects %}active{% endblock %}
 
 {% block content %}
-<div style="display: flex; flex-direction: column; gap: 24px;">
 
-  <!-- Search & Multi-Filter Control Panel -->
-  <div class="glass-card">
-    <form method="GET" action="{% url 'freelancer:find_projects' %}" style="display: flex; flex-direction: column; gap: 16px;">
+<!-- ══ SEARCH & MULTI-FILTER CONTROL PANEL ══════════════════ -->
+<div class="fl-card" style="margin-bottom: 24px;">
+  <form method="GET" action="{% url 'freelancer:find_projects' %}" style="display: flex; flex-direction: column; gap: 16px;">
 
-      <!-- Search Input & Submit Button -->
-      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 260px; position: relative;">
-          <i class="bi bi-search" style="position: absolute; left: 14px; top: 12px; color: var(--text-muted);"></i>
-          <input
-            type="text"
-            name="q"
-            value="{{ search_q }}"
-            placeholder="Search by keywords, skills, or job title (e.g. Python, React, AI, Mobile App)..."
-            class="form-control"
-            style="padding-left: 40px;"
-            id="find-projects-search-input"
-          />
-        </div>
-        <button type="submit" class="btn btn-primary" id="find-projects-search-btn">
-          <i class="bi bi-search"></i> Search
-        </button>
-        {% if search_q or category_filter or skill_filter or budget_min or budget_max or duration_filter %}
-          <a href="{% url 'freelancer:find_projects' %}" class="btn btn-secondary">
-            <i class="bi bi-x-circle"></i> Clear Filters
-          </a>
-        {% endif %}
+    <!-- Search Input & Trigger -->
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 260px; position: relative;">
+        <input
+          type="text"
+          name="q"
+          value="{{ search_q|default:'' }}"
+          placeholder="Search by keywords, skills, or project title (e.g. Django, React, BigQuery, Mobile)..."
+          class="client-input"
+          style="padding-left: 40px;"
+          id="find-projects-search-input"
+        />
+        <i data-lucide="search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--fl-text-muted);"></i>
       </div>
 
-      <!-- Filter Controls Row -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
-        <!-- Category Filter -->
-        <div>
-          <label class="form-label" style="font-size: 11.5px;">Category</label>
-          <select name="category" class="form-control" onchange="this.form.submit()" id="filter-category">
-            <option value="">All Categories</option>
-            {% for cat_val, cat_label in category_choices %}
-              <option value="{{ cat_val }}" {% if category_filter == cat_val %}selected{% endif %}>{{ cat_label }}</option>
-            {% endfor %}
-          </select>
-        </div>
+      <button type="submit" class="btn-fl-primary" id="find-projects-search-btn">
+        <i data-lucide="search"></i>
+        <span>Search</span>
+      </button>
 
-        <!-- Skill Filter -->
-        <div>
-          <label class="form-label" style="font-size: 11.5px;">Skill</label>
-          <input
-            type="text"
-            name="skill"
-            value="{{ skill_filter }}"
-            placeholder="e.g. Django, UI/UX"
-            class="form-control"
-            id="filter-skill"
-          />
-        </div>
-
-        <!-- Budget Range -->
-        <div>
-          <label class="form-label" style="font-size: 11.5px;">Min Budget (₹)</label>
-          <input
-            type="number"
-            name="budget_min"
-            value="{{ budget_min }}"
-            placeholder="Min ₹"
-            class="form-control"
-            id="filter-budget-min"
-          />
-        </div>
-
-        <div>
-          <label class="form-label" style="font-size: 11.5px;">Max Budget (₹)</label>
-          <input
-            type="number"
-            name="budget_max"
-            value="{{ budget_max }}"
-            placeholder="Max ₹"
-            class="form-control"
-            id="filter-budget-max"
-          />
-        </div>
-
-        <!-- Duration Filter -->
-        <div>
-          <label class="form-label" style="font-size: 11.5px;">Duration</label>
-          <select name="duration" class="form-control" onchange="this.form.submit()" id="filter-duration">
-            <option value="">Any Duration</option>
-            {% for dur_val, dur_label in duration_choices %}
-              <option value="{{ dur_val }}" {% if duration_filter == dur_val %}selected{% endif %}>{{ dur_label }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Sorting -->
-        <div>
-          <label class="form-label" style="font-size: 11.5px;">Sort By</label>
-          <select name="sort" class="form-control" onchange="this.form.submit()" id="filter-sort">
-            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest First</option>
-            <option value="budget_high" {% if sort_by == 'budget_high' %}selected{% endif %}>Highest Budget</option>
-            <option value="budget_low" {% if sort_by == 'budget_low' %}selected{% endif %}>Lowest Budget</option>
-            <option value="deadline" {% if sort_by == 'deadline' %}selected{% endif %}>Deadline Soonest</option>
-            <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest First</option>
-          </select>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <!-- Results Count Header -->
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <div style="font-size: 14px; color: var(--text-secondary);">
-      Showing <strong style="color: var(--text-primary);">{{ total_found }}</strong> open project{{ total_found|pluralize }}
+      {% if search_q or category_filter or skill_filter or budget_min or budget_max or duration_filter %}
+        <a href="{% url 'freelancer:find_projects' %}" class="btn-fl-secondary">
+          <i data-lucide="x"></i>
+          <span>Clear Filters</span>
+        </a>
+      {% endif %}
     </div>
-  </div>
 
-  <!-- Projects Grid -->
-  {% if projects %}
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
-    {% for proj in projects %}
-    <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; padding: 22px; position: relative;">
-
-      <!-- Card Top: Tags & Category -->
+    <!-- Filters Row -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
+      
+      <!-- Category Filter -->
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <span class="badge badge-open"><i class="bi bi-dot"></i> Open</span>
-          <span style="font-size: 11.5px; color: var(--text-muted);">
-            <i class="bi bi-clock"></i> {{ proj.created_at|timesince }} ago
-          </span>
-        </div>
-
-        <!-- Title -->
-        <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; line-height: 1.4; margin-bottom: 8px;">
-          <a href="{% url 'freelancer:project_detail' pk=proj.pk %}" style="color: var(--text-primary);">
-            {{ proj.title }}
-          </a>
-        </h3>
-
-        <!-- Client & Location Context -->
-        <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
-          <span><i class="bi bi-building"></i> {{ proj.client.company_name|default:proj.client.display_name }}</span>
-          {% if proj.client.location %}
-            <span>&bull;</span>
-            <span><i class="bi bi-geo-alt"></i> {{ proj.client.location }}</span>
-          {% endif %}
-        </div>
-
-        <!-- Description -->
-        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
-          {{ proj.description|truncatechars:120 }}
-        </p>
-
-        <!-- Required Skills Tags -->
-        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 18px;">
-          {% for skill in proj.skills_list|slice:":4" %}
-            <span class="skill-tag">{{ skill }}</span>
-          {% empty %}
-            <span style="font-size: 11.5px; color: var(--text-muted);">No specific skills listed</span>
+        <label class="client-label" style="font-size: 11.5px;">Category</label>
+        <select name="category" class="client-select" onchange="this.form.submit()" id="filter-category">
+          <option value="">All Categories</option>
+          {% for cat_val, cat_label in category_choices %}
+            <option value="{{ cat_val }}" {% if category_filter == cat_val %}selected{% endif %}>{{ cat_label }}</option>
           {% endfor %}
-        </div>
+        </select>
       </div>
 
-      <!-- Card Bottom: Budget, Duration, Actions -->
-      <div style="border-top: 1px solid var(--border); padding-top: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
-          <div>
-            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Budget</span>
-            <div style="font-size: 18px; font-weight: 800; color: var(--accent);">
-              ₹{{ proj.budget|default:'Negotiable' }}
-              <span style="font-size: 11px; font-weight: 500; color: var(--text-muted);">({{ proj.get_budget_type_display }})</span>
-            </div>
-          </div>
-          <div style="text-align: right;">
-            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Duration</span>
-            <div style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">
-              {{ proj.get_expected_duration_display|default:'Flexible' }}
-            </div>
-          </div>
-        </div>
+      <!-- Skill Filter -->
+      <div>
+        <label class="client-label" style="font-size: 11.5px;">Required Skill</label>
+        <input
+          type="text"
+          name="skill"
+          value="{{ skill_filter|default:'' }}"
+          placeholder="e.g. Python, Figma"
+          class="client-input"
+          id="filter-skill"
+        />
+      </div>
 
-        <div style="display: flex; gap: 8px;">
-          <a href="{% url 'freelancer:project_detail' pk=proj.pk %}" class="btn btn-secondary btn-sm" style="flex: 1;">
-            <i class="bi bi-eye"></i> View
-          </a>
+      <!-- Min Budget -->
+      <div>
+        <label class="client-label" style="font-size: 11.5px;">Min Budget (₹)</label>
+        <input
+          type="number"
+          name="budget_min"
+          value="{{ budget_min|default:'' }}"
+          placeholder="Min ₹"
+          class="client-input"
+          id="filter-budget-min"
+        />
+      </div>
 
-          {% if proj.id in applied_project_ids %}
-            <a href="{% url 'freelancer:my_applications' %}" class="btn btn-secondary btn-sm" style="flex: 1; border-color: rgba(245,158,11,0.4); color: var(--yellow);">
-              <i class="bi bi-check2-circle"></i> Applied
-            </a>
-          {% else %}
-            <a href="{% url 'freelancer:project_apply' pk=proj.pk %}" class="btn btn-primary btn-sm" style="flex: 1;">
-              <i class="bi bi-send-fill"></i> Apply Now
-            </a>
-          {% endif %}
-        </div>
+      <!-- Max Budget -->
+      <div>
+        <label class="client-label" style="font-size: 11.5px;">Max Budget (₹)</label>
+        <input
+          type="number"
+          name="budget_max"
+          value="{{ budget_max|default:'' }}"
+          placeholder="Max ₹"
+          class="client-input"
+          id="filter-budget-max"
+        />
+      </div>
+
+      <!-- Duration -->
+      <div>
+        <label class="client-label" style="font-size: 11.5px;">Expected Duration</label>
+        <select name="duration" class="client-select" onchange="this.form.submit()" id="filter-duration">
+          <option value="">Any Duration</option>
+          {% for dur_val, dur_label in duration_choices %}
+            <option value="{{ dur_val }}" {% if duration_filter == dur_val %}selected{% endif %}>{{ dur_label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Sort -->
+      <div>
+        <label class="client-label" style="font-size: 11.5px;">Sort By</label>
+        <select name="sort" class="client-select" onchange="this.form.submit()" id="filter-sort">
+          <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Newest First</option>
+          <option value="budget_desc" {% if sort == 'budget_desc' %}selected{% endif %}>Highest Budget</option>
+          <option value="budget_asc" {% if sort == 'budget_asc' %}selected{% endif %}>Lowest Budget</option>
+          <option value="deadline_asc" {% if sort == 'deadline_asc' %}selected{% endif %}>Deadline (Urgent)</option>
+        </select>
       </div>
 
     </div>
+
+  </form>
+</div>
+
+<!-- ══ PROJECT OPPORTUNITY CARDS ════════════════════════════ -->
+{% if projects %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for proj in projects %}
+      <div class="fl-card" style="margin-bottom: 0; transition: transform var(--ease-fast), border-color var(--ease-fast);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+          
+          <!-- Project Info -->
+          <div style="flex: 1; min-width: 280px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
+              <span class="fl-badge fl-badge-verified">
+                <i data-lucide="tag" style="width:12px; height:12px;"></i>
+                {{ proj.get_category_display }}
+              </span>
+
+              <span style="font-size: 12px; color: var(--fl-text-muted);">
+                Posted {{ proj.created_at|date:"d M Y" }}
+              </span>
+
+              <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.12); padding: 2px 7px; border-radius: var(--r-sm);">
+                <i data-lucide="shield-check" style="width:12px; height:12px;"></i> Client Verified
+              </span>
+            </div>
+
+            <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 8px;">
+              <a href="{% url 'freelancer:project_detail' pk=proj.pk %}" style="color: var(--fl-text-primary); text-decoration: none;">
+                {{ proj.title }}
+              </a>
+            </h3>
+
+            <p style="font-size: 13.5px; color: var(--fl-text-secondary); line-height: 1.55; margin-bottom: 14px;">
+              {{ proj.description|truncatewords:30 }}
+            </p>
+
+            <!-- Skills List -->
+            {% if proj.skills_list %}
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;">
+                {% for skill in proj.skills_list %}
+                  <span style="padding: 2px 8px; border-radius: var(--r-sm); background: var(--fl-bg-surface); border: 1px solid var(--fl-border); font-size: 11px; font-weight: 600;">{{ skill }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <!-- Meta Strip -->
+            <div style="display: flex; gap: 18px; font-size: 12.5px; color: var(--fl-text-muted); flex-wrap: wrap;">
+              <span><i data-lucide="wallet" style="color:var(--fl-yellow); width:14px; height:14px;"></i> Budget: <strong style="color:var(--fl-text-primary);">₹{{ proj.budget|floatformat:0|default:"TBD" }}</strong></span>
+              <span><i data-lucide="clock" style="width:14px; height:14px;"></i> Duration: <strong>{{ proj.get_expected_duration_display|default:"1 to 4 weeks" }}</strong></span>
+              {% if proj.deadline %}
+                <span><i data-lucide="calendar" style="width:14px; height:14px;"></i> Due: <strong>{{ proj.deadline|date:"d M Y" }}</strong></span>
+              {% endif %}
+              <span><i data-lucide="users" style="width:14px; height:14px;"></i> <strong>{{ proj.app_count|default:"0" }}</strong> proposal{{ proj.app_count|pluralize }}</span>
+            </div>
+          </div>
+
+          <!-- Action CTA -->
+          <div style="display: flex; flex-direction: column; gap: 8px; min-width: 140px;">
+            <a href="{% url 'freelancer:project_detail' pk=proj.pk %}" class="btn-fl-primary" style="justify-content: center; padding: 10px 18px; font-size: 13px;">
+              <i data-lucide="arrow-up-right"></i>
+              <span>View &amp; Apply</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
     {% endfor %}
   </div>
-  {% else %}
-  <div class="glass-card" style="text-align: center; padding: 60px 20px;">
-    <i class="bi bi-search" style="font-size: 48px; color: var(--text-muted); opacity: 0.4; display: block; margin-bottom: 16px;"></i>
-    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">No projects found</h3>
-    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
-      Try broadening your search query or removing active filters.
+{% else %}
+  <!-- Empty State -->
+  <div class="fl-card" style="text-align: center; padding: 60px 24px;">
+    <div style="width: 64px; height: 64px; border-radius: var(--r-lg); background: rgba(255, 94, 108, 0.12); color: var(--fl-coral); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+      <i data-lucide="search" style="width: 32px; height: 32px;"></i>
+    </div>
+    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">No matching projects found</h3>
+    <p style="font-size: 14px; color: var(--fl-text-muted); max-width: 420px; margin: 0 auto 20px auto;">
+      Try adjusting your search criteria, clearing specific skill filters, or broadening your budget range.
     </p>
-    <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary">Clear Filters</a>
+    <a href="{% url 'freelancer:find_projects' %}" class="btn-fl-secondary">
+      <i data-lucide="refresh-cw"></i>
+      <span>Reset Filters</span>
+    </a>
   </div>
-  {% endif %}
+{% endif %}
 
-</div>
 {% endblock %}

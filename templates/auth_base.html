@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Shared Landing CSS for Brand Consistency -->
   <link rel="stylesheet" href="{% static 'css/public_landing.css' %}">
@@ -35,7 +35,6 @@
   </script>
 
   <style>
-    /* ── Auth Shell Layout ──────────────────────────────────── */
     .auth-page-wrapper {
       min-height: 100vh;
       display: flex;
@@ -70,14 +69,13 @@
       max-width: 960px;
       background: var(--bg-card);
       border: 1px solid var(--border-card);
-      border-radius: var(--radius-xl, 24px);
+      border-radius: var(--r-xl);
       box-shadow: var(--shadow-lg);
       display: flex;
       overflow: hidden;
       min-height: 560px;
     }
 
-    /* Left Aesthetic Panel (Abstract Art / Trust - NO HUMANS) */
     .auth-side-art {
       flex: 1;
       background: linear-gradient(135deg, rgba(128, 118, 163, 0.12) 0%, rgba(18, 14, 31, 0.95) 100%);
@@ -90,108 +88,41 @@
       overflow: hidden;
     }
 
-    .auth-side-art::before {
-      content: '';
-      position: absolute;
-      width: 250px;
-      height: 250px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(155, 196, 0, 0.15), transparent 70%);
-      top: -50px;
-      left: -50px;
-      pointer-events: none;
-    }
-
-    .auth-side-art::after {
-      content: '';
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(128, 118, 163, 0.2), transparent 70%);
-      bottom: -60px;
-      right: -60px;
-      pointer-events: none;
-    }
-
     .auth-form-side {
-      width: 480px;
-      padding: 48px 40px;
+      flex: 1.15;
+      padding: 48px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       background: var(--bg-card);
     }
 
-    /* ── Smooth Role Switcher Tabs ────────────────────────── */
-    .auth-role-switcher {
-      display: flex;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-card);
-      border-radius: var(--radius-md, 14px);
-      padding: 4px;
+    .auth-form-header {
       margin-bottom: 28px;
-      position: relative;
     }
 
-    .auth-role-tab {
-      flex: 1;
-      text-align: center;
-      padding: 10px 14px;
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      border-radius: 10px;
-      text-decoration: none;
-      transition: all var(--ease-fast);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .auth-role-tab:hover {
-      color: var(--text-primary);
-    }
-
-    .auth-role-tab.active-client {
-      background: var(--role-client);
-      color: #ffffff !important;
-      box-shadow: 0 4px 14px rgba(125, 60, 255, 0.35);
-    }
-
-    .auth-role-tab.active-freelancer {
-      background: var(--role-freelancer);
-      color: #ffffff !important;
-      box-shadow: 0 4px 14px rgba(255, 94, 108, 0.35);
-    }
-
-    .auth-heading {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+    .auth-form-title {
       font-size: 24px;
       font-weight: 800;
-      color: var(--text-primary);
+      letter-spacing: -0.5px;
       margin-bottom: 6px;
     }
 
-    .auth-subheading {
+    .auth-form-sub {
       font-size: 13.5px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
+      color: var(--text-secondary);
     }
 
-    .auth-form-group {
+    .auth-input-group {
       margin-bottom: 18px;
     }
 
     .auth-label {
       display: block;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-secondary);
       margin-bottom: 6px;
+      color: var(--text-primary);
     }
 
     .auth-input {
@@ -199,110 +130,17 @@
       padding: 12px 16px;
       background: var(--bg-input);
       border: 1px solid var(--border-card);
-      border-radius: 10px;
+      border-radius: var(--r-md);
       color: var(--text-primary);
       font-family: inherit;
       font-size: 14px;
       outline: none;
-      transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+      transition: all var(--ease-fast);
     }
 
     .auth-input:focus {
       border-color: var(--brand-secondary);
-      box-shadow: 0 0 0 3px rgba(155, 196, 0, 0.18);
-    }
-
-    .auth-btn {
-      width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, var(--brand-secondary), #86aa00);
-      color: #0b0914 !important;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 18px rgba(155, 196, 0, 0.35);
-      transition: all var(--ease-fast);
-      margin-top: 10px;
-    }
-
-    .auth-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 24px rgba(155, 196, 0, 0.45);
-    }
-
-    .auth-divider {
-      text-align: center;
-      margin: 20px 0;
-      position: relative;
-      font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-    }
-
-    .auth-divider::before, .auth-divider::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 38%;
-      height: 1px;
-      background: var(--border-subtle);
-    }
-
-    .auth-divider::before { left: 0; }
-    .auth-divider::after { right: 0; }
-
-    .btn-create-account {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 11px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-card);
-      border-radius: 10px;
-      color: var(--text-secondary);
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all var(--ease-fast);
-    }
-
-    .btn-create-account:hover {
-      border-color: var(--brand-secondary);
-      color: var(--text-primary);
-      background: var(--bg-card-hover);
-    }
-
-    .auth-alert {
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-    }
-
-    .auth-alert-error {
-      background: rgba(200, 14, 19, 0.15);
-      border: 1px solid rgba(200, 14, 19, 0.35);
-      color: #ff6b6e;
-    }
-
-    .auth-alert-success {
-      background: rgba(155, 196, 0, 0.15);
-      border: 1px solid rgba(155, 196, 0, 0.35);
-      color: var(--brand-secondary);
+      box-shadow: 0 0 0 3px rgba(155, 196, 0, 0.2);
     }
 
     @media (max-width: 860px) {
@@ -322,20 +160,21 @@
   <header class="auth-minimal-nav">
     <a href="{% url 'core:home' %}" class="hub-brand">
       <div class="hub-brand-badge">
-        <i class="bi bi-intersect"></i>
+        <i data-lucide="layers"></i>
       </div>
-      <span>FreelanceHub</span>
+      <span class="hub-brand-name">FreelanceHub</span>
     </a>
 
     <div style="display: flex; align-items: center; gap: 12px;">
       <a href="{% url 'core:home' %}" class="btn-hub-ghost" style="font-size:13px; padding: 7px 14px;">
-        <i class="bi bi-arrow-left"></i> Home
+        <i data-lucide="arrow-left"></i>
+        <span>Home</span>
       </a>
 
       <!-- Theme Switcher -->
       <button class="hub-theme-toggle" id="authThemeToggle" title="Toggle Light / Dark Mode">
-        <i class="bi bi-sun-fill" id="authThemeSun"></i>
-        <i class="bi bi-moon-stars-fill" id="authThemeMoon" style="display:none;"></i>
+        <i data-lucide="sun" id="authThemeSun"></i>
+        <i data-lucide="moon" id="authThemeMoon" style="display:none;"></i>
       </button>
     </div>
   </header>
@@ -349,34 +188,35 @@
         <div>
           <span class="hub-hero-eyebrow" style="margin-bottom:16px;">
             <span class="pulse-dot"></span>
-            <span>One Marketplace · Two Portals</span>
+            <span>Structured Marketplace Portals</span>
           </span>
           <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:26px; font-weight:800; color:var(--text-primary); line-height:1.2; margin-bottom:12px;">
-            Projects meet the <span class="gradient-text">right talent.</span>
+            Where Projects<br>
+            <span class="gradient-text">Meet Talent.</span>
           </h2>
           <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.6;">
-            Access verified workflows, milestone escrow protection, and specialized workspaces built for Clients and Freelancers.
+            Dedicated workflows, milestone escrow protection, and specialized role-based workspaces built for Clients, Freelancers, and Administrators.
           </p>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:12px; margin: 32px 0;">
           <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-secondary);">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(125,60,255,0.2);color:#7d3cff;display:flex;align-items:center;justify-content:center;">
-              <i class="bi bi-building"></i>
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(125,60,255,0.2);color:#7d3cff;display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="briefcase"></i>
             </div>
             <span><strong>Client Portal:</strong> Project posting, proposal reviews, milestone escrow</span>
           </div>
 
           <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-secondary);">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,94,108,0.2);color:#ff5e6c;display:flex;align-items:center;justify-content:center;">
-              <i class="bi bi-person-badge"></i>
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,94,108,0.2);color:#ff5e6c;display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="code-2"></i>
             </div>
             <span><strong>Freelancer Portal:</strong> KYC verification, opportunity search, verified payouts</span>
           </div>
         </div>
 
         <div style="font-size:11.5px; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
-          <i class="bi bi-shield-lock-fill" style="color:var(--brand-secondary);"></i>
+          <i data-lucide="shield-check" style="color:var(--brand-secondary);"></i>
           <span>Multi-Tier Verified Security &amp; End-to-End Escrow Protection</span>
         </div>
       </div>
@@ -392,6 +232,14 @@
 </div>
 
 <script>
+  function refreshIcons() {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  }
+  document.addEventListener('DOMContentLoaded', refreshIcons);
+  refreshIcons();
+
   // Theme Manager
   const authThemeToggle = document.getElementById('authThemeToggle');
   const authSun = document.getElementById('authThemeSun');
@@ -400,13 +248,16 @@
   function setAuthTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('freelancehub_theme', theme);
-    if (theme === 'light') {
-      authSun.style.display = 'none';
-      authMoon.style.display = 'inline-block';
-    } else {
-      authSun.style.display = 'inline-block';
-      authMoon.style.display = 'none';
+    if (authSun && authMoon) {
+      if (theme === 'light') {
+        authSun.style.display = 'none';
+        authMoon.style.display = 'inline-block';
+      } else {
+        authSun.style.display = 'inline-block';
+        authMoon.style.display = 'none';
+      }
     }
+    refreshIcons();
   }
 
   const currentAuthTheme = document.documentElement.getAttribute('data-theme') || 'dark';

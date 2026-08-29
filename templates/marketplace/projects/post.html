@@ -1,121 +1,186 @@
 {% extends "marketplace/base_client.html" %}
+{% load static %}
 
-{% block title %}Post a Project{% endblock %}
-{% block page_title %}Post a Project{% endblock %}
-{% block page_subtitle %}<div class="page-subtitle">Describe your project to attract the right freelancers</div>{% endblock %}
+{% block title %}Post a Project — Client Workspace{% endblock %}
+{% block page_title %}Post a New Project{% endblock %}
+{% block page_subtitle %}<p>Complete the sections below to specify your requirements, budget, and timeline.</p>{% endblock %}
 {% block nav_post %}active{% endblock %}
 
-{% block topbar_actions %}
-  <a href="{% url 'marketplace:project_list' %}" class="btn btn-secondary btn-sm">
-    <i class="bi bi-arrow-left"></i> My Projects
-  </a>
-{% endblock %}
-
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-{% csrf_token %}
 
-<div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
-
-  <!-- Main form -->
-  <div style="display:flex;flex-direction:column;gap:20px;">
-
-    <div class="card">
-      <div class="card-title" style="margin-bottom:20px;">Project Details</div>
-
-      <div class="form-group">
-        <label class="form-label" for="{{ form.title.id_for_label }}">Project Title <span style="color:var(--red)">*</span></label>
-        {{ form.title }}
-        <div class="form-hint">A clear, concise title helps freelancers understand the work</div>
-        {% if form.title.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.title.errors|first }}</div>{% endif %}
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="{{ form.description.id_for_label }}">Project Description <span style="color:var(--red)">*</span></label>
-        {{ form.description }}
-        <div class="form-hint">Describe your goals, requirements, and expected deliverables in detail</div>
-        {% if form.description.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.description.errors|first }}</div>{% endif %}
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="form-group">
-          <label class="form-label" for="{{ form.category.id_for_label }}">Category <span style="color:var(--red)">*</span></label>
-          {{ form.category }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="{{ form.experience_level.id_for_label }}">Experience Level</label>
-          {{ form.experience_level }}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="{{ form.required_skills.id_for_label }}">Required Skills</label>
-        {{ form.required_skills }}
-        <div class="form-hint">Comma-separated — e.g. HTML, CSS, Django, React</div>
-      </div>
+<!-- ══ MULTI-SECTION STEPPER INDICATOR ══════════════════════ -->
+<div class="client-form-stepper">
+  <div class="client-step-item active" id="stepIndicator1">
+    <div class="client-step-num">01</div>
+    <div class="client-step-info">
+      <h6>Project Info</h6>
+      <span>Title &amp; Category</span>
     </div>
-
-    <div class="card">
-      <div class="card-title" style="margin-bottom:20px;">Attachments</div>
-      <div class="form-group">
-        <label class="form-label" for="{{ form.attachment.id_for_label }}">Upload File (optional)</label>
-        {{ form.attachment }}
-        <div class="form-hint">Wireframes, design references, or specifications (PDF, ZIP, images — max 10MB)</div>
-      </div>
-    </div>
-
   </div>
 
-  <!-- Sidebar -->
-  <div style="display:flex;flex-direction:column;gap:20px;">
+  <div class="client-step-item" id="stepIndicator2">
+    <div class="client-step-num">02</div>
+    <div class="client-step-info">
+      <h6>Requirements</h6>
+      <span>Skills &amp; Scope</span>
+    </div>
+  </div>
 
-    <div class="card">
-      <div class="card-title" style="margin-bottom:20px;">Budget & Timeline</div>
+  <div class="client-step-item" id="stepIndicator3">
+    <div class="client-step-num">03</div>
+    <div class="client-step-info">
+      <h6>Budget &amp; Timeline</h6>
+      <span>Rates &amp; Deadline</span>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <label class="form-label" for="{{ form.budget_type.id_for_label }}">Budget Type</label>
+  <div class="client-step-item" id="stepIndicator4">
+    <div class="client-step-num">04</div>
+    <div class="client-step-info">
+      <h6>Summary Preview</h6>
+      <span>Review &amp; Publish</span>
+    </div>
+  </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" id="postProjectForm">
+  {% csrf_token %}
+
+  <!-- ══ SECTION 1: PROJECT INFORMATION ══════════════════════ -->
+  <div class="client-form-section" id="formSection1">
+    <div class="client-form-section-title">
+      <i data-lucide="info"></i>
+      <span>Section 1 — Project Information</span>
+    </div>
+    <div class="client-form-section-desc">
+      Define your core project scope, primary title, and target industry category.
+    </div>
+
+    <div class="client-input-group">
+      <label class="client-label" for="{{ form.title.id_for_label }}">Project Title <span style="color:var(--client-red);">*</span></label>
+      {{ form.title }}
+      <div style="font-size:12px; color:var(--client-text-muted); margin-top:4px;">Give a descriptive, clear title that immediately conveys the deliverable.</div>
+      {% if form.title.errors %}<div style="color:var(--client-red); font-size:12px; margin-top:4px;">{{ form.title.errors|first }}</div>{% endif %}
+    </div>
+
+    <div class="client-input-group">
+      <label class="client-label" for="{{ form.description.id_for_label }}">Project Description <span style="color:var(--client-red);">*</span></label>
+      {{ form.description }}
+      <div style="font-size:12px; color:var(--client-text-muted); margin-top:4px;">Detail your requirements, project goals, tech stack preferences, and milestones.</div>
+      {% if form.description.errors %}<div style="color:var(--client-red); font-size:12px; margin-top:4px;">{{ form.description.errors|first }}</div>{% endif %}
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="client-input-group">
+        <label class="client-label" for="{{ form.category.id_for_label }}">Category <span style="color:var(--client-red);">*</span></label>
+        {{ form.category }}
+      </div>
+      <div class="client-input-group">
+        <label class="client-label" for="{{ form.experience_level.id_for_label }}">Experience Level</label>
+        {{ form.experience_level }}
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 2: REQUIREMENTS ═════════════════════════════ -->
+  <div class="client-form-section" id="formSection2">
+    <div class="client-form-section-title">
+      <i data-lucide="code-2"></i>
+      <span>Section 2 — Technical Requirements &amp; Attachments</span>
+    </div>
+    <div class="client-form-section-desc">
+      Specify target skillsets and optional specifications or design wireframes.
+    </div>
+
+    <div class="client-input-group">
+      <label class="client-label" for="{{ form.required_skills.id_for_label }}">Required Skills</label>
+      {{ form.required_skills }}
+      <div style="font-size:12px; color:var(--client-text-muted); margin-top:4px;">Comma-separated keywords — e.g. React, Django, PostgreSQL, Figma, BigQuery</div>
+    </div>
+
+    <div class="client-input-group">
+      <label class="client-label" for="{{ form.attachment.id_for_label }}">Project Brief / Specifications (Optional)</label>
+      {{ form.attachment }}
+      <div style="font-size:12px; color:var(--client-text-muted); margin-top:4px;">Upload wireframes, architecture diagrams, or PRD document (PDF, PNG, ZIP — max 10MB).</div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 3: BUDGET & TIMELINE ════════════════════════ -->
+  <div class="client-form-section" id="formSection3">
+    <div class="client-form-section-title">
+      <i data-lucide="credit-card"></i>
+      <span>Section 3 — Budget &amp; Timeline</span>
+    </div>
+    <div class="client-form-section-desc">
+      Establish financial milestones and delivery deadlines for the project.
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="client-input-group">
+        <label class="client-label" for="{{ form.budget_type.id_for_label }}">Budget Type</label>
         {{ form.budget_type }}
       </div>
-
-      <div class="form-group">
-        <label class="form-label" for="{{ form.budget.id_for_label }}">Budget (₹) <span style="color:var(--red)">*</span></label>
+      <div class="client-input-group">
+        <label class="client-label" for="{{ form.budget.id_for_label }}">Total Budget (₹) <span style="color:var(--client-red);">*</span></label>
         {{ form.budget }}
-        <div class="form-hint">Total budget in Indian Rupees</div>
-        {% if form.budget.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.budget.errors|first }}</div>{% endif %}
+        {% if form.budget.errors %}<div style="color:var(--client-red); font-size:12px; margin-top:4px;">{{ form.budget.errors|first }}</div>{% endif %}
       </div>
+    </div>
 
-      <div class="form-group">
-        <label class="form-label" for="{{ form.expected_duration.id_for_label }}">Expected Duration</label>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="client-input-group">
+        <label class="client-label" for="{{ form.expected_duration.id_for_label }}">Expected Duration</label>
         {{ form.expected_duration }}
       </div>
-
-      <div class="form-group">
-        <label class="form-label" for="{{ form.deadline.id_for_label }}">Deadline</label>
+      <div class="client-input-group">
+        <label class="client-label" for="{{ form.deadline.id_for_label }}">Delivery Deadline</label>
         {{ form.deadline }}
       </div>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="card-title" style="margin-bottom:16px;">Visibility</div>
-      <div class="form-group">
-        <label class="form-label" for="{{ form.status.id_for_label }}">Project Status</label>
-        {{ form.status }}
-        <div class="form-hint">
-          <strong>Open</strong> — visible & accepting applications<br>
-          <strong>Draft</strong> — saved but not yet published
-        </div>
-      </div>
+  <!-- ══ SECTION 4: PREVIEW & PUBLISH STATUS ═════════════════ -->
+  <div class="client-form-section" id="formSection4">
+    <div class="client-form-section-title">
+      <i data-lucide="eye"></i>
+      <span>Section 4 — Preview &amp; Publishing Status</span>
+    </div>
+    <div class="client-form-section-desc">
+      Configure visibility and review publishing options.
     </div>
 
-    <button type="submit" class="btn btn-primary btn-lg btn-block">
-      <i class="bi bi-send"></i> Post Project
-    </button>
-
-    <div style="font-size:0.75rem;color:var(--text-muted);text-align:center;">
-      By posting you agree to our <a href="#">Terms of Service</a>.
+    <div class="client-input-group">
+      <label class="client-label" for="{{ form.status.id_for_label }}">Publication Status</label>
+      {{ form.status }}
+      <div style="font-size:12px; color:var(--client-text-muted); margin-top:4px;">
+        <strong>Open:</strong> Project is live immediately and accepts applications.<br>
+        <strong>Draft:</strong> Project is saved privately in your workspace.
+      </div>
     </div>
   </div>
 
-</div>
+  <!-- ══ BOTTOM ACTIONS BAR ═════════════════════════════════ -->
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; background:var(--client-bg-card); border:1px solid var(--client-border); border-radius:var(--r-lg); padding:20px 24px; margin-top:24px;">
+    
+    <a href="{% url 'marketplace:project_list' %}" class="btn-client-secondary">
+      <i data-lucide="x"></i>
+      <span>Cancel</span>
+    </a>
+
+    <div style="display:flex; gap:12px;">
+      <button type="submit" name="status_override" value="draft" class="btn-client-secondary">
+        <i data-lucide="save"></i>
+        <span>Save Draft</span>
+      </button>
+
+      <button type="submit" class="btn-client-primary">
+        <i data-lucide="send"></i>
+        <span>Publish Project</span>
+      </button>
+    </div>
+
+  </div>
+
 </form>
+
 {% endblock %}

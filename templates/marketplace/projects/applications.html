@@ -1,295 +1,151 @@
 {% extends "marketplace/base_client.html" %}
+{% load static %}
 
-{% block title %}Applications — {{ project.title }}{% endblock %}
-{% block page_title %}Applications{% endblock %}
-{% block page_subtitle %}<div class="page-subtitle">{{ project.title|truncatechars:50 }}</div>{% endblock %}
+{% block title %}Applications for {{ project.title }} — Client Workspace{% endblock %}
+{% block page_title %}Candidate Applications{% endblock %}
+{% block page_subtitle %}<p>Review proposals, check verified qualifications, and select the freelancer for <strong>{{ project.title }}</strong></p>{% endblock %}
 {% block nav_projects %}active{% endblock %}
-
-{% block topbar_actions %}
-  <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn btn-secondary btn-sm">
-    <i class="bi bi-arrow-left"></i> Project Details
-  </a>
-{% endblock %}
 
 {% block content %}
 
-<!-- Project Summary Banner -->
-<div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-    <div>
-      <div style="font-size:1.05rem;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;">{{ project.title }}</div>
-      <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">
-        <span class="badge badge-{{ project.status }}">{{ project.get_status_display }}</span>
-        &nbsp;·&nbsp;
-        {% if project.budget %}₹{{ project.budget|floatformat:0 }} Budget&nbsp;·&nbsp;{% endif %}
-        {{ applications.count }} Application{{ applications.count|pluralize }}
-      </div>
+<!-- ══ PROJECT CONTEXT BANNER ═══════════════════════════════ -->
+<div class="client-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+  <div>
+    <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 4px;">
+      {{ project.title }}
     </div>
-    {% if project.assigned_freelancer %}
-    <div style="background:var(--green-soft);padding:8px 14px;border-radius:var(--radius-sm);font-size:0.875rem;color:var(--green);font-weight:600;">
-      <i class="bi bi-person-check"></i> Freelancer Assigned
+    <div style="font-size: 13px; color: var(--client-text-muted); display: flex; gap: 14px; flex-wrap: wrap;">
+      <span><i data-lucide="wallet" style="color:var(--client-yellow); width:14px; height:14px;"></i> Budget: <strong>₹{{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
+      <span><i data-lucide="users" style="color:var(--client-purple); width:14px; height:14px;"></i> <strong>{{ applications.count }}</strong> application{{ applications.count|pluralize }}</span>
+      <span class="client-badge client-badge-{{ project.status }}">{{ project.get_status_display }}</span>
     </div>
-    {% endif %}
+  </div>
+
+  <div style="display: flex; gap: 10px;">
+    <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn-client-secondary" style="padding: 8px 14px; font-size: 13px;">
+      <i data-lucide="eye"></i>
+      <span>Project Details</span>
+    </a>
+    <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-client-primary" style="padding: 8px 14px; font-size: 13px;">
+      <i data-lucide="play"></i>
+      <span>Open Workspace</span>
+    </a>
   </div>
 </div>
 
-<!-- Filter -->
-<div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
-  <a href="?status=" class="btn {% if not status_filter %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">All</a>
-  {% for value, label in status_choices %}
-  <a href="?status={{ value }}" class="btn {% if status_filter == value %}btn-primary{% else %}btn-secondary{% endif %} btn-sm">
-    {{ label }}
+<!-- ══ FILTER PILLS ═════════════════════════════════════════ -->
+<div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
+  <a href="?status=" class="btn-client-{% if not status_filter %}primary{% else %}secondary{% endif %}" style="padding: 6px 14px; font-size: 12.5px;">
+    All Applications ({{ applications.count }})
   </a>
+  {% for value, label in status_choices %}
+    <a href="?status={{ value }}" class="btn-client-{% if status_filter == value %}primary{% else %}secondary{% endif %}" style="padding: 6px 14px; font-size: 12.5px;">
+      {{ label }}
+    </a>
   {% endfor %}
 </div>
 
+<!-- ══ APPLICATION CARDS ════════════════════════════════════ -->
 {% if applications %}
-  <div style="display:flex;flex-direction:column;gap:16px;">
+  <div style="display: flex; flex-direction: column; gap: 16px;">
     {% for app in applications %}
-    <div class="application-card">
-      <div style="display:flex;align-items:flex-start;gap:14px;">
-
-        <!-- Avatar -->
-        <div class="applicant-avatar">{{ app.freelancer.username|first|upper }}</div>
-
-        <!-- Info -->
-        <div style="flex:1;">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-            <div>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <div style="font-size:1.05rem;font-weight:700;">
+      <div class="client-card" style="margin-bottom: 0;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+          
+          <!-- Freelancer Profile & Proposal Excerpt -->
+          <div style="display: flex; gap: 16px; flex: 1; min-width: 280px;">
+            <div class="client-user-avatar" style="width: 48px; height: 48px; font-size: 18px; background: linear-gradient(135deg, var(--client-purple), #9333ea);">
+              {{ app.freelancer.username|slice:":1"|upper|default:"F" }}
+            </div>
+            
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
+                <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800;">
                   {{ app.freelancer.get_full_name|default:app.freelancer.username }}
-                </div>
-                <!-- Freelancer Verification Badge -->
+                </span>
+                
+                <!-- Verification Pill -->
                 {% if app.verification_summary.is_verified %}
-                  <span class="badge" style="background:rgba(16,185,129,0.15); color:var(--green); border:1px solid rgba(16,185,129,0.3); font-weight:700; font-size:12px;">
-                    <i class="bi bi-patch-check-fill"></i> Verified Freelancer
-                  </span>
-                {% elif app.verification_summary.status == 'pending_admin_review' %}
-                  <span class="badge" style="background:rgba(245,158,11,0.15); color:var(--yellow); font-size:12px;">
-                    <i class="bi bi-hourglass-split"></i> Verification Pending
+                  <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(34, 211, 160, 0.14); color: #22d3a0; padding: 2px 8px; border-radius: var(--r-sm); font-size: 11px; font-weight: 800;">
+                    <i data-lucide="shield-check" style="width:13px; height:13px;"></i> Verified Talent
                   </span>
                 {% else %}
-                  <span class="badge" style="background:rgba(244,63,94,0.15); color:var(--red); font-size:12px;">
-                    <i class="bi bi-shield-x"></i> Not Verified
+                  <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(242, 213, 60, 0.14); color: var(--client-yellow); padding: 2px 8px; border-radius: var(--r-sm); font-size: 11px; font-weight: 800;">
+                    <i data-lucide="clock" style="width:13px; height:13px;"></i> Verification Incomplete
                   </span>
                 {% endif %}
-                <button type="button" class="btn btn-secondary btn-sm" style="padding:2px 8px;font-size:11.5px;" onclick="openVerificationModal('modal-ver-{{ app.pk }}')">
-                  <i class="bi bi-shield-check"></i> View Verification
-                </button>
+
+                <span class="client-badge client-badge-{{ app.status }}">
+                  {{ app.get_status_display }}
+                </span>
               </div>
 
-              {% if app.freelancer_profile_obj and app.freelancer_profile_obj.professional_title %}
-                <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:2px;">
-                  {{ app.freelancer_profile_obj.professional_title }}
+              <div style="font-size: 13px; color: var(--client-text-secondary); margin-bottom: 8px;">
+                {{ app.freelancer_profile_obj.professional_title|default:"Freelance Specialist" }}
+                &bull; Applied on {{ app.created_at|date:"d M Y" }}
+              </div>
+
+              <!-- Proposal Excerpt -->
+              <div style="background: var(--client-bg-surface); border: 1px solid var(--client-border-subtle); border-radius: var(--r-md); padding: 14px 16px; font-size: 13.5px; line-height: 1.55; color: var(--client-text-primary); margin-bottom: 14px;">
+                {{ app.cover_letter|linebreaksbr }}
+              </div>
+
+              {% if app.proposed_price or app.estimated_days %}
+                <div style="display: flex; gap: 16px; font-size: 13px; color: var(--client-text-muted);">
+                  {% if app.proposed_price %}
+                    <span><i data-lucide="wallet" style="color:var(--client-yellow); width:14px; height:14px;"></i> Proposed Bid: <strong style="color:var(--client-text-primary);">₹{{ app.proposed_price|floatformat:0 }}</strong></span>
+                  {% endif %}
+                  {% if app.estimated_days %}
+                    <span><i data-lucide="clock" style="width:14px; height:14px;"></i> Delivery Time: <strong style="color:var(--client-text-primary);">{{ app.estimated_days }} days</strong></span>
+                  {% endif %}
                 </div>
               {% endif %}
-
-              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">
-                @{{ app.freelancer.username }} · Applied {{ app.created_at|date:"d M Y" }}
-                {% if app.freelancer_profile_obj and app.freelancer_profile_obj.location %}
-                  &nbsp;&bull;&nbsp; <i class="bi bi-geo-alt"></i> {{ app.freelancer_profile_obj.location }}
-                {% endif %}
-              </div>
             </div>
-
-            <div style="display:flex;align-items:center;gap:10px;">
-              {% if app.proposed_price %}
-              <div style="font-size:1.1rem;font-weight:800;color:var(--green);">₹{{ app.proposed_price|floatformat:0 }}</div>
-              {% endif %}
-              <span class="badge badge-{{ app.status }}">{{ app.get_status_display }}</span>
-            </div>
-          </div>
-
-          <!-- Skills & Experience Preview -->
-          {% if app.freelancer_profile_obj and app.freelancer_profile_obj.skills_list %}
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
-            {% for skill in app.freelancer_profile_obj.skills_list|slice:":6" %}
-              <span style="font-size:11px;padding:2px 8px;background:var(--bg-elevated);border-radius:4px;color:var(--text-secondary);border:1px solid var(--border);">{{ skill }}</span>
-            {% endfor %}
-          </div>
-          {% endif %}
-
-          {% if app.estimated_duration %}
-          <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">
-            <i class="bi bi-clock"></i> Estimated duration: {{ app.estimated_duration }}
-          </div>
-          {% endif %}
-
-          <!-- Proposal -->
-          <div style="margin-top:12px;padding:14px;background:var(--bg-elevated);border-radius:var(--radius-sm);font-size:0.875rem;color:var(--text-secondary);line-height:1.7;border-left:3px solid var(--accent);">
-            {{ app.proposal|truncatechars:400 }}
           </div>
 
           <!-- Actions -->
-          {% if app.status == 'pending' and not project.assigned_freelancer %}
-          <div style="display:flex;gap:10px;margin-top:14px;">
-            <form method="post" action="{% url 'marketplace:application_accept' app_pk=app.pk %}"
-                  onsubmit="return confirm('Accept {{ app.freelancer.username }}? Other pending applications will be automatically rejected.')">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success">
-                <i class="bi bi-check-circle"></i> Accept Freelancer
-              </button>
-            </form>
-            <form method="post" action="{% url 'marketplace:application_reject' app_pk=app.pk %}"
-                  onsubmit="return confirm('Reject this application?')">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-danger">
-                <i class="bi bi-x-circle"></i> Reject
-              </button>
-            </form>
-          </div>
-          {% elif app.status == 'accepted' %}
-          <div style="margin-top:12px;">
-            <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn btn-primary btn-sm">
-              <i class="bi bi-briefcase"></i> Open Project Workspace
-            </a>
-          </div>
-          {% endif %}
+          <div style="display: flex; flex-direction: column; gap: 8px; min-width: 140px;">
+            {% if app.status == 'pending' and project.status == 'open' %}
+              <form method="post" action="{% url 'marketplace:application_accept' app_pk=app.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-client-primary" style="width: 100%; justify-content: center; padding: 8px 14px; font-size: 12.5px;">
+                  <i data-lucide="check-circle-2"></i>
+                  <span>Accept Proposal</span>
+                </button>
+              </form>
 
-        </div>
-      </div>
-    </div>
-
-    <!-- Client-Safe Verification Summary Modal (Zero Sensitive Data Leaked) -->
-    <div class="custom-client-modal-backdrop" id="modal-ver-{{ app.pk }}" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:1100;align-items:center;justify-content:center;padding:20px;">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:480px;box-shadow:0 20px 50px rgba(0,0,0,0.5);overflow:hidden;">
-        <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-          <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;margin:0;display:flex;align-items:center;gap:8px;">
-            <i class="bi bi-shield-check" style="color:var(--accent);"></i> Freelancer Verification Summary
-          </h4>
-          <button type="button" onclick="closeVerificationModal('modal-ver-{{ app.pk }}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;">&times;</button>
-        </div>
-        <div style="padding:24px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:12px;background:var(--bg-elevated);border-radius:var(--radius-sm);">
-            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#06b6d4);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">
-              {{ app.freelancer.username|first|upper }}
-            </div>
-            <div>
-              <div style="font-weight:700;font-size:15px;">{{ app.freelancer.get_full_name|default:app.freelancer.username }}</div>
-              <div style="font-size:12px;color:var(--text-muted);">
-                {% if app.verification_summary.is_verified %}
-                  <span style="color:var(--green);font-weight:700;"><i class="bi bi-patch-check-fill"></i> Fully Verified Freelancer</span>
-                {% else %}
-                  <span style="color:var(--yellow);font-weight:700;">{{ app.verification_summary.badge_text }}</span>
-                {% endif %}
+              <form method="post" action="{% url 'marketplace:application_reject' app_pk=app.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-client-secondary" style="width: 100%; justify-content: center; padding: 8px 14px; font-size: 12.5px; color: var(--client-red); border-color: rgba(200, 14, 19, 0.3);">
+                  <i data-lucide="x-circle"></i>
+                  <span>Decline</span>
+                </button>
+              </form>
+            {% elif app.status == 'accepted' %}
+              <div style="text-align: center; padding: 6px 12px; background: rgba(34, 211, 160, 0.14); color: #22d3a0; font-size: 12px; font-weight: 800; border-radius: var(--r-sm);">
+                ✓ Accepted &amp; Assigned
               </div>
-            </div>
-          </div>
-
-          <!-- Safe Verification Checklist -->
-          <div style="display:flex;flex-direction:column;gap:12px;font-size:13.5px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span><i class="bi bi-envelope-check" style="margin-right:8px;color:var(--accent);"></i> Email Address</span>
-              {% if app.verification_summary.email_verified %}
-                <span style="color:var(--green);font-weight:700;"><i class="bi bi-check-circle-fill"></i> Verified</span>
-              {% else %}
-                <span style="color:var(--text-muted);">✕ Not Verified</span>
-              {% endif %}
-            </div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span><i class="bi bi-phone" style="margin-right:8px;color:var(--accent);"></i> Mobile Phone</span>
-              {% if app.verification_summary.phone_verified %}
-                <span style="color:var(--green);font-weight:700;"><i class="bi bi-check-circle-fill"></i> Verified</span>
-              {% else %}
-                <span style="color:var(--text-muted);">✕ Not Verified</span>
-              {% endif %}
-            </div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span><i class="bi bi-person-badge" style="margin-right:8px;color:var(--accent);"></i> Government Identity</span>
-              {% if app.verification_summary.identity_verified %}
-                <span style="color:var(--green);font-weight:700;"><i class="bi bi-check-circle-fill"></i> Verified</span>
-              {% else %}
-                <span style="color:var(--text-muted);">✕ Not Verified</span>
-              {% endif %}
-            </div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span><i class="bi bi-person-lines-fill" style="margin-right:8px;color:var(--accent);"></i> Professional Profile</span>
-              {% if app.verification_summary.profile_verified %}
-                <span style="color:var(--green);font-weight:700;"><i class="bi bi-check-circle-fill"></i> Verified</span>
-              {% else %}
-                <span style="color:var(--text-muted);">✕ Incomplete</span>
-              {% endif %}
-            </div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span><i class="bi bi-wallet2" style="margin-right:8px;color:var(--accent);"></i> Payment Account KYC</span>
-              {% if app.verification_summary.payment_verified %}
-                <span style="color:var(--green);font-weight:700;"><i class="bi bi-check-circle-fill"></i> Verified</span>
-              {% else %}
-                <span style="color:var(--text-muted);">✕ Not Verified</span>
-              {% endif %}
-            </div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span><i class="bi bi-shield-fill-check" style="margin-right:8px;color:var(--accent);"></i> Platform Admin Approval</span>
-              {% if app.verification_summary.admin_approved %}
-                <span style="color:var(--green);font-weight:700;"><i class="bi bi-check-circle-fill"></i> Approved</span>
-              {% else %}
-                <span style="color:var(--text-muted);">Pending / Incomplete</span>
-              {% endif %}
-            </div>
-
-            {% if app.verification_summary.verified_at %}
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:12px;color:var(--text-muted);">
-              <span>Verification Date</span>
-              <span>{{ app.verification_summary.verified_at }}</span>
-            </div>
+            {% elif app.status == 'rejected' %}
+              <div style="text-align: center; padding: 6px 12px; background: rgba(200, 14, 19, 0.14); color: var(--client-red); font-size: 12px; font-weight: 800; border-radius: var(--r-sm);">
+                ✕ Declined
+              </div>
             {% endif %}
           </div>
 
-          <div style="margin-top:16px;padding:10px 14px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:var(--radius-sm);font-size:11.5px;color:var(--text-muted);">
-            <i class="bi bi-lock-fill" style="color:var(--blue);"></i> Sensitive identification numbers and financial accounts are securely protected under platform data minimization policy.
-          </div>
-        </div>
-        <div style="padding:14px 24px;background:var(--bg-elevated);border-top:1px solid var(--border);text-align:right;">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="closeVerificationModal('modal-ver-{{ app.pk }}')">Close</button>
         </div>
       </div>
-    </div>
     {% endfor %}
   </div>
 {% else %}
-  <div class="card">
-    <div class="empty-state">
-      <span class="empty-icon">📭</span>
-      <div class="empty-title">No applications{% if status_filter %} with status "{{ status_filter }}"{% endif %}</div>
-      <div class="empty-desc">
-        {% if project.status == 'open' %}
-          Your project is live. Freelancers can submit proposals now.
-        {% elif not status_filter %}
-          No one has applied yet.
-        {% endif %}
-      </div>
-      {% if status_filter %}
-      <a href="?" class="btn btn-secondary">Show All Applications</a>
-      {% endif %}
+  <div class="client-card" style="text-align: center; padding: 60px 24px;">
+    <div style="width: 64px; height: 64px; border-radius: var(--r-lg); background: rgba(125, 60, 255, 0.12); color: var(--client-purple); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+      <i data-lucide="clipboard-check" style="width: 32px; height: 32px;"></i>
     </div>
+    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">No applications received yet</h3>
+    <p style="font-size: 14px; color: var(--client-text-muted); max-width: 420px; margin: 0 auto 20px auto;">
+      Freelancers are browsing active marketplace requirements. Proposals will appear here as candidates submit applications.
+    </p>
   </div>
 {% endif %}
 
-<script>
-  function openVerificationModal(id) {
-    var modal = document.getElementById(id);
-    if (modal) {
-      modal.style.display = 'flex';
-    }
-  }
-  function closeVerificationModal(id) {
-    var modal = document.getElementById(id);
-    if (modal) {
-      modal.style.display = 'none';
-    }
-  }
-  window.addEventListener('click', function(e) {
-    if (e.target.classList.contains('custom-client-modal-backdrop')) {
-      e.target.style.display = 'none';
-    }
-  });
-</script>
-
 {% endblock %}
-

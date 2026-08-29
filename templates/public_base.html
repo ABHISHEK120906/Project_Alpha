@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{% block meta_description %}FreelanceHub is a modern freelancing marketplace uniting Clients, Freelancers, and Platform Administrators in one color-driven, secure ecosystem.{% endblock %}">
-  <title>{% block title %}FreelanceHub — Color-Driven Freelancing Marketplace{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}FreelanceHub is a modern freelancing marketplace uniting Clients, Freelancers, and Platform Administrators in one structured, secure ecosystem.{% endblock %}">
+  <title>{% block title %}FreelanceHub — Where Projects Meet Talent{% endblock %}</title>
 
   <!-- Canonical Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239bc400'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%2313101e'/></svg>">
@@ -15,7 +15,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap Icons -->
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Bootstrap Icons for supplementary font fallback -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <!-- Public & Admin Shared Design System -->
@@ -42,49 +45,66 @@
   <header class="hub-navbar" id="hubNavbar" role="banner">
     <div class="pub-container hub-nav-wrap">
       
-      <!-- Brand Logo -->
+      <!-- Left: Brand Logo & Wordmark -->
       <a href="{% url 'core:home' %}" class="hub-brand" aria-label="FreelanceHub Home">
         <div class="hub-brand-badge">
-          <i class="bi bi-intersect"></i>
+          <i data-lucide="layers"></i>
         </div>
-        <span>FreelanceHub</span>
+        <span class="hub-brand-name">FreelanceHub</span>
       </a>
 
-      <!-- Primary Navigation Links -->
+      <!-- Center: Primary Navigation Links -->
       <nav class="hub-nav-menu" role="navigation" aria-label="Main Navigation">
-        <a href="{% url 'core:home' %}" class="hub-nav-link">Home</a>
-        <a href="#how-it-works" class="hub-nav-link">How It Works</a>
-        <a href="#browse-projects" class="hub-nav-link">Browse Projects</a>
-        <a href="#find-freelancers" class="hub-nav-link">Find Freelancers</a>
-        <a href="#role-selection" class="hub-nav-link">Choose Role</a>
+        <a href="{% url 'core:home' %}" class="hub-nav-link">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </a>
+        <a href="#how-it-works" class="hub-nav-link">
+          <i data-lucide="git-merge"></i>
+          <span>How It Works</span>
+        </a>
+        <a href="#browse-projects" class="hub-nav-link">
+          <i data-lucide="folder-kanban"></i>
+          <span>Projects</span>
+        </a>
+        <a href="#find-freelancers" class="hub-nav-link">
+          <i data-lucide="users"></i>
+          <span>Freelancers</span>
+        </a>
       </nav>
 
-      <!-- Right Action Items -->
+      <!-- Right: Role Actions & Theme Toggle -->
       <div class="hub-nav-actions">
         
         <!-- Role Specific Quick Buttons -->
         <a href="{% url 'marketplace:client_register' %}" class="btn-nav-role btn-nav-client" title="Client Portal">
-          <i class="bi bi-building"></i> Client
+          <i data-lucide="briefcase"></i>
+          <span>Client</span>
         </a>
         <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" title="Freelancer Portal">
-          <i class="bi bi-person-badge"></i> Freelancer
+          <i data-lucide="code-2"></i>
+          <span>Freelancer</span>
         </a>
         <a href="{% url 'core:admin_login' %}" class="btn-nav-role btn-nav-admin" title="Admin Portal">
-          <i class="bi bi-shield-lock-fill"></i> Admin
+          <i data-lucide="shield-check"></i>
+          <span>Admin</span>
         </a>
 
         <!-- General Login -->
-        <a href="{% url 'core:login' %}" class="btn-hub-ghost">Login</a>
+        <a href="{% url 'core:login' %}" class="btn-hub-ghost">
+          <i data-lucide="log-in"></i>
+          <span>Login</span>
+        </a>
 
         <!-- Theme Switcher -->
         <button class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle light or dark theme" title="Toggle Light / Dark Mode">
-          <i class="bi bi-sun-fill" id="themeIconSun"></i>
-          <i class="bi bi-moon-stars-fill" id="themeIconMoon" style="display:none;"></i>
+          <i data-lucide="sun" id="themeIconSun"></i>
+          <i data-lucide="moon" id="themeIconMoon" style="display:none;"></i>
         </button>
 
         <!-- Mobile Drawer Toggle -->
         <button class="hub-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
-          <i class="bi bi-list"></i>
+          <i data-lucide="menu"></i>
         </button>
       </div>
 
@@ -93,28 +113,42 @@
 
   <!-- ══ MOBILE NAVIGATION DRAWER ═════════════════════════ -->
   <div class="hub-mobile-drawer" id="mobileDrawer" role="dialog" aria-modal="true">
-    <div class="hub-nav-menu" style="display:flex;flex-direction:column;">
-      <a href="{% url 'core:home' %}" class="hub-nav-link"><i class="bi bi-house-door me-2"></i> Home</a>
-      <a href="#role-selection" class="hub-nav-link"><i class="bi bi-person-gear me-2"></i> Choose Your Role</a>
-      <a href="#how-it-works" class="hub-nav-link"><i class="bi bi-diagram-3 me-2"></i> How It Works</a>
-      <a href="#browse-projects" class="hub-nav-link"><i class="bi bi-briefcase me-2"></i> Browse Projects</a>
-      <a href="#find-freelancers" class="hub-nav-link"><i class="bi bi-people me-2"></i> Find Freelancers</a>
-      <a href="#verification" class="hub-nav-link"><i class="bi bi-patch-check me-2"></i> Verification &amp; Trust</a>
-    </div>
+    <div class="hub-drawer-inner">
+      <div class="hub-drawer-nav">
+        <a href="{% url 'core:home' %}" class="hub-drawer-link">
+          <i data-lucide="home"></i> Home
+        </a>
+        <a href="#role-selection" class="hub-drawer-link">
+          <i data-lucide="layout-grid"></i> Choose Your Role
+        </a>
+        <a href="#how-it-works" class="hub-drawer-link">
+          <i data-lucide="git-merge"></i> How It Works
+        </a>
+        <a href="#browse-projects" class="hub-drawer-link">
+          <i data-lucide="folder-kanban"></i> Projects
+        </a>
+        <a href="#find-freelancers" class="hub-drawer-link">
+          <i data-lucide="users"></i> Freelancers
+        </a>
+        <a href="#verification" class="hub-drawer-link">
+          <i data-lucide="shield-check"></i> Trust &amp; Security
+        </a>
+      </div>
 
-    <div class="hub-nav-actions" style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
-      <a href="{% url 'marketplace:client_register' %}" class="btn-nav-role btn-nav-client" style="justify-content:center;padding:12px;">
-        <i class="bi bi-building"></i> Give Project as Client
-      </a>
-      <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="justify-content:center;padding:12px;">
-        <i class="bi bi-person-badge"></i> Work as Freelancer
-      </a>
-      <a href="{% url 'core:admin_login' %}" class="btn-nav-role btn-nav-admin" style="justify-content:center;padding:12px;">
-        <i class="bi bi-shield-lock-fill"></i> Admin Login
-      </a>
-      <a href="{% url 'core:login' %}" class="btn-hub-ghost" style="justify-content:center;padding:12px;">
-        <i class="bi bi-box-arrow-in-right"></i> Sign In to Account
-      </a>
+      <div class="hub-drawer-actions">
+        <a href="{% url 'marketplace:client_register' %}" class="btn-nav-role btn-nav-client" style="justify-content:center;padding:12px;">
+          <i data-lucide="briefcase"></i> Give Project as Client
+        </a>
+        <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="justify-content:center;padding:12px;">
+          <i data-lucide="code-2"></i> Work as Freelancer
+        </a>
+        <a href="{% url 'core:admin_login' %}" class="btn-nav-role btn-nav-admin" style="justify-content:center;padding:12px;">
+          <i data-lucide="shield-check"></i> Admin Portal
+        </a>
+        <a href="{% url 'core:login' %}" class="btn-hub-ghost" style="justify-content:center;padding:12px;">
+          <i data-lucide="log-in"></i> Sign In to Account
+        </a>
+      </div>
     </div>
   </div>
 
@@ -133,9 +167,9 @@
         <div class="hub-footer-brand-info">
           <a href="{% url 'core:home' %}" class="hub-brand">
             <div class="hub-brand-badge">
-              <i class="bi bi-intersect"></i>
+              <i data-lucide="layers"></i>
             </div>
-            <span>FreelanceHub</span>
+            <span class="hub-brand-name">FreelanceHub</span>
           </a>
           <p class="hub-footer-desc">
             A unified freelancing marketplace powering Client hiring, Freelancer discovery, and Admin governance with color-driven architecture.
@@ -151,10 +185,10 @@
           <h4 class="hub-footer-col-title">Platform</h4>
           <ul class="hub-footer-links">
             <li><a href="{% url 'core:home' %}">Overview</a></li>
-            <li><a href="#role-selection">Role Selection</a></li>
+            <li><a href="#role-selection">Choose Role</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#browse-projects">Live Projects</a></li>
-            <li><a href="#find-freelancers">Verified Talent</a></li>
+            <li><a href="#browse-projects">Browse Projects</a></li>
+            <li><a href="#find-freelancers">Find Talent</a></li>
           </ul>
         </div>
 
@@ -163,7 +197,7 @@
           <h4 class="hub-footer-col-title">For Clients</h4>
           <ul class="hub-footer-links">
             <li><a href="{% url 'marketplace:client_register' %}">Post a Project</a></li>
-            <li><a href="{% url 'core:login' %}">Client Sign In</a></li>
+            <li><a href="{% url 'core:login' %}">Client Login</a></li>
             <li><a href="#how-it-works">Client Workflow</a></li>
             <li><a href="#find-freelancers">Browse Freelancers</a></li>
           </ul>
@@ -174,20 +208,20 @@
           <h4 class="hub-footer-col-title">For Freelancers</h4>
           <ul class="hub-footer-links">
             <li><a href="{% url 'freelancer:register' %}">Join as Freelancer</a></li>
-            <li><a href="{% url 'core:login' %}">Freelancer Sign In</a></li>
+            <li><a href="{% url 'core:login' %}">Freelancer Login</a></li>
             <li><a href="#verification">Verification Guide</a></li>
-            <li><a href="#browse-projects">Search Open Work</a></li>
+            <li><a href="#browse-projects">Search Open Projects</a></li>
           </ul>
         </div>
 
-        <!-- Col 5: Admin & Governance -->
+        <!-- Col 5: Support & Governance -->
         <div>
-          <h4 class="hub-footer-col-title">Admin &amp; Safety</h4>
+          <h4 class="hub-footer-col-title">Support &amp; Safety</h4>
           <ul class="hub-footer-links">
-            <li><a href="{% url 'core:admin_login' %}">Admin Portal</a></li>
+            <li><a href="{% url 'core:admin_login' %}">Admin Login</a></li>
             <li><a href="#verification">Verification Standards</a></li>
-            <li><a href="{% url 'core:login' %}">Dispute Mediation</a></li>
-            <li><a href="{% url 'core:login' %}">Terms &amp; Privacy</a></li>
+            <li><a href="{% url 'core:login' %}">Platform Support</a></li>
+            <li><a href="{% url 'core:login' %}">Privacy &amp; Terms</a></li>
           </ul>
         </div>
 
@@ -196,10 +230,10 @@
       <!-- Footer Bottom -->
       <div class="hub-footer-bottom">
         <div>
-          &copy; 2026 FreelanceHub Inc. All rights reserved. Color-Based Marketplace Architecture.
+          &copy; 2026 FreelanceHub Inc. All rights reserved. Professional Marketplace Architecture.
         </div>
-        <div style="display:flex;gap:20px;">
-          <span>Client ↔ Freelancer ↔ Admin</span>
+        <div class="hub-footer-bottom-links">
+          <span>Client &bull; Freelancer &bull; Admin</span>
           <span>Verified Security KYC</span>
         </div>
       </div>
@@ -209,6 +243,15 @@
 
   <!-- ══ INTERACTIVE SCRIPTS ═══════════════════════════════ -->
   <script>
+    // Initialize Lucide Icons
+    function refreshIcons() {
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    }
+    document.addEventListener('DOMContentLoaded', refreshIcons);
+    refreshIcons();
+
     // 1. Theme Management (Dark / Light toggle)
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const sunIcon = document.getElementById('themeIconSun');
@@ -217,13 +260,16 @@
     function updateThemeUI(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('freelancehub_theme', theme);
-      if (theme === 'light') {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'inline-block';
-      } else {
-        sunIcon.style.display = 'inline-block';
-        moonIcon.style.display = 'none';
+      if (sunIcon && moonIcon) {
+        if (theme === 'light') {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'inline-block';
+        } else {
+          sunIcon.style.display = 'inline-block';
+          moonIcon.style.display = 'none';
+        }
       }
+      refreshIcons();
     }
 
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -255,15 +301,12 @@
       mobileToggle.addEventListener('click', () => {
         const isOpen = mobileDrawer.classList.toggle('open');
         mobileToggle.setAttribute('aria-expanded', isOpen);
-        const icon = mobileToggle.querySelector('i');
-        icon.className = isOpen ? 'bi bi-x-lg' : 'bi bi-list';
       });
 
       mobileDrawer.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           mobileDrawer.classList.remove('open');
           mobileToggle.setAttribute('aria-expanded', 'false');
-          mobileToggle.querySelector('i').className = 'bi bi-list';
         });
       });
     }

@@ -1,125 +1,19 @@
 {% extends 'marketplace/base_freelancer.html' %}
+{% load static %}
 
-{% block title %}Verification Center — FreelanceHub{% endblock %}
-{% block page_title %}Verification Center{% endblock %}
+{% block title %}Verification Center — Freelancer Portal{% endblock %}
+{% block page_title %}Security &amp; Multi-Tier Verification Center{% endblock %}
+{% block page_subtitle %}<p>Complete all identity and qualification checkpoints to receive your Verified Talent badge and unlock client applications.</p>{% endblock %}
+{% block nav_verification %}active{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <style>
-  .ver-hero {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08));
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    border-radius: var(--radius);
-    padding: 28px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
-  .ver-badge-verified {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    color: var(--green);
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-  }
-  .ver-badge-pending {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    color: var(--yellow);
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-  }
-  .ver-badge-incomplete {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background: rgba(244, 63, 94, 0.15);
-    border: 1px solid rgba(244, 63, 94, 0.4);
-    color: var(--red);
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-  }
-  .ver-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-  }
-  .ver-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .ver-card:hover {
-    border-color: rgba(16, 185, 129, 0.3);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  }
-  .ver-card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    gap: 12px;
-  }
-  .ver-icon-wrap {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-  }
-  .ver-icon-success { background: rgba(16, 185, 129, 0.15); color: var(--green); }
-  .ver-icon-warning { background: rgba(245, 158, 11, 0.15); color: var(--yellow); }
-  .ver-icon-neutral { background: var(--bg-elevated); color: var(--text-muted); }
-  
-  .ver-step-num {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 800;
-    color: var(--text-muted);
-  }
-  .ver-step-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin: 2px 0 4px;
-    color: var(--text-primary);
-  }
-  .ver-step-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-  }
-
-  /* Modal style */
   .custom-modal-backdrop {
     display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(6px);
+    background: rgba(14, 10, 20, 0.82);
+    backdrop-filter: blur(8px);
     z-index: 1050;
     align-items: center;
     justify-content: center;
@@ -129,22 +23,22 @@
     display: flex;
   }
   .custom-modal {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    background: var(--fl-bg-card);
+    border: 1px solid var(--fl-border);
+    border-radius: var(--r-lg);
     width: 100%;
     max-width: 520px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--fl-shadow-lg);
     overflow: hidden;
-    animation: modalIn 0.25s ease-out;
+    animation: modalSlide 0.22s ease-out;
   }
-  @keyframes modalIn {
-    from { opacity: 0; transform: translateY(20px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+  @keyframes modalSlide {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .modal-head {
     padding: 18px 24px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--fl-border-subtle);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -154,8 +48,8 @@
   }
   .modal-foot {
     padding: 16px 24px;
-    background: var(--bg-elevated);
-    border-top: 1px solid var(--border);
+    background: var(--fl-bg-surface);
+    border-top: 1px solid var(--fl-border-subtle);
     display: flex;
     justify-content: flex-end;
     gap: 12px;
@@ -166,524 +60,452 @@
 {% block content %}
 <div style="display: flex; flex-direction: column; gap: 28px;">
 
-  <!-- Hero Status Banner -->
-  <div class="ver-hero">
-    <div>
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap;">
-        <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; margin: 0;">
-          Freelancer Verification Center
-        </h2>
-        {% if is_verified %}
-          <span class="ver-badge-verified"><i class="bi bi-patch-check-fill"></i> Verified Freelancer</span>
-        {% elif verification.final_verification_status == 'pending_admin_review' %}
-          <span class="ver-badge-pending"><i class="bi bi-hourglass-split"></i> Pending Admin Review</span>
-        {% else %}
-          <span class="ver-badge-incomplete"><i class="bi bi-shield-exclamation"></i> Verification Incomplete</span>
-        {% endif %}
+  <!-- ══ HERO STATUS BANNER ══════════════════════════════════ -->
+  <div class="fl-card" style="border-left: 4px solid {% if is_verified %}#10b981{% elif verification.final_verification_status == 'pending_admin_review' %}var(--fl-yellow){% else %}var(--fl-coral){% endif %}; margin-bottom: 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap;">
+          <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; margin: 0;">
+            Platform KYC Verification Center
+          </h2>
+          {% if is_verified %}
+            <span class="fl-badge fl-badge-verified"><i data-lucide="shield-check"></i> Verified Talent</span>
+          {% elif verification.final_verification_status == 'pending_admin_review' %}
+            <span class="fl-badge fl-badge-pending"><i data-lucide="clock"></i> Pending Admin Review</span>
+          {% else %}
+            <span class="fl-badge fl-badge-required"><i data-lucide="shield-alert"></i> Verification Required</span>
+          {% endif %}
+        </div>
+        <p style="color: var(--fl-text-secondary); font-size: 13.5px; margin: 0; max-width: 620px;">
+          To protect clients and maintain marketplace standards, all freelancers complete multi-tier identity, skills, and account checkpoints before bidding on projects.
+        </p>
       </div>
-      <p style="color: var(--text-secondary); font-size: 14px; margin: 0; max-width: 650px;">
-        To protect clients and ensure marketplace trust, freelancers must complete all security verification steps before applying to client projects.
-      </p>
-    </div>
 
-    <!-- Progress Meter -->
-    <div style="text-align: right; min-width: 200px;">
-      <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">
-        Verification Progress: <strong style="color: var(--accent);">{{ verification.get_completed_steps_count }}/7 Completed</strong>
+      <!-- Progress Meter -->
+      <div style="text-align: right; min-width: 200px;">
+        <div style="font-size: 12px; color: var(--fl-text-muted); margin-bottom: 6px;">
+          Verification Checkpoints: <strong style="color: var(--fl-yellow);">{{ verification.get_completed_steps_count|default:"0" }}/7 Complete</strong>
+        </div>
+        <div style="width: 100%; height: 8px; background: var(--fl-bg-elevated); border-radius: var(--r-full); overflow: hidden;">
+          <div style="width: {% widthratio verification.get_completed_steps_count 7 100 %}%; height: 100%; background: linear-gradient(90deg, var(--fl-coral), var(--fl-yellow)); transition: width var(--ease-smooth);"></div>
+        </div>
+        <div style="font-size: 11px; color: var(--fl-text-muted); margin-top: 6px;">
+          {% if is_verified %}
+            Verified &amp; Cleared on {{ verification.verified_at|date:"d M Y" }}
+          {% elif verification.final_verification_status == 'pending_admin_review' %}
+            Under Admin Review Queue
+          {% else %}
+            {{ 7|add:"-"|add:verification.get_completed_steps_count }} checkpoints remaining
+          {% endif %}
+        </div>
       </div>
-      <div class="progress-bar-container" style="height: 10px;">
-        <div class="progress-bar-fill" style="width: {% widthratio verification.get_completed_steps_count 7 100 %}%;"></div>
-      </div>
-      <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">
-        {% if is_verified %}
-          Verified on {{ verification.verified_at|date:"d M Y" }}
-        {% elif verification.final_verification_status == 'pending_admin_review' %}
-          Submitted for Admin Review
-        {% else %}
-          {{ 7|add:"-"|add:verification.get_completed_steps_count }} steps remaining
-        {% endif %}
-      </div>
+
     </div>
   </div>
 
-  <!-- Verification Cards Grid -->
-  <div class="ver-grid">
+  <!-- ══ 6 CORE VERIFICATION CHECKPOINTS ═════════════════════ -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
 
     <!-- 1. Email Verification -->
-    <div class="ver-card">
+    <div class="fl-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
       <div>
-        <div class="ver-card-header">
+        <div class="fl-card-header">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="ver-icon-wrap {% if verification.email_verified %}ver-icon-success{% else %}ver-icon-warning{% endif %}">
-              <i class="bi bi-envelope-check-fill"></i>
+            <div class="fl-kpi-icon {% if verification.email_verified %}green{% else %}coral{% endif %}" style="width: 40px; height: 40px; font-size: 18px;">
+              <i data-lucide="mail"></i>
             </div>
             <div>
-              <div class="ver-step-num">Step 1</div>
-              <div class="ver-step-title">Email Verification</div>
+              <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--fl-text-muted);">Step 1</div>
+              <div style="font-size: 15px; font-weight: 700;">Email Verification</div>
             </div>
           </div>
           {% if verification.email_verified %}
-            <span class="badge badge-success" style="background: rgba(16,185,129,0.15); color: var(--green);"><i class="bi bi-check-lg"></i> Verified</span>
+            <span class="fl-badge fl-badge-verified">Verified</span>
           {% else %}
-            <span class="badge badge-warning" style="background: rgba(245,158,11,0.15); color: var(--yellow);"><i class="bi bi-x-lg"></i> Unverified</span>
+            <span class="fl-badge fl-badge-required">Required</span>
           {% endif %}
         </div>
-        <div class="ver-step-desc">
-          Email: <strong style="color: var(--text-primary);">{{ request.user.email }}</strong>
-          <br>
-          Confirms ownership of your primary registered contact email.
+        <div style="font-size: 13px; color: var(--fl-text-secondary); line-height: 1.5;">
+          Email: <strong style="color: var(--fl-text-primary);">{{ request.user.email }}</strong><br>
+          Confirms registered communication channel and account recovery.
         </div>
       </div>
+
       <div style="margin-top: 20px;">
         {% if verification.email_verified %}
-          <div style="font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 6px;">
-            <i class="bi bi-check-circle-fill"></i> Verified on {{ verification.email_verified_at|date:"d M Y, H:i"|default:"Active" }}
+          <div style="font-size: 12px; color: #10b981; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+            <span>Verified on {{ verification.email_verified_at|date:"d M Y" }}</span>
           </div>
         {% else %}
-          <button type="button" class="btn btn-primary btn-sm" style="width: 100%;" onclick="openModal('modal-email')">
-            <i class="bi bi-shield-check"></i> Verify Email Now
+          <button type="button" class="btn-fl-primary" style="width: 100%; justify-content: center;" onclick="openModal('modal-email')">
+            <i data-lucide="shield-check"></i>
+            <span>Verify Email Now</span>
           </button>
         {% endif %}
       </div>
     </div>
 
     <!-- 2. Mobile Phone Verification -->
-    <div class="ver-card">
+    <div class="fl-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
       <div>
-        <div class="ver-card-header">
+        <div class="fl-card-header">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="ver-icon-wrap {% if verification.phone_verified %}ver-icon-success{% else %}ver-icon-warning{% endif %}">
-              <i class="bi bi-phone-fill"></i>
+            <div class="fl-kpi-icon {% if verification.phone_verified %}green{% else %}yellow{% endif %}" style="width: 40px; height: 40px; font-size: 18px;">
+              <i data-lucide="phone"></i>
             </div>
             <div>
-              <div class="ver-step-num">Step 2</div>
-              <div class="ver-step-title">Mobile Phone Verification</div>
+              <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--fl-text-muted);">Step 2</div>
+              <div style="font-size: 15px; font-weight: 700;">Phone Verification</div>
             </div>
           </div>
           {% if verification.phone_verified %}
-            <span class="badge badge-success" style="background: rgba(16,185,129,0.15); color: var(--green);"><i class="bi bi-check-lg"></i> Verified</span>
+            <span class="fl-badge fl-badge-verified">Verified</span>
           {% else %}
-            <span class="badge badge-warning" style="background: rgba(245,158,11,0.15); color: var(--yellow);"><i class="bi bi-x-lg"></i> Unverified</span>
+            <span class="fl-badge fl-badge-pending">Pending</span>
           {% endif %}
         </div>
-        <div class="ver-step-desc">
-          {% if verification.phone_verified %}
-            Phone: <strong style="color: var(--text-primary);">{{ verification.phone_number }}</strong>
-          {% else %}
-            Secure two-factor mobile identity check via SMS OTP verification.
-          {% endif %}
+        <div style="font-size: 13px; color: var(--fl-text-secondary); line-height: 1.5;">
+          Phone: <strong style="color: var(--fl-text-primary);">{{ verification.phone_number|default:"Not Submitted" }}</strong><br>
+          Enables SMS security notices and milestone transaction validation.
         </div>
       </div>
+
       <div style="margin-top: 20px;">
         {% if verification.phone_verified %}
-          <div style="font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 6px;">
-            <i class="bi bi-check-circle-fill"></i> Verified on {{ verification.phone_verified_at|date:"d M Y, H:i"|default:"Active" }}
+          <div style="font-size: 12px; color: #10b981; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+            <span>Verified on {{ verification.phone_verified_at|date:"d M Y" }}</span>
           </div>
         {% else %}
-          <button type="button" class="btn btn-primary btn-sm" style="width: 100%;" onclick="openModal('modal-phone')">
-            <i class="bi bi-shield-check"></i> Verify Mobile Number
+          <button type="button" class="btn-fl-primary" style="width: 100%; justify-content: center;" onclick="openModal('modal-phone')">
+            <i data-lucide="phone-call"></i>
+            <span>Verify Phone</span>
           </button>
         {% endif %}
       </div>
     </div>
 
-    <!-- 3. Identity Verification -->
-    <div class="ver-card">
+    <!-- 3. Government ID Verification -->
+    <div class="fl-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
       <div>
-        <div class="ver-card-header">
+        <div class="fl-card-header">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="ver-icon-wrap {% if verification.identity_status == 'verified' %}ver-icon-success{% elif verification.identity_status == 'under_review' %}ver-icon-warning{% else %}ver-icon-neutral{% endif %}">
-              <i class="bi bi-person-badge-fill"></i>
+            <div class="fl-kpi-icon {% if verification.identity_status == 'verified' %}green{% else %}coral{% endif %}" style="width: 40px; height: 40px; font-size: 18px;">
+              <i data-lucide="file-text"></i>
             </div>
             <div>
-              <div class="ver-step-num">Step 3</div>
-              <div class="ver-step-title">Government Identity</div>
+              <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--fl-text-muted);">Step 3</div>
+              <div style="font-size: 15px; font-weight: 700;">Government ID Check</div>
             </div>
           </div>
           {% if verification.identity_status == 'verified' %}
-            <span class="badge badge-success" style="background: rgba(16,185,129,0.15); color: var(--green);"><i class="bi bi-check-lg"></i> Verified</span>
-          {% elif verification.identity_status == 'under_review' %}
-            <span class="badge badge-warning" style="background: rgba(245,158,11,0.15); color: var(--yellow);">Under Review</span>
+            <span class="fl-badge fl-badge-verified">Verified</span>
+          {% elif verification.identity_status == 'submitted' %}
+            <span class="fl-badge fl-badge-pending">Submitted</span>
           {% else %}
-            <span class="badge badge-secondary">Not Submitted</span>
+            <span class="fl-badge fl-badge-required">Required</span>
           {% endif %}
         </div>
-        <div class="ver-step-desc">
-          {% if verification.identity_status == 'verified' %}
-            Type: <strong style="color: var(--text-primary);">{{ verification.identity_type }}</strong><br>
-            Legal Name: <strong style="color: var(--text-primary);">{{ verification.identity_holder_name }}</strong>
-          {% else %}
-            Verification of government-issued photo ID (Aadhaar, Passport, Voter ID, Driver License).
-          {% endif %}
+        <div style="font-size: 13px; color: var(--fl-text-secondary); line-height: 1.5;">
+          Aadhaar, Passport, or National ID validation check for real-world legal compliance.
         </div>
       </div>
+
       <div style="margin-top: 20px;">
         {% if verification.identity_status == 'verified' %}
-          <div style="font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 6px;">
-            <i class="bi bi-check-circle-fill"></i> Verified on {{ verification.identity_verified_at|date:"d M Y"|default:"Active" }}
+          <div style="font-size: 12px; color: #10b981; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+            <span>Verified (Encrypted ID: {{ verification.identity_number|truncatechars:8|default:"***" }})</span>
           </div>
         {% else %}
-          <button type="button" class="btn btn-primary btn-sm" style="width: 100%;" onclick="openModal('modal-identity')">
-            <i class="bi bi-file-earmark-person"></i> Complete Identity Check
+          <button type="button" class="btn-fl-primary" style="width: 100%; justify-content: center;" onclick="openModal('modal-identity')">
+            <i data-lucide="shield-check"></i>
+            <span>Submit ID Check</span>
           </button>
         {% endif %}
       </div>
     </div>
 
-    <!-- 4. PAN Verification -->
-    <div class="ver-card">
+    <!-- 4. Professional Profile & Portfolio -->
+    <div class="fl-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
       <div>
-        <div class="ver-card-header">
+        <div class="fl-card-header">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="ver-icon-wrap {% if verification.pan_status == 'verified' %}ver-icon-success{% elif verification.pan_status == 'under_review' %}ver-icon-warning{% else %}ver-icon-neutral{% endif %}">
-              <i class="bi bi-card-heading"></i>
+            <div class="fl-kpi-icon {% if verification.profile_status == 'verified' %}green{% else %}coral{% endif %}" style="width: 40px; height: 40px; font-size: 18px;">
+              <i data-lucide="user-check"></i>
             </div>
             <div>
-              <div class="ver-step-num">Step 4</div>
-              <div class="ver-step-title">PAN Verification</div>
+              <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--fl-text-muted);">Step 4</div>
+              <div style="font-size: 15px; font-weight: 700;">Professional Profile</div>
             </div>
           </div>
-          {% if verification.pan_status == 'verified' %}
-            <span class="badge badge-success" style="background: rgba(16,185,129,0.15); color: var(--green);"><i class="bi bi-check-lg"></i> Verified</span>
-          {% elif verification.pan_status == 'under_review' %}
-            <span class="badge badge-warning" style="background: rgba(245,158,11,0.15); color: var(--yellow);">Under Review</span>
+          {% if verification.profile_status == 'verified' %}
+            <span class="fl-badge fl-badge-verified">Verified</span>
           {% else %}
-            <span class="badge badge-secondary">Not Submitted</span>
+            <span class="fl-badge fl-badge-pending">Pending</span>
           {% endif %}
         </div>
-        <div class="ver-step-desc">
-          {% if verification.pan_status == 'verified' %}
-            PAN: <strong style="color: var(--text-primary); font-family: monospace;">{{ verification.pan_masked }}</strong>
-            <br>
-            <span style="font-size: 11.5px; color: var(--text-muted);">(Sensitive characters masked for privacy)</span>
-          {% else %}
-            Income tax / PAN card validation for official compliance and invoicing.
-          {% endif %}
+        <div style="font-size: 13px; color: var(--fl-text-secondary); line-height: 1.5;">
+          Title: <strong>{{ freelancer_profile.professional_title|default:"Not specified" }}</strong><br>
+          Verified skills, hourly rates, and portfolio references.
         </div>
       </div>
-      <div style="margin-top: 20px;">
-        {% if verification.pan_status == 'verified' %}
-          <div style="font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 6px;">
-            <i class="bi bi-check-circle-fill"></i> Verified on {{ verification.pan_verified_at|date:"d M Y"|default:"Active" }}
-          </div>
-        {% else %}
-          <button type="button" class="btn btn-primary btn-sm" style="width: 100%;" onclick="openModal('modal-pan')">
-            <i class="bi bi-card-text"></i> Verify PAN Number
-          </button>
-        {% endif %}
-      </div>
-    </div>
 
-    <!-- 5. Payment Account Verification -->
-    <div class="ver-card">
-      <div>
-        <div class="ver-card-header">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="ver-icon-wrap {% if verification.payment_status == 'verified' %}ver-icon-success{% elif verification.payment_status == 'under_review' %}ver-icon-warning{% else %}ver-icon-neutral{% endif %}">
-              <i class="bi bi-wallet2"></i>
-            </div>
-            <div>
-              <div class="ver-step-num">Step 5</div>
-              <div class="ver-step-title">Payment Account KYC</div>
-            </div>
-          </div>
-          {% if verification.payment_status == 'verified' %}
-            <span class="badge badge-success" style="background: rgba(16,185,129,0.15); color: var(--green);"><i class="bi bi-check-lg"></i> Verified</span>
-          {% elif verification.payment_status == 'under_review' %}
-            <span class="badge badge-warning" style="background: rgba(245,158,11,0.15); color: var(--yellow);">Under Review</span>
-          {% else %}
-            <span class="badge badge-secondary">Not Submitted</span>
-          {% endif %}
-        </div>
-        <div class="ver-step-desc">
-          {% if verification.payment_status == 'verified' %}
-            Method: <strong style="color: var(--text-primary);">{{ verification.payment_account_type }}</strong>
-          {% else %}
-            Payout route & bank/UPI account verification for project milestone releases.
-          {% endif %}
-        </div>
-      </div>
       <div style="margin-top: 20px;">
-        {% if verification.payment_status == 'verified' %}
-          <div style="font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 6px;">
-            <i class="bi bi-check-circle-fill"></i> Verified on {{ verification.payment_verified_at|date:"d M Y"|default:"Active" }}
-          </div>
-        {% else %}
-          <button type="button" class="btn btn-primary btn-sm" style="width: 100%;" onclick="openModal('modal-payment')">
-            <i class="bi bi-bank"></i> Link & Verify Payment Account
-          </button>
-        {% endif %}
-      </div>
-    </div>
-
-    <!-- 6. Professional Profile Verification -->
-    <div class="ver-card">
-      <div>
-        <div class="ver-card-header">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="ver-icon-wrap {% if verification.profile_status == 'complete' %}ver-icon-success{% else %}ver-icon-warning{% endif %}">
-              <i class="bi bi-person-lines-fill"></i>
-            </div>
-            <div>
-              <div class="ver-step-num">Step 6</div>
-              <div class="ver-step-title">Professional Profile</div>
-            </div>
-          </div>
-          {% if verification.profile_status == 'complete' %}
-            <span class="badge badge-success" style="background: rgba(16,185,129,0.15); color: var(--green);"><i class="bi bi-check-lg"></i> Complete ({{ profile_completion }}%)</span>
-          {% else %}
-            <span class="badge badge-warning" style="background: rgba(245,158,11,0.15); color: var(--yellow);">Incomplete ({{ profile_completion }}%)</span>
-          {% endif %}
-        </div>
-        <div class="ver-step-desc">
-          {% if missing_fields %}
-            <span style="color: var(--yellow); font-weight: 600;">Missing fields:</span>
-            <ul style="margin: 6px 0 0 16px; padding: 0; font-size: 12.5px; color: var(--text-secondary);">
-              {% for field in missing_fields %}
-                <li>{{ field }}</li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            All required professional details (Title, Skills, Experience, Bio, Portfolio) are complete.
-          {% endif %}
-        </div>
-      </div>
-      <div style="margin-top: 20px;">
-        <a href="{% url 'freelancer:profile_edit' %}" class="btn {% if verification.profile_status == 'complete' %}btn-secondary{% else %}btn-primary{% endif %} btn-sm" style="width: 100%;">
-          <i class="bi bi-pencil-square"></i> {% if verification.profile_status == 'complete' %}Edit Profile{% else %}Complete Professional Profile{% endif %}
+        <a href="{% url 'freelancer:profile_edit' %}" class="btn-fl-secondary" style="width: 100%; justify-content: center;">
+          <i data-lucide="pencil"></i>
+          <span>Update Profile Info</span>
         </a>
       </div>
     </div>
 
-  </div>
-
-  <!-- 7. Admin Review & Final Status Section -->
-  <div class="glass-card" style="padding: 28px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <div class="ver-icon-wrap {% if is_verified %}ver-icon-success{% elif verification.final_verification_status == 'pending_admin_review' %}ver-icon-warning{% else %}ver-icon-neutral{% endif %}" style="width: 52px; height: 52px; font-size: 24px;">
-          <i class="bi bi-patch-check-fill"></i>
+    <!-- 5. Payment Account & KYC -->
+    <div class="fl-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+      <div>
+        <div class="fl-card-header">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="fl-kpi-icon {% if verification.payment_status == 'verified' %}green{% else %}yellow{% endif %}" style="width: 40px; height: 40px; font-size: 18px;">
+              <i data-lucide="credit-card"></i>
+            </div>
+            <div>
+              <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--fl-text-muted);">Step 5</div>
+              <div style="font-size: 15px; font-weight: 700;">Payment Account</div>
+            </div>
+          </div>
+          {% if verification.payment_status == 'verified' %}
+            <span class="fl-badge fl-badge-verified">Verified</span>
+          {% else %}
+            <span class="fl-badge fl-badge-pending">Pending</span>
+          {% endif %}
         </div>
-        <div>
-          <div class="ver-step-num">Final Step (Step 7)</div>
-          <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; margin: 2px 0 4px;">
-            Platform Admin Verification & Approval
-          </h3>
-          <p style="color: var(--text-secondary); font-size: 13.5px; margin: 0;">
-            Status: <strong style="color: var(--text-primary);">{{ verification.get_final_verification_status_display }}</strong>
-            {% if verification.admin_review_notes %}
-              &bull; Notes: <em>{{ verification.admin_review_notes }}</em>
-            {% endif %}
-          </p>
+        <div style="font-size: 13px; color: var(--fl-text-secondary); line-height: 1.5;">
+          Verified banking and UPI payment channels for escrow payout disbursements.
         </div>
       </div>
 
-      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        {% if not is_verified %}
-          <form method="post" action="{% url 'freelancer:verify_submit_admin' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary" {% if verification.get_completed_steps_count < 6 %}disabled style="opacity:0.6;"{% endif %}>
-              <i class="bi bi-send-check"></i> Submit for Admin Review
-            </button>
-          </form>
-          <!-- Quick simulation approval for development/test environment -->
-          <form method="post" action="{% url 'freelancer:verify_simulate_approve' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-secondary" title="Simulate instant admin approval" {% if verification.get_completed_steps_count < 6 %}disabled style="opacity:0.6;"{% endif %}>
-              <i class="bi bi-shield-fill-check"></i> Instant Admin Approval
-            </button>
-          </form>
-        {% else %}
-          <div style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-sm); padding: 8px 18px; color: var(--green); font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
-            <i class="bi bi-check-circle-fill"></i> Verified & Eligible to Apply
+      <div style="margin-top: 20px;">
+        {% if verification.payment_status == 'verified' %}
+          <div style="font-size: 12px; color: #10b981; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+            <span>Banking &amp; UPI KYC Verified</span>
           </div>
+        {% else %}
+          <button type="button" class="btn-fl-primary" style="width: 100%; justify-content: center;" onclick="openModal('modal-payment')">
+            <i data-lucide="credit-card"></i>
+            <span>Verify Payout Account</span>
+          </button>
         {% endif %}
       </div>
+    </div>
+
+    <!-- 6. Admin Approval & Clearance -->
+    <div class="fl-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+      <div>
+        <div class="fl-card-header">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="fl-kpi-icon {% if is_verified %}green{% elif verification.final_verification_status == 'pending_admin_review' %}yellow{% else %}coral{% endif %}" style="width: 40px; height: 40px; font-size: 18px;">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <div>
+              <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--fl-text-muted);">Step 6</div>
+              <div style="font-size: 15px; font-weight: 700;">Admin Approval</div>
+            </div>
+          </div>
+          {% if is_verified %}
+            <span class="fl-badge fl-badge-verified">Approved</span>
+          {% elif verification.final_verification_status == 'pending_admin_review' %}
+            <span class="fl-badge fl-badge-pending">In Review</span>
+          {% else %}
+            <span class="fl-badge fl-badge-required">Pending Steps</span>
+          {% endif %}
+        </div>
+        <div style="font-size: 13px; color: var(--fl-text-secondary); line-height: 1.5;">
+          Final administrative review and issuance of the Verified Talent badge.
+        </div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        {% if is_verified %}
+          <div style="font-size: 12px; color: #10b981; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+            <span>Platform Cleared &amp; Approved</span>
+          </div>
+        {% elif verification.final_verification_status == 'pending_admin_review' %}
+          <div style="display: flex; gap: 8px;">
+            <span style="font-size: 12px; color: var(--fl-yellow); padding: 8px 0;">⏳ Admin review in progress</span>
+            <!-- Fast simulation button for testing -->
+            <form method="post" action="{% url 'freelancer:verify_simulate_approve' %}" style="margin-left: auto;">
+              {% csrf_token %}
+              <button type="submit" class="btn-fl-yellow" style="padding: 6px 12px; font-size: 11.5px;">
+                <i data-lucide="check"></i> Auto-Approve (Dev)
+              </button>
+            </form>
+          </div>
+        {% else %}
+          <form method="post" action="{% url 'freelancer:verify_submit_admin' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-fl-primary" style="width: 100%; justify-content: center;">
+              <i data-lucide="send"></i>
+              <span>Submit for Final Review</span>
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ PRIVACY NOTICE STRIP ════════════════════════════════ -->
+  <div style="background: var(--fl-bg-card); border: 1px solid var(--fl-border); border-radius: var(--r-md); padding: 18px 22px; display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--fl-text-secondary);">
+    <i data-lucide="lock" style="color: var(--fl-coral); width: 22px; height: 22px; flex-shrink: 0;"></i>
+    <div>
+      <strong>Strict KYC Privacy Policy:</strong> Sensitive personal documents, government IDs, and payment details are encrypted. Clients only see your Verified badge and public portfolio credentials.
     </div>
   </div>
 
 </div>
 
+<!-- ══ MODALS FOR VERIFICATION STEPS ════════════════════════ -->
 
-<!-- ── Modals for Step Verification ── -->
-
-<!-- 1. Email Verification Modal -->
+<!-- Modal 1: Email -->
 <div class="custom-modal-backdrop" id="modal-email">
   <div class="custom-modal">
     <div class="modal-head">
-      <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin: 0;">
-        <i class="bi bi-envelope-check-fill" style="color: var(--accent);"></i> Verify Email Address
-      </h4>
-      <button type="button" class="btn-close" onclick="closeModal('modal-email')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:18px;">&times;</button>
+      <h3 style="font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="mail" style="color: var(--fl-coral);"></i>
+        <span>Verify Email Address</span>
+      </h3>
+      <button type="button" style="background: none; border: none; color: var(--fl-text-muted); cursor: pointer;" onclick="closeModal('modal-email')">
+        <i data-lucide="x"></i>
+      </button>
     </div>
     <form method="post" action="{% url 'freelancer:verify_email' %}">
       {% csrf_token %}
       <div class="modal-body">
-        <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px;">
-          We sent a 6-digit confirmation code to <strong style="color: var(--text-primary);">{{ request.user.email }}</strong>. For simulation in development, you may enter any 6 digits (e.g. <code>123456</code>).
+        <p style="font-size: 13.5px; color: var(--fl-text-secondary); margin-bottom: 16px;">
+          Confirm verification of your primary email: <strong>{{ request.user.email }}</strong>
         </p>
-        <div class="form-group">
-          <label class="form-label" for="verify-email-otp">6-Digit OTP Code</label>
-          {{ email_form.otp_code }}
-          <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">Enter standard numerical OTP code.</small>
+        <div class="client-input-group">
+          <label class="client-label">Verification Code (Simulated)</label>
+          <input type="text" name="code" value="123456" class="client-input" placeholder="Enter 6-digit code" required />
         </div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-email')">Cancel</button>
-        <button type="submit" class="btn btn-primary">Verify Email</button>
+        <button type="button" class="btn-fl-secondary" onclick="closeModal('modal-email')">Cancel</button>
+        <button type="submit" class="btn-fl-primary">Confirm Verification</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- 2. Phone Verification Modal -->
+<!-- Modal 2: Phone -->
 <div class="custom-modal-backdrop" id="modal-phone">
   <div class="custom-modal">
     <div class="modal-head">
-      <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin: 0;">
-        <i class="bi bi-phone-fill" style="color: var(--accent);"></i> Verify Mobile Number
-      </h4>
-      <button type="button" class="btn-close" onclick="closeModal('modal-phone')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:18px;">&times;</button>
+      <h3 style="font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="phone" style="color: var(--fl-yellow);"></i>
+        <span>Verify Mobile Phone</span>
+      </h3>
+      <button type="button" style="background: none; border: none; color: var(--fl-text-muted); cursor: pointer;" onclick="closeModal('modal-phone')">
+        <i data-lucide="x"></i>
+      </button>
     </div>
     <form method="post" action="{% url 'freelancer:verify_phone' %}">
       {% csrf_token %}
       <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="verify-phone-input">Mobile Phone Number</label>
-          {{ phone_form.phone_number }}
+        <div class="client-input-group">
+          <label class="client-label">Mobile Number</label>
+          <input type="tel" name="phone_number" value="{{ verification.phone_number|default:'+91 9876543210' }}" class="client-input" placeholder="+91 XXXXX XXXXX" required />
         </div>
-        <div class="form-group">
-          <label class="form-label" for="verify-phone-otp">SMS OTP Code (e.g. 654321)</label>
-          {{ phone_form.otp_code }}
+        <div class="client-input-group">
+          <label class="client-label">SMS Verification Code</label>
+          <input type="text" name="otp" value="654321" class="client-input" placeholder="Enter SMS OTP" required />
         </div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-phone')">Cancel</button>
-        <button type="submit" class="btn btn-primary">Verify Phone</button>
+        <button type="button" class="btn-fl-secondary" onclick="closeModal('modal-phone')">Cancel</button>
+        <button type="submit" class="btn-fl-primary">Verify Phone</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- 3. Identity Verification Modal -->
+<!-- Modal 3: Identity Check -->
 <div class="custom-modal-backdrop" id="modal-identity">
   <div class="custom-modal">
     <div class="modal-head">
-      <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin: 0;">
-        <i class="bi bi-person-badge-fill" style="color: var(--accent);"></i> Government Identity Check
-      </h4>
-      <button type="button" class="btn-close" onclick="closeModal('modal-identity')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:18px;">&times;</button>
+      <h3 style="font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="file-text" style="color: var(--fl-coral);"></i>
+        <span>Submit Government ID Check</span>
+      </h3>
+      <button type="button" style="background: none; border: none; color: var(--fl-text-muted); cursor: pointer;" onclick="closeModal('modal-identity')">
+        <i data-lucide="x"></i>
+      </button>
     </div>
-    <form method="post" action="{% url 'freelancer:verify_identity' %}">
+    <form method="post" action="{% url 'freelancer:verify_identity' %}" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="verify-id-type">Document Type</label>
-          {{ identity_form.identity_type }}
+        <div class="client-input-group">
+          <label class="client-label">Document Type</label>
+          <select name="id_type" class="client-select" required>
+            <option value="aadhaar">Aadhaar Card</option>
+            <option value="passport">Passport</option>
+            <option value="voter_id">Voter ID</option>
+            <option value="driving_license">Driving License</option>
+          </select>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="verify-id-name">Full Legal Name</label>
-          {{ identity_form.legal_name }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="verify-id-number">Document Number / Reference</label>
-          {{ identity_form.id_number }}
-          <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">Document numbers are processed securely and never shown to clients.</small>
+        <div class="client-input-group">
+          <label class="client-label">Document ID Number</label>
+          <input type="text" name="id_number" placeholder="Enter document number (Encrypted)" class="client-input" required />
         </div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-identity')">Cancel</button>
-        <button type="submit" class="btn btn-primary">Submit Identity</button>
+        <button type="button" class="btn-fl-secondary" onclick="closeModal('modal-identity')">Cancel</button>
+        <button type="submit" class="btn-fl-primary">Submit ID Check</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- 4. PAN Verification Modal -->
-<div class="custom-modal-backdrop" id="modal-pan">
-  <div class="custom-modal">
-    <div class="modal-head">
-      <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin: 0;">
-        <i class="bi bi-card-heading" style="color: var(--accent);"></i> Permanent Account Number (PAN)
-      </h4>
-      <button type="button" class="btn-close" onclick="closeModal('modal-pan')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:18px;">&times;</button>
-    </div>
-    <form method="post" action="{% url 'freelancer:verify_pan' %}">
-      {% csrf_token %}
-      <div class="modal-body">
-        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
-          Standard 10-character PAN format: 5 letters, 4 digits, 1 letter (e.g. <code>ABCDE1234F</code>).
-        </p>
-        <div class="form-group">
-          <label class="form-label" for="verify-pan-number">PAN Number</label>
-          {{ pan_form.pan_number }}
-          <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">
-            <i class="bi bi-lock-fill"></i> Only masked PAN (e.g. XXXXXX1234) is retained. Raw PAN is never exposed publicly.
-          </small>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-pan')">Cancel</button>
-        <button type="submit" class="btn btn-primary">Verify PAN</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- 5. Payment Verification Modal -->
+<!-- Modal 4: Payment Account -->
 <div class="custom-modal-backdrop" id="modal-payment">
   <div class="custom-modal">
     <div class="modal-head">
-      <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; margin: 0;">
-        <i class="bi bi-wallet2" style="color: var(--accent);"></i> Payment Account Onboarding
-      </h4>
-      <button type="button" class="btn-close" onclick="closeModal('modal-payment')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:18px;">&times;</button>
+      <h3 style="font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="credit-card" style="color: var(--fl-yellow);"></i>
+        <span>Verify Payout Account</span>
+      </h3>
+      <button type="button" style="background: none; border: none; color: var(--fl-text-muted); cursor: pointer;" onclick="closeModal('modal-payment')">
+        <i data-lucide="x"></i>
+      </button>
     </div>
     <form method="post" action="{% url 'freelancer:verify_payment' %}">
       {% csrf_token %}
       <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="verify-payment-provider">Payment Provider / Method</label>
-          {{ payment_form.account_provider }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="verify-payment-holder">Bank / Account Holder Name</label>
-          {{ payment_form.account_holder_name }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="verify-payment-identifier">Account Identifier / UPI ID</label>
-          {{ payment_form.account_identifier }}
+        <div class="client-input-group">
+          <label class="client-label">UPI ID or Bank Account</label>
+          <input type="text" name="payout_account" placeholder="e.g. yourname@upi or Account Number" class="client-input" required />
         </div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-payment')">Cancel</button>
-        <button type="submit" class="btn btn-primary">Link & Verify Account</button>
+        <button type="button" class="btn-fl-secondary" onclick="closeModal('modal-payment')">Cancel</button>
+        <button type="submit" class="btn-fl-primary">Save Payout Method</button>
       </div>
     </form>
   </div>
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
 <script>
-  function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.add('active');
-    }
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.add('active');
   }
-  function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.remove('active');
-    }
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('active');
   }
-  // Close on outside click
-  window.addEventListener('click', function(e) {
-    if (e.target.classList.contains('custom-modal-backdrop')) {
-      e.target.classList.remove('active');
-    }
-  });
 </script>
+
 {% endblock %}

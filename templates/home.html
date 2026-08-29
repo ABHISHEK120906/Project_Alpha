@@ -1,28 +1,28 @@
 {% extends 'public_base.html' %}
 {% load static %}
 
-{% block title %}FreelanceHub — Projects Meet the Right Talent{% endblock %}
-{% block meta_description %}FreelanceHub connects Clients, Freelancers, and Platform Administrators in one structured, color-driven ecosystem. Choose your role and start collaborating.{% endblock %}
+{% block title %}FreelanceHub — Where Projects Meet Talent{% endblock %}
+{% block meta_description %}FreelanceHub is a color-driven freelancing marketplace connecting Clients, Freelancers, and Platform Governance in one secure ecosystem.{% endblock %}
 
 {% block content %}
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 02 — HERO
+     SECTION 01 — HERO (WHERE PROJECTS MEET TALENT)
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-hero" id="hero">
-  <!-- Ambient Graphic Elements -->
+  <!-- Ambient Gradient Glow -->
   <div class="hub-hero-ambient" aria-hidden="true">
     <svg viewBox="0 0 1000 700" width="100%" height="100%" fill="none">
-      <circle cx="200" cy="200" r="300" fill="url(#heroGlowPurple)" opacity="0.35" />
-      <circle cx="800" cy="300" r="350" fill="url(#heroGlowGreen)" opacity="0.3" />
+      <circle cx="200" cy="200" r="320" fill="url(#heroGlowPurple)" opacity="0.3" />
+      <circle cx="800" cy="300" r="360" fill="url(#heroGlowLime)" opacity="0.25" />
       <defs>
         <radialGradient id="heroGlowPurple" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="var(--brand-primary)" stop-opacity="0.4"/>
-          <stop offset="100%" stop-color="var(--brand-primary)" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#8076a3" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#8076a3" stop-opacity="0"/>
         </radialGradient>
-        <radialGradient id="heroGlowGreen" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="var(--brand-secondary)" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="var(--brand-secondary)" stop-opacity="0"/>
+        <radialGradient id="heroGlowLime" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#9bc400" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#9bc400" stop-opacity="0"/>
         </radialGradient>
       </defs>
     </svg>
@@ -31,61 +31,61 @@
   <div class="pub-container">
     <div class="hub-hero-grid">
       
-      <!-- Hero Left: Typography & Primary Actions -->
+      <!-- Hero Left: Content & Actions -->
       <div class="hub-hero-content">
         
-        <!-- Small Eyebrow Label -->
+        <!-- Eyebrow -->
         <div class="hub-hero-eyebrow">
           <span class="pulse-dot"></span>
-          <span>Next-Gen Marketplace Architecture</span>
+          <span>FREELANCE MARKETPLACE</span>
         </div>
 
-        <!-- Very Large H1 -->
+        <!-- Main Title -->
         <h1 class="hub-hero-title">
-          Projects meet<br>
-          the <span class="gradient-text">right talent.</span>
+          Where Projects<br>
+          <span class="gradient-text">Meet Talent.</span>
         </h1>
 
-        <!-- Short Supporting Paragraph -->
+        <!-- Subtitle -->
         <p class="hub-hero-desc">
-          FreelanceHub brings Clients, Verified Freelancers, and Platform Governance together in one structured, color-driven ecosystem.
+          A structured, role-driven freelancing platform engineered for verified talent discovery, collaborative project delivery, and transparent governance.
         </p>
 
-        <!-- Primary and Secondary CTAs -->
+        <!-- Primary & Secondary Action Buttons -->
         <div class="hub-hero-role-buttons">
           <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client">
-            <i class="bi bi-briefcase-fill"></i>
-            <span>Give a Project</span>
+            <i data-lucide="briefcase"></i>
+            <span>GIVE A PROJECT</span>
           </a>
           <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer">
-            <i class="bi bi-search"></i>
-            <span>Find Work</span>
+            <i data-lucide="search"></i>
+            <span>FIND PROJECTS</span>
           </a>
         </div>
 
         <!-- Trust Indicators Strip -->
         <div class="hub-hero-trust-strip">
           <div class="hub-hero-trust-item">
-            <i class="bi bi-patch-check-fill"></i>
+            <i data-lucide="shield-check" style="color:var(--brand-secondary);"></i>
             <span>Multi-Tier Verified Talent</span>
           </div>
           <div class="hub-hero-trust-item">
-            <i class="bi bi-shield-lock-fill"></i>
+            <i data-lucide="lock" style="color:var(--brand-accent-pink);"></i>
             <span>Milestone Escrow Security</span>
           </div>
           <div class="hub-hero-trust-item">
-            <i class="bi bi-diagram-3-fill"></i>
-            <span>Dedicated Role Portals</span>
+            <i data-lucide="layout-grid" style="color:var(--brand-primary);"></i>
+            <span>Role-Specific Workspaces</span>
           </div>
         </div>
 
       </div>
 
-      <!-- Hero Right: Abstract Connected Network Composition (NO HUMANS) -->
+      <!-- Hero Right: Original Abstract Graphic (NO HUMANS) -->
       <div class="hub-hero-visual">
         <div class="hub-hero-art-wrapper">
           <img src="{% static 'images/illustrations/hero_abstract_nodes.svg' %}" 
-               alt="Abstract UI composition representing Project, Connection, Talent, and Platform Completion"
+               alt="Abstract UI composition depicting Project, Talent, Collaboration, and Completion nodes"
                width="800" 
                height="620" 
                loading="eager">
@@ -94,11 +94,11 @@
 
     </div>
 
-    <!-- Scroll Indicator Cue -->
-    <a href="#role-selection" class="hub-scroll-cue" aria-label="Scroll to role selection">
-      <span>Scroll to Explore</span>
+    <!-- Scroll Cue -->
+    <a href="#role-selection" class="hub-scroll-cue" aria-label="Scroll to explore roles">
+      <span>Choose Your Role</span>
       <div class="hub-scroll-arrow">
-        <i class="bi bi-arrow-down"></i>
+        <i data-lucide="chevron-down"></i>
       </div>
     </a>
 
@@ -106,87 +106,87 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 03 — ROLE SELECTION ("CHOOSE YOUR WAY TO WORK")
+     SECTION 02 — ROLE SELECTION ("CHOOSE YOUR ROLE")
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-section hub-section-alt" id="role-selection">
   <div class="pub-container">
     
     <div class="hub-section-header">
       <span class="hub-eyebrow">Platform Entry Points</span>
-      <h2 class="hub-title">Choose your way to work.</h2>
+      <h2 class="hub-title">Choose Your Role</h2>
       <p class="hub-subtitle">
-        Select your role below to access your dedicated workspace, tools, and personalized marketplace features.
+        Access dedicated workspaces tailored for posting projects, delivering client work, or administering platform operations.
       </p>
     </div>
 
     <div class="hub-roles-grid">
       
-      <!-- 1. CLIENT PANEL -->
+      <!-- 1. CLIENT -->
       <div class="hub-role-panel role-client-panel">
-        <div>
+        <div class="hub-role-inner">
           <div class="hub-role-icon-box">
-            <i class="bi bi-building"></i>
+            <i data-lucide="briefcase"></i>
           </div>
           <div class="hub-role-tag">CLIENT</div>
-          <h3 class="hub-role-headline">Post projects. Find the right freelancer.</h3>
+          <h3 class="hub-role-headline">Give a Project</h3>
           <p class="hub-role-desc">
-            Post detailed requirements, review verified talent applications, fund milestone escrows, and track deliverables.
+            Post your project and connect with suitable freelancers.
           </p>
           <ul class="hub-role-bullets">
-            <li><i class="bi bi-check-circle-fill"></i> Post customized project briefs in minutes</li>
-            <li><i class="bi bi-check-circle-fill"></i> Inspect verified freelancer credentials &amp; proposals</li>
-            <li><i class="bi bi-check-circle-fill"></i> Secure milestone payments &amp; approve work</li>
+            <li><i data-lucide="check-circle-2"></i> Structured multi-section project posting</li>
+            <li><i data-lucide="check-circle-2"></i> Review verified proposals and portfolio metrics</li>
+            <li><i data-lucide="check-circle-2"></i> Milestone escrow payment protection</li>
           </ul>
         </div>
         <a href="{% url 'marketplace:client_register' %}" class="btn-role-action">
           <span>Continue as Client</span>
-          <i class="bi bi-arrow-right"></i>
+          <i data-lucide="arrow-right"></i>
         </a>
       </div>
 
-      <!-- 2. FREELANCER PANEL -->
+      <!-- 2. FREELANCER -->
       <div class="hub-role-panel role-freelancer-panel">
-        <div>
+        <div class="hub-role-inner">
           <div class="hub-role-icon-box">
-            <i class="bi bi-person-badge"></i>
+            <i data-lucide="search"></i>
           </div>
           <div class="hub-role-tag">FREELANCER</div>
-          <h3 class="hub-role-headline">Discover projects. Build your professional career.</h3>
+          <h3 class="hub-role-headline">Find Work</h3>
           <p class="hub-role-desc">
-            Build your professional profile, pass multi-tier verification checkpoints, discover matching projects, and earn verified payouts.
+            Discover projects and apply to opportunities.
           </p>
           <ul class="hub-role-bullets">
-            <li><i class="bi bi-check-circle-fill"></i> Complete 6-step identity &amp; skills verification</li>
-            <li><i class="bi bi-check-circle-fill"></i> Browse vetted projects matching your expertise</li>
-            <li><i class="bi bi-check-circle-fill"></i> Submit milestone proposals &amp; receive direct payouts</li>
+            <li><i data-lucide="check-circle-2"></i> 6-point verification badge center</li>
+            <li><i data-lucide="check-circle-2"></i> Filter open projects by category &amp; skills</li>
+            <li><i data-lucide="check-circle-2"></i> Submit structured proposals &amp; track earnings</li>
           </ul>
         </div>
         <a href="{% url 'freelancer:register' %}" class="btn-role-action">
           <span>Continue as Freelancer</span>
-          <i class="bi bi-arrow-right"></i>
+          <i data-lucide="arrow-right"></i>
         </a>
       </div>
 
-      <!-- 3. ADMIN PANEL -->
+      <!-- 3. ADMIN -->
       <div class="hub-role-panel role-admin-panel">
-        <div>
+        <div class="hub-role-inner">
           <div class="hub-role-icon-box">
-            <i class="bi bi-shield-lock-fill"></i>
+            <i data-lucide="shield-check"></i>
           </div>
           <div class="hub-role-tag">ADMIN</div>
-          <h3 class="hub-role-headline">Manage the FreelanceHub platform.</h3>
+          <h3 class="hub-role-headline">Manage Platform</h3>
           <p class="hub-role-desc">
-            Access the centralized administration portal to monitor live projects, approve freelancer verifications, arbitrate disputes, and manage platform health.
+            Monitor users, projects, verification and platform activity.
           </p>
           <ul class="hub-role-bullets">
-            <li><i class="bi bi-check-circle-fill"></i> Review &amp; approve freelancer verification submissions</li>
-            <li><i class="bi bi-check-circle-fill"></i> Oversee marketplace projects, applications &amp; milestones</li>
-            <li><i class="bi bi-check-circle-fill"></i> Handle support tickets, disputes &amp; activity logs</li>
+            <li><i data-lucide="check-circle-2"></i> Review KYC verification queue &amp; audits</li>
+            <li><i data-lucide="check-circle-2"></i> Moderate projects, applications &amp; milestones</li>
+            <li><i data-lucide="check-circle-2"></i> Impartial report arbitration &amp; support desk</li>
           </ul>
         </div>
         <a href="{% url 'core:admin_login' %}" class="btn-role-action">
           <span>Admin Login</span>
-          <i class="bi bi-arrow-right"></i>
+          <i data-lucide="arrow-right"></i>
         </a>
       </div>
 
@@ -196,34 +196,34 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 04 — HOW FREELANCEHUB WORKS
+     SECTION 03 — HOW IT WORKS
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-section" id="how-it-works">
   <div class="pub-container">
     
     <div class="hub-section-header">
-      <span class="hub-eyebrow">Structured Marketplace Flow</span>
-      <h2 class="hub-title">How FreelanceHub Works</h2>
+      <span class="hub-eyebrow">Structured Process</span>
+      <h2 class="hub-title">How It Works</h2>
       <p class="hub-subtitle">
-        A clear visual timeline engineered for Clients, Freelancers, and Platform Governance.
+        A transparent, step-by-step workflow connecting each role in the marketplace.
       </p>
     </div>
 
     <div class="hub-how-workflow-track">
       
-      <!-- CLIENT WORKFLOW -->
+      <!-- CLIENT PIPELINE -->
       <div class="hub-workflow-col client-wf">
         <div class="hub-wf-col-title">
-          <i class="bi bi-building" style="color:var(--role-client);"></i>
-          <span>Client Flow</span>
+          <i data-lucide="briefcase" style="color:var(--role-client);"></i>
+          <span>Client Workflow</span>
         </div>
         <div class="hub-wf-steps">
           
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">01</div>
             <div class="hub-wf-step-text">
-              <h5>Post</h5>
-              <p>Define requirements, tech stack, budget, and project milestones.</p>
+              <h5>Post Project</h5>
+              <p>Define requirements, tech stack, budget, and delivery milestones.</p>
             </div>
           </div>
 
@@ -238,59 +238,59 @@
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">03</div>
             <div class="hub-wf-step-text">
-              <h5>Review</h5>
-              <p>Inspect verified badges, ratings, skills, and portfolio history.</p>
+              <h5>Review Freelancers</h5>
+              <p>Inspect verified credentials, skills, ratings, and experience.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">04</div>
             <div class="hub-wf-step-text">
-              <h5>Select</h5>
-              <p>Accept best proposal and fund milestone escrow safely.</p>
+              <h5>Select Freelancer</h5>
+              <p>Accept best candidate and fund milestone escrow securely.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">05</div>
             <div class="hub-wf-step-text">
-              <h5>Manage</h5>
-              <p>Track progress in workspace, approve deliverables, and release funds.</p>
+              <h5>Manage Project</h5>
+              <p>Track workspace milestones, approve deliverables, and release payments.</p>
             </div>
           </div>
 
         </div>
       </div>
 
-      <!-- FREELANCER WORKFLOW -->
+      <!-- FREELANCER PIPELINE -->
       <div class="hub-workflow-col freelancer-wf">
         <div class="hub-wf-col-title">
-          <i class="bi bi-person-badge" style="color:var(--role-freelancer);"></i>
-          <span>Freelancer Flow</span>
+          <i data-lucide="code-2" style="color:var(--role-freelancer);"></i>
+          <span>Freelancer Workflow</span>
         </div>
         <div class="hub-wf-steps">
           
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">01</div>
             <div class="hub-wf-step-text">
-              <h5>Profile</h5>
-              <p>Highlight skills, rates, bio, GitHub, and professional portfolio.</p>
+              <h5>Create Profile</h5>
+              <p>Showcase skills, experience, portfolio links, and hourly rates.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">02</div>
             <div class="hub-wf-step-text">
-              <h5>Verify</h5>
-              <p>Complete multi-tier identity, KYC, and skills verification checks.</p>
+              <h5>Complete Verification</h5>
+              <p>Pass multi-tier identity, KYC, and profile verification checkpoints.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">03</div>
             <div class="hub-wf-step-text">
-              <h5>Discover</h5>
-              <p>Search live opportunities filtered by domain, rate, and skills.</p>
+              <h5>Browse Projects</h5>
+              <p>Filter open requirements matching your domain expertise.</p>
             </div>
           </div>
 
@@ -298,50 +298,50 @@
             <div class="hub-wf-step-num">04</div>
             <div class="hub-wf-step-text">
               <h5>Apply</h5>
-              <p>Submit applications with clear deliverables, milestones, and timelines.</p>
+              <p>Submit structured proposals with realistic milestones and pricing.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">05</div>
             <div class="hub-wf-step-text">
-              <h5>Work</h5>
-              <p>Collaborate in active workspace and receive verified payouts.</p>
+              <h5>Work on Project</h5>
+              <p>Collaborate in active workspace and receive guaranteed payouts.</p>
             </div>
           </div>
 
         </div>
       </div>
 
-      <!-- ADMIN WORKFLOW -->
+      <!-- ADMIN PIPELINE -->
       <div class="hub-workflow-col admin-wf">
         <div class="hub-wf-col-title">
-          <i class="bi bi-shield-lock-fill" style="color:var(--role-admin);"></i>
-          <span>Admin Flow</span>
+          <i data-lucide="shield-check" style="color:var(--role-admin);"></i>
+          <span>Admin Workflow</span>
         </div>
         <div class="hub-wf-steps">
           
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">01</div>
             <div class="hub-wf-step-text">
-              <h5>Manage Users</h5>
-              <p>Oversee client and freelancer accounts, roles, and status logs.</p>
+              <h5>Monitor Platform</h5>
+              <p>Track realtime system health, user onboarding, and telemetry.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">02</div>
             <div class="hub-wf-step-text">
-              <h5>Verify Freelancers</h5>
-              <p>Review KYC and identity submissions to maintain marketplace trust.</p>
+              <h5>Verify Users</h5>
+              <p>Audit KYC documents and approve verified status badges.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">03</div>
             <div class="hub-wf-step-text">
-              <h5>Monitor Projects</h5>
-              <p>Track project lifecycles, milestone payments, and completion rates.</p>
+              <h5>Manage Projects</h5>
+              <p>Oversee project lifecycles, milestone completions, and escrow safety.</p>
             </div>
           </div>
 
@@ -349,7 +349,7 @@
             <div class="hub-wf-step-num">04</div>
             <div class="hub-wf-step-text">
               <h5>Handle Reports</h5>
-              <p>Investigate disputes and provide impartial, evidence-based mediation.</p>
+              <p>Investigate reported issues and provide fair arbitration.</p>
             </div>
           </div>
 
@@ -357,7 +357,7 @@
             <div class="hub-wf-step-num">05</div>
             <div class="hub-wf-step-text">
               <h5>Support Platform</h5>
-              <p>Respond to support tickets and manage global security settings.</p>
+              <p>Resolve support tickets and enforce marketplace standards.</p>
             </div>
           </div>
 
@@ -370,16 +370,16 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 05 — PROJECT DISCOVERY
+     SECTION 04 — PROJECT PREVIEW ("PROJECTS LOOKING FOR TALENT")
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-section hub-section-alt" id="browse-projects">
   <div class="pub-container">
     
     <div class="hub-section-header">
-      <span class="hub-eyebrow">Marketplace Opportunities</span>
-      <h2 class="hub-title">Projects looking for talent.</h2>
+      <span class="hub-eyebrow">Marketplace Catalog</span>
+      <h2 class="hub-title">Projects Looking for Talent</h2>
       <p class="hub-subtitle">
-        Browse open requirements across web development, data analytics, UI/UX design, and mobile engineering.
+        Explore active requirements across full-stack development, data engineering, UI/UX design, and DevOps.
       </p>
     </div>
 
@@ -387,170 +387,127 @@
       {% if open_projects %}
         {% for proj in open_projects %}
           <div class="hub-project-card">
-            <div>
+            <div class="hub-project-card-top">
               <div class="hub-project-meta-top">
-                <span class="hub-category-pill">{{ proj.get_category_display }}</span>
-                <span class="hub-budget-tag">
-                  {% if proj.budget_type == 'fixed' %}${{ proj.budget_min|default:"500" }} - ${{ proj.budget_max|default:"2000" }}{% else %}${{ proj.hourly_rate|default:"45" }}/hr{% endif %}
+                <span class="hub-category-pill">
+                  <i data-lucide="tag"></i>
+                  {{ proj.get_category_display|default:"Engineering" }}
                 </span>
+                <span class="hub-status-pill hub-status-open">Open</span>
               </div>
               <h4 class="hub-project-title">{{ proj.title }}</h4>
-              <p class="hub-project-desc">{{ proj.description }}</p>
+              <p class="hub-project-desc">{{ proj.description|truncatewords:20 }}</p>
               <div class="hub-skills-chips">
                 {% if proj.required_skills %}
                   {% for skill in proj.skills_list|slice:":4" %}
                     <span class="hub-skill-chip">{{ skill }}</span>
                   {% endfor %}
                 {% else %}
-                  <span class="hub-skill-chip">{{ proj.get_category_display }}</span>
                   <span class="hub-skill-chip">Verified Pro</span>
+                  <span class="hub-skill-chip">Full Stack</span>
                 {% endif %}
               </div>
             </div>
             <div class="hub-project-footer">
-              <span><i class="bi bi-clock"></i> {{ proj.get_duration_display|default:"1 to 4 weeks" }}</span>
-              <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
-                <span>View &amp; Apply</span>
+              <div class="hub-project-metrics">
+                <span class="hub-budget-tag">₹{{ proj.budget|floatformat:0|default:"Fixed Budget" }}</span>
+                <span class="hub-duration-tag"><i data-lucide="clock"></i> {{ proj.deadline|date:"M d, Y"|default:"Active" }}</span>
+              </div>
+              <a href="{% url 'freelancer:register' %}" class="btn-project-view">
+                <span>View Project</span>
+                <i data-lucide="arrow-up-right"></i>
               </a>
             </div>
           </div>
         {% endfor %}
       {% else %}
-        <!-- Curated UI Marketplace Project Cards -->
+        <!-- Curated UI Project Cards with Strict Category Icons -->
         <div class="hub-project-card">
-          <div>
+          <div class="hub-project-card-top">
             <div class="hub-project-meta-top">
-              <span class="hub-category-pill">Web Development</span>
-              <span class="hub-budget-tag">$1,500 - $3,000</span>
+              <span class="hub-category-pill">
+                <i data-lucide="code-2"></i>
+                Full-Stack Engineering
+              </span>
+              <span class="hub-status-pill hub-status-open">Open</span>
             </div>
-            <h4 class="hub-project-title">Full-Stack SaaS Client Portal &amp; REST API</h4>
-            <p class="hub-project-desc">Build a responsive client management dashboard with authentication, real-time metrics, and PostgreSQL database.</p>
+            <h4 class="hub-project-title">Enterprise SaaS Analytics Portal &amp; REST API</h4>
+            <p class="hub-project-desc">Design and implement a responsive analytics dashboard with multi-tenant auth, PostgreSQL backend, and live telemetry charts.</p>
             <div class="hub-skills-chips">
-              <span class="hub-skill-chip">React</span>
               <span class="hub-skill-chip">Django</span>
+              <span class="hub-skill-chip">React</span>
               <span class="hub-skill-chip">PostgreSQL</span>
               <span class="hub-skill-chip">REST API</span>
             </div>
           </div>
           <div class="hub-project-footer">
-            <span><i class="bi bi-clock"></i> 1 to 3 months</span>
-            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
-              <span>View &amp; Apply</span>
+            <div class="hub-project-metrics">
+              <span class="hub-budget-tag">₹1,50,000</span>
+              <span class="hub-duration-tag"><i data-lucide="clock"></i> 4 Weeks</span>
+            </div>
+            <a href="{% url 'freelancer:register' %}" class="btn-project-view">
+              <span>View Project</span>
+              <i data-lucide="arrow-up-right"></i>
             </a>
           </div>
         </div>
 
         <div class="hub-project-card">
-          <div>
+          <div class="hub-project-card-top">
             <div class="hub-project-meta-top">
-              <span class="hub-category-pill">Data Analytics &amp; AI</span>
-              <span class="hub-budget-tag">$850 - $1,800</span>
+              <span class="hub-category-pill">
+                <i data-lucide="database"></i>
+                Data &amp; Machine Learning
+              </span>
+              <span class="hub-status-pill hub-status-open">Open</span>
             </div>
-            <h4 class="hub-project-title">Predictive ML Pipeline &amp; Customer Insights</h4>
-            <p class="hub-project-desc">Develop automated data cleaning, anomaly detection, and retention modeling for transaction datasets.</p>
+            <h4 class="hub-project-title">Automated ML Pipeline &amp; Customer Analytics</h4>
+            <p class="hub-project-desc">Build automated data cleansing, cohort churn predictions, and automated scheduled reporting with Python and BigQuery.</p>
             <div class="hub-skills-chips">
               <span class="hub-skill-chip">Python</span>
-              <span class="hub-skill-chip">Pandas</span>
               <span class="hub-skill-chip">Scikit-Learn</span>
               <span class="hub-skill-chip">BigQuery</span>
+              <span class="hub-skill-chip">Pandas</span>
             </div>
           </div>
           <div class="hub-project-footer">
-            <span><i class="bi bi-clock"></i> 1 to 4 weeks</span>
-            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
-              <span>View &amp; Apply</span>
+            <div class="hub-project-metrics">
+              <span class="hub-budget-tag">₹95,000</span>
+              <span class="hub-duration-tag"><i data-lucide="clock"></i> 3 Weeks</span>
+            </div>
+            <a href="{% url 'freelancer:register' %}" class="btn-project-view">
+              <span>View Project</span>
+              <i data-lucide="arrow-up-right"></i>
             </a>
           </div>
         </div>
 
         <div class="hub-project-card">
-          <div>
+          <div class="hub-project-card-top">
             <div class="hub-project-meta-top">
-              <span class="hub-category-pill">UI/UX Design</span>
-              <span class="hub-budget-tag">$1,200 - $2,400</span>
+              <span class="hub-category-pill">
+                <i data-lucide="layout"></i>
+                UI/UX Design
+              </span>
+              <span class="hub-status-pill hub-status-open">Open</span>
             </div>
-            <h4 class="hub-project-title">Fintech Mobile App UI/UX &amp; Design System</h4>
-            <p class="hub-project-desc">Create high-fidelity wireframes, interactive prototypes, and token-based Figma design systems for iOS/Android.</p>
+            <h4 class="hub-project-title">Fintech Mobile Design System &amp; Prototypes</h4>
+            <p class="hub-project-desc">Architect high-fidelity tokenized Figma component libraries, responsive micro-animations, and complete user flows.</p>
             <div class="hub-skills-chips">
               <span class="hub-skill-chip">Figma</span>
               <span class="hub-skill-chip">Design Systems</span>
-              <span class="hub-skill-chip">Mobile UX</span>
+              <span class="hub-skill-chip">Wireframing</span>
               <span class="hub-skill-chip">Prototyping</span>
             </div>
           </div>
           <div class="hub-project-footer">
-            <span><i class="bi bi-clock"></i> 1 to 4 weeks</span>
-            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
-              <span>View &amp; Apply</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="hub-project-card">
-          <div>
-            <div class="hub-project-meta-top">
-              <span class="hub-category-pill">Mobile Development</span>
-              <span class="hub-budget-tag">$2,000 - $4,500</span>
+            <div class="hub-project-metrics">
+              <span class="hub-budget-tag">₹75,000</span>
+              <span class="hub-duration-tag"><i data-lucide="clock"></i> 2 Weeks</span>
             </div>
-            <h4 class="hub-project-title">Cross-Platform React Native E-Commerce App</h4>
-            <p class="hub-project-desc">Build a performant mobile commerce app with push notifications, offline cache, and Stripe checkout.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">React Native</span>
-              <span class="hub-skill-chip">TypeScript</span>
-              <span class="hub-skill-chip">Redux</span>
-              <span class="hub-skill-chip">Stripe</span>
-            </div>
-          </div>
-          <div class="hub-project-footer">
-            <span><i class="bi bi-clock"></i> 1 to 3 months</span>
-            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
-              <span>View &amp; Apply</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="hub-project-card">
-          <div>
-            <div class="hub-project-meta-top">
-              <span class="hub-category-pill">Digital Marketing &amp; SEO</span>
-              <span class="hub-budget-tag">$600 - $1,400</span>
-            </div>
-            <h4 class="hub-project-title">SaaS Technical SEO &amp; Organic Growth Strategy</h4>
-            <p class="hub-project-desc">Audit site indexing, optimize keyword clustering, and develop content architecture for B2B search traffic.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">SEO</span>
-              <span class="hub-skill-chip">Content Strategy</span>
-              <span class="hub-skill-chip">Analytics</span>
-              <span class="hub-skill-chip">SaaS</span>
-            </div>
-          </div>
-          <div class="hub-project-footer">
-            <span><i class="bi bi-clock"></i> 1 to 2 weeks</span>
-            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
-              <span>View &amp; Apply</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="hub-project-card">
-          <div>
-            <div class="hub-project-meta-top">
-              <span class="hub-category-pill">Cloud &amp; DevOps</span>
-              <span class="hub-budget-tag">$65 - $100/hr</span>
-            </div>
-            <h4 class="hub-project-title">Docker &amp; Kubernetes CI/CD Automation</h4>
-            <p class="hub-project-desc">Architect zero-downtime deployment pipelines with GitHub Actions, Docker containers, and cloud cost management.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">Docker</span>
-              <span class="hub-skill-chip">Kubernetes</span>
-              <span class="hub-skill-chip">GitHub Actions</span>
-              <span class="hub-skill-chip">AWS</span>
-            </div>
-          </div>
-          <div class="hub-project-footer">
-            <span><i class="bi bi-clock"></i> 1 to 4 weeks</span>
-            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
-              <span>View &amp; Apply</span>
+            <a href="{% url 'freelancer:register' %}" class="btn-project-view">
+              <span>View Project</span>
+              <i data-lucide="arrow-up-right"></i>
             </a>
           </div>
         </div>
@@ -558,9 +515,9 @@
     </div>
 
     <!-- Center CTA -->
-    <div style="text-align:center;">
+    <div style="text-align:center;margin-top:32px;">
       <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer" style="display:inline-flex;">
-        <i class="bi bi-grid-fill"></i>
+        <i data-lucide="folder-kanban"></i>
         <span>Explore All Opportunities</span>
       </a>
     </div>
@@ -569,225 +526,131 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 06 — FREELANCER DISCOVERY
+     SECTION 05 — FREELANCER PREVIEW ("PROFESSIONAL TALENT")
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-section" id="find-freelancers">
   <div class="pub-container">
     
     <div class="hub-section-header">
       <span class="hub-eyebrow">Verified Talent Showcase</span>
-      <h2 class="hub-title">Find the right skills for your project.</h2>
+      <h2 class="hub-title">Professional Talent</h2>
       <p class="hub-subtitle">
-        Work with experienced professionals verified for skills, identity, and reliability.
+        Work with thoroughly verified professionals equipped with verified identity and proven track records.
       </p>
     </div>
 
     <div class="hub-freelancers-grid">
-      {% if freelancers %}
-        {% for fl in freelancers %}
-          <div class="hub-freelancer-card">
-            <div>
-              <div class="hub-fl-header">
-                <div class="hub-fl-avatar">
-                  {{ fl.full_name|slice:":1"|default:"F" }}
-                </div>
-                <div class="hub-fl-info">
-                  <div class="hub-fl-name">
-                    <span>{{ fl.display_name }}</span>
-                    <i class="bi bi-patch-check-fill" title="Verified Freelancer"></i>
-                  </div>
-                  <div class="hub-fl-title">{{ fl.professional_title|default:"Full-Stack Specialist" }}</div>
-                </div>
-              </div>
-              <p class="hub-fl-bio">{{ fl.bio|default:"Dedicated specialist delivering robust digital solutions with clean code and clear communication." }}</p>
-              <div class="hub-skills-chips">
-                {% for skill in fl.skills_list|slice:":4" %}
-                  <span class="hub-skill-chip">{{ skill }}</span>
-                {% endfor %}
-              </div>
+      <!-- Monogram Profile Cards (ZERO HUMAN PHOTOS) -->
+      <div class="hub-freelancer-card">
+        <div class="hub-fl-card-body">
+          <div class="hub-fl-header">
+            <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #7d3cff, #8076a3);">
+              AM
             </div>
-            <div class="hub-fl-stats-row">
-              <span><i class="bi bi-geo-alt"></i> {{ fl.location|default:"Global Remote" }}</span>
-              <span class="hub-fl-rate">{% if fl.hourly_rate %}${{ fl.hourly_rate }}/hr{% else %}Top Rated{% endif %}</span>
+            <div class="hub-fl-info">
+              <div class="hub-fl-name">
+                <span>Alex M.</span>
+                <span class="hub-fl-verify-badge" title="Identity & Skills Verified">
+                  <i data-lucide="shield-check"></i> Verified
+                </span>
+              </div>
+              <div class="hub-fl-title">Senior Full-Stack Architect</div>
             </div>
           </div>
-        {% endfor %}
-      {% else %}
-        <!-- Curated UI Freelancer Cards with Abstract Avatars -->
-        <div class="hub-freelancer-card">
-          <div>
-            <div class="hub-fl-header">
-              <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #7d3cff, #8076a3);">
-                AM
-              </div>
-              <div class="hub-fl-info">
-                <div class="hub-fl-name">
-                  <span>Alex Morgan</span>
-                  <i class="bi bi-patch-check-fill" title="Verified Specialist"></i>
-                </div>
-                <div class="hub-fl-title">Senior Full-Stack Engineer</div>
-              </div>
-            </div>
-            <p class="hub-fl-bio">Specializing in high-performance Python, Django, React, and scalable cloud architectures with 6+ years experience.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">React</span>
-              <span class="hub-skill-chip">Django</span>
-              <span class="hub-skill-chip">PostgreSQL</span>
-              <span class="hub-skill-chip">TypeScript</span>
-            </div>
-          </div>
-          <div class="hub-fl-stats-row">
-            <span><i class="bi bi-geo-alt"></i> San Francisco, CA</span>
-            <span class="hub-fl-rate">$75/hr</span>
+          <div class="hub-skills-chips">
+            <span class="hub-skill-chip">React</span>
+            <span class="hub-skill-chip">Django</span>
+            <span class="hub-skill-chip">PostgreSQL</span>
+            <span class="hub-skill-chip">TypeScript</span>
           </div>
         </div>
+        <div class="hub-fl-stats-row">
+          <div class="hub-fl-metric">
+            <i data-lucide="briefcase"></i>
+            <span><strong>24</strong> Projects</span>
+          </div>
+          <div class="hub-fl-metric">
+            <i data-lucide="award"></i>
+            <span><strong>6+</strong> Yrs Exp</span>
+          </div>
+        </div>
+      </div>
 
-        <div class="hub-freelancer-card">
-          <div>
-            <div class="hub-fl-header">
-              <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #9bc400, #10b981);">
-                SC
-              </div>
-              <div class="hub-fl-info">
-                <div class="hub-fl-name">
-                  <span>Sophia Chen</span>
-                  <i class="bi bi-patch-check-fill" title="Verified Specialist"></i>
-                </div>
-                <div class="hub-fl-title">Data Scientist &amp; ML Engineer</div>
-              </div>
+      <div class="hub-freelancer-card">
+        <div class="hub-fl-card-body">
+          <div class="hub-fl-header">
+            <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #9bc400, #10b981);">
+              SC
             </div>
-            <p class="hub-fl-bio">Building production machine learning pipelines, predictive analytics models, and automated business intelligence dashboards.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">Python</span>
-              <span class="hub-skill-chip">Scikit-Learn</span>
-              <span class="hub-skill-chip">BigQuery</span>
-              <span class="hub-skill-chip">PyTorch</span>
+            <div class="hub-fl-info">
+              <div class="hub-fl-name">
+                <span>Sophia C.</span>
+                <span class="hub-fl-verify-badge" title="Identity & Skills Verified">
+                  <i data-lucide="shield-check"></i> Verified
+                </span>
+              </div>
+              <div class="hub-fl-title">Data Scientist &amp; ML Engineer</div>
             </div>
           </div>
-          <div class="hub-fl-stats-row">
-            <span><i class="bi bi-geo-alt"></i> Toronto, Canada</span>
-            <span class="hub-fl-rate">$85/hr</span>
+          <div class="hub-skills-chips">
+            <span class="hub-skill-chip">Python</span>
+            <span class="hub-skill-chip">BigQuery</span>
+            <span class="hub-skill-chip">Scikit-Learn</span>
+            <span class="hub-skill-chip">PyTorch</span>
           </div>
         </div>
+        <div class="hub-fl-stats-row">
+          <div class="hub-fl-metric">
+            <i data-lucide="briefcase"></i>
+            <span><strong>18</strong> Projects</span>
+          </div>
+          <div class="hub-fl-metric">
+            <i data-lucide="award"></i>
+            <span><strong>5+</strong> Yrs Exp</span>
+          </div>
+        </div>
+      </div>
 
-        <div class="hub-freelancer-card">
-          <div>
-            <div class="hub-fl-header">
-              <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #ff5e6c, #feb300);">
-                ER
-              </div>
-              <div class="hub-fl-info">
-                <div class="hub-fl-name">
-                  <span>Elena Rostova</span>
-                  <i class="bi bi-patch-check-fill" title="Verified Specialist"></i>
-                </div>
-                <div class="hub-fl-title">Principal UI/UX &amp; Product Designer</div>
-              </div>
+      <div class="hub-freelancer-card">
+        <div class="hub-fl-card-body">
+          <div class="hub-fl-header">
+            <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #ff5e6c, #feb300);">
+              ER
             </div>
-            <p class="hub-fl-bio">Designing intuitive SaaS interfaces, design systems, and mobile applications with an editorial aesthetic and high conversion.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">Figma</span>
-              <span class="hub-skill-chip">Design Systems</span>
-              <span class="hub-skill-chip">Wireframing</span>
-              <span class="hub-skill-chip">Mobile UX</span>
+            <div class="hub-fl-info">
+              <div class="hub-fl-name">
+                <span>Elena R.</span>
+                <span class="hub-fl-verify-badge" title="Identity & Skills Verified">
+                  <i data-lucide="shield-check"></i> Verified
+                </span>
+              </div>
+              <div class="hub-fl-title">Principal UI/UX &amp; Design Lead</div>
             </div>
           </div>
-          <div class="hub-fl-stats-row">
-            <span><i class="bi bi-geo-alt"></i> London, UK</span>
-            <span class="hub-fl-rate">$68/hr</span>
+          <div class="hub-skills-chips">
+            <span class="hub-skill-chip">Figma</span>
+            <span class="hub-skill-chip">Design Systems</span>
+            <span class="hub-skill-chip">Prototyping</span>
+            <span class="hub-skill-chip">Mobile UX</span>
           </div>
         </div>
-
-        <div class="hub-freelancer-card">
-          <div>
-            <div class="hub-fl-header">
-              <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #f9c5bd, #7c677f);">
-                MV
-              </div>
-              <div class="hub-fl-info">
-                <div class="hub-fl-name">
-                  <span>Marcus Vance</span>
-                  <i class="bi bi-patch-check-fill" title="Verified Specialist"></i>
-                </div>
-                <div class="hub-fl-title">Mobile App Developer (iOS &amp; Flutter)</div>
-              </div>
-            </div>
-            <p class="hub-fl-bio">Crafting smooth cross-platform mobile apps with native bridges, responsive state management, and API integrations.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">Flutter</span>
-              <span class="hub-skill-chip">Swift</span>
-              <span class="hub-skill-chip">React Native</span>
-              <span class="hub-skill-chip">Firebase</span>
-            </div>
+        <div class="hub-fl-stats-row">
+          <div class="hub-fl-metric">
+            <i data-lucide="briefcase"></i>
+            <span><strong>31</strong> Projects</span>
           </div>
-          <div class="hub-fl-stats-row">
-            <span><i class="bi bi-geo-alt"></i> Austin, TX</span>
-            <span class="hub-fl-rate">$70/hr</span>
+          <div class="hub-fl-metric">
+            <i data-lucide="award"></i>
+            <span><strong>7+</strong> Yrs Exp</span>
           </div>
         </div>
-
-        <div class="hub-freelancer-card">
-          <div>
-            <div class="hub-fl-header">
-              <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #8076a3, #9bc400);">
-                DP
-              </div>
-              <div class="hub-fl-info">
-                <div class="hub-fl-name">
-                  <span>Devon Patel</span>
-                  <i class="bi bi-patch-check-fill" title="Verified Specialist"></i>
-                </div>
-                <div class="hub-fl-title">Cloud Solutions &amp; DevOps Architect</div>
-              </div>
-            </div>
-            <p class="hub-fl-bio">Automating infrastructure deployments, container orchestration, CI/CD pipelines, and cloud cost optimization.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">Kubernetes</span>
-              <span class="hub-skill-chip">Docker</span>
-              <span class="hub-skill-chip">Terraform</span>
-              <span class="hub-skill-chip">AWS</span>
-            </div>
-          </div>
-          <div class="hub-fl-stats-row">
-            <span><i class="bi bi-geo-alt"></i> Berlin, Germany</span>
-            <span class="hub-fl-rate">$90/hr</span>
-          </div>
-        </div>
-
-        <div class="hub-freelancer-card">
-          <div>
-            <div class="hub-fl-header">
-              <div class="hub-fl-avatar" style="background:linear-gradient(135deg, #7d3cff, #ff5e6c);">
-                CD
-              </div>
-              <div class="hub-fl-info">
-                <div class="hub-fl-name">
-                  <span>Clara Dupont</span>
-                  <i class="bi bi-patch-check-fill" title="Verified Specialist"></i>
-                </div>
-                <div class="hub-fl-title">Technical Copywriter &amp; SEO Lead</div>
-              </div>
-            </div>
-            <p class="hub-fl-bio">Creating clear developer documentation, engaging SaaS product copy, and high-impact organic search content strategies.</p>
-            <div class="hub-skills-chips">
-              <span class="hub-skill-chip">Copywriting</span>
-              <span class="hub-skill-chip">SEO Strategy</span>
-              <span class="hub-skill-chip">Technical Docs</span>
-              <span class="hub-skill-chip">Content</span>
-            </div>
-          </div>
-          <div class="hub-fl-stats-row">
-            <span><i class="bi bi-geo-alt"></i> Paris, France</span>
-            <span class="hub-fl-rate">$55/hr</span>
-          </div>
-        </div>
-      {% endif %}
+      </div>
     </div>
 
     <!-- Center CTA -->
-    <div style="text-align:center;">
+    <div style="text-align:center;margin-top:32px;">
       <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client" style="display:inline-flex;">
-        <i class="bi bi-person-plus-fill"></i>
+        <i data-lucide="users"></i>
         <span>Post a Project to Hire Verified Talent</span>
       </a>
     </div>
@@ -796,133 +659,123 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 07 — TRUST / VERIFICATION
+     SECTION 06 — TRUST SECTION ("BUILT FOR PROFESSIONAL COLLABORATION")
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-section hub-section-alt" id="verification">
   <div class="pub-container">
     
-    <div class="hub-verify-grid">
+    <div class="hub-section-header">
+      <span class="hub-eyebrow">Security &amp; Integrity</span>
+      <h2 class="hub-title">Built for Professional Collaboration</h2>
+      <p class="hub-subtitle">
+        Engineered with multi-layered trust protocols, secure financial tracking, and dedicated admin mediation.
+      </p>
+    </div>
+
+    <!-- 5 Trust Pillars -->
+    <div class="hub-trust-grid">
       
-      <!-- Abstract Security Artwork (NO HUMANS) -->
-      <div class="hub-verify-art-box">
-        <img src="{% static 'images/illustrations/abstract_workflow_engine.svg' %}" 
-             alt="FreelanceHub security and multi-step verification platform engine" 
-             width="600" 
-             height="400" 
-             loading="lazy">
-      </div>
-
-      <!-- Trust Checkpoints & Explanation -->
-      <div>
-        <span class="hub-eyebrow">Rigorous Security Standards</span>
-        <h2 class="hub-title">Built around professional trust.</h2>
-        <p class="hub-subtitle" style="margin-bottom:24px;">
-          Freelancers on FreelanceHub undergo our multi-tier verification process before applying to marketplace opportunities. This creates a secure, trusted ecosystem where clients hire with total confidence.
+      <div class="hub-trust-pillar-card">
+        <div class="hub-trust-icon-box">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <h4 class="hub-trust-pillar-title">Verified Professionals</h4>
+        <p class="hub-trust-pillar-desc">
+          Every freelancer profile is audited across identity, contact channels, and technical domain qualifications.
         </p>
-
-        <!-- 6 Verification Indicators -->
-        <div class="hub-verify-cards-grid">
-          
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-envelope-check"></i></div>
-            <div>
-              <div class="hub-verify-name">Verified Profiles</div>
-              <div class="hub-verify-detail">Confirmed primary communication channel</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-person-badge"></i></div>
-            <div>
-              <div class="hub-verify-name">Identity Verification</div>
-              <div class="hub-verify-detail">Official government ID validation check</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-file-earmark-person"></i></div>
-            <div>
-              <div class="hub-verify-name">Professional Information</div>
-              <div class="hub-verify-detail">Comprehensive skills and portfolio vetting</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-credit-card-2-front"></i></div>
-            <div>
-              <div class="hub-verify-name">Payment Verification</div>
-              <div class="hub-verify-detail">Verified banking &amp; payout KYC status</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-shield-fill-check"></i></div>
-            <div>
-              <div class="hub-verify-name">Admin Approval</div>
-              <div class="hub-verify-detail">Final platform clearance &amp; trust audit</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-headset"></i></div>
-            <div>
-              <div class="hub-verify-name">Platform Support</div>
-              <div class="hub-verify-detail">Dedicated mediation &amp; dispute assistance</div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Privacy & Security Guarantee -->
-        <div class="hub-verify-privacy-notice">
-          <i class="bi bi-shield-lock-fill"></i>
-          <div>
-            <strong>Strict Privacy Guarantee:</strong> Sensitive personal documents, IDs, and financial account credentials are encrypted and never exposed publicly. Clients only see verified status badges.
-          </div>
-        </div>
-
       </div>
 
+      <div class="hub-trust-pillar-card">
+        <div class="hub-trust-icon-box">
+          <i data-lucide="lock"></i>
+        </div>
+        <h4 class="hub-trust-pillar-title">Secure Platform</h4>
+        <p class="hub-trust-pillar-desc">
+          Strict encryption protocols safeguard user authentication, workspace communications, and private data.
+        </p>
+      </div>
+
+      <div class="hub-trust-pillar-card">
+        <div class="hub-trust-icon-box">
+          <i data-lucide="folder-kanban"></i>
+        </div>
+        <h4 class="hub-trust-pillar-title">Transparent Projects</h4>
+        <p class="hub-trust-pillar-desc">
+          Live milestone tracking and deliverables inspection ensure complete clarity between client and freelancer.
+        </p>
+      </div>
+
+      <div class="hub-trust-pillar-card">
+        <div class="hub-trust-icon-box">
+          <i data-lucide="credit-card"></i>
+        </div>
+        <h4 class="hub-trust-pillar-title">Payment Tracking</h4>
+        <p class="hub-trust-pillar-desc">
+          Structured escrow records and transparent budget allocation ensure guaranteed payments for completed work.
+        </p>
+      </div>
+
+      <div class="hub-trust-pillar-card">
+        <div class="hub-trust-icon-box">
+          <i data-lucide="life-buoy"></i>
+        </div>
+        <h4 class="hub-trust-pillar-title">Platform Support</h4>
+        <p class="hub-trust-pillar-desc">
+          Dedicated administrative oversight provides impartial arbitration, dispute resolution, and 24/7 assistance.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Privacy Notice Strip -->
+    <div class="hub-verify-privacy-notice" style="margin-top:40px;">
+      <i data-lucide="shield-alert"></i>
+      <div>
+        <strong>Zero-Knowledge Privacy Standard:</strong> Sensitive KYC identity documentation and payment credentials are encrypted and never exposed to the public. Clients only see verified trust status badges.
+      </div>
     </div>
 
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 08 — FINAL CTA (TWO PATHS)
+     SECTION 07 — FINAL DUAL CTA
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-cta-section" id="get-started">
   <div class="pub-container">
     
-    <div class="hub-cta-banner">
+    <div class="hub-cta-split-grid">
       
-      <!-- Text & Dual Action Buttons -->
-      <div>
-        <span class="hub-eyebrow" style="color:var(--brand-secondary);">Get Started Today</span>
-        <h2 class="hub-cta-title">Ready to turn your next idea into reality?</h2>
-        <p class="hub-cta-sub">
-          Join FreelanceHub today. Whether you have a project to post or are looking for your next freelancing opportunity, choose your path below.
-        </p>
-
-        <div class="hub-cta-buttons">
-          <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client">
-            <i class="bi bi-briefcase-fill"></i>
-            <span>Post a Project</span>
-          </a>
-          <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer">
-            <i class="bi bi-search"></i>
-            <span>Find Projects</span>
-          </a>
+      <!-- CLIENT CTA BOX -->
+      <div class="hub-cta-box client-cta-box">
+        <div class="hub-cta-icon">
+          <i data-lucide="briefcase"></i>
         </div>
+        <span class="hub-cta-eyebrow">CLIENT</span>
+        <h3 class="hub-cta-headline">Have a project?</h3>
+        <p class="hub-cta-desc">
+          Define your project requirements and receive competitive proposals from verified freelancers within minutes.
+        </p>
+        <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client">
+          <i data-lucide="plus-circle"></i>
+          <span>POST YOUR PROJECT</span>
+        </a>
       </div>
 
-      <!-- Abstract Graphic -->
-      <div class="hub-cta-art">
-        <img src="{% static 'images/illustrations/abstract_workflow_engine.svg' %}" 
-             alt="FreelanceHub unified platform engine" 
-             width="600" 
-             height="400" 
-             loading="lazy">
+      <!-- FREELANCER CTA BOX -->
+      <div class="hub-cta-box freelancer-cta-box">
+        <div class="hub-cta-icon">
+          <i data-lucide="code-2"></i>
+        </div>
+        <span class="hub-cta-eyebrow">FREELANCER</span>
+        <h3 class="hub-cta-headline">Looking for work?</h3>
+        <p class="hub-cta-desc">
+          Build your verified profile, browse open marketplace opportunities, and collaborate directly with quality clients.
+        </p>
+        <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer">
+          <i data-lucide="search"></i>
+          <span>FIND PROJECTS</span>
+        </a>
       </div>
 
     </div>
