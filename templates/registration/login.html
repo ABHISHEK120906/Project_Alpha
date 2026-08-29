@@ -1,11 +1,21 @@
 {% extends 'auth_base.html' %}
 {% block title %}Sign In — FreelanceHub{% endblock %}
-{% block meta_description %}Sign in to your FreelanceHub account. Access your Client or Freelancer dashboard.{% endblock %}
+{% block meta_description %}Sign in to your FreelanceHub account. Access your Client workspace or Freelancer platform.{% endblock %}
 
 {% block content %}
 
-<h1 class="auth-heading">Welcome back</h1>
-<p class="auth-subheading">Sign in to your FreelanceHub account</p>
+<!-- Role Tabs -->
+<div class="auth-role-switcher">
+  <button type="button" class="auth-role-tab active-client" id="tabClientBtn" onclick="switchLoginRole('client')">
+    <i class="bi bi-building"></i> Client
+  </button>
+  <button type="button" class="auth-role-tab" id="tabFreelancerBtn" onclick="switchLoginRole('freelancer')">
+    <i class="bi bi-person-badge"></i> Freelancer
+  </button>
+</div>
+
+<h1 class="auth-heading" id="authTitle">Welcome back</h1>
+<p class="auth-subheading" id="authSub">Sign in to your <strong style="color:var(--role-client);" id="roleText">Client Workspace</strong></p>
 
 <form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate>
   {% csrf_token %}
@@ -24,7 +34,7 @@
   <div class="auth-form-group">
     <label class="auth-label" for="id_username">Username</label>
     <div style="position:relative;">
-      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;">
         <i class="bi bi-person-fill"></i>
       </span>
       <input
@@ -32,8 +42,8 @@
         name="username"
         id="id_username"
         class="auth-input"
-        style="padding-left: 38px;"
-        placeholder="Your username"
+        style="padding-left: 42px;"
+        placeholder="Enter your username"
         required
         autocomplete="username"
         autofocus
@@ -41,7 +51,7 @@
       >
     </div>
     {% if form.username.errors %}
-      <div style="color:#f43f5e;font-size:12px;margin-top:4px;">{{ form.username.errors.0 }}</div>
+      <div style="color:var(--role-client-red);font-size:12px;margin-top:4px;">{{ form.username.errors.0 }}</div>
     {% endif %}
   </div>
 
@@ -49,7 +59,7 @@
   <div class="auth-form-group">
     <label class="auth-label" for="id_password">Password</label>
     <div style="position:relative;">
-      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;">
         <i class="bi bi-lock-fill"></i>
       </span>
       <input
@@ -57,62 +67,80 @@
         name="password"
         id="id_password"
         class="auth-input"
-        style="padding-left: 38px; padding-right: 42px;"
-        placeholder="Your password"
+        style="padding-left: 42px; padding-right: 44px;"
+        placeholder="Enter your password"
         required
         autocomplete="current-password"
       >
       <button type="button" id="togglePwd" aria-label="Toggle password visibility"
-              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:15px;padding:0;">
+              style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0;">
         <i class="bi bi-eye" id="pwdIcon"></i>
       </button>
     </div>
     {% if form.password.errors %}
-      <div style="color:#f43f5e;font-size:12px;margin-top:4px;">{{ form.password.errors.0 }}</div>
+      <div style="color:var(--role-client-red);font-size:12px;margin-top:4px;">{{ form.password.errors.0 }}</div>
     {% endif %}
   </div>
 
   <!-- Forgot password -->
-  <div style="text-align:right;margin-top:-10px;margin-bottom:18px;">
-    <a href="{% url 'core:password_reset' %}" style="font-size:12.5px;color:#64748b;font-weight:600;transition:color 0.2s;"
-       onmouseover="this.style.color='#6c63ff'" onmouseout="this.style.color='#64748b'">Forgot password?</a>
+  <div style="text-align:right;margin-top:-6px;margin-bottom:18px;">
+    <a href="{% url 'core:password_reset' %}" style="font-size:12.5px;color:var(--text-muted);font-weight:600;transition:color 0.2s;"
+       onmouseover="this.style.color='var(--brand-secondary)'" onmouseout="this.style.color='var(--text-muted)'">Forgot password?</a>
   </div>
 
   <button type="submit" class="auth-btn" id="loginSubmitBtn">
     <i class="bi bi-box-arrow-in-right"></i>
-    Sign In
+    <span>Sign In</span>
   </button>
 </form>
 
-<div class="auth-divider"><span>or register as</span></div>
+<div class="auth-divider"><span>New to FreelanceHub?</span></div>
 
-<div style="display:flex;flex-direction:column;gap:10px;">
-  <a href="{% url 'marketplace:client_register' %}" class="btn-create-account"
-     style="border-color:rgba(108,99,255,0.35);color:#a78bfa;">
-    <i class="bi bi-briefcase-fill"></i>
-    Register as Client — Post Projects
+<div style="display:flex;flex-direction:column;gap:10px;" id="registerButtonsGroup">
+  <a href="{% url 'marketplace:client_register' %}" class="btn-create-account" id="registerClientLink" style="border-color:rgba(125,60,255,0.35);color:#a78bfa;">
+    <i class="bi bi-building"></i>
+    <span>Create Client Account (Post Projects)</span>
   </a>
-  <a href="{% url 'core:register' %}" class="btn-create-account">
-    <i class="bi bi-person-check-fill"></i>
-    Register as Freelancer — Find Work
+  <a href="{% url 'core:register' %}" class="btn-create-account" id="registerFreelancerLink" style="border-color:rgba(255,94,108,0.35);color:#ffaaab;">
+    <i class="bi bi-person-badge"></i>
+    <span>Create Freelancer Account (Find Work)</span>
   </a>
 </div>
 
-<!-- Admin login -->
-<div style="text-align:center;margin-top:20px;">
+<!-- Admin Login Link -->
+<div style="text-align:center;margin-top:24px;">
   <a href="{% url 'core:admin_login' %}"
-     style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#475569;padding:6px 14px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;transition:all 0.2s;"
-     onmouseover="this.style.color='#38bdf8';this.style.borderColor='rgba(56,189,248,0.25)'"
-     onmouseout="this.style.color='#475569';this.style.borderColor='rgba(255,255,255,0.07)'">
-    <i class="bi bi-shield-lock-fill"></i> Platform Admin Login
+     style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);padding:6px 14px;border:1px solid var(--border-subtle);border-radius:8px;transition:all 0.2s;text-decoration:none;"
+     onmouseover="this.style.color='var(--brand-secondary)';this.style.borderColor='var(--brand-secondary)'"
+     onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border-subtle)'">
+    <i class="bi bi-shield-lock-fill"></i> Platform Administrator Login
   </a>
 </div>
 
 <script>
+function switchLoginRole(role) {
+  const clientBtn = document.getElementById('tabClientBtn');
+  const freelancerBtn = document.getElementById('tabFreelancerBtn');
+  const roleText = document.getElementById('roleText');
+  const submitBtn = document.getElementById('loginSubmitBtn');
+
+  if (role === 'freelancer') {
+    clientBtn.className = 'auth-role-tab';
+    freelancerBtn.className = 'auth-role-tab active-freelancer';
+    roleText.textContent = 'Freelancer Portal';
+    roleText.style.color = 'var(--role-freelancer)';
+  } else {
+    clientBtn.className = 'auth-role-tab active-client';
+    freelancerBtn.className = 'auth-role-tab';
+    roleText.textContent = 'Client Workspace';
+    roleText.style.color = 'var(--role-client)';
+  }
+}
+
 (function() {
-  const btn   = document.getElementById('togglePwd');
+  const btn = document.getElementById('togglePwd');
   const input = document.getElementById('id_password');
-  const icon  = document.getElementById('pwdIcon');
+  const icon = document.getElementById('pwdIcon');
   if (btn && input && icon) {
     btn.addEventListener('click', function() {
       const visible = input.type === 'text';
@@ -121,13 +149,13 @@
     });
   }
 
-  // Loading state on submit
   const form = document.getElementById('userLoginForm');
   const submitBtn = document.getElementById('loginSubmitBtn');
   if (form && submitBtn) {
     form.addEventListener('submit', function() {
-      submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Signing in…';
+      submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Authenticating…';
       submitBtn.style.pointerEvents = 'none';
+      submitBtn.style.opacity = '0.8';
     });
   }
 })();

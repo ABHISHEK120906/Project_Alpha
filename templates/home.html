@@ -1,13 +1,13 @@
 {% extends 'public_base.html' %}
 {% load static %}
 
-{% block title %}FreelanceHub — Color-Driven Freelancing Marketplace{% endblock %}
-{% block meta_description %}FreelanceHub connects Clients, Freelancers, and Platform Administrators in one color-driven, secure ecosystem. Choose your role and start collaborating today.{% endblock %}
+{% block title %}FreelanceHub — Projects Meet the Right Talent{% endblock %}
+{% block meta_description %}FreelanceHub connects Clients, Freelancers, and Platform Administrators in one structured, color-driven ecosystem. Choose your role and start collaborating.{% endblock %}
 
 {% block content %}
 
 <!-- ══════════════════════════════════════════════════════════
-     1. HERO SECTION (COLOR & ABSTRACT UI BASED — NO HUMANS)
+     SECTION 02 — HERO
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-hero" id="hero">
   <!-- Ambient Graphic Elements -->
@@ -31,39 +31,35 @@
   <div class="pub-container">
     <div class="hub-hero-grid">
       
-      <!-- Hero Left: Content & Role Selection Triggers -->
+      <!-- Hero Left: Typography & Primary Actions -->
       <div class="hub-hero-content">
         
-        <!-- Eyebrow Badge -->
+        <!-- Small Eyebrow Label -->
         <div class="hub-hero-eyebrow">
           <span class="pulse-dot"></span>
-          <span>Unified Freelancing Platform</span>
+          <span>Next-Gen Marketplace Architecture</span>
         </div>
 
-        <!-- Headline -->
+        <!-- Very Large H1 -->
         <h1 class="hub-hero-title">
-          Great Projects<br>
-          Start with <span class="gradient-text">Great People.</span>
+          Projects meet<br>
+          the <span class="gradient-text">right talent.</span>
         </h1>
 
-        <!-- Supporting Copy -->
+        <!-- Short Supporting Paragraph -->
         <p class="hub-hero-desc">
-          FreelanceHub unites Clients, Verified Freelancers, and Platform Administrators in one color-driven, transparent ecosystem. Choose your entry point below to get started.
+          FreelanceHub brings Clients, Verified Freelancers, and Platform Governance together in one structured, color-driven ecosystem.
         </p>
 
-        <!-- 3 Primary Role Action Buttons -->
+        <!-- Primary and Secondary CTAs -->
         <div class="hub-hero-role-buttons">
-          <a href="{% url 'marketplace:client_register' %}" class="btn-hero-client" title="Post and manage projects as a client">
+          <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client">
             <i class="bi bi-briefcase-fill"></i>
-            <span>Give Project as Client</span>
+            <span>Give a Project</span>
           </a>
-          <a href="{% url 'freelancer:register' %}" class="btn-hero-freelancer" title="Discover projects and apply as a freelancer">
-            <i class="bi bi-person-badge"></i>
-            <span>Work as Freelancer</span>
-          </a>
-          <a href="{% url 'core:admin_login' %}" class="btn-hero-admin" title="Manage and monitor the platform">
-            <i class="bi bi-shield-lock-fill"></i>
-            <span>Admin Login</span>
+          <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer">
+            <i class="bi bi-search"></i>
+            <span>Find Work</span>
           </a>
         </div>
 
@@ -85,11 +81,11 @@
 
       </div>
 
-      <!-- Hero Right: Abstract Connected Network Graphic (NO HUMANS) -->
+      <!-- Hero Right: Abstract Connected Network Composition (NO HUMANS) -->
       <div class="hub-hero-visual">
         <div class="hub-hero-art-wrapper">
           <img src="{% static 'images/illustrations/hero_abstract_nodes.svg' %}" 
-               alt="Abstract network nodes representing Client, Freelancer, Project, and Admin collaboration"
+               alt="Abstract UI composition representing Project, Connection, Talent, and Platform Completion"
                width="800" 
                height="620" 
                loading="eager">
@@ -100,7 +96,7 @@
 
     <!-- Scroll Indicator Cue -->
     <a href="#role-selection" class="hub-scroll-cue" aria-label="Scroll to role selection">
-      <span>Scroll to Explore Roles</span>
+      <span>Scroll to Explore</span>
       <div class="hub-scroll-arrow">
         <i class="bi bi-arrow-down"></i>
       </div>
@@ -110,31 +106,31 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     2. PRIMARY ROLE SELECTION SECTION
+     SECTION 03 — ROLE SELECTION ("CHOOSE YOUR WAY TO WORK")
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-section hub-section-alt" id="role-selection">
   <div class="pub-container">
     
     <div class="hub-section-header">
       <span class="hub-eyebrow">Platform Entry Points</span>
-      <h2 class="hub-title">How do you want to use FreelanceHub?</h2>
+      <h2 class="hub-title">Choose your way to work.</h2>
       <p class="hub-subtitle">
-        Select your role to access your dedicated workspace, tools, and personalized marketplace features.
+        Select your role below to access your dedicated workspace, tools, and personalized marketplace features.
       </p>
     </div>
 
     <div class="hub-roles-grid">
       
-      <!-- 1. CLIENT CARD -->
-      <div class="hub-role-card role-client-card">
+      <!-- 1. CLIENT PANEL -->
+      <div class="hub-role-panel role-client-panel">
         <div>
           <div class="hub-role-icon-box">
             <i class="bi bi-building"></i>
           </div>
-          <div class="hub-role-tag">CLIENT ACCESS</div>
-          <h3 class="hub-role-headline">Give Project as a Client</h3>
+          <div class="hub-role-tag">CLIENT</div>
+          <h3 class="hub-role-headline">Post projects. Find the right freelancer.</h3>
           <p class="hub-role-desc">
-            Post project briefs, review proposals from verified freelancers, fund milestone escrows, and manage project deliverables seamlessly.
+            Post detailed requirements, review verified talent applications, fund milestone escrows, and track deliverables.
           </p>
           <ul class="hub-role-bullets">
             <li><i class="bi bi-check-circle-fill"></i> Post customized project briefs in minutes</li>
@@ -143,21 +139,21 @@
           </ul>
         </div>
         <a href="{% url 'marketplace:client_register' %}" class="btn-role-action">
-          <span>Enter as Client</span>
+          <span>Continue as Client</span>
           <i class="bi bi-arrow-right"></i>
         </a>
       </div>
 
-      <!-- 2. FREELANCER CARD -->
-      <div class="hub-role-card role-freelancer-card">
+      <!-- 2. FREELANCER PANEL -->
+      <div class="hub-role-panel role-freelancer-panel">
         <div>
           <div class="hub-role-icon-box">
             <i class="bi bi-person-badge"></i>
           </div>
-          <div class="hub-role-tag">FREELANCER ACCESS</div>
-          <h3 class="hub-role-headline">Work as a Freelancer</h3>
+          <div class="hub-role-tag">FREELANCER</div>
+          <h3 class="hub-role-headline">Discover projects. Build your professional career.</h3>
           <p class="hub-role-desc">
-            Build your professional profile, pass multi-tier verification checkpoints, discover matching client projects, and earn verified payouts.
+            Build your professional profile, pass multi-tier verification checkpoints, discover matching projects, and earn verified payouts.
           </p>
           <ul class="hub-role-bullets">
             <li><i class="bi bi-check-circle-fill"></i> Complete 6-step identity &amp; skills verification</li>
@@ -166,19 +162,19 @@
           </ul>
         </div>
         <a href="{% url 'freelancer:register' %}" class="btn-role-action">
-          <span>Enter as Freelancer</span>
+          <span>Continue as Freelancer</span>
           <i class="bi bi-arrow-right"></i>
         </a>
       </div>
 
-      <!-- 3. ADMIN CARD -->
-      <div class="hub-role-card role-admin-card">
+      <!-- 3. ADMIN PANEL -->
+      <div class="hub-role-panel role-admin-panel">
         <div>
           <div class="hub-role-icon-box">
             <i class="bi bi-shield-lock-fill"></i>
           </div>
-          <div class="hub-role-tag">ADMIN ACCESS</div>
-          <h3 class="hub-role-headline">Admin Login</h3>
+          <div class="hub-role-tag">ADMIN</div>
+          <h3 class="hub-role-headline">Manage the FreelanceHub platform.</h3>
           <p class="hub-role-desc">
             Access the centralized administration portal to monitor live projects, approve freelancer verifications, arbitrate disputes, and manage platform health.
           </p>
@@ -189,7 +185,7 @@
           </ul>
         </div>
         <a href="{% url 'core:admin_login' %}" class="btn-role-action">
-          <span>Enter Admin Portal</span>
+          <span>Admin Login</span>
           <i class="bi bi-arrow-right"></i>
         </a>
       </div>
@@ -200,7 +196,7 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     3. HOW IT WORKS (3-WAY PLATFORM LIFECYCLE)
+     SECTION 04 — HOW FREELANCEHUB WORKS
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-section" id="how-it-works">
   <div class="pub-container">
@@ -209,7 +205,7 @@
       <span class="hub-eyebrow">Structured Marketplace Flow</span>
       <h2 class="hub-title">How FreelanceHub Works</h2>
       <p class="hub-subtitle">
-        A clear, sequential lifecycle engineered for Clients, Freelancers, and Platform Administrators.
+        A clear visual timeline engineered for Clients, Freelancers, and Platform Governance.
       </p>
     </div>
 
@@ -219,14 +215,14 @@
       <div class="hub-workflow-col client-wf">
         <div class="hub-wf-col-title">
           <i class="bi bi-building" style="color:var(--role-client);"></i>
-          <span>Client Journey</span>
+          <span>Client Flow</span>
         </div>
         <div class="hub-wf-steps">
           
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">01</div>
             <div class="hub-wf-step-text">
-              <h5>Post Project Brief</h5>
+              <h5>Post</h5>
               <p>Define requirements, tech stack, budget, and project milestones.</p>
             </div>
           </div>
@@ -242,7 +238,7 @@
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">03</div>
             <div class="hub-wf-step-text">
-              <h5>Review Freelancers</h5>
+              <h5>Review</h5>
               <p>Inspect verified badges, ratings, skills, and portfolio history.</p>
             </div>
           </div>
@@ -250,7 +246,7 @@
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">04</div>
             <div class="hub-wf-step-text">
-              <h5>Select Freelancer</h5>
+              <h5>Select</h5>
               <p>Accept best proposal and fund milestone escrow safely.</p>
             </div>
           </div>
@@ -258,7 +254,7 @@
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">05</div>
             <div class="hub-wf-step-text">
-              <h5>Manage &amp; Complete</h5>
+              <h5>Manage</h5>
               <p>Track progress in workspace, approve deliverables, and release funds.</p>
             </div>
           </div>
@@ -270,14 +266,14 @@
       <div class="hub-workflow-col freelancer-wf">
         <div class="hub-wf-col-title">
           <i class="bi bi-person-badge" style="color:var(--role-freelancer);"></i>
-          <span>Freelancer Journey</span>
+          <span>Freelancer Flow</span>
         </div>
         <div class="hub-wf-steps">
           
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">01</div>
             <div class="hub-wf-step-text">
-              <h5>Create Profile</h5>
+              <h5>Profile</h5>
               <p>Highlight skills, rates, bio, GitHub, and professional portfolio.</p>
             </div>
           </div>
@@ -285,7 +281,7 @@
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">02</div>
             <div class="hub-wf-step-text">
-              <h5>Pass Verification</h5>
+              <h5>Verify</h5>
               <p>Complete multi-tier identity, KYC, and skills verification checks.</p>
             </div>
           </div>
@@ -293,7 +289,7 @@
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">03</div>
             <div class="hub-wf-step-text">
-              <h5>Browse Projects</h5>
+              <h5>Discover</h5>
               <p>Search live opportunities filtered by domain, rate, and skills.</p>
             </div>
           </div>
@@ -301,15 +297,15 @@
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">04</div>
             <div class="hub-wf-step-text">
-              <h5>Submit Application</h5>
-              <p>Apply with clear deliverables, milestone splits, and timelines.</p>
+              <h5>Apply</h5>
+              <p>Submit applications with clear deliverables, milestones, and timelines.</p>
             </div>
           </div>
 
           <div class="hub-wf-step-item">
             <div class="hub-wf-step-num">05</div>
             <div class="hub-wf-step-text">
-              <h5>Get Selected &amp; Work</h5>
+              <h5>Work</h5>
               <p>Collaborate in active workspace and receive verified payouts.</p>
             </div>
           </div>
@@ -321,7 +317,7 @@
       <div class="hub-workflow-col admin-wf">
         <div class="hub-wf-col-title">
           <i class="bi bi-shield-lock-fill" style="color:var(--role-admin);"></i>
-          <span>Admin Journey</span>
+          <span>Admin Flow</span>
         </div>
         <div class="hub-wf-steps">
           
@@ -374,107 +370,14 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     4. VERIFIED FREELANCER SECTION (TRUST & KYC STATUS)
+     SECTION 05 — PROJECT DISCOVERY
      ══════════════════════════════════════════════════════════ -->
-<section class="hub-section hub-section-alt" id="verification">
-  <div class="pub-container">
-    
-    <div class="hub-verify-grid">
-      
-      <!-- Abstract Security Artwork (NO HUMANS) -->
-      <div class="hub-verify-art-box">
-        <img src="{% static 'images/illustrations/abstract_workflow_engine.svg' %}" 
-             alt="FreelanceHub security and multi-step verification platform engine" 
-             width="600" 
-             height="400" 
-             loading="lazy">
-      </div>
-
-      <!-- Trust Checkpoints & Explanation -->
-      <div>
-        <span class="hub-eyebrow">Rigorous Security Standards</span>
-        <h2 class="hub-title">Verified Talent. Better Connections.</h2>
-        <p class="hub-subtitle" style="margin-bottom:24px;">
-          Freelancers on FreelanceHub undergo our multi-tier verification process before applying to marketplace opportunities. This creates a secure, trusted ecosystem where clients hire with total confidence.
-        </p>
-
-        <!-- 6 Verification Indicators -->
-        <div class="hub-verify-cards-grid">
-          
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-envelope-check"></i></div>
-            <div>
-              <div class="hub-verify-name">Email Verified</div>
-              <div class="hub-verify-detail">Confirmed primary communication channel</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-telephone-check"></i></div>
-            <div>
-              <div class="hub-verify-name">Phone Verified</div>
-              <div class="hub-verify-detail">Two-factor mobile security authorization</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-person-badge"></i></div>
-            <div>
-              <div class="hub-verify-name">Identity Verified</div>
-              <div class="hub-verify-detail">Official government ID validation check</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-star-fill"></i></div>
-            <div>
-              <div class="hub-verify-name">Professional Profile</div>
-              <div class="hub-verify-detail">Comprehensive skills and portfolio vetting</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-credit-card-2-front"></i></div>
-            <div>
-              <div class="hub-verify-name">Payment Account</div>
-              <div class="hub-verify-detail">Verified banking &amp; payout KYC status</div>
-            </div>
-          </div>
-
-          <div class="hub-verify-card">
-            <div class="hub-verify-icon"><i class="bi bi-shield-fill-check"></i></div>
-            <div>
-              <div class="hub-verify-name">Admin Approved</div>
-              <div class="hub-verify-detail">Final platform clearance &amp; trust audit</div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Privacy & Security Guarantee -->
-        <div class="hub-verify-privacy-notice">
-          <i class="bi bi-shield-lock-fill"></i>
-          <div>
-            <strong>Strict Privacy Guarantee:</strong> Sensitive personal documents, IDs, and financial account credentials are encrypted and never exposed publicly. Clients only see verified status badges.
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════
-     5. BROWSE PROJECTS PREVIEW (UI CARDS ONLY)
-     ══════════════════════════════════════════════════════════ -->
-<section class="hub-section" id="browse-projects">
+<section class="hub-section hub-section-alt" id="browse-projects">
   <div class="pub-container">
     
     <div class="hub-section-header">
-      <span class="hub-eyebrow">Active Marketplace Demand</span>
-      <h2 class="hub-title">Explore Live Project Opportunities</h2>
+      <span class="hub-eyebrow">Marketplace Opportunities</span>
+      <h2 class="hub-title">Projects looking for talent.</h2>
       <p class="hub-subtitle">
         Browse open requirements across web development, data analytics, UI/UX design, and mobile engineering.
       </p>
@@ -506,7 +409,9 @@
             </div>
             <div class="hub-project-footer">
               <span><i class="bi bi-clock"></i> {{ proj.get_duration_display|default:"1 to 4 weeks" }}</span>
-              <span style="color:var(--brand-secondary);font-weight:700;"><i class="bi bi-check2-circle"></i> Open</span>
+              <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
+                <span>View &amp; Apply</span>
+              </a>
             </div>
           </div>
         {% endfor %}
@@ -529,7 +434,9 @@
           </div>
           <div class="hub-project-footer">
             <span><i class="bi bi-clock"></i> 1 to 3 months</span>
-            <span style="color:var(--brand-secondary);font-weight:700;"><i class="bi bi-check2-circle"></i> Open for Bids</span>
+            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
+              <span>View &amp; Apply</span>
+            </a>
           </div>
         </div>
 
@@ -550,7 +457,9 @@
           </div>
           <div class="hub-project-footer">
             <span><i class="bi bi-clock"></i> 1 to 4 weeks</span>
-            <span style="color:var(--brand-secondary);font-weight:700;"><i class="bi bi-check2-circle"></i> Open for Bids</span>
+            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
+              <span>View &amp; Apply</span>
+            </a>
           </div>
         </div>
 
@@ -571,7 +480,9 @@
           </div>
           <div class="hub-project-footer">
             <span><i class="bi bi-clock"></i> 1 to 4 weeks</span>
-            <span style="color:var(--brand-secondary);font-weight:700;"><i class="bi bi-check2-circle"></i> Open for Bids</span>
+            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
+              <span>View &amp; Apply</span>
+            </a>
           </div>
         </div>
 
@@ -592,7 +503,9 @@
           </div>
           <div class="hub-project-footer">
             <span><i class="bi bi-clock"></i> 1 to 3 months</span>
-            <span style="color:var(--brand-secondary);font-weight:700;"><i class="bi bi-check2-circle"></i> Open for Bids</span>
+            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
+              <span>View &amp; Apply</span>
+            </a>
           </div>
         </div>
 
@@ -613,7 +526,9 @@
           </div>
           <div class="hub-project-footer">
             <span><i class="bi bi-clock"></i> 1 to 2 weeks</span>
-            <span style="color:var(--brand-secondary);font-weight:700;"><i class="bi bi-check2-circle"></i> Open for Bids</span>
+            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
+              <span>View &amp; Apply</span>
+            </a>
           </div>
         </div>
 
@@ -634,7 +549,9 @@
           </div>
           <div class="hub-project-footer">
             <span><i class="bi bi-clock"></i> 1 to 4 weeks</span>
-            <span style="color:var(--brand-secondary);font-weight:700;"><i class="bi bi-check2-circle"></i> Open for Bids</span>
+            <a href="{% url 'freelancer:register' %}" class="btn-nav-role btn-nav-freelancer" style="padding:4px 10px;font-size:12px;">
+              <span>View &amp; Apply</span>
+            </a>
           </div>
         </div>
       {% endif %}
@@ -642,9 +559,9 @@
 
     <!-- Center CTA -->
     <div style="text-align:center;">
-      <a href="{% url 'freelancer:register' %}" class="btn-hero-freelancer" style="display:inline-flex;">
+      <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer" style="display:inline-flex;">
         <i class="bi bi-grid-fill"></i>
-        <span>Explore All Opportunities &amp; Apply</span>
+        <span>Explore All Opportunities</span>
       </a>
     </div>
 
@@ -652,14 +569,14 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     6. FREELANCER PREVIEW (ABSTRACT AVATARS & RATINGS)
+     SECTION 06 — FREELANCER DISCOVERY
      ══════════════════════════════════════════════════════════ -->
-<section class="hub-section hub-section-alt" id="find-freelancers">
+<section class="hub-section" id="find-freelancers">
   <div class="pub-container">
     
     <div class="hub-section-header">
       <span class="hub-eyebrow">Verified Talent Showcase</span>
-      <h2 class="hub-title">Meet Top Verified Freelancers</h2>
+      <h2 class="hub-title">Find the right skills for your project.</h2>
       <p class="hub-subtitle">
         Work with experienced professionals verified for skills, identity, and reliability.
       </p>
@@ -869,7 +786,7 @@
 
     <!-- Center CTA -->
     <div style="text-align:center;">
-      <a href="{% url 'marketplace:client_register' %}" class="btn-hero-client" style="display:inline-flex;">
+      <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client" style="display:inline-flex;">
         <i class="bi bi-person-plus-fill"></i>
         <span>Post a Project to Hire Verified Talent</span>
       </a>
@@ -879,68 +796,92 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     7. CATEGORY EXPLORATION (COLOR-BASED UI)
+     SECTION 07 — TRUST / VERIFICATION
      ══════════════════════════════════════════════════════════ -->
-<section class="hub-section" id="categories">
+<section class="hub-section hub-section-alt" id="verification">
   <div class="pub-container">
     
-    <div class="hub-section-header">
-      <span class="hub-eyebrow">Specialized Domains</span>
-      <h2 class="hub-title">Explore by Discipline</h2>
-      <p class="hub-subtitle">
-        Discover verified specialists tailored to your specific technical requirements.
-      </p>
-    </div>
-
-    <div class="hub-categories-grid">
+    <div class="hub-verify-grid">
       
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-code-slash"></i></div>
-        <h4 class="hub-cat-title">Web &amp; Software Dev</h4>
-        <span class="hub-cat-count">Full-stack, APIs, Databases</span>
-      </a>
+      <!-- Abstract Security Artwork (NO HUMANS) -->
+      <div class="hub-verify-art-box">
+        <img src="{% static 'images/illustrations/abstract_workflow_engine.svg' %}" 
+             alt="FreelanceHub security and multi-step verification platform engine" 
+             width="600" 
+             height="400" 
+             loading="lazy">
+      </div>
 
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-cpu"></i></div>
-        <h4 class="hub-cat-title">AI &amp; Data Science</h4>
-        <span class="hub-cat-count">Machine Learning, Analytics</span>
-      </a>
+      <!-- Trust Checkpoints & Explanation -->
+      <div>
+        <span class="hub-eyebrow">Rigorous Security Standards</span>
+        <h2 class="hub-title">Built around professional trust.</h2>
+        <p class="hub-subtitle" style="margin-bottom:24px;">
+          Freelancers on FreelanceHub undergo our multi-tier verification process before applying to marketplace opportunities. This creates a secure, trusted ecosystem where clients hire with total confidence.
+        </p>
 
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-palette-fill"></i></div>
-        <h4 class="hub-cat-title">UI/UX &amp; Brand Design</h4>
-        <span class="hub-cat-count">Design Systems, Wireframes</span>
-      </a>
+        <!-- 6 Verification Indicators -->
+        <div class="hub-verify-cards-grid">
+          
+          <div class="hub-verify-card">
+            <div class="hub-verify-icon"><i class="bi bi-envelope-check"></i></div>
+            <div>
+              <div class="hub-verify-name">Verified Profiles</div>
+              <div class="hub-verify-detail">Confirmed primary communication channel</div>
+            </div>
+          </div>
 
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-phone"></i></div>
-        <h4 class="hub-cat-title">Mobile App Dev</h4>
-        <span class="hub-cat-count">iOS, Android, React Native</span>
-      </a>
+          <div class="hub-verify-card">
+            <div class="hub-verify-icon"><i class="bi bi-person-badge"></i></div>
+            <div>
+              <div class="hub-verify-name">Identity Verification</div>
+              <div class="hub-verify-detail">Official government ID validation check</div>
+            </div>
+          </div>
 
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-cloud-arrow-up"></i></div>
-        <h4 class="hub-cat-title">Cloud &amp; DevOps</h4>
-        <span class="hub-cat-count">Docker, Kubernetes, AWS</span>
-      </a>
+          <div class="hub-verify-card">
+            <div class="hub-verify-icon"><i class="bi bi-file-earmark-person"></i></div>
+            <div>
+              <div class="hub-verify-name">Professional Information</div>
+              <div class="hub-verify-detail">Comprehensive skills and portfolio vetting</div>
+            </div>
+          </div>
 
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-megaphone-fill"></i></div>
-        <h4 class="hub-cat-title">Digital Marketing</h4>
-        <span class="hub-cat-count">SEO, Paid Ads, Growth</span>
-      </a>
+          <div class="hub-verify-card">
+            <div class="hub-verify-icon"><i class="bi bi-credit-card-2-front"></i></div>
+            <div>
+              <div class="hub-verify-name">Payment Verification</div>
+              <div class="hub-verify-detail">Verified banking &amp; payout KYC status</div>
+            </div>
+          </div>
 
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-pen-fill"></i></div>
-        <h4 class="hub-cat-title">Technical Writing</h4>
-        <span class="hub-cat-count">API Docs, Blogs, Copy</span>
-      </a>
+          <div class="hub-verify-card">
+            <div class="hub-verify-icon"><i class="bi bi-shield-fill-check"></i></div>
+            <div>
+              <div class="hub-verify-name">Admin Approval</div>
+              <div class="hub-verify-detail">Final platform clearance &amp; trust audit</div>
+            </div>
+          </div>
 
-      <a href="{% url 'marketplace:client_register' %}" class="hub-category-card">
-        <div class="hub-cat-icon-wrap"><i class="bi bi-camera-reels-fill"></i></div>
-        <h4 class="hub-cat-title">Video &amp; Creative</h4>
-        <span class="hub-cat-count">Motion Graphics, 3D Art</span>
-      </a>
+          <div class="hub-verify-card">
+            <div class="hub-verify-icon"><i class="bi bi-headset"></i></div>
+            <div>
+              <div class="hub-verify-name">Platform Support</div>
+              <div class="hub-verify-detail">Dedicated mediation &amp; dispute assistance</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Privacy & Security Guarantee -->
+        <div class="hub-verify-privacy-notice">
+          <i class="bi bi-shield-lock-fill"></i>
+          <div>
+            <strong>Strict Privacy Guarantee:</strong> Sensitive personal documents, IDs, and financial account credentials are encrypted and never exposed publicly. Clients only see verified status badges.
+          </div>
+        </div>
+
+      </div>
 
     </div>
 
@@ -948,33 +889,29 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     8. FINAL CALL TO ACTION BANNER
+     SECTION 08 — FINAL CTA (TWO PATHS)
      ══════════════════════════════════════════════════════════ -->
 <section class="hub-cta-section" id="get-started">
   <div class="pub-container">
     
     <div class="hub-cta-banner">
       
-      <!-- Text & Buttons -->
+      <!-- Text & Dual Action Buttons -->
       <div>
         <span class="hub-eyebrow" style="color:var(--brand-secondary);">Get Started Today</span>
         <h2 class="hub-cta-title">Ready to turn your next idea into reality?</h2>
         <p class="hub-cta-sub">
-          Join FreelanceHub today. Whether you need to give a project as a client, work as a verified freelancer, or manage the platform as an admin, your journey starts here.
+          Join FreelanceHub today. Whether you have a project to post or are looking for your next freelancing opportunity, choose your path below.
         </p>
 
         <div class="hub-cta-buttons">
-          <a href="{% url 'marketplace:client_register' %}" class="btn-hero-client">
+          <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client">
             <i class="bi bi-briefcase-fill"></i>
-            <span>Give Project</span>
+            <span>Post a Project</span>
           </a>
-          <a href="{% url 'freelancer:register' %}" class="btn-hero-freelancer">
-            <i class="bi bi-person-badge"></i>
-            <span>Work as Freelancer</span>
-          </a>
-          <a href="{% url 'core:admin_login' %}" class="btn-hero-admin">
-            <i class="bi bi-shield-lock-fill"></i>
-            <span>Admin Login</span>
+          <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer">
+            <i class="bi bi-search"></i>
+            <span>Find Projects</span>
           </a>
         </div>
       </div>
@@ -982,7 +919,7 @@
       <!-- Abstract Graphic -->
       <div class="hub-cta-art">
         <img src="{% static 'images/illustrations/abstract_workflow_engine.svg' %}" 
-             alt="FreelanceHub unified 3-role platform engine" 
+             alt="FreelanceHub unified platform engine" 
              width="600" 
              height="400" 
              loading="lazy">

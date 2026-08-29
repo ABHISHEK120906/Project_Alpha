@@ -5,16 +5,18 @@
 {% block content %}
 
 <!-- Admin Security Badge -->
-<div style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:12px 16px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <i class="bi bi-shield-lock-fill" style="color:#38bdf8;font-size:18px;flex-shrink:0;"></i>
+<div style="background:rgba(155,196,0,0.12); border:1px solid rgba(155,196,0,0.3); border-radius:12px; padding:12px 16px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+  <div style="width:36px; height:36px; border-radius:8px; background:var(--brand-secondary); color:#0b0914; display:flex; align-items:center; justify-content:center; font-size:18px;">
+    <i class="bi bi-shield-lock-fill"></i>
+  </div>
   <div>
-    <div style="font-size:13px;font-weight:700;color:#38bdf8;">Platform Administration</div>
-    <div style="font-size:11.5px;color:#64748b;margin-top:1px;">Restricted access — authorized personnel only.</div>
+    <div style="font-size:13.5px; font-weight:800; color:var(--brand-secondary);">Platform Administration</div>
+    <div style="font-size:11.5px; color:var(--text-muted); margin-top:1px;">Restricted access — authorized personnel only.</div>
   </div>
 </div>
 
 <h1 class="auth-heading">Administrator Login</h1>
-<p class="auth-subheading">Sign in to the FreelanceHub management console</p>
+<p class="auth-subheading">Sign in to the FreelanceHub governance &amp; moderation console</p>
 
 {% if messages %}
   {% for message in messages %}
@@ -32,7 +34,7 @@
   <div class="auth-form-group">
     <label class="auth-label" for="id_admin_username">Admin Username</label>
     <div style="position:relative;">
-      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;">
         <i class="bi bi-shield-shaded"></i>
       </span>
       <input
@@ -40,7 +42,7 @@
         name="username"
         id="id_admin_username"
         class="auth-input"
-        style="padding-left: 38px;"
+        style="padding-left: 42px;"
         placeholder="Enter admin username"
         required
         autocomplete="username"
@@ -54,7 +56,7 @@
   <div class="auth-form-group">
     <label class="auth-label" for="id_admin_password">Admin Password</label>
     <div style="position:relative;">
-      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;pointer-events:none;">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;">
         <i class="bi bi-key-fill"></i>
       </span>
       <input
@@ -62,30 +64,30 @@
         name="password"
         id="id_admin_password"
         class="auth-input"
-        style="padding-left: 38px; padding-right: 42px;"
+        style="padding-left: 42px; padding-right: 44px;"
         placeholder="Enter admin password"
         required
         autocomplete="current-password"
       >
       <button type="button" id="toggleAdminPwd" aria-label="Toggle password visibility"
-              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:15px;padding:0;">
+              style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0;">
         <i class="bi bi-eye" id="adminPwdIcon"></i>
       </button>
     </div>
   </div>
 
   <button type="submit" class="auth-btn" id="adminSubmitBtn"
-          style="background:linear-gradient(135deg, #0284c7, #0369a1);box-shadow:0 4px 18px rgba(2,132,199,0.35);margin-top:10px;">
+          style="background:linear-gradient(135deg, var(--brand-secondary), #86aa00); color:#0b0914 !important; box-shadow:0 4px 18px rgba(155,196,0,0.35); margin-top:10px;">
     <i class="bi bi-shield-check"></i>
-    Access Management Console
+    <span>Access Management Console</span>
   </button>
 </form>
 
-<div class="auth-divider"><span>back</span></div>
+<div class="auth-divider"><span>or return</span></div>
 
 <a href="{% url 'core:login' %}" class="btn-create-account">
   <i class="bi bi-arrow-left"></i>
-  Back to Member Sign In
+  <span>Back to Member Sign In</span>
 </a>
 
 <script>
@@ -101,13 +103,13 @@
     });
   }
 
-  // Submit loading state
   const form = document.getElementById('adminLoginForm');
   const submitBtn = document.getElementById('adminSubmitBtn');
   if (form && submitBtn) {
     form.addEventListener('submit', function() {
       submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Authenticating…';
       submitBtn.style.pointerEvents = 'none';
+      submitBtn.style.opacity = '0.8';
     });
   }
 })();

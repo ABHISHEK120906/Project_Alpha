@@ -5,858 +5,252 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Client Portal{% endblock %} — FreelanceHub</title>
-  <meta name="description" content="{% block meta_description %}FreelanceHub Client Portal — Post projects and hire top freelancers.{% endblock %}" />
+  <meta name="description" content="{% block meta_description %}FreelanceHub Client Workspace — Post projects, review verified proposals, and manage deliverables.{% endblock %}" />
 
-  <!-- Google Fonts -->
+  <!-- Canonical Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237d3cff'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%23ffffff'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
-  <style>
-    /* ── Design Tokens ─────────────────────────────────── */
-    :root {
-      --bg-base:       #0d0c14;
-      --bg-surface:    #161322;
-      --bg-elevated:   #1f1a30;
-      --bg-card:       #251f3b;
-      --bg-hover:      #30274c;
-
-      --accent:        #7d3cff; /* Client Purple-y */
-      --accent-hover:  #6729e6;
-      --accent-soft:   rgba(125, 60, 255, 0.15);
-      --accent-glow:   rgba(125, 60, 255, 0.35);
-
-      --client-tan:    #fceed1; /* Client Background Tan */
-      --yellow:        #f2d53c; /* Client Yellow Gloves */
-      --yellow-soft:   rgba(242, 213, 60, 0.15);
-      --red:           #c80e13; /* Client Redhead */
-      --red-soft:      rgba(200, 14, 19, 0.15);
-      --green:         #22d3a0;
-      --green-soft:    rgba(34, 211, 160, 0.12);
-      --blue:          #38bdf8;
-      --blue-soft:     rgba(56, 189, 248, 0.12);
-      --purple:        #7d3cff;
-      --purple-soft:   rgba(125, 60, 255, 0.15);
-      --orange:        #fb923c;
-      --orange-soft:   rgba(251,146,60,0.12);
-
-      --text-primary:   #f1f5f9;
-      --text-secondary: #94a3b8;
-      --text-muted:     #64748b;
-
-      --border:         rgba(255,255,255,0.07);
-      --border-active:  rgba(108,99,255,0.5);
-
-      --radius-sm:  6px;
-      --radius:    12px;
-      --radius-lg: 18px;
-      --radius-xl: 24px;
-
-      --sidebar-w: 260px;
-      --topbar-h:  64px;
-
-      --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
-      --shadow:     0 4px 20px rgba(0,0,0,0.5);
-      --shadow-lg:  0 8px 40px rgba(0,0,0,0.6);
-      --glow:       0 0 30px var(--accent-glow);
-    }
-
-    /* ── Reset & Base ──────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg-base);
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
-    a:hover { color: var(--accent-hover); }
-
-    /* ── Layout ────────────────────────────────────────── */
-    .app-layout {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* ── Sidebar ───────────────────────────────────────── */
-    .sidebar {
-      width: var(--sidebar-w);
-      background: var(--bg-surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0; left: 0;
-      height: 100vh;
-      z-index: 100;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
-    }
-
-    .sidebar-header {
-      padding: 24px 20px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.3px;
-    }
-
-    .sidebar-logo .logo-icon {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, var(--accent), #a78bfa);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      box-shadow: var(--glow);
-    }
-
-    .sidebar-logo .logo-badge {
-      font-size: 0.6rem;
-      font-weight: 600;
-      background: var(--accent-soft);
-      color: var(--accent);
-      padding: 2px 6px;
-      border-radius: 20px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    /* Sidebar User Card */
-    .sidebar-user {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .user-avatar {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--purple));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 700;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .user-avatar img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-
-    .user-info { overflow: hidden; }
-    .user-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .user-role { font-size: 0.7rem; color: var(--accent); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    /* Sidebar Nav */
-    .sidebar-nav { padding: 12px 12px; flex: 1; }
-
-    .nav-section-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      padding: 8px 8px 4px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: all 0.2s;
-      margin-bottom: 2px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .nav-item:hover {
-      background: var(--bg-hover);
-      color: var(--text-primary);
-    }
-
-    .nav-item.active {
-      background: var(--accent-soft);
-      color: var(--accent);
-    }
-
-    .nav-item .nav-icon {
-      width: 18px;
-      text-align: center;
-      font-size: 0.95rem;
-      flex-shrink: 0;
-    }
-
-    .nav-item .nav-badge {
-      margin-left: auto;
-      background: var(--accent);
-      color: white;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 20px;
-      min-width: 18px;
-      text-align: center;
-    }
-
-    .nav-item.danger:hover { background: var(--red-soft); color: var(--red); }
-
-    .sidebar-footer {
-      padding: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    /* ── Main Content ──────────────────────────────────── */
-    .main-content {
-      margin-left: var(--sidebar-w);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* ── Topbar ────────────────────────────────────────── */
-    .topbar {
-      height: var(--topbar-h);
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(10px);
-    }
-
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-
-    .page-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    .page-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-
-    .topbar-btn {
-      width: 38px; height: 38px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-
-    .topbar-btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border-active); }
-
-    /* ── Page Body ─────────────────────────────────────── */
-    .page-body {
-      padding: 28px;
-      flex: 1;
-    }
-
-    /* ── Cards ─────────────────────────────────────────── */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover { border-color: var(--border-active); box-shadow: var(--shadow); }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    .card-subtitle {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* ── Stat Cards ────────────────────────────────────── */
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.25s;
-    }
-
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--stat-color, var(--accent)), transparent);
-    }
-
-    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--border-active); }
-
-    .stat-icon {
-      width: 42px; height: 42px;
-      border-radius: var(--radius-sm);
-      background: var(--stat-bg, var(--accent-soft));
-      color: var(--stat-color, var(--accent));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      margin-bottom: 14px;
-    }
-
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-weight: 500;
-    }
-
-    /* ── Buttons ───────────────────────────────────────── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 9px 18px;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-      text-decoration: none;
-      font-family: inherit;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-      color: white;
-      box-shadow: 0 4px 15px var(--accent-glow);
-    }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); color: white; }
-
-    .btn-secondary {
-      background: var(--bg-elevated);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); }
-
-    .btn-success {
-      background: var(--green-soft);
-      color: var(--green);
-      border: 1px solid rgba(34,211,160,0.2);
-    }
-    .btn-success:hover { background: var(--green); color: #0d0f14; }
-
-    .btn-danger {
-      background: var(--red-soft);
-      color: var(--red);
-      border: 1px solid rgba(244,63,94,0.2);
-    }
-    .btn-danger:hover { background: var(--red); color: white; }
-
-    .btn-warning {
-      background: var(--yellow-soft);
-      color: var(--yellow);
-      border: 1px solid rgba(245,158,11,0.2);
-    }
-    .btn-warning:hover { background: var(--yellow); color: #0d0f14; }
-
-    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
-    .btn-lg { padding: 12px 24px; font-size: 1rem; }
-    .btn-block { width: 100%; justify-content: center; }
-
-    /* ── Badges / Status ───────────────────────────────── */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .badge-open        { background: var(--green-soft); color: var(--green); }
-    .badge-draft       { background: var(--bg-elevated); color: var(--text-muted); }
-    .badge-assigned    { background: var(--blue-soft); color: var(--blue); }
-    .badge-in_progress { background: var(--accent-soft); color: var(--accent); }
-    .badge-completed   { background: var(--green-soft); color: var(--green); }
-    .badge-closed      { background: var(--red-soft); color: var(--red); }
-    .badge-applications_received { background: var(--yellow-soft); color: var(--yellow); }
-    .badge-pending     { background: var(--yellow-soft); color: var(--yellow); }
-    .badge-accepted    { background: var(--green-soft); color: var(--green); }
-    .badge-rejected    { background: var(--red-soft); color: var(--red); }
-
-    /* ── Forms ─────────────────────────────────────────── */
-    .form-group { margin-bottom: 20px; }
-
-    .form-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 10px 14px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      font-family: inherit;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-
-    .form-control::placeholder { color: var(--text-muted); }
-
-    textarea.form-control { resize: vertical; }
-
-    select.form-control {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 36px;
-    }
-
-    .form-error { color: var(--red); font-size: 0.78rem; margin-top: 4px; }
-
-    .form-hint { color: var(--text-muted); font-size: 0.78rem; margin-top: 4px; }
-
-    /* ── Alerts ────────────────────────────────────────── */
-    .alert {
-      padding: 14px 18px;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      border: 1px solid;
-    }
-
-    .alert-success { background: var(--green-soft); color: var(--green); border-color: rgba(34,211,160,0.2); }
-    .alert-danger  { background: var(--red-soft);   color: var(--red);   border-color: rgba(244,63,94,0.2); }
-    .alert-warning { background: var(--yellow-soft); color: var(--yellow); border-color: rgba(245,158,11,0.2); }
-    .alert-info    { background: var(--blue-soft);   color: var(--blue);   border-color: rgba(56,189,248,0.2); }
-
-    /* ── Table ─────────────────────────────────────────── */
-    .table-wrap { overflow-x: auto; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th {
-      text-align: left;
-      padding: 10px 16px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-    }
-
-    td {
-      padding: 14px 16px;
-      font-size: 0.875rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: var(--bg-hover); }
-
-    /* ── Empty State ───────────────────────────────────── */
-    .empty-state {
-      text-align: center;
-      padding: 60px 24px;
-    }
-
-    .empty-icon {
-      font-size: 3rem;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .empty-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-
-    .empty-desc {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-      max-width: 360px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* ── Project Card ──────────────────────────────────── */
-    .project-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      transition: all 0.25s;
-    }
-
-    .project-card:hover {
-      border-color: var(--border-active);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
-    }
-
-    .project-card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      gap: 12px;
-    }
-
-    .project-card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    .project-card-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 10px 0;
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .meta-item i { font-size: 0.85rem; color: var(--accent); }
-
-    .skills-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 10px 0;
-    }
-
-    .skill-tag {
-      background: var(--accent-soft);
-      color: var(--accent);
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
-
-    /* ── Application Card ──────────────────────────────── */
-    .application-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      transition: all 0.2s;
-    }
-
-    .application-card:hover { border-color: var(--border-active); }
-
-    .applicant-avatar {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--purple), var(--accent));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      font-weight: 700;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    /* ── Progress Bar ──────────────────────────────────── */
-    .progress-bar-wrap {
-      background: var(--bg-elevated);
-      border-radius: 6px;
-      height: 8px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--purple));
-      border-radius: 6px;
-      transition: width 0.4s ease;
-    }
-
-    /* ── Responsive ────────────────────────────────────── */
-    @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0; }
-      .stat-grid { grid-template-columns: 1fr 1fr; }
-      .page-body { padding: 16px; }
-      .topbar { padding: 0 16px; }
-    }
-
-    /* ── Animations ────────────────────────────────────── */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in { animation: fadeInUp 0.4s ease forwards; }
-
-    /* ── Gradient text ─────────────────────────────────── */
-    .gradient-text {
-      background: linear-gradient(135deg, var(--accent), var(--purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-  </style>
+  <!-- Client Dedicated Design System -->
+  <link rel="stylesheet" href="{% static 'css/client_theme.css' %}">
+
+  <!-- Zero-FOUC Theme Initializer -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('freelancehub_client_theme') || localStorage.getItem('freelancehub_theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
 
   {% block extra_head %}{% endblock %}
 </head>
-<body>
-<div class="app-layout">
+<body class="client-workspace">
+<div class="client-app-layout">
 
-  <!-- ── Sidebar ──────────────────────────────────────── -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <a href="{% url 'marketplace:client_dashboard' %}" class="sidebar-logo" style="text-decoration:none;">
-        <div class="logo-icon"><i class="bi bi-briefcase-fill"></i></div>
-        <div>
-          FreelanceHub
-          <br><span class="logo-badge">Client</span>
+  <!-- ══ CLIENT SIDEBAR ════════════════════════════════════ -->
+  <aside class="client-sidebar" id="clientSidebar">
+    
+    <!-- Brand Header -->
+    <div class="client-sidebar-header">
+      <a href="{% url 'marketplace:client_dashboard' %}" class="client-brand-link">
+        <div class="client-brand-icon">
+          <i class="bi bi-intersect"></i>
         </div>
+        <span>FreelanceHub</span>
       </a>
+      <span class="client-role-badge">CLIENT</span>
     </div>
 
+    <!-- User Profile Summary -->
     {% if client_profile %}
-    <div class="sidebar-user">
-      <div class="user-avatar">
-        {% if client_profile.avatar %}
-          <img src="{{ client_profile.avatar.url }}" alt="avatar" />
-        {% else %}
-          {{ client_profile.full_name|first|upper }}
-        {% endif %}
+    <div class="client-sidebar-user">
+      <div class="client-user-avatar">
+        {{ client_profile.display_name|slice:":1"|upper|default:"C" }}
       </div>
-      <div class="user-info">
-        <div class="user-name">{{ client_profile.full_name|truncatechars:22 }}</div>
-        <div class="user-role">Client</div>
+      <div class="client-user-details">
+        <div class="client-user-name">{{ client_profile.display_name }}</div>
+        <div class="client-user-company">{{ client_profile.company_name|default:"Client Workspace" }}</div>
       </div>
     </div>
     {% endif %}
 
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Main</div>
-
-      <a href="{% url 'marketplace:client_dashboard' %}"
-         class="nav-item {% block nav_dashboard %}{% endblock %}">
-        <i class="bi bi-grid-1x2 nav-icon"></i> Dashboard
+    <!-- Navigation Menu -->
+    <nav class="client-sidebar-nav">
+      
+      <div class="client-nav-group-title">WORKSPACE</div>
+      
+      <a href="{% url 'marketplace:client_dashboard' %}" class="client-nav-item {% block nav_dashboard %}{% endblock %}">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Dashboard</span>
       </a>
 
-      <div class="nav-section-label" style="margin-top:12px;">Projects</div>
-
-      <a href="{% url 'marketplace:project_post' %}"
-         class="nav-item {% block nav_post %}{% endblock %}">
-        <i class="bi bi-plus-circle nav-icon"></i> Post a Project
+      <a href="{% url 'marketplace:project_list' %}" class="client-nav-item {% block nav_projects %}{% endblock %}">
+        <i class="bi bi-folder2-open"></i>
+        <span>My Projects</span>
+        {% if open_projects %}
+          <span class="client-nav-badge">{{ open_projects }}</span>
+        {% endif %}
       </a>
 
-      <a href="{% url 'marketplace:project_list' %}"
-         class="nav-item {% block nav_projects %}{% endblock %}">
-        <i class="bi bi-folder2-open nav-icon"></i> My Projects
+      <a href="{% url 'marketplace:project_post' %}" class="client-nav-item {% block nav_post %}{% endblock %}">
+        <i class="bi bi-plus-circle-fill"></i>
+        <span>Post Project</span>
       </a>
 
-      <div class="nav-section-label" style="margin-top:12px;">Finance</div>
+      <div class="client-nav-group-title">COLLABORATION</div>
 
-      <a href="{% url 'marketplace:client_payments' %}"
-         class="nav-item {% block nav_payments %}{% endblock %}">
-        <i class="bi bi-credit-card nav-icon"></i> Payments
+      <a href="{% url 'core:home' %}#find-freelancers" class="client-nav-item">
+        <i class="bi bi-people-fill"></i>
+        <span>Find Freelancers</span>
       </a>
 
-      <div class="nav-section-label" style="margin-top:12px;">Account</div>
-
-      <a href="{% url 'marketplace:client_profile_view' %}"
-         class="nav-item {% block nav_profile %}{% endblock %}">
-        <i class="bi bi-person-circle nav-icon"></i> My Profile
+      <a href="{% url 'core:chat_home' %}" class="client-nav-item {% block nav_chat %}{% endblock %}">
+        <i class="bi bi-chat-dots-fill"></i>
+        <span>Messages &amp; TrackBot</span>
       </a>
 
-      <a href="{% url 'marketplace:client_support_list' %}"
-         class="nav-item {% block nav_support %}{% endblock %}">
-        <i class="bi bi-life-preserver nav-icon"></i> Support
+      <a href="{% url 'core:notifications_list' %}" class="client-nav-item {% block nav_notifications %}{% endblock %}">
+        <i class="bi bi-bell-fill"></i>
+        <span>Notifications</span>
       </a>
 
-      <div style="margin-top: auto;"></div>
+      <div class="client-nav-group-title">MANAGEMENT</div>
 
-      <a href="{% url 'core:logout' %}" class="nav-item danger" style="margin-top:12px;">
-        <i class="bi bi-box-arrow-left nav-icon"></i> Logout
+      <a href="{% url 'marketplace:client_payments' %}" class="client-nav-item {% block nav_payments %}{% endblock %}">
+        <i class="bi bi-credit-card-2-front-fill"></i>
+        <span>Payments &amp; Escrow</span>
       </a>
+
+      <a href="{% url 'marketplace:client_support_list' %}" class="client-nav-item {% block nav_support %}{% endblock %}">
+        <i class="bi bi-shield-check"></i>
+        <span>Support &amp; Reports</span>
+      </a>
+
+      <a href="{% url 'marketplace:client_profile_view' %}" class="client-nav-item {% block nav_profile %}{% endblock %}">
+        <i class="bi bi-person-fill-gear"></i>
+        <span>Profile Settings</span>
+      </a>
+
+      <a href="{% url 'core:settings' %}" class="client-nav-item {% block nav_settings %}{% endblock %}">
+        <i class="bi bi-gear-fill"></i>
+        <span>Platform Preferences</span>
+      </a>
+
+      <div style="margin-top: auto; padding-top: 16px;"></div>
+
+      <a href="{% url 'core:logout' %}" class="client-nav-item" style="color: var(--client-red);">
+        <i class="bi bi-box-arrow-left" style="color: var(--client-red);"></i>
+        <span>Sign Out</span>
+      </a>
+
     </nav>
-
-    <div class="sidebar-footer">
-      <div style="font-size:0.7rem;color:var(--text-muted);text-align:center;">
-        FreelanceHub · Client Portal
-      </div>
-    </div>
   </aside>
 
-  <!-- ── Main ─────────────────────────────────────────── -->
-  <div class="main-content">
+  <!-- ══ MAIN WORKSPACE CONTENT ════════════════════════════ -->
+  <div class="client-main-content">
+    
     <!-- Topbar -->
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="topbar-btn" id="sidebarToggle" style="display:none;">
-          <i class="bi bi-list"></i>
+    <header class="client-topbar">
+      
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="btn-client-secondary" id="clientSidebarToggle" style="display: none; padding: 8px 12px;" aria-label="Toggle sidebar menu">
+          <i class="bi bi-list fs-5"></i>
         </button>
-        <div>
-          <div class="page-title">{% block page_title %}Dashboard{% endblock %}</div>
-          {% block page_subtitle %}{% endblock %}
+        
+        <div class="client-page-title-group">
+          <h1>{% block page_title %}Client Dashboard{% endblock %}</h1>
+          {% block page_subtitle %}<p>Manage your active requirements, reviews, and proposals</p>{% endblock %}
         </div>
       </div>
-      <div class="topbar-right">
-        {% block topbar_actions %}
-          <a href="{% url 'marketplace:project_post' %}" class="btn btn-primary btn-sm">
-            <i class="bi bi-plus-lg"></i> Post Project
-          </a>
-        {% endblock %}
+
+      <div class="client-topbar-actions">
+        
+        <!-- Post Project Quick Button -->
+        <a href="{% url 'marketplace:project_post' %}" class="btn-client-primary">
+          <i class="bi bi-plus-lg"></i>
+          <span>Post a Project</span>
+        </a>
+
+        <!-- Dark/Light Theme Switcher -->
+        <button class="btn-client-secondary" id="clientThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode" style="padding: 8px 12px;">
+          <i class="bi bi-sun-fill" id="clientThemeSun"></i>
+          <i class="bi bi-moon-stars-fill" id="clientThemeMoon" style="display:none;"></i>
+        </button>
+
+        <!-- User Quick Avatar Dropdown -->
+        <a href="{% url 'marketplace:client_profile_view' %}" class="client-user-avatar" style="width:36px;height:36px;font-size:13px;" title="View Profile">
+          {{ client_profile.display_name|slice:":1"|upper|default:"C" }}
+        </a>
+
       </div>
+
     </header>
 
-    <!-- Messages -->
+    <!-- Page Body Messages -->
     {% if messages %}
-    <div style="padding: 16px 28px 0;">
+    <div style="padding: 20px 32px 0;">
       {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">
-        <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'danger' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
-        {{ message }}
+      <div style="padding: 12px 18px; border-radius: var(--r-sm); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600; {% if message.tags == 'success' %}background:var(--status-open-soft);color:var(--status-open);border:1px solid rgba(34,211,160,0.3);{% elif message.tags == 'danger' or message.tags == 'error' %}background:var(--client-red-soft);color:var(--client-red);border:1px solid rgba(200,14,19,0.3);{% else %}background:var(--client-purple-soft);color:var(--client-purple);border:1px solid var(--client-border);{% endif %}">
+        <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'danger' or message.tags == 'error' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %}"></i>
+        <span>{{ message }}</span>
       </div>
       {% endfor %}
     </div>
     {% endif %}
 
-    <!-- Page Body -->
-    <main class="page-body fade-in">
+    <!-- Page Body Container -->
+    <main class="client-content-container">
       {% block content %}{% endblock %}
     </main>
+
   </div>
+
 </div>
 
+<!-- ══ CLIENT INTERACTIVE SCRIPTS ═════════════════════════ -->
 <script>
-  // Sidebar mobile toggle
-  const toggle = document.getElementById('sidebarToggle');
-  const sidebar = document.getElementById('sidebar');
-  if (window.innerWidth <= 768) {
-    toggle.style.display = 'flex';
-  }
-  toggle?.addEventListener('click', () => sidebar.classList.toggle('open'));
+  // 1. Theme Manager
+  const themeToggle = document.getElementById('clientThemeToggle');
+  const sunIcon = document.getElementById('clientThemeSun');
+  const moonIcon = document.getElementById('clientThemeMoon');
 
-  // Active nav highlight by URL
-  document.querySelectorAll('.nav-item').forEach(item => {
-    if (item.href === window.location.href) item.classList.add('active');
-  });
+  function setClientTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('freelancehub_client_theme', theme);
+    localStorage.setItem('freelancehub_theme', theme);
+    if (theme === 'light') {
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'inline-block';
+    } else {
+      sunIcon.style.display = 'inline-block';
+      moonIcon.style.display = 'none';
+    }
+  }
+
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  setClientTheme(currentTheme);
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const active = document.documentElement.getAttribute('data-theme');
+      const nextTheme = active === 'light' ? 'dark' : 'light';
+      setClientTheme(nextTheme);
+    });
+  }
+
+  // 2. Sidebar Mobile Drawer Toggle
+  const sidebarToggle = document.getElementById('clientSidebarToggle');
+  const sidebar = document.getElementById('clientSidebar');
+
+  function checkMobileSidebar() {
+    if (window.innerWidth <= 991) {
+      if (sidebarToggle) sidebarToggle.style.display = 'inline-flex';
+    } else {
+      if (sidebarToggle) sidebarToggle.style.display = 'none';
+      if (sidebar) sidebar.classList.remove('open');
+    }
+  }
+
+  window.addEventListener('resize', checkMobileSidebar);
+  checkMobileSidebar();
+
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+  }
 </script>
 
 {% block extra_js %}{% endblock %}

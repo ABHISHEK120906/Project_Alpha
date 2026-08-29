@@ -1,77 +1,87 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <script>
-    (function() {
-      try {
-        var saved = localStorage.getItem('theme') || (localStorage.getItem('darkMode') === '1' ? 'dark' : (localStorage.getItem('darkMode') === '0' ? 'light' : null));
-        var theme = saved;
-        if (!theme) {
-          theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        document.documentElement.setAttribute('data-theme', theme);
-      } catch (e) {}
-    })();
-  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{{ page_title|default:"Platform Administration" }} — FreelanceHub Admin{% endblock %}</title>
+  <title>{% block title %}{{ page_title|default:"Platform Governance & Admin" }} — FreelanceHub Admin{% endblock %}</title>
 
-  <!-- Google Fonts: Inter -->
+  <!-- Canonical Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239bc400'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%23120e20'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Font Awesome 6 -->
+  <!-- Font Awesome 6 & Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-  <!-- Chart.js 4.4.0 with Fallback -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script>
-    if (typeof Chart === 'undefined') {
-      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"><\/script>');
-    }
-  </script>
 
-  <!-- Custom Purple/Violet UI CSS -->
+  <!-- Main + Admin Shared Design System -->
+  <link rel="stylesheet" href="{% static 'css/public_landing.css' %}">
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
+  <!-- Zero-FOUC Theme Initializer -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('freelancehub_admin_theme') || localStorage.getItem('freelancehub_theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+
   <style>
-    :root {
-      --admin-primary: #8076a3;              /* Purple Mountains Majesty */
-      --admin-secondary: #9bc400;            /* Grassy Green */
-      --admin-accent-pink: #f9c5bd;          /* Misty Mountain Pink */
-      --admin-factory-stone: #7c677f;        /* Factory Stone Purple */
-      --admin-bg-dark: #0c0a14;
-      --admin-card-bg: rgba(25, 21, 39, 0.85);
-      --admin-border: rgba(128, 118, 163, 0.28);
+    /* Admin UI Shared Brand Tokens: #9bc400, #8076a3, #f9c5bd, #7c677f */
+    :root, [data-theme="dark"] {
+      --admin-brand-green: #9bc400;
+      --admin-brand-purple: #8076a3;
+      --admin-brand-pink: #f9c5bd;
+      --admin-brand-stone: #7c677f;
+      --admin-bg-base: #0b0914;
+      --admin-bg-surface: #120e20;
+      --admin-bg-card: #181427;
+      --admin-border: rgba(128, 118, 163, 0.25);
+      --admin-text-primary: #f8fafc;
+      --admin-text-muted: #8076a3;
+    }
+
+    [data-theme="light"] {
+      --admin-bg-base: #f6f4fa;
+      --admin-bg-surface: #ffffff;
+      --admin-bg-card: #ffffff;
+      --admin-border: rgba(128, 118, 163, 0.2);
+      --admin-text-primary: #1c152c;
+      --admin-text-muted: #7c677f;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--admin-bg-dark);
-      color: #f8fafc;
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--admin-bg-base);
+      color: var(--admin-text-primary);
       min-height: 100vh;
     }
 
-    /* Admin Sidebar */
     .admin-sidebar {
       width: 260px;
       position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      background: rgba(18, 14, 32, 0.95);
-      backdrop-filter: blur(16px);
+      top: 0; left: 0; bottom: 0;
+      background: var(--admin-bg-surface);
       border-right: 1px solid var(--admin-border);
       z-index: 1040;
       display: flex;
       flex-direction: column;
-      transition: all 0.3s ease;
+      transition: transform var(--ease-smooth);
     }
 
     .admin-brand {
@@ -81,16 +91,17 @@
       gap: 12px;
       color: #fff;
       text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid var(--admin-border);
     }
 
     .admin-brand-badge {
-      background: linear-gradient(135deg, #6f42c1, #00d2ff);
+      background: linear-gradient(135deg, var(--admin-brand-purple), var(--admin-brand-green));
       padding: 6px 10px;
       border-radius: 8px;
       font-weight: 800;
       font-size: 14px;
-      box-shadow: 0 4px 12px rgba(111,66,193,0.4);
+      color: #0b0914;
+      box-shadow: 0 4px 14px rgba(155, 196, 0, 0.35);
     }
 
     .admin-nav {
@@ -104,216 +115,274 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      color: rgba(255,255,255,0.7);
+      color: var(--text-secondary);
       text-decoration: none;
-      font-weight: 500;
-      font-size: 14px;
+      font-weight: 600;
+      font-size: 13.5px;
       border-left: 3px solid transparent;
-      transition: all 0.2s ease;
+      transition: all var(--ease-fast);
     }
 
     .admin-nav-item:hover, .admin-nav-item.active {
       color: #fff;
-      background: rgba(111, 66, 193, 0.15);
-      border-left-color: var(--admin-primary);
+      background: rgba(155, 196, 0, 0.12);
+      border-left-color: var(--admin-brand-green);
     }
 
     .admin-nav-label {
-      font-size: 11px;
+      font-size: 10.5px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: rgba(255,255,255,0.4);
+      color: var(--admin-text-muted);
       padding: 1rem 1.5rem 0.4rem;
-      font-weight: 700;
+      font-weight: 800;
     }
 
-    /* Main Layout */
     .admin-main {
       margin-left: 260px;
       padding: 1.5rem 2rem;
-      transition: all 0.3s ease;
+      transition: margin-left var(--ease-smooth);
     }
 
-    /* Admin Topbar */
     .admin-topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 1rem 1.5rem;
-      background: var(--admin-card-bg);
-      backdrop-filter: blur(12px);
+      background: var(--admin-bg-card);
       border: 1px solid var(--admin-border);
       border-radius: 14px;
       margin-bottom: 1.5rem;
     }
 
     .glass-card {
-      background: var(--admin-card-bg);
-      backdrop-filter: blur(12px);
+      background: var(--admin-bg-card);
       border: 1px solid var(--admin-border);
       border-radius: 14px;
       padding: 1.25rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: transform var(--ease-fast), border-color var(--ease-fast);
+    }
+
+    .glass-card:hover {
+      border-color: var(--admin-brand-green);
     }
 
     .kpi-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform var(--ease-fast), box-shadow var(--ease-fast);
     }
 
     .kpi-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(111,66,193,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(155, 196, 0, 0.25);
     }
 
     .kpi-title {
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.8px;
+      color: var(--admin-text-muted);
+      font-weight: 800;
     }
 
     .kpi-value {
-      font-size: 1.6rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.75rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--admin-text-primary);
     }
 
     @media (max-width: 991px) {
-      .admin-sidebar { left: -260px; }
-      .admin-sidebar.show { left: 0; }
-      .admin-main { margin-left: 0; }
+      .admin-sidebar {
+        transform: translateX(-100%);
+      }
+      .admin-sidebar.open {
+        transform: translateX(0);
+      }
+      .admin-main {
+        margin-left: 0;
+        padding: 1rem;
+      }
     }
   </style>
 
-  {% block extra_css %}{% endblock %}
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
 
-  <!-- Admin Sidebar -->
+  <!-- ══ ADMIN SIDEBAR ══════════════════════════════════════ -->
   <aside class="admin-sidebar" id="adminSidebar">
-    <a href="{% url 'core:admin_dashboard' %}" class="admin-brand">
-      <span class="admin-brand-badge"><i class="fas fa-shield-alt me-1"></i> ADMIN</span>
+    
+    <!-- Brand -->
+    <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-brand">
+      <div class="admin-brand-badge"><i class="fas fa-shield-alt"></i></div>
       <div>
-        <div style="font-weight:800; line-height:1.2;">FreelanceHub</div>
-        <div style="font-size:11px; color:rgba(255,255,255,0.5);">Platform Administration</div>
+        <div class="fw-bold fs-6" style="font-family:'Plus Jakarta Sans',sans-serif;">FreelanceHub</div>
+        <small class="badge bg-success bg-opacity-25 text-success" style="font-size:10px;">ADMIN PORTAL</small>
       </div>
     </a>
 
-      <div class="admin-nav-label">Marketplace Administration</div>
-      <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        <i class="fas fa-store-alt text-primary"></i> <span>Marketplace Overview</span>
-      </a>
-      <a href="{% url 'marketplace_admin:users_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'users' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-users-cog text-info"></i> <span>Clients & Freelancers</span>
-      </a>
-      <a href="{% url 'marketplace_admin:projects_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'projects' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-briefcase text-warning"></i> <span>Marketplace Projects</span>
-      </a>
-      <a href="{% url 'marketplace_admin:applications_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'applications' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-paper-plane text-cyan"></i> <span>Proposals & Bids</span>
-      </a>
-      <a href="{% url 'marketplace_admin:reports_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'reports' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-flag text-danger"></i> <span>Incident Reports</span>
-      </a>
-      <a href="{% url 'marketplace_admin:disputes_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'disputes' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-gavel text-warning"></i> <span>Disputes & Arbitration</span>
-      </a>
-      <a href="{% url 'marketplace_admin:support_list' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'support' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-headset text-success"></i> <span>Support Desk</span>
-      </a>
-      <a href="{% url 'marketplace_admin:analytics' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and request.resolver_match.url_name == 'analytics' %}active{% endif %}">
-        <i class="fas fa-chart-line text-purple"></i> <span>Platform Analytics</span>
-      </a>
-      <a href="{% url 'marketplace_admin:exports_hub' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'marketplace_admin' and 'export' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-file-export text-secondary"></i> <span>Reports & Exports</span>
+    <!-- Nav Items -->
+    <nav class="admin-nav">
+      
+      <div class="admin-nav-label">Platform Overview</div>
+      <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i> Dashboard
       </a>
 
-      <div class="admin-nav-label">System</div>
-      <a href="{% url 'core:admin_dashboard' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-        <i class="fas fa-chart-pie text-muted"></i> <span>CRM Overview</span>
+      <div class="admin-nav-label">User Governance</div>
+      <a href="{% url 'marketplace_admin:users_list' %}" class="admin-nav-item {% if 'users' in request.path %}active{% endif %}">
+        <i class="fas fa-users-cog"></i> Users &amp; Roles
       </a>
-      <a href="{% url 'core:admin_activity_logs' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and 'activities' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-history text-light"></i> <span>Audit Logs</span>
+      <a href="{% url 'marketplace_admin:users_list' %}?role=client" class="admin-nav-item">
+        <i class="fas fa-building"></i> Clients
       </a>
-      <a href="{% url 'core:admin_security' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and 'security' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-shield-virus text-danger"></i> <span>Security Center</span>
-      </a>
-      <a href="{% url 'core:admin_settings' %}" class="admin-nav-item {% if request.resolver_match.namespace == 'core' and 'settings' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="fas fa-sliders-h text-secondary"></i> <span>System Settings</span>
+      <a href="{% url 'marketplace_admin:users_list' %}?role=freelancer" class="admin-nav-item">
+        <i class="fas fa-person-burst"></i> Freelancers
       </a>
 
-      <div class="admin-nav-label">Shortcuts</div>
-      <a href="{% url 'marketplace:client_dashboard' %}" class="admin-nav-item" target="_blank">
-        <i class="fas fa-external-link-alt text-muted"></i> <span>Client Portal</span>
+      <div class="admin-nav-label">Marketplace Oversight</div>
+      <a href="{% url 'marketplace_admin:projects_list' %}" class="admin-nav-item {% if 'projects' in request.path %}active{% endif %}">
+        <i class="fas fa-project-diagram"></i> Projects Catalog
       </a>
-      <a href="{% url 'freelancer:dashboard' %}" class="admin-nav-item" target="_blank">
-        <i class="fas fa-external-link-alt text-muted"></i> <span>Freelancer Portal</span>
+      <a href="{% url 'marketplace_admin:applications_list' %}" class="admin-nav-item {% if 'applications' in request.path %}active{% endif %}">
+        <i class="fas fa-file-signature"></i> Applications
+      </a>
+
+      <div class="admin-nav-label">Trust &amp; Arbitration</div>
+      <a href="{% url 'marketplace_admin:disputes_list' %}" class="admin-nav-item {% if 'disputes' in request.path %}active{% endif %}">
+        <i class="fas fa-gavel"></i> Disputes &amp; Mediation
+      </a>
+      <a href="{% url 'marketplace_admin:reports_list' %}" class="admin-nav-item {% if 'reports' in request.path %}active{% endif %}">
+        <i class="fas fa-flag"></i> Reports &amp; Incidents
+      </a>
+      <a href="{% url 'marketplace_admin:support_list' %}" class="admin-nav-item {% if 'support' in request.path %}active{% endif %}">
+        <i class="fas fa-headset"></i> Support Desk
+      </a>
+
+      <div class="admin-nav-label">System &amp; Exports</div>
+      <a href="{% url 'marketplace_admin:analytics' %}" class="admin-nav-item {% if 'analytics' in request.path %}active{% endif %}">
+        <i class="fas fa-chart-pie"></i> Platform Analytics
+      </a>
+      <a href="{% url 'marketplace_admin:exports_hub' %}" class="admin-nav-item {% if 'exports' in request.path %}active{% endif %}">
+        <i class="fas fa-file-export"></i> Reports &amp; Exports
+      </a>
+      <a href="{% url 'core:activity_list' %}" class="admin-nav-item">
+        <i class="fas fa-history"></i> Activity Logs
+      </a>
+
+      <div style="margin-top: auto; padding-top: 1rem;"></div>
+      <a href="{% url 'core:home' %}" class="admin-nav-item text-muted">
+        <i class="fas fa-globe"></i> View Public Site
+      </a>
+      <a href="{% url 'core:logout' %}" class="admin-nav-item text-danger">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
       </a>
     </nav>
+
   </aside>
 
-  <!-- Main Area -->
+  <!-- ══ ADMIN MAIN ═════════════════════════════════════════ -->
   <main class="admin-main">
-
+    
     <!-- Topbar -->
-    <header class="admin-topbar">
+    <div class="admin-topbar">
+      
       <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-outline-light d-lg-none" onclick="document.getElementById('adminSidebar').classList.toggle('show')">
+        <button class="btn btn-outline-secondary d-lg-none" id="adminSidebarToggle" aria-label="Toggle admin sidebar">
           <i class="fas fa-bars"></i>
         </button>
-        <div class="position-relative d-none d-sm-block" style="width: 320px;">
-          <form action="{% url 'core:global_search' %}" method="get">
-            <input type="text" name="q" class="form-control form-control-sm bg-dark text-white border-secondary rounded-pill ps-4" placeholder="Global search users, projects, clients...">
-          </form>
+        <div>
+          <h4 class="mb-0 fw-bold" style="font-family:'Plus Jakarta Sans',sans-serif;">{% block page_title %}{{ page_title|default:"Platform Governance" }}{% endblock %}</h4>
+          <small class="text-muted">FreelanceHub Unified Administration Suite</small>
         </div>
       </div>
 
       <div class="d-flex align-items-center gap-3">
-        <!-- User Switch -->
-        <a href="{% url 'core:dashboard' %}" class="btn btn-sm btn-outline-info rounded-pill">
-          <i class="fas fa-user-circle me-1"></i> User Portal
-        </a>
-
-        <!-- Admin Profile -->
-        <div class="dropdown">
-          <button class="btn btn-dark btn-sm dropdown-toggle rounded-pill d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
-            <div class="bg-purple text-white rounded-circle d-flex align-items-center justify-content-center" style="width:28px; height:28px; background:#6f42c1; font-weight:700;">
-              {{ request.user.username|slice:":1"|upper }}
-            </div>
-            <span>{{ request.user.username }}</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-            <li><a class="dropdown-item" href="{% url 'core:profile_view' %}"><i class="fas fa-user me-2"></i> Profile</a></li>
-            <li><a class="dropdown-item" href="{% url 'core:admin_settings' %}"><i class="fas fa-cog me-2"></i> Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <form action="{% url 'core:logout' %}" method="post" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
-              </form>
-            </li>
-          </ul>
+        
+        <!-- Live System Status Pill -->
+        <div class="d-none d-md-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-success bg-opacity-10 border border-success border-opacity-25 text-success small fw-semibold">
+          <span class="status-indicator-dot"></span>
+          <span>System Operational</span>
         </div>
-      </div>
-    </header>
 
-    <!-- Toast Messages -->
+        <!-- Theme Toggle -->
+        <button class="btn btn-outline-secondary btn-sm" id="adminThemeToggle" title="Toggle Light / Dark Mode">
+          <i class="fas fa-sun" id="adminThemeSun"></i>
+          <i class="fas fa-moon" id="adminThemeMoon" style="display:none;"></i>
+        </button>
+
+        <!-- User Info -->
+        <div class="d-flex align-items-center gap-2">
+          <div class="rounded-circle bg-success text-dark fw-bold d-flex align-items-center justify-content-center" style="width:34px;height:34px;font-size:13px;">
+            {{ request.user.username|slice:":1"|upper|default:"A" }}
+          </div>
+          <span class="small fw-semibold d-none d-sm-inline">{{ request.user.username }}</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Django Messages -->
     {% if messages %}
+    <div class="mb-4">
       {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-lg" role="alert">
-        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'danger' or message.tags == 'error' %}fa-times-circle{% else %}fa-info-circle{% endif %} me-2"></i>
+      <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show border-0 shadow-sm" role="alert">
         {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       {% endfor %}
+    </div>
     {% endif %}
 
-    <!-- Page Content -->
+    <!-- Content Block -->
     {% block content %}{% endblock %}
 
   </main>
 
+  <!-- ══ ADMIN SCRIPTS ══════════════════════════════════════ -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Theme Manager
+    const adminThemeToggle = document.getElementById('adminThemeToggle');
+    const adminSun = document.getElementById('adminThemeSun');
+    const adminMoon = document.getElementById('adminThemeMoon');
+
+    function setAdminTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('freelancehub_admin_theme', theme);
+      localStorage.setItem('freelancehub_theme', theme);
+      if (theme === 'light') {
+        adminSun.style.display = 'none';
+        adminMoon.style.display = 'inline-block';
+      } else {
+        adminSun.style.display = 'inline-block';
+        adminMoon.style.display = 'none';
+      }
+    }
+
+    const currentAdminTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    setAdminTheme(currentAdminTheme);
+
+    if (adminThemeToggle) {
+      adminThemeToggle.addEventListener('click', () => {
+        const active = document.documentElement.getAttribute('data-theme');
+        const nextTheme = active === 'light' ? 'dark' : 'light';
+        setAdminTheme(nextTheme);
+      });
+    }
+
+    // Mobile Sidebar Toggle
+    const adminSidebarToggle = document.getElementById('adminSidebarToggle');
+    const adminSidebar = document.getElementById('adminSidebar');
+    if (adminSidebarToggle && adminSidebar) {
+      adminSidebarToggle.addEventListener('click', () => {
+        adminSidebar.classList.toggle('open');
+      });
+    }
+  </script>
+
   {% block extra_js %}{% endblock %}
 </body>
 </html>

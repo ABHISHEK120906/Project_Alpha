@@ -1,14 +1,19 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   FREELANCEHUB — MAIN & ADMIN UNIFIED DESIGN SYSTEM
-   Color-Based & UI-Based · Pure Abstract Graphics · Dark & Light Themes
-   Palette: Grassy Green #9bc400 · Purple Mountains Majesty #8076a3
-            Misty Mountain Pink #f9c5bd · Factory Stone Purple #7c677f
+   FREELANCEHUB — HIGH-END DESIGN SYSTEM & PRODUCTION UI/UX
+   Main Page & Admin Shared Brand · Color & UI Driven · Zero Human Visuals
+   Palettes:
+     - Main + Admin: Grassy Green #9bc400 · Purple Mountains Majesty #8076a3
+                     Misty Mountain Pink #f9c5bd · Factory Stone Purple #7c677f
+     - Client:       Background Tan #fceed1 · Purple-y #7d3cff
+                     Yellow Gloves #f2d53c · Redhead #c80e13
+     - Freelancer:   Ragin Beige #fff5d7 · Coral Pink #ff5e6c
+                     Sleuthe Yellow #feb300 · Pink Leaf #ffaaab
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── 1. THEME TOKENS & CSS VARIABLES ───────────────────────────────────── */
+/* ── 1. DESIGN SYSTEM TOKENS & CSS VARIABLES ───────────────────────────── */
 :root,
 [data-theme="dark"] {
-  /* Admin & Main Core Brand */
+  /* Main & Admin Shared Palette */
   --brand-primary: #8076a3;              /* Purple Mountains Majesty */
   --brand-primary-rgb: 128, 118, 163;
   --brand-primary-hover: #6d6291;
@@ -18,10 +23,10 @@
   --brand-accent-pink: #f9c5bd;          /* Misty Mountain Pink */
   --brand-factory-stone: #7c677f;        /* Factory Stone Purple */
 
-  /* Role-Specific Identity Accents */
+  /* Role Identity Accents */
   --role-client: #7d3cff;                /* Client Purple-y */
   --role-client-tan: #fceed1;            /* Client Tan */
-  --role-client-yellow: #f2d53c;         /* Client Yellow */
+  --role-client-yellow: #f2d53c;         /* Client Yellow Gloves */
   --role-client-red: #c80e13;            /* Client Redhead */
 
   --role-freelancer: #ff5e6c;            /* Freelancer Coral Pink */
@@ -31,60 +36,66 @@
 
   --role-admin: #9bc400;                 /* Admin Grassy Green */
 
-  /* Surfaces & Backgrounds (Dark Mode) */
-  --bg-base: #0c0a14;
-  --bg-surface: #13101e;
-  --bg-card: #191527;
-  --bg-card-hover: #211c34;
-  --bg-elevated: #241e39;
-  --bg-glass: rgba(19, 16, 30, 0.82);
-  --bg-glass-strong: rgba(12, 10, 20, 0.94);
-  --bg-input: #151122;
+  /* Surfaces & Backgrounds */
+  --bg-base: #0b0914;
+  --bg-surface: #120e1f;
+  --bg-card: #181427;
+  --bg-card-hover: #201a34;
+  --bg-elevated: #241d3a;
+  --bg-glass: rgba(18, 14, 31, 0.85);
+  --bg-glass-strong: rgba(11, 9, 20, 0.95);
+  --bg-input: #141022;
 
-  /* Text & Content */
+  /* Typography Colors */
   --text-primary: #f8fafc;
   --text-secondary: #c4bcd8;
   --text-muted: #8076a3;
-  --text-inverse: #0c0a14;
+  --text-inverse: #0b0914;
 
-  /* Borders & Dividers */
-  --border-subtle: rgba(128, 118, 163, 0.18);
-  --border-card: rgba(128, 118, 163, 0.28);
+  /* Borders & Grids */
+  --border-subtle: rgba(128, 118, 163, 0.16);
+  --border-card: rgba(128, 118, 163, 0.26);
   --border-glow: rgba(155, 196, 0, 0.4);
-  --border-glow-purple: rgba(128, 118, 163, 0.5);
+  --border-glow-purple: rgba(128, 118, 163, 0.45);
 
-  /* Shadows & Glows */
+  /* Elevation & Shadows */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.75);
-  --shadow-glow: 0 0 32px rgba(155, 196, 0, 0.25);
-  --shadow-glow-purple: 0 0 32px rgba(128, 118, 163, 0.3);
+  --shadow-glow: 0 0 32px rgba(155, 196, 0, 0.22);
+  --shadow-glow-purple: 0 0 32px rgba(128, 118, 163, 0.28);
 
   /* Gradients */
   --grad-hero-text: linear-gradient(135deg, #ffffff 0%, #f9c5bd 60%, #8076a3 100%);
   --grad-brand-text: linear-gradient(135deg, #9bc400 0%, #38bdf8 50%, #f9c5bd 100%);
-  --grad-card-client: linear-gradient(135deg, rgba(125, 60, 255, 0.12) 0%, rgba(19, 16, 30, 0.9) 100%);
-  --grad-card-freelancer: linear-gradient(135deg, rgba(255, 94, 108, 0.12) 0%, rgba(19, 16, 30, 0.9) 100%);
-  --grad-card-admin: linear-gradient(135deg, rgba(155, 196, 0, 0.12) 0%, rgba(19, 16, 30, 0.9) 100%);
-  --grad-cta: linear-gradient(135deg, #13101e 0%, #241e39 60%, #171f11 100%);
+  --grad-card-client: linear-gradient(135deg, rgba(125, 60, 255, 0.12) 0%, rgba(18, 14, 31, 0.95) 100%);
+  --grad-card-freelancer: linear-gradient(135deg, rgba(255, 94, 108, 0.12) 0%, rgba(18, 14, 31, 0.95) 100%);
+  --grad-card-admin: linear-gradient(135deg, rgba(155, 196, 0, 0.12) 0%, rgba(18, 14, 31, 0.95) 100%);
+  --grad-cta: linear-gradient(135deg, #120e1f 0%, #241d3a 60%, #151d0f 100%);
 
   /* Badges */
   --badge-bg: rgba(128, 118, 163, 0.2);
   --badge-text: #f9c5bd;
+
+  /* Motion & Timing Curves */
+  --ease-fast: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-slow: 360ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme="light"] {
-  /* Admin & Main Core Brand */
-  --brand-primary: #6c5f93;              /* Purple Mountains Majesty Deep */
+  /* Main & Admin Shared Palette */
+  --brand-primary: #6c5f93;              /* Deep Purple Mountains Majesty */
   --brand-primary-rgb: 108, 95, 147;
   --brand-primary-hover: #584c7d;
-  --brand-secondary: #82a500;            /* Grassy Green Deep */
-  --brand-secondary-rgb: 130, 165, 0;
-  --brand-secondary-hover: #6d8b00;
-  --brand-accent-pink: #d9777f;          /* Misty Mountain Pink Deep */
-  --brand-factory-stone: #5d4860;        /* Factory Stone Deep */
+  --brand-secondary: #7fa400;            /* Deep Grassy Green */
+  --brand-secondary-rgb: 127, 164, 0;
+  --brand-secondary-hover: #6c8c00;
+  --brand-accent-pink: #d9777f;          /* Deep Misty Mountain Pink */
+  --brand-factory-stone: #5d4860;        /* Deep Factory Stone */
 
-  /* Role-Specific Identity Accents */
+  /* Role Identity Accents */
   --role-client: #6d28d9;
   --role-client-tan: #fbf0dc;
   --role-client-yellow: #d97706;
@@ -97,49 +108,55 @@
 
   --role-admin: #65a30d;
 
-  /* Surfaces & Backgrounds (Light Mode) */
-  --bg-base: #f7f5fa;
+  /* Surfaces & Backgrounds */
+  --bg-base: #f6f4fa;
   --bg-surface: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #f3f0f8;
-  --bg-elevated: #ede9f4;
-  --bg-glass: rgba(255, 255, 255, 0.88);
-  --bg-glass-strong: rgba(247, 245, 250, 0.96);
+  --bg-card-hover: #f2eef8;
+  --bg-elevated: #ece6f4;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --bg-glass-strong: rgba(246, 244, 250, 0.98);
   --bg-input: #ffffff;
 
-  /* Text & Content */
-  --text-primary: #1e172e;
-  --text-secondary: #584c70;
+  /* Typography Colors */
+  --text-primary: #1d162d;
+  --text-secondary: #54486d;
   --text-muted: #7c677f;
   --text-inverse: #ffffff;
 
-  /* Borders & Dividers */
-  --border-subtle: rgba(128, 118, 163, 0.15);
-  --border-card: rgba(128, 118, 163, 0.22);
-  --border-glow: rgba(130, 165, 0, 0.3);
-  --border-glow-purple: rgba(108, 95, 147, 0.3);
+  /* Borders & Grids */
+  --border-subtle: rgba(128, 118, 163, 0.16);
+  --border-card: rgba(128, 118, 163, 0.24);
+  --border-glow: rgba(127, 164, 0, 0.35);
+  --border-glow-purple: rgba(108, 95, 147, 0.35);
 
-  /* Shadows & Glows */
-  --shadow-sm: 0 2px 6px rgba(30, 23, 46, 0.06);
-  --shadow-md: 0 8px 24px rgba(30, 23, 46, 0.08);
-  --shadow-lg: 0 16px 40px rgba(30, 23, 46, 0.12);
-  --shadow-glow: 0 0 24px rgba(130, 165, 0, 0.15);
-  --shadow-glow-purple: 0 0 24px rgba(108, 95, 147, 0.15);
+  /* Elevation & Shadows */
+  --shadow-xs: 0 1px 3px rgba(29, 22, 45, 0.04);
+  --shadow-sm: 0 2px 6px rgba(29, 22, 45, 0.06);
+  --shadow-md: 0 8px 24px rgba(29, 22, 45, 0.08);
+  --shadow-lg: 0 16px 40px rgba(29, 22, 45, 0.12);
+  --shadow-glow: 0 0 24px rgba(127, 164, 0, 0.18);
+  --shadow-glow-purple: 0 0 24px rgba(108, 95, 147, 0.18);
 
   /* Gradients */
-  --grad-hero-text: linear-gradient(135deg, #1e172e 0%, #584c70 60%, #7c677f 100%);
-  --grad-brand-text: linear-gradient(135deg, #82a500 0%, #6c5f93 60%, #d9777f 100%);
+  --grad-hero-text: linear-gradient(135deg, #1d162d 0%, #54486d 60%, #7c677f 100%);
+  --grad-brand-text: linear-gradient(135deg, #7fa400 0%, #6c5f93 60%, #d9777f 100%);
   --grad-card-client: linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
   --grad-card-freelancer: linear-gradient(135deg, rgba(225, 29, 72, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
   --grad-card-admin: linear-gradient(135deg, rgba(101, 163, 13, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
-  --grad-cta: linear-gradient(135deg, #f3f0f8 0%, #ede9f4 60%, #f0fdf4 100%);
+  --grad-cta: linear-gradient(135deg, #f2eef8 0%, #ece6f4 60%, #f0fdf4 100%);
 
   /* Badges */
   --badge-bg: rgba(108, 95, 147, 0.12);
-  --badge-text: #584c70;
+  --badge-text: #54486d;
+
+  /* Motion & Timing Curves */
+  --ease-fast: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-slow: 360ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── 2. GLOBAL RESET & BASE STYLES ─────────────────────────────────────── */
+/* ── 2. GLOBAL RESET & BASE ARCHITECTURE ───────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -160,7 +177,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color var(--ease-smooth), color var(--ease-smooth);
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -174,7 +191,7 @@ h1, h2, h3, h4, h5, h6,
 a {
   color: var(--brand-secondary);
   text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color var(--ease-fast), transform var(--ease-fast);
 }
 
 a:hover {
@@ -213,7 +230,7 @@ img, svg {
   z-index: 1000;
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: height var(--ease-smooth), background-color var(--ease-smooth), border-color var(--ease-smooth), box-shadow var(--ease-smooth);
 }
 
 .hub-navbar.scrolled {
@@ -230,7 +247,6 @@ img, svg {
   width: 100%;
 }
 
-/* Brand */
 .hub-brand {
   display: flex;
   align-items: center;
@@ -254,7 +270,7 @@ img, svg {
   color: #ffffff;
   font-size: 18px;
   box-shadow: 0 4px 16px rgba(var(--brand-secondary-rgb), 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform var(--ease-smooth), box-shadow var(--ease-smooth);
 }
 
 .hub-brand:hover .hub-brand-badge {
@@ -269,7 +285,6 @@ img, svg {
   background-clip: text;
 }
 
-/* Nav Links */
 .hub-nav-menu {
   display: flex;
   align-items: center;
@@ -283,7 +298,7 @@ img, svg {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-secondary);
-  transition: all 0.2s ease;
+  transition: color var(--ease-fast), background-color var(--ease-fast);
 }
 
 .hub-nav-link:hover {
@@ -291,7 +306,6 @@ img, svg {
   background: var(--border-subtle);
 }
 
-/* Nav Actions */
 .hub-nav-actions {
   display: flex;
   align-items: center;
@@ -310,22 +324,22 @@ img, svg {
   justify-content: center;
   cursor: pointer;
   font-size: 16px;
-  transition: all 0.2s ease;
+  transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast), transform var(--ease-fast);
 }
 
 .hub-theme-toggle:hover {
   background: var(--bg-card-hover);
   color: var(--text-primary);
   border-color: var(--border-card);
+  transform: translateY(-1px);
 }
 
-/* Role Nav Buttons */
 .btn-nav-role {
   padding: 7px 14px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 700;
-  transition: all 0.2s ease;
+  transition: all var(--ease-fast);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -376,7 +390,7 @@ img, svg {
   color: var(--text-secondary);
   background: transparent;
   border: 1px solid var(--border-subtle);
-  transition: all 0.2s ease;
+  transition: all var(--ease-fast);
 }
 
 .btn-hub-ghost:hover {
@@ -412,7 +426,7 @@ img, svg {
   transform: translateY(-100%);
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  transition: transform var(--ease-smooth), opacity var(--ease-smooth);
   z-index: 999;
   overflow-y: auto;
 }
@@ -430,7 +444,7 @@ img, svg {
   .hub-mobile-toggle { display: flex; }
 }
 
-/* ── 4. HERO SECTION (COLOR & ABSTRACT UI BASED) ───────────────────────── */
+/* ── 4. HERO SECTION ───────────────────────────────────────────────────── */
 .hub-hero {
   position: relative;
   padding: 130px 0 80px;
@@ -528,7 +542,6 @@ img, svg {
   }
 }
 
-/* 3-Role Hero CTA Group */
 .hub-hero-role-buttons {
   display: flex;
   align-items: center;
@@ -543,11 +556,12 @@ img, svg {
   }
 }
 
-.btn-hero-client {
-  padding: 14px 28px;
+.btn-hero-primary-client {
+  padding: 15px 32px;
   border-radius: 12px;
   font-size: 15px;
   font-weight: 800;
+  letter-spacing: 0.3px;
   color: #ffffff !important;
   background: linear-gradient(135deg, var(--role-client), #9055ff);
   border: none;
@@ -555,20 +569,22 @@ img, svg {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  transition: all 0.25s ease;
+  transition: transform var(--ease-fast), box-shadow var(--ease-fast), filter var(--ease-fast);
   text-decoration: none;
 }
 
-.btn-hero-client:hover {
-  transform: translateY(-3px);
+.btn-hero-primary-client:hover {
+  transform: translateY(-2px);
   box-shadow: 0 10px 32px rgba(125, 60, 255, 0.6);
+  filter: brightness(1.06);
 }
 
-.btn-hero-freelancer {
-  padding: 14px 28px;
+.btn-hero-secondary-freelancer {
+  padding: 15px 32px;
   border-radius: 12px;
   font-size: 15px;
   font-weight: 800;
+  letter-spacing: 0.3px;
   color: #ffffff !important;
   background: linear-gradient(135deg, var(--role-freelancer), #ff7b87);
   border: none;
@@ -576,34 +592,14 @@ img, svg {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  transition: all 0.25s ease;
+  transition: transform var(--ease-fast), box-shadow var(--ease-fast), filter var(--ease-fast);
   text-decoration: none;
 }
 
-.btn-hero-freelancer:hover {
-  transform: translateY(-3px);
+.btn-hero-secondary-freelancer:hover {
+  transform: translateY(-2px);
   box-shadow: 0 10px 32px rgba(255, 94, 108, 0.6);
-}
-
-.btn-hero-admin {
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 800;
-  color: #0c0a14 !important;
-  background: linear-gradient(135deg, var(--role-admin), #b5e600);
-  border: none;
-  box-shadow: 0 6px 24px rgba(155, 196, 0, 0.35);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.25s ease;
-  text-decoration: none;
-}
-
-.btn-hero-admin:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 32px rgba(155, 196, 0, 0.55);
+  filter: brightness(1.06);
 }
 
 .hub-hero-trust-strip {
@@ -649,7 +645,7 @@ img, svg {
   padding: 24px;
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(12px);
-  transition: transform 0.4s ease;
+  transition: transform var(--ease-smooth), box-shadow var(--ease-smooth);
 }
 
 .hub-hero-art-wrapper:hover {
@@ -670,6 +666,11 @@ img, svg {
   letter-spacing: 2px;
   text-transform: uppercase;
   text-decoration: none;
+  transition: color var(--ease-fast);
+}
+
+.hub-scroll-cue:hover {
+  color: var(--brand-secondary);
 }
 
 .hub-scroll-arrow {
@@ -730,7 +731,7 @@ img, svg {
   line-height: 1.7;
 }
 
-/* ── 6. PRIMARY ROLE SELECTION SECTION ("HOW DO YOU WANT TO USE FREELANCEHUB?") ── */
+/* ── 6. ROLE SELECTION SECTION ("CHOOSE YOUR WAY TO WORK") ─────────────── */
 .hub-roles-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -744,7 +745,7 @@ img, svg {
   }
 }
 
-.hub-role-card {
+.hub-role-panel {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: 20px;
@@ -752,34 +753,44 @@ img, svg {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--ease-smooth), box-shadow var(--ease-smooth), border-color var(--ease-smooth);
   position: relative;
   overflow: hidden;
 }
 
-.hub-role-card.role-client-card {
+.hub-role-panel.role-client-panel {
   background: var(--grad-card-client);
   border-top: 4px solid var(--role-client);
 }
 
-.hub-role-card.role-freelancer-card {
+.hub-role-panel.role-freelancer-panel {
   background: var(--grad-card-freelancer);
   border-top: 4px solid var(--role-freelancer);
 }
 
-.hub-role-card.role-admin-card {
+.hub-role-panel.role-admin-panel {
   background: var(--grad-card-admin);
   border-top: 4px solid var(--role-admin);
 }
 
-.hub-role-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
+.hub-role-panel:hover {
+  transform: translateY(-5px) scale(1.01);
 }
 
-.role-client-card:hover { box-shadow: 0 12px 36px rgba(125, 60, 255, 0.25); }
-.role-freelancer-card:hover { box-shadow: 0 12px 36px rgba(255, 94, 108, 0.25); }
-.role-admin-card:hover { box-shadow: 0 12px 36px rgba(155, 196, 0, 0.25); }
+.role-client-panel:hover {
+  border-color: var(--role-client);
+  box-shadow: 0 16px 40px rgba(125, 60, 255, 0.25);
+}
+
+.role-freelancer-panel:hover {
+  border-color: var(--role-freelancer);
+  box-shadow: 0 16px 40px rgba(255, 94, 108, 0.25);
+}
+
+.role-admin-panel:hover {
+  border-color: var(--role-admin);
+  box-shadow: 0 16px 40px rgba(155, 196, 0, 0.25);
+}
 
 .hub-role-icon-box {
   width: 54px;
@@ -790,19 +801,24 @@ img, svg {
   justify-content: center;
   font-size: 24px;
   margin-bottom: 20px;
+  transition: transform var(--ease-fast);
 }
 
-.role-client-card .hub-role-icon-box {
+.hub-role-panel:hover .hub-role-icon-box {
+  transform: scale(1.1) rotate(4deg);
+}
+
+.role-client-panel .hub-role-icon-box {
   background: rgba(125, 60, 255, 0.2);
   color: #a78bfa;
 }
 
-.role-freelancer-card .hub-role-icon-box {
+.role-freelancer-panel .hub-role-icon-box {
   background: rgba(255, 94, 108, 0.2);
   color: #ffaaab;
 }
 
-.role-admin-card .hub-role-icon-box {
+.role-admin-panel .hub-role-icon-box {
   background: rgba(155, 196, 0, 0.2);
   color: #c9e84b;
 }
@@ -815,9 +831,9 @@ img, svg {
   margin-bottom: 8px;
 }
 
-.role-client-card .hub-role-tag { color: #a78bfa; }
-.role-freelancer-card .hub-role-tag { color: #ffaaab; }
-.role-admin-card .hub-role-tag { color: #c9e84b; }
+.role-client-panel .hub-role-tag { color: #a78bfa; }
+.role-freelancer-panel .hub-role-tag { color: #ffaaab; }
+.role-admin-panel .hub-role-tag { color: #c9e84b; }
 
 .hub-role-headline {
   font-size: 22px;
@@ -849,9 +865,9 @@ img, svg {
   color: var(--text-secondary);
 }
 
-.role-client-card .hub-role-bullets li i { color: var(--role-client); }
-.role-freelancer-card .hub-role-bullets li i { color: var(--role-freelancer); }
-.role-admin-card .hub-role-bullets li i { color: var(--role-admin); }
+.role-client-panel .hub-role-bullets li i { color: var(--role-client); }
+.role-freelancer-panel .hub-role-bullets li i { color: var(--role-freelancer); }
+.role-admin-panel .hub-role-bullets li i { color: var(--role-admin); }
 
 .btn-role-action {
   width: 100%;
@@ -865,30 +881,30 @@ img, svg {
   justify-content: center;
   gap: 8px;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: transform var(--ease-fast), filter var(--ease-fast);
 }
 
-.role-client-card .btn-role-action {
+.role-client-panel .btn-role-action {
   background: var(--role-client);
   color: #ffffff;
 }
 
-.role-freelancer-card .btn-role-action {
+.role-freelancer-panel .btn-role-action {
   background: var(--role-freelancer);
   color: #ffffff;
 }
 
-.role-admin-card .btn-role-action {
+.role-admin-panel .btn-role-action {
   background: var(--role-admin);
-  color: #0c0a14;
+  color: #0b0914;
 }
 
 .btn-role-action:hover {
   transform: translateY(-2px);
-  filter: brightness(1.1);
+  filter: brightness(1.08);
 }
 
-/* ── 7. HOW IT WORKS (3-WAY TRACK WORKFLOW) ────────────────────────────── */
+/* ── 7. HOW IT WORKS (VISUAL TIMELINE & WORKFLOW) ───────────────────────── */
 .hub-how-workflow-track {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -907,6 +923,12 @@ img, svg {
   border: 1px solid var(--border-card);
   border-radius: 18px;
   padding: 30px 24px;
+  transition: transform var(--ease-smooth), border-color var(--ease-smooth);
+}
+
+.hub-workflow-col:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-glow-purple);
 }
 
 .hub-wf-col-title {
@@ -1006,7 +1028,7 @@ img, svg {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  transition: all 0.2s ease;
+  transition: transform var(--ease-fast), border-color var(--ease-fast);
 }
 
 .hub-verify-card:hover {
@@ -1059,7 +1081,7 @@ img, svg {
   flex-shrink: 0;
 }
 
-/* ── 9. BROWSE PROJECTS PREVIEW (UI CARDS ONLY) ────────────────────────── */
+/* ── 9. BROWSE PROJECTS PREVIEW (UI ONLY) ──────────────────────────────── */
 .hub-projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -1079,7 +1101,7 @@ img, svg {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.25s ease;
+  transition: transform var(--ease-smooth), border-color var(--ease-smooth), box-shadow var(--ease-smooth);
 }
 
 .hub-project-card:hover {
@@ -1177,7 +1199,7 @@ img, svg {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.25s ease;
+  transition: transform var(--ease-smooth), border-color var(--ease-smooth), box-shadow var(--ease-smooth);
 }
 
 .hub-freelancer-card:hover {
@@ -1283,7 +1305,7 @@ img, svg {
   flex-direction: column;
   align-items: flex-start;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: transform var(--ease-smooth), border-color var(--ease-smooth), background-color var(--ease-smooth);
   position: relative;
   overflow: hidden;
 }
@@ -1306,6 +1328,11 @@ img, svg {
   font-size: 20px;
   color: var(--brand-secondary);
   margin-bottom: 14px;
+  transition: transform var(--ease-fast);
+}
+
+.hub-category-card:hover .hub-cat-icon-wrap {
+  transform: scale(1.08);
 }
 
 .hub-cat-title {
@@ -1366,7 +1393,7 @@ img, svg {
 .hub-cta-buttons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
@@ -1436,7 +1463,7 @@ img, svg {
 .hub-footer-links a {
   font-size: 13.5px;
   color: var(--text-muted);
-  transition: all 0.2s ease;
+  transition: color var(--ease-fast), transform var(--ease-fast);
 }
 
 .hub-footer-links a:hover {

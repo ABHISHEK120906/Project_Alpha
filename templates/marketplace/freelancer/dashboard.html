@@ -1,329 +1,241 @@
 {% extends 'marketplace/base_freelancer.html' %}
+{% load static %}
 
-{% block title %}Dashboard{% endblock %}
-{% block page_title %}Freelancer Dashboard{% endblock %}
+{% block title %}Dashboard — Freelancer Portal{% endblock %}
+{% block page_title %}Freelancer Portal Dashboard{% endblock %}
+{% block page_subtitle %}<p>Welcome back, {{ freelancer_profile.full_name }} — explore open requirements and track your milestones</p>{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
 
 {% block content %}
-<div style="display: flex; flex-direction: column; gap: 28px;">
 
-  <!-- Hero Welcome Banner -->
-  <div style="background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius); padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+<!-- ══ ROW 1: VERIFICATION & PROFILE STATUS BANNER ═════════ -->
+<div style="background: var(--fl-bg-card); border: 1px solid {% if is_verified %}rgba(16,185,129,0.35){% elif verification.final_verification_status == 'pending_admin_review' %}rgba(254,179,0,0.35){% else %}rgba(255,94,108,0.35){% endif %}; border-radius: var(--r-md); padding: 22px 26px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+  
+  <div style="display: flex; align-items: center; gap: 18px;">
+    <div style="width: 52px; height: 52px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; font-size: 24px; {% if is_verified %}background: var(--fl-status-verified-soft); color: var(--fl-status-verified);{% elif verification.final_verification_status == 'pending_admin_review' %}background: var(--fl-yellow-soft); color: var(--fl-yellow);{% else %}background: var(--fl-coral-soft); color: var(--fl-coral);{% endif %}">
+      <i class="bi {% if is_verified %}bi-patch-check-fill{% elif verification.final_verification_status == 'pending_admin_review' %}bi-hourglass-split{% else %}bi-shield-exclamation{% endif %}"></i>
+    </div>
+    
     <div>
-      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 6px;">
-        Welcome back, {{ freelancer_profile.full_name }}! 👋
-      </h2>
-      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
-        There are <strong style="color: var(--accent);">{{ open_projects_count }} open projects</strong> waiting for your proposal today.
-      </p>
-    </div>
-    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-      <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary">
-        <i class="bi bi-search"></i> Browse Open Projects
-      </a>
-      <a href="{% url 'freelancer:my_applications' %}" class="btn btn-secondary">
-        <i class="bi bi-send-check"></i> View My Applications
-      </a>
-    </div>
-  </div>
-
-  <!-- Freelancer Verification Card -->
-  <div style="background: var(--bg-surface); border: 1px solid {% if is_verified %}rgba(16,185,129,0.35){% elif verification.final_verification_status == 'pending_admin_review' %}rgba(245,158,11,0.35){% else %}rgba(244,63,94,0.3){% endif %}; border-radius: var(--radius); padding: 20px 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; {% if is_verified %}background: rgba(16,185,129,0.15); color: var(--green);{% elif verification.final_verification_status == 'pending_admin_review' %}background: rgba(245,158,11,0.15); color: var(--yellow);{% else %}background: rgba(244,63,94,0.15); color: var(--red);{% endif %}">
-          <i class="bi {% if is_verified %}bi-patch-check-fill{% elif verification.final_verification_status == 'pending_admin_review' %}bi-hourglass-split{% else %}bi-shield-exclamation{% endif %}"></i>
-        </div>
-        <div>
-          <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">
-            Freelancer Security & KYC Verification
-          </div>
-          <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
-            Status: 
-            {% if is_verified %}
-              <span style="color: var(--green);">✓ VERIFIED FREELANCER</span>
-            {% elif verification.final_verification_status == 'pending_admin_review' %}
-              <span style="color: var(--yellow);">⏳ PENDING ADMIN REVIEW</span>
-            {% else %}
-              <span style="color: var(--red);">⚠ VERIFICATION INCOMPLETE</span>
-            {% endif %}
-          </div>
-          <div style="font-size: 12.5px; color: var(--text-secondary); margin-top: 4px;">
-            Verification: <strong style="color: var(--accent);">{{ verification.get_completed_steps_count }}/7 Completed</strong>
-            &nbsp;&bull;&nbsp;
-            Email {% if verification.email_verified %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
-            Phone {% if verification.phone_verified %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
-            Identity {% if verification.identity_status == 'verified' %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
-            PAN {% if verification.pan_status == 'verified' %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
-            Payment {% if verification.payment_status == 'verified' %}✓{% else %}✕{% endif %} &nbsp;|&nbsp;
-            Profile {% if verification.profile_status == 'complete' %}✓{% else %}✕{% endif %}
-          </div>
-        </div>
+      <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--fl-text-muted);">
+        Platform Security &amp; Multi-Tier KYC Status
       </div>
-
-      <div>
+      <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; color: var(--fl-text-primary); margin-top: 2px;">
         {% if is_verified %}
-          <a href="{% url 'freelancer:verification_center' %}" class="btn btn-secondary btn-sm">
-            <i class="bi bi-shield-check"></i> Verification Center
-          </a>
+          <span style="color: var(--fl-status-verified);">✓ Multi-Tier Verified Freelancer</span>
+        {% elif verification.final_verification_status == 'pending_admin_review' %}
+          <span style="color: var(--fl-yellow);">⏳ Submitted — Pending Admin Final Review</span>
         {% else %}
-          <a href="{% url 'freelancer:verification_center' %}" class="btn btn-primary btn-sm">
-            <i class="bi bi-arrow-right-circle"></i> Complete Verification
-          </a>
+          <span style="color: var(--fl-coral);">⚠ Verification Incomplete (Required for applying)</span>
         {% endif %}
       </div>
-    </div>
-  </div>
-
-  <!-- Metric Stat Cards Grid -->
-
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px;">
-    <!-- Available Projects -->
-    <div class="stat-card">
-      <div class="stat-icon" style="background: rgba(56,189,248,0.12); color: var(--blue);">
-        <i class="bi bi-briefcase-fill"></i>
-      </div>
-      <div>
-        <div class="stat-val">{{ open_projects_count }}</div>
-        <div class="stat-title">Available Projects</div>
-      </div>
-    </div>
-
-    <!-- Total Applications -->
-    <div class="stat-card">
-      <div class="stat-icon" style="background: rgba(168,85,247,0.12); color: var(--purple);">
-        <i class="bi bi-send-fill"></i>
-      </div>
-      <div>
-        <div class="stat-val">{{ total_applications }}</div>
-        <div class="stat-title">My Applications</div>
-      </div>
-    </div>
-
-    <!-- Pending Applications -->
-    <div class="stat-card">
-      <div class="stat-icon" style="background: rgba(245,158,11,0.12); color: var(--yellow);">
-        <i class="bi bi-clock-history"></i>
-      </div>
-      <div>
-        <div class="stat-val">{{ pending_applications }}</div>
-        <div class="stat-title">Pending Decisions</div>
-      </div>
-    </div>
-
-    <!-- Accepted / Active Projects -->
-    <div class="stat-card">
-      <div class="stat-icon" style="background: rgba(16,185,129,0.12); color: var(--green);">
-        <i class="bi bi-check-circle-fill"></i>
-      </div>
-      <div>
-        <div class="stat-val">{{ active_projects_count }}</div>
-        <div class="stat-title">Active Projects</div>
-      </div>
-    </div>
-
-    <!-- Completed Projects -->
-    <div class="stat-card">
-      <div class="stat-icon" style="background: rgba(34,211,160,0.12); color: #22d3a0;">
-        <i class="bi bi-trophy-fill"></i>
-      </div>
-      <div>
-        <div class="stat-val">{{ completed_projects_count }}</div>
-        <div class="stat-title">Completed Projects</div>
-      </div>
-    </div>
-
-    <!-- Total Earned -->
-    <div class="stat-card">
-      <div class="stat-icon" style="background: rgba(16,185,129,0.12); color: var(--green);">
-        <i class="bi bi-currency-rupee"></i>
-      </div>
-      <div>
-        <div class="stat-val">₹{{ total_earned|floatformat:0 }}</div>
-        <div class="stat-title">Total Earned</div>
-      </div>
-    </div>
-
-    <!-- Pending Payment -->
-    <div class="stat-card">
-      <div class="stat-icon" style="background: rgba(245,158,11,0.12); color: var(--yellow);">
-        <i class="bi bi-hourglass-split"></i>
-      </div>
-      <div>
-        <div class="stat-val">₹{{ total_pending_payment|floatformat:0 }}</div>
-        <div class="stat-title">Pending Payment</div>
+      <div style="font-size: 12.5px; color: var(--fl-text-secondary); margin-top: 4px;">
+        Progress: <strong style="color: var(--fl-yellow);">{{ verification.get_completed_steps_count|default:"0" }}/7 Checkpoints Complete</strong>
+        &nbsp;&bull;&nbsp;
+        Email {% if verification.email_verified %}<span style="color:var(--fl-status-verified)">✓</span>{% else %}<span style="color:var(--fl-coral)">✕</span>{% endif %} &nbsp;|&nbsp;
+        Phone {% if verification.phone_verified %}<span style="color:var(--fl-status-verified)">✓</span>{% else %}<span style="color:var(--fl-coral)">✕</span>{% endif %} &nbsp;|&nbsp;
+        ID {% if verification.identity_status == 'verified' %}<span style="color:var(--fl-status-verified)">✓</span>{% else %}<span style="color:var(--fl-coral)">✕</span>{% endif %} &nbsp;|&nbsp;
+        PAN {% if verification.pan_status == 'verified' %}<span style="color:var(--fl-status-verified)">✓</span>{% else %}<span style="color:var(--fl-coral)">✕</span>{% endif %} &nbsp;|&nbsp;
+        Payment {% if verification.payment_status == 'verified' %}<span style="color:var(--fl-status-verified)">✓</span>{% else %}<span style="color:var(--fl-coral)">✕</span>{% endif %}
       </div>
     </div>
   </div>
 
-  <!-- Two-Column Layout: Active Projects & Recent Applications -->
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-
-    <!-- Active Projects Panel -->
-    <div class="glass-card">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-        <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-          <i class="bi bi-kanban-fill" style="color: var(--accent);"></i> My Active Projects
-        </h3>
-        <a href="{% url 'freelancer:my_projects' %}" class="btn btn-secondary btn-sm">View All</a>
-      </div>
-
-      {% if recent_active_projects %}
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          {% for p in recent_active_projects %}
-          <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; transition: all 0.2s;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-              <div>
-                <h4 style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">
-                  <a href="{% url 'freelancer:workspace' pk=p.pk %}">{{ p.title }}</a>
-                </h4>
-                <div style="font-size: 12px; color: var(--text-muted);">
-                  Client: <strong style="color: var(--text-secondary);">{{ p.client.display_name }}</strong>
-                  {% if p.client.company_name %}&bull; {{ p.client.company_name }}{% endif %}
-                </div>
-              </div>
-              <span class="badge badge-{{ p.status }}">{{ p.get_status_display }}</span>
-            </div>
-
-            <!-- Progress -->
-            <div style="margin-top: 12px;">
-              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: var(--text-muted);">
-                <span>Progress</span>
-                <span style="color: var(--accent); font-weight: 700;">{{ p.progress }}%</span>
-              </div>
-              <div class="progress-bar-container">
-                <div class="progress-bar-fill" style="width: {{ p.progress }}%;"></div>
-              </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 12px;">
-              <span style="color: var(--text-muted);">
-                Budget: <strong style="color: var(--text-primary);">₹{{ p.budget|default:'N/A' }}</strong>
-              </span>
-              <a href="{% url 'freelancer:workspace' pk=p.pk %}" class="btn btn-primary btn-sm">
-                <i class="bi bi-box-arrow-in-right"></i> Open Workspace
-              </a>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <div style="text-align: center; padding: 36px 20px; color: var(--text-muted);">
-          <i class="bi bi-kanban" style="font-size: 36px; color: var(--text-muted); opacity: 0.5; display: block; margin-bottom: 12px;"></i>
-          <p style="font-size: 14px; margin-bottom: 14px;">No active assigned projects yet.</p>
-          <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary btn-sm">Find Projects to Apply</a>
-        </div>
-      {% endif %}
-    </div>
-
-    <!-- Recent Applications Panel -->
-    <div class="glass-card">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-        <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-          <i class="bi bi-send-fill" style="color: var(--purple);"></i> Recent Applications
-        </h3>
-        <a href="{% url 'freelancer:my_applications' %}" class="btn btn-secondary btn-sm">View All</a>
-      </div>
-
-      {% if recent_applications %}
-        <div style="overflow-x: auto;">
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th>Project</th>
-                <th>Bid Price</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for app in recent_applications %}
-              <tr>
-                <td>
-                  <a href="{% url 'freelancer:project_detail' pk=app.project.pk %}" style="font-weight: 600; color: var(--text-primary);">
-                    {{ app.project.title|truncatechars:28 }}
-                  </a>
-                  <div style="font-size: 11px; color: var(--text-muted);">
-                    {{ app.project.client.company_name|default:app.project.client.display_name }}
-                  </div>
-                </td>
-                <td style="font-weight: 600; color: var(--accent);">
-                  ₹{{ app.proposed_price|default:app.project.budget|default:'—' }}
-                </td>
-                <td style="font-size: 12px; color: var(--text-muted);">
-                  {{ app.created_at|date:"M d" }}
-                </td>
-                <td>
-                  <span class="badge badge-{{ app.status }}">{{ app.get_status_display }}</span>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <div style="text-align: center; padding: 36px 20px; color: var(--text-muted);">
-          <i class="bi bi-file-earmark-text" style="font-size: 36px; opacity: 0.5; display: block; margin-bottom: 12px;"></i>
-          <p style="font-size: 14px; margin-bottom: 14px;">You haven't submitted any proposals yet.</p>
-          <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary btn-sm">Start Applying</a>
-        </div>
-      {% endif %}
-    </div>
-
+  <div>
+    {% if is_verified %}
+      <a href="{% url 'freelancer:verification_center' %}" class="btn-fl-secondary" style="padding: 9px 16px; font-size: 13px;">
+        <i class="bi bi-shield-check"></i> Verification Center
+      </a>
+    {% else %}
+      <a href="{% url 'freelancer:verification_center' %}" class="btn-fl-primary" style="padding: 9px 18px; font-size: 13px;">
+        <i class="bi bi-arrow-right-circle-fill"></i> Complete Verification
+      </a>
+    {% endif %}
   </div>
-
-  <!-- Featured Open Projects -->
-  {% if recommended_projects %}
-  <div class="glass-card">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-      <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-        <i class="bi bi-stars" style="color: var(--yellow);"></i> Explore Open Opportunities
-      </h3>
-      <a href="{% url 'freelancer:find_projects' %}" class="btn btn-secondary btn-sm">Browse All ({{ open_projects_count }})</a>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-      {% for proj in recommended_projects %}
-      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span class="badge badge-open">Open</span>
-            <span style="font-size: 12px; color: var(--text-muted);">{{ proj.get_expected_duration_display|default:'Flexible' }}</span>
-          </div>
-          <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">
-            <a href="{% url 'freelancer:project_detail' pk=proj.pk %}" style="color: var(--text-primary);">{{ proj.title }}</a>
-          </h4>
-          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px;">
-            {{ proj.description|truncatechars:90 }}
-          </p>
-          <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px;">
-            {% for skill in proj.skills_list|slice:":3" %}
-              <span class="skill-tag">{{ skill }}</span>
-            {% endfor %}
-          </div>
-        </div>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border);">
-          <div>
-            <div style="font-size: 11px; color: var(--text-muted);">Budget</div>
-            <div style="font-size: 16px; font-weight: 800; color: var(--accent);">₹{{ proj.budget|default:'Open' }}</div>
-          </div>
-          <a href="{% url 'freelancer:project_apply' pk=proj.pk %}" class="btn btn-primary btn-sm">
-            <i class="bi bi-send"></i> Apply Now
-          </a>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
 
 </div>
 
-<style>
-  @media (max-width: 900px) {
-    div[style*="grid-template-columns: 1fr 1fr"] {
-      grid-template-columns: 1fr !important;
-    }
-  }
-</style>
+<!-- ══ ROW 2: KPI STATS GRID ════════════════════════════════ -->
+<div class="fl-kpi-grid">
+
+  <!-- Available Projects -->
+  <div class="fl-kpi-card">
+    <div class="fl-kpi-icon coral">
+      <i class="bi bi-briefcase-fill"></i>
+    </div>
+    <div>
+      <div class="fl-kpi-val">{{ open_projects_count|default:"0" }}</div>
+      <div class="fl-kpi-label">Open Projects</div>
+    </div>
+  </div>
+
+  <!-- Total Applications -->
+  <div class="fl-kpi-card">
+    <div class="fl-kpi-icon yellow">
+      <i class="bi bi-send-fill"></i>
+    </div>
+    <div>
+      <div class="fl-kpi-val">{{ total_applications|default:"0" }}</div>
+      <div class="fl-kpi-label">My Applications</div>
+    </div>
+  </div>
+
+  <!-- Active Projects -->
+  <div class="fl-kpi-card">
+    <div class="fl-kpi-icon green">
+      <i class="bi bi-lightning-charge-fill"></i>
+    </div>
+    <div>
+      <div class="fl-kpi-val">{{ active_projects_count|default:"0" }}</div>
+      <div class="fl-kpi-label">Active Workspaces</div>
+    </div>
+  </div>
+
+  <!-- Completed Projects -->
+  <div class="fl-kpi-card">
+    <div class="fl-kpi-icon pink">
+      <i class="bi bi-trophy-fill"></i>
+    </div>
+    <div>
+      <div class="fl-kpi-val">{{ completed_projects_count|default:"0" }}</div>
+      <div class="fl-kpi-label">Completed Projects</div>
+    </div>
+  </div>
+
+  <!-- Total Earnings -->
+  <div class="fl-kpi-card">
+    <div class="fl-kpi-icon green">
+      <i class="bi bi-currency-rupee"></i>
+    </div>
+    <div>
+      <div class="fl-kpi-val">₹{{ total_earned|floatformat:0|default:"0" }}</div>
+      <div class="fl-kpi-label">Total Earned</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ ROW 3: TWO COLUMN SECTION ════════════════════════════ -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+
+  <!-- Left: Active Work & Applications -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    
+    <!-- Recent Applications -->
+    <div class="fl-card">
+      <div class="fl-card-header">
+        <div>
+          <h2 class="fl-card-title">Recent Project Proposals</h2>
+          <div class="fl-card-desc">Status of your submitted applications and client reviews</div>
+        </div>
+        <a href="{% url 'freelancer:my_applications' %}" class="btn-fl-secondary" style="padding: 6px 14px; font-size: 12px;">
+          <span>View All</span>
+          <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+
+      {% if recent_applications %}
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          {% for app in recent_applications %}
+            <div style="background: var(--fl-bg-surface); border: 1px solid var(--fl-border); border-radius: var(--r-md); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+              <div style="flex: 1; min-width: 260px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                  <a href="{% url 'freelancer:project_detail' pk=app.project.pk %}" style="font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; font-weight:700; color:var(--fl-text-primary); text-decoration:none;">
+                    {{ app.project.title }}
+                  </a>
+                  <span class="fl-badge {% if app.status == 'accepted' %}fl-badge-verified{% elif app.status == 'rejected' %}fl-badge-required{% else %}fl-badge-pending{% endif %}">
+                    {{ app.get_status_display }}
+                  </span>
+                </div>
+                <div style="display: flex; gap: 16px; font-size: 12px; color: var(--fl-text-muted);">
+                  <span><i class="bi bi-currency-rupee" style="color:var(--fl-yellow);"></i> Bid: <strong>₹{{ app.bid_amount|floatformat:0 }}</strong></span>
+                  <span><i class="bi bi-clock"></i> {{ app.estimated_days|default:"7" }} days</span>
+                  <span><i class="bi bi-calendar3"></i> Applied: {{ app.created_at|date:"d M Y" }}</span>
+                </div>
+              </div>
+
+              <div>
+                <a href="{% url 'freelancer:project_detail' pk=app.project.pk %}" class="btn-fl-secondary" style="padding: 7px 12px; font-size: 12px;">
+                  <i class="bi bi-eye"></i> View Details
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="text-align: center; padding: 40px 20px; background: var(--fl-bg-surface); border-radius: var(--r-md); border: 1px dashed var(--fl-border);">
+          <div style="width: 48px; height: 48px; border-radius: var(--r-md); background: var(--fl-coral-soft); color: var(--fl-coral); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 12px;">
+            <i class="bi bi-send"></i>
+          </div>
+          <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-size: 15px; font-weight: 700; color: var(--fl-text-primary); margin-bottom: 4px;">
+            No applications submitted yet
+          </h3>
+          <p style="font-size: 12.5px; color: var(--fl-text-muted); margin-bottom: 16px;">
+            Discover active requirements in your domain and submit your proposals.
+          </p>
+          <a href="{% url 'freelancer:find_projects' %}" class="btn-fl-primary" style="padding: 8px 16px; font-size: 13px;">
+            <i class="bi bi-search"></i> Browse Open Projects
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Right: Quick Actions & Opportunity Shortcuts -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    
+    <!-- Quick Actions -->
+    <div class="fl-card">
+      <div class="fl-card-header">
+        <h2 class="fl-card-title">Quick Actions</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="{% url 'freelancer:find_projects' %}" class="btn-fl-primary" style="width:100%; justify-content:flex-start;">
+          <i class="bi bi-search"></i>
+          <span>Browse Marketplace Projects</span>
+        </a>
+        <a href="{% url 'freelancer:verification_center' %}" class="btn-fl-secondary" style="width:100%; justify-content:flex-start;">
+          <i class="bi bi-patch-check"></i>
+          <span>Check KYC Verification</span>
+        </a>
+        <a href="{% url 'freelancer:profile_edit' %}" class="btn-fl-secondary" style="width:100%; justify-content:flex-start;">
+          <i class="bi bi-pencil-square"></i>
+          <span>Update Professional Profile</span>
+        </a>
+        <a href="{% url 'freelancer:payments' %}" class="btn-fl-secondary" style="width:100%; justify-content:flex-start;">
+          <i class="bi bi-credit-card-2-front"></i>
+          <span>View Earnings &amp; Invoices</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Earnings Breakdown -->
+    <div class="fl-card">
+      <div class="fl-card-header">
+        <h2 class="fl-card-title">Earnings Summary</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--fl-border-subtle);">
+          <span style="font-size: 13px; color: var(--fl-text-muted);">Total Cleared Payouts</span>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size: 15px; font-weight: 800; color: var(--fl-status-verified);">
+            ₹{{ total_earned|floatformat:0|default:"0" }}
+          </span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 13px; color: var(--fl-text-muted);">In Escrow / Pending Release</span>
+          <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size: 15px; font-weight: 800; color: var(--fl-yellow);">
+            ₹{{ total_pending_payment|floatformat:0|default:"0" }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
 {% endblock %}
