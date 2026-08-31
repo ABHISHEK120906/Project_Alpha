@@ -65,10 +65,13 @@
                 </span>
                 
                 <!-- Verification Pill -->
-                {% if app.verification_summary.is_verified %}
+                {% if app.verification_summary.is_verified or app.freelancer_profile_obj.is_verified %}
                   <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(34, 211, 160, 0.14); color: #22d3a0; padding: 2px 8px; border-radius: var(--r-sm); font-size: 11px; font-weight: 800;">
-                    <i data-lucide="shield-check" style="width:13px; height:13px;"></i> Verified Talent
+                    <i data-lucide="shield-check" style="width:13px; height:13px;"></i> Verified Freelancer
                   </span>
+                  <button type="button" class="btn-client-secondary" style="padding: 2px 8px; font-size: 11px; height: auto;">
+                    View Verification
+                  </button>
                 {% else %}
                   <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(242, 213, 60, 0.14); color: var(--client-yellow); padding: 2px 8px; border-radius: var(--r-sm); font-size: 11px; font-weight: 800;">
                     <i data-lucide="clock" style="width:13px; height:13px;"></i> Verification Incomplete
@@ -87,15 +90,17 @@
 
               <!-- Proposal Excerpt -->
               <div style="background: var(--client-bg-surface); border: 1px solid var(--client-border-subtle); border-radius: var(--r-md); padding: 14px 16px; font-size: 13.5px; line-height: 1.55; color: var(--client-text-primary); margin-bottom: 14px;">
-                {{ app.cover_letter|linebreaksbr }}
+                {{ app.proposal|default:app.cover_letter|linebreaksbr }}
               </div>
 
-              {% if app.proposed_price or app.estimated_days %}
+              {% if app.proposed_price or app.estimated_duration or app.estimated_days %}
                 <div style="display: flex; gap: 16px; font-size: 13px; color: var(--client-text-muted);">
                   {% if app.proposed_price %}
                     <span><i data-lucide="wallet" style="color:var(--client-yellow); width:14px; height:14px;"></i> Proposed Bid: <strong style="color:var(--client-text-primary);">₹{{ app.proposed_price|floatformat:0 }}</strong></span>
                   {% endif %}
-                  {% if app.estimated_days %}
+                  {% if app.estimated_duration %}
+                    <span><i data-lucide="clock" style="width:14px; height:14px;"></i> Delivery Time: <strong style="color:var(--client-text-primary);">{{ app.estimated_duration }}</strong></span>
+                  {% elif app.estimated_days %}
                     <span><i data-lucide="clock" style="width:14px; height:14px;"></i> Delivery Time: <strong style="color:var(--client-text-primary);">{{ app.estimated_days }} days</strong></span>
                   {% endif %}
                 </div>
