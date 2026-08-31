@@ -201,6 +201,16 @@
 
     <!-- Content Body -->
     <main class="fl-content-body">
+      {% if messages %}
+        <div style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}" style="padding: 12px 18px; border-radius: var(--r-md); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; background: {% if message.tags == 'success' %}rgba(34, 197, 94, 0.15){% elif message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.15){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.15){% else %}rgba(59, 130, 246, 0.15){% endif %}; border: 1px solid {% if message.tags == 'success' %}rgba(34, 197, 94, 0.3){% elif message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.3){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.3){% else %}rgba(59, 130, 246, 0.3){% endif %}; color: {% if message.tags == 'success' %}#4ade80{% elif message.tags == 'error' or message.tags == 'danger' %}#f87171{% elif message.tags == 'warning' %}#fbbf24{% else %}#60a5fa{% endif %};">
+              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}" style="width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
       {% block content %}{% endblock %}
     </main>
 

@@ -412,6 +412,11 @@ class ProjectApplication(models.Model):
     def __str__(self):
         return f"{self.freelancer.username} → {self.project.title} ({self.status})"
 
+    @property
+    def cover_letter(self):
+        """Backwards compatibility alias for proposal text."""
+        return self.proposal
+
 
 # ---------------------------------------------------------------------------
 # ProjectPaymentRecord
