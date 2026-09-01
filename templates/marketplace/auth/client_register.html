@@ -4,120 +4,117 @@
 
 {% block content %}
 
-<div class="auth-card animate-slide-up" style="max-width:520px;">
-
-  <!-- Role Tabs with direct navigation -->
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px;">
-    <a href="{% url 'marketplace:client_register' %}"
-       style="display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:var(--r-md); border:2px solid var(--hub-gold); background:var(--hub-gold-soft); color:var(--hub-gold); font-size:13px; font-weight:700; text-decoration:none;">
-      <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
-    </a>
-    <a href="{% url 'core:register' %}"
-       style="display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:var(--r-md); border:2px solid var(--border-color); background:transparent; color:var(--text-muted); font-size:13px; font-weight:700; text-decoration:none;">
-      <i data-lucide="search" style="width:15px;height:15px;"></i> Freelancer
-    </a>
+<!-- Header -->
+<div class="auth-card-header" style="text-align:center; margin-bottom:20px;">
+  <div class="auth-brand-badge" style="margin:0 auto 12px;">
+    <i data-lucide="briefcase"></i>
   </div>
-
-  <div class="auth-card-header">
-    <div class="auth-brand-badge">
-      <i data-lucide="briefcase"></i>
-    </div>
-    <h1 style="font-size:22px; font-weight:800; color:var(--text-primary); margin-bottom:6px;">Register as Client</h1>
-    <p style="font-size:13.5px; color:var(--text-muted);">Post projects, hire verified talent, and manage milestone escrow</p>
-  </div>
-
-  {% if messages %}
-    {% for message in messages %}
-    <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
-      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
-      <span>{{ message }}</span>
-    </div>
-    {% endfor %}
-  {% endif %}
-
-  {% if form.non_field_errors %}
-    <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
-      <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
-      <span>{{ form.non_field_errors|first }}</span>
-    </div>
-  {% endif %}
-
-  <form method="post" action="{% url 'marketplace:client_register' %}" id="clientRegisterForm" novalidate>
-    {% csrf_token %}
-
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-      <div class="form-group">
-        <label for="{{ form.full_name.id_for_label }}">Full Name *</label>
-        {{ form.full_name }}
-        <style>#{{ form.full_name.id_for_label }} { width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none; } #{{ form.full_name.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
-        {% if form.full_name.errors %}
-          <div class="form-error">{{ form.full_name.errors|first }}</div>
-        {% endif %}
-      </div>
-
-      <div class="form-group">
-        <label for="{{ form.phone.id_for_label }}">Phone Number</label>
-        {{ form.phone }}
-        <style>#{{ form.phone.id_for_label }} { width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none; } #{{ form.phone.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
-        {% if form.phone.errors %}
-          <div class="form-error">{{ form.phone.errors|first }}</div>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="{{ form.email.id_for_label }}">Email Address *</label>
-      {{ form.email }}
-      <style>#{{ form.email.id_for_label }} { width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none; } #{{ form.email.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
-      {% if form.email.errors %}
-        <div class="form-error">{{ form.email.errors|first }}</div>
-      {% endif %}
-    </div>
-
-    <div class="form-group">
-      <label for="{{ form.company_name.id_for_label }}">Company / Organisation</label>
-      {{ form.company_name }}
-      <style>#{{ form.company_name.id_for_label }} { width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none; } #{{ form.company_name.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
-      {% if form.company_name.errors %}
-        <div class="form-error">{{ form.company_name.errors|first }}</div>
-      {% endif %}
-    </div>
-
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-      <div class="form-group">
-        <label for="{{ form.password1.id_for_label }}">Password *</label>
-        {{ form.password1 }}
-        <style>#{{ form.password1.id_for_label }} { width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none; } #{{ form.password1.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
-        {% if form.password1.errors %}
-          <div class="form-error">{{ form.password1.errors|first }}</div>
-        {% endif %}
-      </div>
-
-      <div class="form-group">
-        <label for="{{ form.password2.id_for_label }}">Confirm Password *</label>
-        {{ form.password2 }}
-        <style>#{{ form.password2.id_for_label }} { width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none; } #{{ form.password2.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
-        {% if form.password2.errors %}
-          <div class="form-error">{{ form.password2.errors|first }}</div>
-        {% endif %}
-      </div>
-    </div>
-
-    <button type="submit" class="btn-hub-primary btn-lg" id="clientRegisterSubmitBtn" style="width:100%; justify-content:center; margin-top:8px;">
-      <i data-lucide="building" style="width:17px;height:17px;"></i>
-      <span>Create Client Account</span>
-    </button>
-  </form>
-
-  <div class="hub-divider-label" style="margin-top:24px;">
-    <span>Already Registered?</span>
-  </div>
-
-  <a href="{% url 'core:login' %}" class="btn-hub-secondary" style="width:100%; justify-content:center;">
-    <i data-lucide="log-in" style="width:15px;height:15px;"></i>
-    <span>Sign In to Existing Account</span>
-  </a>
-
+  <h1 style="font-size:22px; font-weight:800; color:var(--text-primary); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Register as Client</h1>
+  <p style="font-size:13.5px; color:var(--text-muted);">Post projects, hire verified talent, and manage milestone escrow</p>
 </div>
+
+<!-- Role Tabs with direct navigation -->
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 24px; background:var(--bg-input); padding:4px; border-radius:var(--r-md); border:1px solid var(--border-color); box-sizing:border-box;">
+  <a href="{% url 'marketplace:client_register' %}"
+     style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:var(--r-sm); border:1px solid var(--hub-gold); background:var(--hub-gold-soft); color:var(--hub-gold); font-size:13px; font-weight:700; text-decoration:none;">
+    <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
+  </a>
+  <a href="{% url 'core:register' %}"
+     style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:var(--r-sm); border:1px solid transparent; background:transparent; color:var(--text-muted); font-size:13px; font-weight:700; text-decoration:none;">
+    <i data-lucide="search" style="width:15px;height:15px;"></i> Freelancer
+  </a>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+  <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
+    <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}
+{% endif %}
+
+{% if form.non_field_errors %}
+  <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
+    <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
+    <span>{{ form.non_field_errors|first }}</span>
+  </div>
+{% endif %}
+
+<form method="post" action="{% url 'marketplace:client_register' %}" id="clientRegisterForm" novalidate style="width:100%; box-sizing:border-box;">
+  {% csrf_token %}
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:14px;">
+    <div class="form-group">
+      <label for="{{ form.full_name.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Full Name *</label>
+      {{ form.full_name }}
+      <style>#{{ form.full_name.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.full_name.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
+      {% if form.full_name.errors %}
+        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.full_name.errors|first }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.phone.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Phone Number</label>
+      {{ form.phone }}
+      <style>#{{ form.phone.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.phone.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
+      {% if form.phone.errors %}
+        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.phone.errors|first }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="form-group" style="margin-bottom:14px;">
+    <label for="{{ form.email.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Email Address *</label>
+    {{ form.email }}
+    <style>#{{ form.email.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.email.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
+    {% if form.email.errors %}
+      <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.email.errors|first }}</div>
+    {% endif %}
+  </div>
+
+  <div class="form-group" style="margin-bottom:14px;">
+    <label for="{{ form.company_name.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Company / Organisation</label>
+    {{ form.company_name }}
+    <style>#{{ form.company_name.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.company_name.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
+    {% if form.company_name.errors %}
+      <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.company_name.errors|first }}</div>
+    {% endif %}
+  </div>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:18px;">
+    <div class="form-group">
+      <label for="{{ form.password1.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Password *</label>
+      {{ form.password1 }}
+      <style>#{{ form.password1.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.password1.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
+      {% if form.password1.errors %}
+        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.password1.errors|first }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.password2.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Confirm Password *</label>
+      {{ form.password2 }}
+      <style>#{{ form.password2.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.password2.id_for_label }}:focus { border-color:var(--border-input-focus); box-shadow:0 0 0 3px var(--hub-gold-soft); }</style>
+      {% if form.password2.errors %}
+        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.password2.errors|first }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <button type="submit" class="btn-hub-primary" id="clientRegisterSubmitBtn" style="width:100%; box-sizing:border-box; padding:13px; justify-content:center;">
+    <i data-lucide="building" style="width:17px;height:17px;"></i>
+    <span>Create Client Account</span>
+  </button>
+</form>
+
+<div class="hub-divider-label" style="margin:20px 0;">
+  <span>Already Registered?</span>
+</div>
+
+<a href="{% url 'core:login' %}" class="btn-hub-secondary" style="width:100%; box-sizing:border-box; justify-content:center;">
+  <i data-lucide="log-in" style="width:15px;height:15px;"></i>
+  <span>Sign In to Existing Account</span>
+</a>
 
 {% endblock %}

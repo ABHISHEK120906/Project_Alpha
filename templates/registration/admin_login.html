@@ -4,114 +4,110 @@
 
 {% block content %}
 
-<div class="auth-card animate-slide-up">
+<!-- Admin Security Badge -->
+<div style="background:var(--hub-gold-soft); border:1px solid var(--hub-gold-border); border-radius:var(--r-md); padding:14px 16px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+  <div style="width:40px; height:40px; border-radius:var(--r-sm); background:linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%); color:#0D0F14; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 14px var(--hub-gold-glow);">
+    <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
+  </div>
+  <div>
+    <div style="font-size:13.5px; font-weight:800; color:var(--hub-gold); letter-spacing:0.5px; font-family:'Plus Jakarta Sans',sans-serif;">Platform Administration</div>
+    <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">Restricted access — authorized personnel only.</div>
+  </div>
+</div>
 
-  <!-- Admin Security Badge -->
-  <div style="background:var(--hub-gold-soft); border:1px solid var(--hub-gold-border); border-radius:var(--r-md); padding:14px 16px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
-    <div style="width:40px; height:40px; border-radius:var(--r-sm); background:linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%); color:#0D0F14; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 14px var(--hub-gold-glow);">
-      <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
+<div class="auth-card-header" style="text-align:center; margin-bottom:20px;">
+  <h1 style="font-size:22px; font-weight:800; color:var(--text-primary); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Administrator Login</h1>
+  <p style="font-size:13.5px; color:var(--text-muted);">Sign in to the FreelanceHub governance &amp; moderation console</p>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+  <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
+    <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}
+{% endif %}
+
+{% if form.non_field_errors %}
+  {% for error in form.non_field_errors %}
+    <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
+      <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
+      <span>{{ error }}</span>
     </div>
-    <div>
-      <div style="font-size:13.5px; font-weight:800; color:var(--hub-gold); letter-spacing:0.5px; font-family:'Plus Jakarta Sans',sans-serif;">Platform Administration</div>
-      <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">Restricted access — authorized personnel only.</div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" action="{% url 'core:admin_login' %}" id="adminLoginForm" novalidate style="width:100%; box-sizing:border-box;">
+  {% csrf_token %}
+
+  <!-- Admin Username -->
+  <div class="form-group" style="margin-bottom:18px;">
+    <label for="id_admin_username" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Admin Username</label>
+    <div style="position:relative; width:100%; box-sizing:border-box;">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--hub-gold);pointer-events:none;">
+        <i data-lucide="shield" style="width:16px;height:16px;"></i>
+      </span>
+      <input
+        type="text"
+        name="username"
+        id="id_admin_username"
+        class="form-control"
+        style="width:100%; box-sizing:border-box; padding:12px 14px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
+        placeholder="Enter admin username"
+        required
+        autocomplete="username"
+        autofocus
+        value="{{ request.POST.username|default:'' }}"
+      >
     </div>
+    {% if form.username.errors %}
+      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.username.errors.0 }}</div>
+    {% endif %}
   </div>
 
-  <div class="auth-card-header">
-    <h1 style="font-size:22px; font-weight:800; color:var(--text-primary); margin-bottom:6px;">Administrator Login</h1>
-    <p style="font-size:13.5px; color:var(--text-muted);">Sign in to the FreelanceHub governance &amp; moderation console</p>
+  <!-- Admin Password -->
+  <div class="form-group" style="margin-bottom:22px;">
+    <label for="id_admin_password" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Password</label>
+    <div style="position:relative; width:100%; box-sizing:border-box;">
+      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--hub-gold);pointer-events:none;">
+        <i data-lucide="lock" style="width:16px;height:16px;"></i>
+      </span>
+      <input
+        type="password"
+        name="password"
+        id="id_admin_password"
+        class="form-control"
+        style="width:100%; box-sizing:border-box; padding:12px 44px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
+        placeholder="Enter admin password"
+        required
+        autocomplete="current-password"
+      >
+      <button type="button" id="toggleAdminPwd" aria-label="Toggle password visibility"
+              style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;display:flex;align-items:center;">
+        <i data-lucide="eye" id="adminPwdIcon" style="width:16px;height:16px;"></i>
+      </button>
+    </div>
+    {% if form.password.errors %}
+      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.password.errors.0 }}</div>
+    {% endif %}
   </div>
 
-  {% if messages %}
-    {% for message in messages %}
-    <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
-      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
-      <span>{{ message }}</span>
-    </div>
-    {% endfor %}
-  {% endif %}
+  <button type="submit" class="btn-hub-primary" id="adminLoginSubmitBtn" style="width:100%; box-sizing:border-box; padding:13px; justify-content:center;">
+    <i data-lucide="shield-check" style="width:17px;height:17px;"></i>
+    <span>Authenticate as Administrator</span>
+  </button>
+</form>
 
-  {% if form.non_field_errors %}
-    {% for error in form.non_field_errors %}
-      <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
-        <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
-        <span>{{ error }}</span>
-      </div>
-    {% endfor %}
-  {% endif %}
+<div class="hub-divider-label" style="margin:22px 0;">
+  <span>Standard Access</span>
+</div>
 
-  <form method="post" action="{% url 'core:admin_login' %}" id="adminLoginForm" novalidate>
-    {% csrf_token %}
-
-    <!-- Admin Username -->
-    <div class="form-group">
-      <label for="id_admin_username">Admin Username</label>
-      <div style="position:relative;">
-        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;">
-          <i data-lucide="shield" style="width:15px;height:15px;"></i>
-        </span>
-        <input
-          type="text"
-          name="username"
-          id="id_admin_username"
-          class="form-control"
-          style="padding-left:40px;"
-          placeholder="Enter admin username"
-          required
-          autocomplete="username"
-          autofocus
-          value="{{ request.POST.username|default:'' }}"
-        >
-      </div>
-      {% if form.username.errors %}
-        <div class="form-error">{{ form.username.errors.0 }}</div>
-      {% endif %}
-    </div>
-
-    <!-- Admin Password -->
-    <div class="form-group">
-      <label for="id_admin_password">Password</label>
-      <div style="position:relative;">
-        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;">
-          <i data-lucide="lock" style="width:15px;height:15px;"></i>
-        </span>
-        <input
-          type="password"
-          name="password"
-          id="id_admin_password"
-          class="form-control"
-          style="padding-left:40px; padding-right:44px;"
-          placeholder="Enter admin password"
-          required
-          autocomplete="current-password"
-        >
-        <button type="button" id="toggleAdminPwd" aria-label="Toggle password visibility"
-                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;display:flex;align-items:center;">
-          <i data-lucide="eye" id="adminPwdIcon" style="width:16px;height:16px;"></i>
-        </button>
-      </div>
-      {% if form.password.errors %}
-        <div class="form-error">{{ form.password.errors.0 }}</div>
-      {% endif %}
-    </div>
-
-    <button type="submit" class="btn-hub-primary btn-lg" id="adminLoginSubmitBtn" style="width:100%; justify-content:center; margin-top:8px;">
-      <i data-lucide="shield-check" style="width:17px;height:17px;"></i>
-      <span>Authenticate as Administrator</span>
-    </button>
-  </form>
-
-  <div class="hub-divider-label" style="margin-top:24px;">
-    <span>Standard Access</span>
-  </div>
-
-  <div style="text-align:center;">
-    <a href="{% url 'core:login' %}" class="btn-hub-secondary" style="width:100%; justify-content:center;">
-      <i data-lucide="arrow-left" style="width:15px;height:15px;"></i>
-      <span>Back to Member Login</span>
-    </a>
-  </div>
-
+<div style="text-align:center; width:100%; box-sizing:border-box;">
+  <a href="{% url 'core:login' %}" class="btn-hub-secondary" style="width:100%; box-sizing:border-box; justify-content:center;">
+    <i data-lucide="arrow-left" style="width:15px;height:15px;"></i>
+    <span>Back to Member Login</span>
+  </a>
 </div>
 
 <script>
@@ -139,5 +135,4 @@
   }
 })();
 </script>
-
 {% endblock %}

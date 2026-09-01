@@ -50,15 +50,18 @@
 
 body.freelancer-portal {
   font-family: 'Inter', system-ui, sans-serif;
-  background: var(--bg-canvas, #0D0F14);
+  background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center fixed / cover !important;
   color: var(--text-primary, #F0EDE8);
   font-size: 14.5px;
 }
 
 /* ── 2. LAYOUT ──────────────────────────────────────────────────────────── */
 .fl-app-layout {
-  display: flex; min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
+  background: transparent !important;
 }
+
 
 /* ── 3. SIDEBAR ─────────────────────────────────────────────────────────── */
 .fl-sidebar {

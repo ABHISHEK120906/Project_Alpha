@@ -14,12 +14,12 @@
   /* ── Hero with Exact Paper-Cut Background ── */
   .hero-paper-cut-section {
     position: relative;
-    min-height: 100vh;
-    background: #080D14 url('/static/images/paper_cut_bg.png') no-repeat center center / cover;
+    min-height: calc(100vh - 64px);
+    background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center / cover;
     background-attachment: fixed;
     display: flex;
     align-items: center;
-    padding: 100px 0 60px;
+    padding: 60px 0 50px;
     overflow: hidden;
   }
 
@@ -27,330 +27,154 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse at 80% 50%, rgba(8,13,20,0.6) 0%, rgba(8,13,20,0.92) 100%),
-      linear-gradient(to right, rgba(8,13,20,0.85) 0%, rgba(8,13,20,0.45) 50%, rgba(8,13,20,0.88) 100%);
+      linear-gradient(180deg, rgba(8, 12, 20, 0.40) 0%, rgba(8, 12, 20, 0.15) 40%, rgba(8, 12, 20, 0.48) 100%),
+      radial-gradient(ellipse at 75% 35%, rgba(8, 12, 20, 0.10) 0%, rgba(8, 12, 20, 0.45) 100%);
     pointer-events: none;
     z-index: 1;
+  }
+
+  [data-theme="light"] .hero-paper-cut-overlay {
+    background:
+      linear-gradient(180deg, rgba(248, 245, 240, 0.55) 0%, rgba(248, 245, 240, 0.30) 40%, rgba(248, 245, 240, 0.65) 100%),
+      radial-gradient(ellipse at 75% 35%, rgba(248, 245, 240, 0.20) 0%, rgba(248, 245, 240, 0.55) 100%);
   }
 
   .hero-grid-split {
     position: relative;
     z-index: 2;
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.12fr 0.88fr;
     gap: 48px;
     align-items: center;
   }
 
   /* Left Editorial Column */
-  .hero-editorial-badge {
+  .hero-marketplace-badge {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .hero-editorial-squircle {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #D4A853 0%, #B8892A 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #0D0F14;
-    box-shadow: 0 8px 24px rgba(212,168,83,0.35);
-    flex-shrink: 0;
-  }
-
-  .hero-editorial-name {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    color: #F0EDE8;
-    line-height: 1.1;
-  }
-
-  .hero-editorial-sub {
-    font-size: 10px;
-    font-weight: 800;
-    color: #D4A853;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  .hero-eyebrow-tag {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    gap: 8px;
+    background: var(--hub-gold-soft);
+    border: 1px solid var(--hub-gold-border);
+    border-radius: var(--r-full);
+    padding: 6px 14px;
     font-size: 11px;
     font-weight: 800;
+    letter-spacing: 1.6px;
+    color: var(--hub-gold);
     text-transform: uppercase;
-    letter-spacing: 2.2px;
-    color: #D4A853;
-    margin-bottom: 18px;
-  }
-
-  .hero-eyebrow-tag::before {
-    content: '';
-    width: 22px;
-    height: 2px;
-    background: #D4A853;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   }
 
   .hero-main-title {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(38px, 4.4vw, 58px);
-    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: clamp(38px, 4.2vw, 56px);
+    font-weight: 800;
     line-height: 1.12;
-    color: #FFFFFF;
-    margin-bottom: 20px;
-    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin-bottom: 18px;
+    letter-spacing: -1px;
   }
 
-  .hero-main-title em {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-style: italic;
-    color: #D4A853;
-    font-weight: 600;
+  .hero-main-title span.hero-title-highlight {
+    background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-light) 50%, #E8A83A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: block;
   }
 
   .hero-main-desc {
-    font-size: 15.5px;
-    color: rgba(240, 237, 232, 0.75);
-    line-height: 1.75;
-    margin-bottom: 32px;
-    max-width: 540px;
-  }
-
-  .hero-stats-row {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
     margin-bottom: 28px;
+    max-width: 520px;
   }
 
-  .hero-stat-box {
+  .hero-cta-group {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
   }
 
-  .hero-stat-digit {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    color: #D4A853;
-    line-height: 1.1;
-  }
-
-  .hero-stat-text {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: rgba(240, 237, 232, 0.5);
-    margin-top: 4px;
-  }
-
-  .hero-pill-list {
-    display: flex;
-    flex-direction: column;
+  .hero-btn-primary {
+    display: inline-flex;
+    align-items: center;
     gap: 10px;
+    padding: 13px 26px;
+    background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
+    color: #0D0F14 !important;
+    border-radius: var(--r-md);
+    font-size: 14.5px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 6px 22px var(--hub-gold-glow);
+    transition: all var(--ease-fast);
   }
 
-  .hero-pill-item {
-    display: flex;
+  .hero-btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px var(--hub-gold-glow);
+  }
+
+  .hero-btn-secondary {
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-    background: rgba(19, 26, 38, 0.55);
-    border: 1px solid rgba(212,168,83,0.18);
+    gap: 10px;
+    padding: 12px 22px;
+    background: var(--bg-card);
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+    border-radius: var(--r-md);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all var(--ease-fast);
     backdrop-filter: blur(12px);
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: rgba(240, 237, 232, 0.85);
-    font-size: 13.5px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    max-width: 480px;
   }
 
-  .hero-pill-item:hover {
-    background: rgba(19, 26, 38, 0.8);
-    border-color: rgba(212,168,83,0.4);
-    transform: translateX(4px);
+  .hero-btn-secondary:hover {
+    border-color: var(--hub-gold-border);
+    background: var(--hub-gold-soft);
+    color: var(--hub-gold) !important;
+    transform: translateY(-2px);
   }
 
-  .hero-pill-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(212,168,83,0.12);
-    border: 1px solid rgba(212,168,83,0.25);
-    color: #D4A853;
+  /* Trust Badges Strip */
+  .hero-trust-indicators {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .hero-trust-badge {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .hero-trust-badge i, .hero-trust-badge svg {
+    width: 16px;
+    height: 16px;
+    color: var(--hub-gold);
     flex-shrink: 0;
   }
 
-  /* Right Action Panel (Matches 2nd Reference Image) */
-  .hero-right-glass-card {
-    background: rgba(13, 18, 27, 0.82);
-    border: 1px solid rgba(212, 168, 83, 0.22);
-    box-shadow: 0 24px 64px rgba(0,0,0,0.65), 0 0 40px rgba(212,168,83,0.08);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border-radius: 24px;
-    padding: 36px 32px;
-  }
-
-  .hero-panel-pill {
-    display: inline-block;
-    background: rgba(212,168,83,0.12);
-    border: 1px solid rgba(212,168,83,0.25);
-    border-radius: 9999px;
-    padding: 4px 14px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    color: #D4A853;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-
-  .hero-panel-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    color: #FFFFFF;
-    margin-bottom: 6px;
-    line-height: 1.2;
-  }
-
-  .hero-panel-desc {
-    font-size: 12.5px;
-    color: rgba(240, 237, 232, 0.6);
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-
-  /* 2x2 Pillars Grid */
-  .hero-pillars-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .hero-pillar-tile {
-    background: rgba(19, 26, 38, 0.6);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 14px;
-    transition: all 0.2s ease;
-  }
-
-  .hero-pillar-tile:hover {
-    border-color: rgba(212,168,83,0.35);
-    background: rgba(19, 26, 38, 0.9);
-  }
-
-  .hero-pillar-title {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #F0EDE8;
+  /* Right Column Cards */
+  .hero-right-column {
     display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 4px;
-  }
-
-  .hero-pillar-desc {
-    font-size: 11px;
-    color: rgba(240,237,232,0.5);
-    line-height: 1.4;
-  }
-
-  /* Buttons */
-  .hero-action-btn-client {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 14px 20px;
-    border-radius: 12px;
-    border: none;
-    background: linear-gradient(135deg, #D4A853 0%, #B8892A 100%);
-    color: #0D0F14;
-    font-size: 14px;
-    font-weight: 800;
-    text-decoration: none;
-    box-shadow: 0 6px 20px rgba(212,168,83,0.35);
-    transition: all 0.2s ease;
-    margin-bottom: 10px;
-  }
-
-  .hero-action-btn-client:hover {
-    filter: brightness(1.1);
-    transform: translateY(-2px);
-    color: #0D0F14;
-  }
-
-  .hero-action-btn-freelancer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 12px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(212,168,83,0.3);
-    background: rgba(212,168,83,0.08);
-    color: #D4A853;
-    font-size: 13.5px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    margin-bottom: 12px;
-  }
-
-  .hero-action-btn-freelancer:hover {
-    background: rgba(212,168,83,0.18);
-    border-color: #D4A853;
-    color: #D4A853;
-  }
-
-  .hero-action-link-login {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(240,237,232,0.7);
-    text-decoration: none;
-    transition: color 0.2s;
-    margin-bottom: 18px;
-  }
-
-  .hero-action-link-login:hover {
-    color: #D4A853;
-  }
-
-  .hero-panel-trust-footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 11px;
-    color: rgba(240,237,232,0.45);
-    text-align: center;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding-top: 14px;
+    flex-direction: column;
+    gap: 16px;
   }
 
   @media (max-width: 1024px) {
@@ -359,7 +183,7 @@
       gap: 40px;
     }
     .hero-paper-cut-section {
-      padding: 90px 0 40px;
+      padding: 50px 0 40px;
     }
   }
 </style>
@@ -368,7 +192,7 @@
 {% block content %}
 
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 01 — CINEMATIC HERO (EXACT REFERENCE DESIGN)
+     SECTION 01 — CINEMATIC HERO WITH FLOATING CARDS
      ══════════════════════════════════════════════════════════ -->
 <section class="hero-paper-cut-section" id="hero">
   <!-- Vignette Overlay -->
@@ -377,145 +201,138 @@
   <div class="pub-container" style="position:relative; z-index:2; width:100%;">
     <div class="hero-grid-split">
 
-      <!-- Left Column: Editorial Content (Matches Reference 1) -->
+      <!-- Left Column: Marketplace Introduction -->
       <div>
 
-        <!-- Brand Squircle Row -->
-        <div class="hero-editorial-badge">
-          <div class="hero-editorial-squircle">
-            <i data-lucide="layers" style="width:24px;height:24px;"></i>
-          </div>
-          <div>
-            <div class="hero-editorial-name">FreelanceHub</div>
-            <div class="hero-editorial-sub">YOUR BUSINESS. YOUR RULES.</div>
-          </div>
+        <!-- Small Marketplace Badge -->
+        <div class="hero-marketplace-badge">
+          <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
+          <span>FREELANCE MARKETPLACE</span>
         </div>
 
-        <div class="hero-eyebrow-tag">THE SMART FREELANCER'S TOOLKIT</div>
-
+        <!-- Large Heading -->
         <h1 class="hero-main-title">
-          Where <em>Ambition</em><br>Meets Order.
+          Where Great Projects
+          <span class="hero-title-highlight">Meet Great Talent.</span>
         </h1>
 
+        <!-- Supporting Paragraph -->
         <p class="hero-main-desc">
-          Stop juggling spreadsheets. Start running a real business. <strong>FreelanceHub</strong> puts your clients, invoices, projects and payments in one place — beautifully.
+          Clients can post projects and find verified freelancers. Freelancers can discover suitable projects and apply.
         </p>
 
-        <!-- Stat Row -->
-        <div class="hero-stats-row">
-          <div class="hero-stat-box">
-            <div class="hero-stat-digit">6+</div>
-            <div class="hero-stat-text">POWER MODULES</div>
-          </div>
-          <div class="hero-stat-box">
-            <div class="hero-stat-digit">100%</div>
-            <div class="hero-stat-text">FREE TO USE</div>
-          </div>
-          <div class="hero-stat-box">
-            <div class="hero-stat-digit">∞</div>
-            <div class="hero-stat-text">CLIENTS &amp; PROJECTS</div>
-          </div>
+        <!-- Action CTAs -->
+        <div class="hero-cta-group">
+          <a href="{% url 'marketplace:client_register' %}" class="hero-btn-primary">
+            <i data-lucide="briefcase" style="width:17px;height:17px;"></i>
+            <span>Post a Project</span>
+          </a>
+          <a href="{% url 'freelancer:register' %}" class="hero-btn-secondary">
+            <i data-lucide="search" style="width:16px;height:16px;"></i>
+            <span>Browse Projects</span>
+          </a>
+          <a href="{% url 'core:login' %}" class="btn-hub-ghost" style="font-size:13.5px;padding:12px 18px;">
+            <i data-lucide="log-in" style="width:15px;height:15px;"></i>
+            <span>Sign In</span>
+          </a>
         </div>
 
-        <!-- 3 Feature Glass Pills -->
-        <div class="hero-pill-list">
-          <div class="hero-pill-item">
-            <div class="hero-pill-icon"><i data-lucide="zap" style="width:15px;height:15px;"></i></div>
-            <span>One dashboard. Every client, project &amp; invoice.</span>
+        <!-- Trust Indicators -->
+        <div class="hero-trust-indicators">
+          <div class="hero-trust-badge">
+            <i data-lucide="shield-check"></i>
+            <span>Verified Freelancers</span>
           </div>
-          <div class="hero-pill-item">
-            <div class="hero-pill-icon"><i data-lucide="trending-up" style="width:15px;height:15px;"></i></div>
-            <span>Real-time earnings reports &amp; PDF exports.</span>
+          <div class="hero-trust-badge">
+            <i data-lucide="lock"></i>
+            <span>Milestone Escrow</span>
           </div>
-          <div class="hero-pill-item">
-            <div class="hero-pill-icon"><i data-lucide="shield-check" style="width:15px;height:15px;"></i></div>
-            <span>Your data stays yours. Private &amp; secure.</span>
+          <div class="hero-trust-badge">
+            <i data-lucide="award"></i>
+            <span>Quality Guaranteed</span>
           </div>
         </div>
 
       </div>
 
-      <!-- Right Column: Glassmorphism Platform Action Card (Matches Reference 2) -->
-      <div>
-        <div class="hero-right-glass-card">
+      <!-- Right Column: Floating Project Card + Statistics Card -->
+      <div class="hero-right-column">
 
-          <div class="hero-panel-pill">MANAGE &bull; ANALYZE &bull; PREDICT &bull; GROW</div>
+        <!-- ── FLOATING PROJECT CARD ── -->
+        <div class="hero-floating-project-card">
 
-          <h2 class="hero-panel-title">Freelancer Intelligence Platform</h2>
-          <p class="hero-panel-desc">
-            Full-Stack Web Development + Data Analytics + Data Science + Business Intelligence
-          </p>
-
-          <!-- 4 Pillars 2x2 Grid -->
-          <div class="hero-pillars-grid">
-            <div class="hero-pillar-tile">
-              <div class="hero-pillar-title">
-                <i data-lucide="folder-kanban" style="width:14px;height:14px;color:#D4A853;"></i>
-                <span>Full-Stack</span>
-              </div>
-              <div class="hero-pillar-desc">Auth, Projects, Clients, Invoices &amp; Security</div>
-            </div>
-
-            <div class="hero-pillar-tile">
-              <div class="hero-pillar-title">
-                <i data-lucide="bar-chart-2" style="width:14px;height:14px;color:#5B9FD4;"></i>
-                <span>Data Analytics</span>
-              </div>
-              <div class="hero-pillar-desc">Profiling, EDA, Statistics &amp; Correlation</div>
-            </div>
-
-            <div class="hero-pillar-tile">
-              <div class="hero-pillar-title">
-                <i data-lucide="cpu" style="width:14px;height:14px;color:#E05C5C;"></i>
-                <span>Data Science</span>
-              </div>
-              <div class="hero-pillar-desc">Forecasting &amp; Predictive Risk Models</div>
-            </div>
-
-            <div class="hero-pillar-tile">
-              <div class="hero-pillar-title">
-                <i data-lucide="bot" style="width:14px;height:14px;color:#4CAF7A;"></i>
-                <span>Intelligence</span>
-              </div>
-              <div class="hero-pillar-desc">Executive Dashboard &amp; TrackBot AI</div>
-            </div>
+          <!-- Card Header: Category + Status -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;">
+            <span class="hero-category-tag">
+              <i data-lucide="layers" style="width:12px;height:12px;"></i>
+              Full-Stack Development
+            </span>
+            <span class="badge badge-success" style="font-size:11px;padding:3px 9px;">
+              <span class="pulse-dot" style="width:6px;height:6px;background:currentColor;margin-right:4px;"></span>
+              Verified · Open
+            </span>
           </div>
 
-          <!-- CTAs -->
-          <a href="{% url 'marketplace:client_register' %}" class="hero-action-btn-client">
-            <i data-lucide="briefcase" style="width:17px;height:17px;"></i>
-            <span>Hire a Freelancer (Register as Client)</span>
-          </a>
+          <!-- Project Title -->
+          <h3 style="font-size:16px;font-weight:800;color:var(--text-primary);margin-bottom:10px;line-height:1.3;font-family:'Plus Jakarta Sans',sans-serif;">
+            Fintech Platform Architecture &amp; Next.js Mobile UI
+          </h3>
 
-          <a href="{% url 'freelancer:register' %}" class="hero-action-btn-freelancer">
-            <i data-lucide="user-check" style="width:16px;height:16px;"></i>
-            <span>Join as Freelancer</span>
-          </a>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:14px;">
+            Looking for a senior developer to build an escrow payment flow with real-time financial tracking dashboard.
+          </p>
 
-          <a href="{% url 'core:login' %}" class="hero-action-link-login">
-            <i data-lucide="log-in" style="width:15px;height:15px;"></i>
-            <span>Sign In to Existing Account</span>
-          </a>
+          <!-- Technology / Skill Tags -->
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;">
+            <span class="hero-skill-chip"><i data-lucide="code-2" style="width:11px;height:11px;margin-right:3px;"></i>Python</span>
+            <span class="hero-skill-chip">Django</span>
+            <span class="hero-skill-chip">React</span>
+            <span class="hero-skill-chip">PostgreSQL</span>
+          </div>
 
-          <div class="hero-panel-trust-footer">
-            <i data-lucide="shield" style="width:13px;height:13px;color:#D4A853;"></i>
-            <span>Role-based security &bull; Private data isolation &bull; Real analytics</span>
+          <!-- Footer: Budget & Client Verification -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border-subtle);">
+            <div>
+              <div style="font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Project Budget</div>
+              <div style="font-size:18px;font-weight:800;color:var(--hub-gold);font-family:'Plus Jakarta Sans',sans-serif;">₹85,000 <span style="font-size:12px;color:var(--text-muted);font-weight:500;">($1,200)</span></div>
+            </div>
+
+            <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r-full);background:var(--hub-gold-soft);border:1px solid var(--hub-gold-border);color:var(--hub-gold);font-size:11.5px;font-weight:700;">
+              <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+              <span>Verified Client</span>
+            </div>
           </div>
 
         </div>
+
+        <!-- ── FLOATING STATISTICS CARD ── -->
+        <div class="hero-floating-stats-card">
+          <div class="hero-fstat-item">
+            <div class="hero-fstat-val">{{ active_projects|default:"240" }}+</div>
+            <div class="hero-fstat-lbl">Open Projects</div>
+          </div>
+          <div class="hero-fstat-item">
+            <div class="hero-fstat-val">{{ verified_freelancers|default:"580" }}+</div>
+            <div class="hero-fstat-lbl">Freelancers</div>
+          </div>
+          <div class="hero-fstat-item">
+            <div class="hero-fstat-val">₹2.4M+</div>
+            <div class="hero-fstat-lbl">Paid Out</div>
+          </div>
+        </div>
+
       </div>
 
     </div>
   </div>
 </section>
 
-
 <!-- ══════════════════════════════════════════════════════════
-     SECTION 02 — LIVE STATS BAR
+     SECTION 02 — PLATFORM METRICS STRIP
      ══════════════════════════════════════════════════════════ -->
-<section style="padding:0;background:var(--bg-surface);border-top:1px solid var(--border-color);border-bottom:1px solid var(--border-color);">
+<section style="padding:0;background:var(--bg-card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border-color);border-bottom:1px solid var(--border-color);">
   <div class="pub-container">
-    <div class="stats-bar">
+    <div class="stats-bar" style="border:none;background:transparent;margin:0;">
       <div class="stats-bar-item">
         <div class="stats-bar-val">{{ active_projects|default:"240" }}+</div>
         <div class="stats-bar-label">Active Projects</div>
@@ -624,7 +441,7 @@
 <!-- ══════════════════════════════════════════════════════════
      SECTION 04 — HOW IT WORKS
      ══════════════════════════════════════════════════════════ -->
-<section class="hub-section" id="how-it-works" style="background:var(--bg-surface);">
+<section class="hub-section" id="how-it-works" style="background:transparent;">
   <div class="pub-container">
 
     <div class="hub-section-header">
@@ -744,7 +561,7 @@
 <!-- ══════════════════════════════════════════════════════════
      SECTION 06 — FEATURED FREELANCERS
      ══════════════════════════════════════════════════════════ -->
-<section class="hub-section" id="find-freelancers" style="background:var(--bg-surface);">
+<section class="hub-section" id="find-freelancers" style="background:transparent;">
   <div class="pub-container">
 
     <div class="hub-section-header">
@@ -805,7 +622,7 @@
 <!-- ══════════════════════════════════════════════════════════
      SECTION 07 — TRUST & SECURITY
      ══════════════════════════════════════════════════════════ -->
-<section class="hub-section" id="trust">
+<section class="hub-section" id="trust" style="background:transparent;">
   <div class="pub-container">
 
     <div class="hub-section-header">
@@ -876,7 +693,7 @@
 <!-- ══════════════════════════════════════════════════════════
      SECTION 08 — CTA BANNER
      ══════════════════════════════════════════════════════════ -->
-<section class="hub-section" style="background:var(--bg-surface);">
+<section class="hub-section" style="background:transparent;">
   <div class="pub-container">
     <div class="hub-cta-section">
       <h2 class="hub-cta-title">Ready to Start Your First Project?</h2>

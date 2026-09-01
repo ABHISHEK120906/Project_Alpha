@@ -5,21 +5,21 @@
 {% block content %}
 
 <!-- Header -->
-<div style="text-align:center; margin-bottom:28px;">
-  <h1 style="font-size:24px; font-weight:800; color:#FFFFFF; margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Welcome Back</h1>
-  <p style="font-size:13.5px; color:rgba(240,237,232,0.65); margin:0;">
-    Sign in to your <strong id="roleText" style="color:#D4A853;">Client Workspace</strong>
+<div style="text-align:center; margin-bottom:24px;">
+  <h1 style="font-size:24px; font-weight:800; color:var(--text-primary); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Welcome Back</h1>
+  <p style="font-size:13.5px; color:var(--text-muted); margin:0;">
+    Sign in to your <strong id="roleText" style="color:var(--hub-gold);">Client Workspace</strong>
   </p>
 </div>
 
-<!-- Role Switcher Tabs -->
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px; background:rgba(255,255,255,0.04); padding:4px; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
+<!-- Role Switcher Tabs (Segmented Control) -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:24px; background:var(--bg-input); padding:4px; border-radius:var(--r-md); border:1px solid var(--border-color); box-sizing:border-box;">
   <button type="button" id="tabClientBtn" onclick="switchRole('client')"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:8px; border:1px solid #D4A853; background:rgba(212,168,83,0.18); color:#D4A853; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:var(--r-sm); border:1px solid var(--hub-gold); background:var(--hub-gold-soft); color:var(--hub-gold); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
     <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
   </button>
   <button type="button" id="tabFreelancerBtn" onclick="switchRole('freelancer')"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:8px; border:1px solid transparent; background:transparent; color:rgba(240,237,232,0.6); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:var(--r-sm); border:1px solid transparent; background:transparent; color:var(--text-muted); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
     <i data-lucide="search" style="width:15px;height:15px;"></i> Freelancer
   </button>
 </div>
@@ -44,76 +44,76 @@
 {% endif %}
 
 <!-- Login Form -->
-<form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate>
+<form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate style="box-sizing:border-box; width:100%;">
   {% csrf_token %}
   <input type="hidden" name="login_type" value="user">
 
   <!-- Username -->
   <div class="form-group" style="margin-bottom:18px;">
-    <label for="id_username" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:rgba(240,237,232,0.7);">Username</label>
-    <div style="position:relative;">
-      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#D4A853; pointer-events:none;">
+    <label for="id_username" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Username</label>
+    <div style="position:relative; width:100%; box-sizing:border-box;">
+      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--hub-gold); pointer-events:none;">
         <i data-lucide="user" style="width:16px;height:16px;"></i>
       </span>
       <input type="text" name="username" id="id_username" class="form-control"
-        style="width:100%; padding:12px 14px 12px 42px; background:rgba(7,11,17,0.7); border:1px solid rgba(212,168,83,0.25); border-radius:12px; color:#FFFFFF; font-size:14px; outline:none;"
+        style="width:100%; box-sizing:border-box; padding:12px 14px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
         placeholder="Enter your username"
         required autocomplete="username" autofocus
         value="{{ request.POST.username|default:'' }}">
     </div>
     {% if form.username.errors %}
-      <div class="form-error" style="color:#F08080; font-size:12px; margin-top:5px;">{{ form.username.errors.0 }}</div>
+      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.username.errors.0 }}</div>
     {% endif %}
   </div>
 
   <!-- Password -->
   <div class="form-group" style="margin-bottom:20px;">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;">
-      <label for="id_password" style="margin:0; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:rgba(240,237,232,0.7);">Password</label>
-      <a href="{% url 'core:password_reset' %}" style="font-size:12px; color:#D4A853; font-weight:600; text-decoration:none;">Forgot password?</a>
+      <label for="id_password" style="margin:0; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Password</label>
+      <a href="{% url 'core:password_reset' %}" style="font-size:12px; color:var(--hub-gold); font-weight:600; text-decoration:none;">Forgot password?</a>
     </div>
-    <div style="position:relative;">
-      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#D4A853; pointer-events:none;">
+    <div style="position:relative; width:100%; box-sizing:border-box;">
+      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--hub-gold); pointer-events:none;">
         <i data-lucide="lock" style="width:16px;height:16px;"></i>
       </span>
       <input type="password" name="password" id="id_password" class="form-control"
-        style="width:100%; padding:12px 44px 12px 42px; background:rgba(7,11,17,0.7); border:1px solid rgba(212,168,83,0.25); border-radius:12px; color:#FFFFFF; font-size:14px; outline:none;"
+        style="width:100%; box-sizing:border-box; padding:12px 44px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
         placeholder="Enter your password"
         required autocomplete="current-password">
       <button type="button" id="togglePwd" aria-label="Toggle password visibility"
-        style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(240,237,232,0.5); cursor:pointer; padding:0; display:flex; align-items:center;">
+        style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0; display:flex; align-items:center;">
         <i data-lucide="eye" id="pwdIcon" style="width:16px;height:16px;"></i>
       </button>
     </div>
     {% if form.password.errors %}
-      <div class="form-error" style="color:#F08080; font-size:12px; margin-top:5px;">{{ form.password.errors.0 }}</div>
+      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.password.errors.0 }}</div>
     {% endif %}
   </div>
 
   <!-- Submit -->
   <button type="submit" id="loginSubmitBtn"
-    style="width:100%; padding:13px 20px; border-radius:12px; border:none; background:linear-gradient(135deg, #D4A853 0%, #B8892A 100%); color:#0D0F14; font-size:14.5px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 20px rgba(212,168,83,0.35); transition:all 0.2s ease;">
+    style="width:100%; box-sizing:border-box; padding:13px 20px; border-radius:var(--r-md); border:none; background:linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%); color:#0D0F14; font-size:14.5px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 20px var(--hub-gold-glow); transition:all 0.2s ease;">
     <i data-lucide="log-in" style="width:17px;height:17px;"></i>
     <span>Sign In to Workspace</span>
   </button>
 </form>
 
 <!-- Divider -->
-<div style="display:flex; align-items:center; gap:12px; margin:24px 0;">
-  <div style="flex:1; height:1px; background:rgba(255,255,255,0.08);"></div>
-  <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:rgba(240,237,232,0.4);">New to FreelanceHub?</span>
-  <div style="flex:1; height:1px; background:rgba(255,255,255,0.08);"></div>
+<div style="display:flex; align-items:center; gap:12px; margin:22px 0;">
+  <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+  <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">New to FreelanceHub?</span>
+  <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
 </div>
 
 <!-- Register CTA -->
-<div style="display:flex; flex-direction:column; gap:10px;">
+<div style="display:flex; flex-direction:column; gap:10px; width:100%; box-sizing:border-box;">
   <a href="{% url 'marketplace:client_register' %}"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:12px; border:1px solid rgba(212,168,83,0.25); background:rgba(212,168,83,0.06); color:#D4A853; font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:var(--r-md); border:1px solid var(--hub-gold-border); background:var(--hub-gold-soft); color:var(--hub-gold); font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
     <i data-lucide="briefcase" style="width:16px;height:16px;"></i>
     <span>Create Client Account (Post Projects)</span>
   </a>
   <a href="{% url 'core:register' %}"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); background:transparent; color:rgba(240,237,232,0.8); font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:var(--r-md); border:1px solid var(--border-color); background:transparent; color:var(--text-secondary); font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
     <i data-lucide="search" style="width:16px;height:16px;"></i>
     <span>Create Freelancer Account (Find Work)</span>
   </a>
@@ -122,8 +122,8 @@
 <!-- Admin Link -->
 <div style="text-align:center; margin-top:20px;">
   <a href="{% url 'core:admin_login' %}"
-    style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:rgba(240,237,232,0.5); text-decoration:none; transition:color 0.2s;">
-    <i data-lucide="shield" style="width:13px;height:13px; color:#D4A853;"></i>
+    style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); text-decoration:none; transition:color 0.2s;">
+    <i data-lucide="shield" style="width:13px;height:13px; color:var(--hub-gold);"></i>
     <span>Platform Administrator Login</span>
   </a>
 </div>
@@ -137,21 +137,21 @@
     if (role === 'freelancer') {
       clientBtn.style.border = '1px solid transparent';
       clientBtn.style.background = 'transparent';
-      clientBtn.style.color = 'rgba(240,237,232,0.6)';
+      clientBtn.style.color = 'var(--text-muted)';
 
-      freelancerBtn.style.border = '1px solid #D4A853';
-      freelancerBtn.style.background = 'rgba(212,168,83,0.18)';
-      freelancerBtn.style.color = '#D4A853';
+      freelancerBtn.style.border = '1px solid var(--hub-gold)';
+      freelancerBtn.style.background = 'var(--hub-gold-soft)';
+      freelancerBtn.style.color = 'var(--hub-gold)';
 
       roleText.textContent = 'Freelancer Portal';
     } else {
-      clientBtn.style.border = '1px solid #D4A853';
-      clientBtn.style.background = 'rgba(212,168,83,0.18)';
-      clientBtn.style.color = '#D4A853';
+      clientBtn.style.border = '1px solid var(--hub-gold)';
+      clientBtn.style.background = 'var(--hub-gold-soft)';
+      clientBtn.style.color = 'var(--hub-gold)';
 
       freelancerBtn.style.border = '1px solid transparent';
       freelancerBtn.style.background = 'transparent';
-      freelancerBtn.style.color = 'rgba(240,237,232,0.6)';
+      freelancerBtn.style.color = 'var(--text-muted)';
 
       roleText.textContent = 'Client Workspace';
     }
@@ -182,5 +182,4 @@
     }
   })();
 </script>
-
 {% endblock %}

@@ -13,68 +13,68 @@
   --hub-gold:            #D4A853;
   --hub-gold-dark:       #B8892A;
   --hub-gold-light:      #E8C27A;
-  --hub-gold-soft:       rgba(212,168,83,0.12);
-  --hub-gold-glow:       rgba(212,168,83,0.28);
-  --hub-gold-border:     rgba(212,168,83,0.22);
+  --hub-gold-soft:       rgba(212,168,83,0.14);
+  --hub-gold-glow:       rgba(212,168,83,0.3);
+  --hub-gold-border:     rgba(212,168,83,0.25);
 
-  /* ── Backgrounds ── */
-  --bg-canvas:           #0D0F14;
-  --bg-surface:          #13161C;
-  --bg-card:             #1A1E27;
-  --bg-card-hover:       #1E2330;
-  --bg-elevated:         #222736;
-  --bg-glass:            rgba(19,22,28,0.85);
-  --bg-input:            #111419;
-  --bg-overlay:          rgba(7,9,13,0.75);
+  /* ── Translucent Backgrounds (Artwork shines through) ── */
+  --bg-canvas:           transparent;
+  --bg-surface:          rgba(14, 18, 26, 0.75);
+  --bg-card:             rgba(20, 26, 38, 0.78);
+  --bg-card-hover:       rgba(26, 34, 48, 0.85);
+  --bg-elevated:         rgba(28, 36, 52, 0.8);
+  --bg-glass:            rgba(13, 17, 25, 0.82);
+  --bg-input:            rgba(8, 12, 18, 0.75);
+  --bg-overlay:          rgba(5, 8, 12, 0.8);
 
   /* ── Borders ── */
-  --border-color:        rgba(212,168,83,0.15);
-  --border-subtle:       rgba(255,255,255,0.06);
-  --border-strong:       rgba(212,168,83,0.35);
-  --border-input:        rgba(212,168,83,0.2);
-  --border-input-focus:  rgba(212,168,83,0.6);
+  --border-color:        rgba(212,168,83,0.18);
+  --border-subtle:       rgba(255,255,255,0.08);
+  --border-strong:       rgba(212,168,83,0.4);
+  --border-input:        rgba(212,168,83,0.22);
+  --border-input-focus:  rgba(212,168,83,0.65);
 
   /* ── Typography ── */
-  --text-primary:        #F0EDE8;
-  --text-secondary:      #A8A099;
-  --text-muted:          #5C5650;
+  --text-primary:        #F5F2ED;
+  --text-secondary:      #B5ADA4;
+  --text-muted:          #7A7268;
   --text-inverse:        #0D0F14;
   --text-accent:         #D4A853;
 
   /* ── Sidebar ── */
-  --sidebar-bg:          #0B0D12;
-  --sidebar-text:        #8A8480;
+  --sidebar-bg:          rgba(9, 12, 18, 0.88);
+  --sidebar-text:        #948E88;
   --sidebar-active:      #D4A853;
   --sidebar-active-text: #0D0F14;
-  --sidebar-hover-bg:    rgba(212,168,83,0.08);
-  --sidebar-border:      rgba(212,168,83,0.1);
+  --sidebar-hover-bg:    rgba(212,168,83,0.1);
+  --sidebar-border:      rgba(212,168,83,0.15);
 
   /* ── Topbar ── */
-  --topbar-bg:           #111419;
-  --topbar-border:       rgba(212,168,83,0.1);
-  --topbar-text:         #F0EDE8;
+  --topbar-bg:           rgba(11, 15, 22, 0.82);
+  --topbar-border:       rgba(212,168,83,0.15);
+  --topbar-text:         #F5F2ED;
 
   /* ── Semantic Status ── */
   --success:             #4CAF7A;
-  --success-soft:        rgba(76,175,122,0.14);
+  --success-soft:        rgba(76,175,122,0.16);
   --success-text:        #6FCCA0;
   --warning:             #E8A83A;
-  --warning-soft:        rgba(232,168,58,0.14);
+  --warning-soft:        rgba(232,168,58,0.16);
   --warning-text:        #F0C060;
   --danger:              #E05C5C;
-  --danger-soft:         rgba(224,92,92,0.14);
+  --danger-soft:         rgba(224,92,92,0.16);
   --danger-text:         #F08080;
   --info:                #5B9FD4;
-  --info-soft:           rgba(91,159,212,0.14);
+  --info-soft:           rgba(91,159,212,0.16);
   --info-text:           #7ABFEE;
 
   /* ── Shadows ── */
-  --shadow-sm:           0 1px 4px rgba(0,0,0,0.3);
-  --shadow-md:           0 4px 16px rgba(0,0,0,0.45);
-  --shadow-lg:           0 12px 40px rgba(0,0,0,0.6);
-  --shadow-gold:         0 0 24px rgba(212,168,83,0.2);
-  --shadow-card:         0 2px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.25);
-  --shadow-card-hover:   0 8px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,168,83,0.12);
+  --shadow-sm:           0 2px 6px rgba(0,0,0,0.35);
+  --shadow-md:           0 6px 20px rgba(0,0,0,0.48);
+  --shadow-lg:           0 16px 48px rgba(0,0,0,0.65);
+  --shadow-gold:         0 0 28px rgba(212,168,83,0.25);
+  --shadow-card:         0 4px 20px rgba(0,0,0,0.45), 0 0 0 1px rgba(212,168,83,0.1);
+  --shadow-card-hover:   0 12px 36px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,168,83,0.25);
 
   /* ── Geometry ── */
   --r-xs:   4px;
@@ -92,7 +92,7 @@
   --ease-smooth: 0.25s cubic-bezier(0.4,0,0.2,1);
   --ease-bounce: 0.35s cubic-bezier(0.34,1.56,0.64,1);
 
-  /* ── Backward compat aliases (used by old templates) ── */
+  /* ── Backward compat aliases ── */
   --primary:          var(--hub-gold);
   --primary-dark:     var(--hub-gold-dark);
   --primary-soft:     var(--hub-gold-soft);
@@ -111,70 +111,56 @@
   --card-shadow-hover:var(--shadow-card-hover);
   --transition:       all var(--ease-smooth);
   --transition-fast:  all var(--ease-fast);
-  --transition-bounce:all var(--ease-bounce);
   --topbar-h:         64px;
 }
 
-/* ── 2. LIGHT MODE TOKENS ────────────────────────────────────────────────── */
+/* ── 2. LIGHT MODE TOKENS (Translucent Luminous Veils) ───────────────────── */
 [data-theme="light"] {
   --hub-gold:            #B8892A;
   --hub-gold-dark:       #9A6E18;
   --hub-gold-light:      #D4A853;
-  --hub-gold-soft:       rgba(184,137,42,0.1);
-  --hub-gold-glow:       rgba(184,137,42,0.2);
-  --hub-gold-border:     rgba(184,137,42,0.25);
+  --hub-gold-soft:       rgba(184,137,42,0.12);
+  --hub-gold-glow:       rgba(184,137,42,0.22);
+  --hub-gold-border:     rgba(184,137,42,0.28);
 
-  --bg-canvas:           #F5F3EE;
-  --bg-surface:          #FFFFFF;
-  --bg-card:             #FFFFFF;
-  --bg-card-hover:       #FDFBF7;
-  --bg-elevated:         #EEE9E0;
-  --bg-glass:            rgba(255,255,255,0.88);
-  --bg-input:            #FAFAF8;
-  --bg-overlay:          rgba(0,0,0,0.45);
+  --bg-canvas:           transparent;
+  --bg-surface:          rgba(255, 255, 255, 0.84);
+  --bg-card:             rgba(255, 255, 255, 0.88);
+  --bg-card-hover:       rgba(255, 255, 255, 0.95);
+  --bg-elevated:         rgba(246, 242, 235, 0.9);
+  --bg-glass:            rgba(255, 255, 255, 0.9);
+  --bg-input:            rgba(255, 255, 255, 0.92);
+  --bg-overlay:          rgba(20, 15, 10, 0.45);
 
-  --border-color:        rgba(184,137,42,0.18);
-  --border-subtle:       rgba(0,0,0,0.07);
-  --border-strong:       rgba(184,137,42,0.4);
-  --border-input:        rgba(184,137,42,0.22);
-  --border-input-focus:  rgba(184,137,42,0.7);
+  --border-color:        rgba(184,137,42,0.22);
+  --border-subtle:       rgba(0,0,0,0.08);
+  --border-strong:       rgba(184,137,42,0.45);
+  --border-input:        rgba(184,137,42,0.28);
+  --border-input-focus:  rgba(184,137,42,0.75);
 
-  --text-primary:        #1A1510;
-  --text-secondary:      #4A4035;
-  --text-muted:          #8A8070;
+  --text-primary:        #14100A;
+  --text-secondary:      #3E3428;
+  --text-muted:          #6E6458;
   --text-inverse:        #FFFFFF;
   --text-accent:         #B8892A;
 
-  --sidebar-bg:          #1A1E27;
-  --sidebar-text:        #8A8480;
-  --sidebar-active:      #D4A853;
-  --sidebar-active-text: #0D0F14;
-  --sidebar-hover-bg:    rgba(212,168,83,0.08);
-  --sidebar-border:      rgba(212,168,83,0.1);
+  --sidebar-bg:          rgba(248, 245, 239, 0.92);
+  --sidebar-text:        #5C5246;
+  --sidebar-active:      #B8892A;
+  --sidebar-active-text: #FFFFFF;
+  --sidebar-hover-bg:    rgba(184,137,42,0.1);
+  --sidebar-border:      rgba(184,137,42,0.18);
 
-  --topbar-bg:           #FFFFFF;
-  --topbar-border:       rgba(184,137,42,0.12);
-  --topbar-text:         #1A1510;
+  --topbar-bg:           rgba(255, 255, 255, 0.9);
+  --topbar-border:       rgba(184,137,42,0.18);
+  --topbar-text:         #14100A;
 
-  --success:             #3A9060;
-  --success-soft:        rgba(58,144,96,0.12);
-  --success-text:        #2D7048;
-  --warning:             #C8881A;
-  --warning-soft:        rgba(200,136,26,0.12);
-  --warning-text:        #A06A10;
-  --danger:              #C04040;
-  --danger-soft:         rgba(192,64,64,0.12);
-  --danger-text:         #A03030;
-  --info:                #3A7FBF;
-  --info-soft:           rgba(58,127,191,0.12);
-  --info-text:           #2A6090;
-
-  --shadow-sm:           0 1px 4px rgba(20,15,10,0.06);
-  --shadow-md:           0 4px 16px rgba(20,15,10,0.09);
-  --shadow-lg:           0 12px 40px rgba(20,15,10,0.12);
-  --shadow-gold:         0 0 24px rgba(184,137,42,0.15);
-  --shadow-card:         0 2px 12px rgba(20,15,10,0.07), 0 1px 3px rgba(20,15,10,0.05);
-  --shadow-card-hover:   0 8px 32px rgba(20,15,10,0.12), 0 0 0 1px rgba(184,137,42,0.15);
+  --shadow-sm:           0 2px 6px rgba(20,15,10,0.08);
+  --shadow-md:           0 6px 20px rgba(20,15,10,0.12);
+  --shadow-lg:           0 16px 48px rgba(20,15,10,0.16);
+  --shadow-gold:         0 0 24px rgba(184,137,42,0.2);
+  --shadow-card:         0 4px 20px rgba(20,15,10,0.09), 0 0 0 1px rgba(184,137,42,0.15);
+  --shadow-card-hover:   0 12px 36px rgba(20,15,10,0.16), 0 0 0 1px rgba(184,137,42,0.3);
 
   /* Backward compat */
   --primary:          var(--hub-gold);
@@ -188,6 +174,14 @@
   --amber:            var(--hub-gold);
   --amber-dark:       var(--hub-gold-dark);
   --amber-light:      var(--hub-gold-light);
+  --radius:           var(--r-md);
+  --radius-sm:        var(--r-sm);
+  --radius-lg:        var(--r-lg);
+  --card-shadow:      var(--shadow-card);
+  --card-shadow-hover:var(--shadow-card-hover);
+  --transition:       all var(--ease-smooth);
+  --transition-fast:  all var(--ease-fast);
+  --topbar-h:         64px;
 }
 
 /* ── 3. RESET & BASE ────────────────────────────────────────────────────── */
@@ -227,7 +221,7 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
 }
 
 /* ── 4. SIGNATURE UPLOADED ARTWORK BACKGROUND SYSTEM ───────────────────── */
-/* Uses the uploaded abstract layered artwork asset across all main surfaces */
+/* Uses the uploaded abstract layered artwork asset across all main surfaces with high visibility */
 .paper-cut-canvas,
 .fh-main-background {
   position: fixed;
@@ -243,15 +237,17 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 70% 50%, rgba(8,13,20,0.4) 0%, rgba(8,13,20,0.85) 100%),
-              linear-gradient(to bottom, rgba(8,13,20,0.6) 0%, rgba(8,13,20,0.3) 50%, rgba(8,13,20,0.8) 100%);
+  background:
+    linear-gradient(180deg, rgba(8, 12, 20, 0.40) 0%, rgba(8, 12, 20, 0.15) 40%, rgba(8, 12, 20, 0.50) 100%),
+    radial-gradient(ellipse at 70% 30%, rgba(8, 12, 20, 0.10) 0%, rgba(8, 12, 20, 0.45) 100%);
   pointer-events: none;
 }
 
 [data-theme="light"] .paper-cut-canvas::after,
 [data-theme="light"] .fh-main-background::after {
-  background: radial-gradient(ellipse at 70% 50%, rgba(245,243,238,0.35) 0%, rgba(245,243,238,0.75) 100%),
-              linear-gradient(to bottom, rgba(245,243,238,0.5) 0%, rgba(245,243,238,0.2) 50%, rgba(245,243,238,0.7) 100%);
+  background:
+    linear-gradient(180deg, rgba(248, 245, 240, 0.55) 0%, rgba(248, 245, 240, 0.30) 40%, rgba(248, 245, 240, 0.65) 100%),
+    radial-gradient(ellipse at 70% 30%, rgba(248, 245, 240, 0.20) 0%, rgba(248, 245, 240, 0.55) 100%);
 }
 
 .dashboard-ambient {
@@ -261,29 +257,30 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
   pointer-events: none;
   background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center / cover;
   background-attachment: fixed;
-  opacity: 0.35;
+  opacity: 0.45;
 }
 
 [data-theme="light"] .dashboard-ambient {
-  opacity: 0.2;
+  opacity: 0.35;
+  filter: brightness(1.2) contrast(0.9);
 }
 
 /* Translucent Glass Surfaces */
 .fh-glass-card,
 .card-glass {
-  background: rgba(19, 26, 38, 0.72) !important;
-  border: 1px solid rgba(212, 168, 83, 0.22) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-radius: var(--r-xl);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+  box-shadow: var(--shadow-card);
 }
 
 [data-theme="light"] .fh-glass-card,
 [data-theme="light"] .card-glass {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(184, 137, 42, 0.2) !important;
-  box-shadow: 0 16px 48px rgba(20,15,10,0.1);
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-card);
 }
 
 
