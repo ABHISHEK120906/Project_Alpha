@@ -2,46 +2,45 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+  <!-- FOUC prevention -->
+  <script>
+    (function(){
+      try {
+        var t = localStorage.getItem('freelancehub_theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        else document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch(e) {}
+    })();
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Freelancer Portal{% endblock %} — FreelanceHub</title>
-  <meta name="description" content="{% block meta_description %}FreelanceHub Freelancer Platform — Discover open projects, submit proposals, complete verification, and track earnings.{% endblock %}" />
+  <meta name="description" content="{% block meta_description %}FreelanceHub Freelancer Platform — Discover open projects, submit proposals, and track earnings.{% endblock %}" />
 
-  <!-- Canonical Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ff5e6c'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%23ffffff'/></svg>">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
 
-  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
 
-  <!-- Lucide Icons CDN -->
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Freelancer Dedicated Design System -->
+  <!-- FreelanceHub Unified Design System -->
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" href="{% static 'css/freelancer_theme.css' %}">
-
-  <!-- Zero-FOUC Theme Initializer -->
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('freelancehub_freelancer_theme') || localStorage.getItem('freelancehub_theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-      }
-    })();
-  </script>
 
   {% block extra_head %}{% endblock %}
 </head>
 <body class="freelancer-portal">
 <div class="fl-app-layout">
 
-  <!-- ══ FREELANCER SIDEBAR ═════════════════════════════════ -->
+  <!-- ══ FREELANCER SIDEBAR ════════════════════════════════════ -->
   <aside class="fl-sidebar" id="flSidebar">
-    
+
     <!-- Brand Header -->
     <div class="fl-sidebar-header">
       <a href="{% url 'freelancer:dashboard' %}" class="fl-brand-link">
@@ -53,7 +52,7 @@
       <span class="fl-role-badge">FREELANCER</span>
     </div>
 
-    <!-- User Profile Summary -->
+    <!-- User Profile -->
     <div class="fl-sidebar-user">
       <div class="fl-user-avatar">
         {{ freelancer_profile.full_name|slice:":1"|upper|default:"F" }}
@@ -61,88 +60,75 @@
       <div class="fl-user-details">
         <div class="fl-user-name">{{ freelancer_profile.full_name|default:"Freelance Pro" }}</div>
         <div class="fl-user-badge-row">
-          <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
-          <span>{{ freelancer_profile.professional_title|default:"Verified Specialist"|truncatechars:18 }}</span>
+          <i data-lucide="shield-check"></i>
+          <span>{{ freelancer_profile.professional_title|default:"Verified Specialist"|truncatechars:20 }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Navigation Menu (Every item with exact required icon) -->
-    <nav class="fl-sidebar-nav">
-      
-      <div class="fl-nav-group-title">OPPORTUNITIES</div>
-      
-      <!-- 1. Dashboard -->
+    <!-- Navigation -->
+    <nav class="fl-sidebar-nav" aria-label="Freelancer navigation">
+
+      <p class="fl-nav-group-title">OPPORTUNITIES</p>
+
       <a href="{% url 'freelancer:dashboard' %}" class="fl-nav-item {% block nav_dashboard %}{% endblock %}">
         <i data-lucide="layout-dashboard"></i>
         <span>Dashboard</span>
       </a>
 
-      <!-- 2. Browse Projects -->
       <a href="{% url 'freelancer:find_projects' %}" class="fl-nav-item {% block nav_find_projects %}{% endblock %}">
         <i data-lucide="search"></i>
         <span>Browse Projects</span>
-        {% if open_projects_count %}
-          <span class="fl-nav-badge">{{ open_projects_count }}</span>
-        {% endif %}
+        {% if open_projects_count %}<span class="fl-nav-badge">{{ open_projects_count }}</span>{% endif %}
       </a>
 
-      <!-- 3. My Applications -->
       <a href="{% url 'freelancer:my_applications' %}" class="fl-nav-item {% block nav_applications %}{% endblock %}">
         <i data-lucide="clipboard-check"></i>
         <span>My Applications</span>
       </a>
 
-      <!-- 4. Active Projects -->
       <a href="{% url 'freelancer:my_projects' %}" class="fl-nav-item {% block nav_my_projects %}{% endblock %}">
         <i data-lucide="folder-kanban"></i>
         <span>Active Projects</span>
       </a>
 
-      <!-- 5. Completed Projects -->
       <a href="{% url 'freelancer:my_projects' %}?status=completed" class="fl-nav-item {% block nav_completed_projects %}{% endblock %}">
         <i data-lucide="check-circle-2"></i>
-        <span>Completed Projects</span>
+        <span>Completed</span>
       </a>
 
-      <div class="fl-nav-group-title">TRUST &amp; REPUTATION</div>
+      <p class="fl-nav-group-title">TRUST & REPUTATION</p>
 
-      <!-- 6. Profile -->
       <a href="{% url 'freelancer:profile_view' %}" class="fl-nav-item {% block nav_profile %}{% endblock %}">
         <i data-lucide="user-circle"></i>
         <span>Profile</span>
       </a>
 
-      <!-- 7. Verification Center -->
       <a href="{% url 'freelancer:verification_center' %}" class="fl-nav-item {% block nav_verification %}{% endblock %}">
         <i data-lucide="shield-check"></i>
         <span>Verification</span>
         {% if not is_verified %}
-          <span class="fl-nav-badge" style="background:var(--fl-coral);color:#fff;">Required</span>
+          <span class="fl-nav-badge" style="background:rgba(224,92,92,0.14);color:#E05C5C;border-color:rgba(224,92,92,0.25);">!</span>
         {% endif %}
       </a>
 
-      <div class="fl-nav-group-title">COMMUNICATION &amp; EARNINGS</div>
+      <p class="fl-nav-group-title">EARNINGS & SUPPORT</p>
 
-      <!-- 8. Messages -->
       <a href="{% url 'core:chat_home' %}" class="fl-nav-item {% block nav_chat %}{% endblock %}">
         <i data-lucide="message-square"></i>
         <span>Messages</span>
       </a>
 
-      <!-- 9. Payments -->
       <a href="{% url 'freelancer:payments' %}" class="fl-nav-item {% block nav_payments %}{% endblock %}">
         <i data-lucide="credit-card"></i>
         <span>Payments</span>
       </a>
 
-      <!-- 10. Notifications -->
       <a href="{% url 'core:notifications_list' %}" class="fl-nav-item {% block nav_notifications %}{% endblock %}">
         <i data-lucide="bell"></i>
         <span>Notifications</span>
       </a>
 
-      <!-- 11. Settings -->
       <a href="{% url 'core:settings' %}" class="fl-nav-item {% block nav_settings %}{% endblock %}">
         <i data-lucide="settings"></i>
         <span>Settings</span>
@@ -150,23 +136,25 @@
 
     </nav>
 
-    <!-- Sidebar Bottom Actions -->
+    <!-- Sidebar Footer -->
     <div class="fl-sidebar-footer">
-      <a href="{% url 'core:logout' %}" class="btn-fl-secondary" style="justify-content:center;font-size:13px;padding:8px;">
-        <i data-lucide="log-out"></i>
-        <span>Sign Out</span>
-      </a>
+      <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="fl-nav-item" style="width:100%;background:none;border:none;cursor:pointer;color:var(--sidebar-text);">
+          <i data-lucide="log-out"></i>
+          <span>Sign Out</span>
+        </button>
+      </form>
     </div>
 
   </aside>
 
-  <!-- ══ MAIN CONTENT WRAPPER ═══════════════════════════════ -->
+  <!-- ══ MAIN WRAPPER ══════════════════════════════════════════ -->
   <div class="fl-main-wrapper">
-    
+
     <!-- Topbar -->
     <header class="fl-topbar">
-      
-      <div style="display:flex;align-items:center;gap:16px;">
+      <div style="display:flex;align-items:center;gap:14px;">
         <button class="hub-mobile-toggle" id="flSidebarToggle" aria-label="Toggle sidebar" style="display:none;">
           <i data-lucide="menu"></i>
         </button>
@@ -177,97 +165,89 @@
       </div>
 
       <div class="fl-topbar-actions">
-        <!-- Quick Browse CTA -->
+        <!-- Browse CTA -->
         <a href="{% url 'freelancer:find_projects' %}" class="btn-fl-primary" style="padding:8px 16px;font-size:13px;">
           <i data-lucide="search"></i>
-          <span>Browse Projects</span>
+          <span>Browse</span>
         </a>
 
-        <!-- Global Theme Switcher -->
-        <button class="hub-theme-toggle" id="flThemeToggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
-          <i data-lucide="sun" id="themeSun"></i>
-          <i data-lucide="moon" id="themeMoon" style="display:none;"></i>
+        <!-- Theme Toggle -->
+        <button class="hub-theme-toggle" id="flThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+          <i data-lucide="sun" id="flThemeSun"></i>
+          <i data-lucide="moon" id="flThemeMoon" style="display:none;"></i>
         </button>
 
-        <!-- User Quick Monogram -->
+        <!-- Avatar -->
         <a href="{% url 'freelancer:profile_view' %}" style="text-decoration:none;">
-          <div class="fl-user-avatar" style="width:36px;height:36px;font-size:14px;">
+          <div class="fl-user-avatar" style="width:36px;height:36px;font-size:13px;flex-shrink:0;">
             {{ freelancer_profile.full_name|slice:":1"|upper|default:"F" }}
           </div>
         </a>
       </div>
-
     </header>
 
     <!-- Content Body -->
     <main class="fl-content-body">
       {% if messages %}
-        <div style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="margin-bottom:18px;display:flex;flex-direction:column;gap:8px;">
           {% for message in messages %}
-            <div class="alert alert-{{ message.tags|default:'info' }}" style="padding: 12px 18px; border-radius: var(--r-md); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; background: {% if message.tags == 'success' %}rgba(34, 197, 94, 0.15){% elif message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.15){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.15){% else %}rgba(59, 130, 246, 0.15){% endif %}; border: 1px solid {% if message.tags == 'success' %}rgba(34, 197, 94, 0.3){% elif message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.3){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.3){% else %}rgba(59, 130, 246, 0.3){% endif %}; color: {% if message.tags == 'success' %}#4ade80{% elif message.tags == 'error' or message.tags == 'danger' %}#f87171{% elif message.tags == 'warning' %}#fbbf24{% else %}#60a5fa{% endif %};">
-              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}" style="width: 18px; height: 18px; flex-shrink: 0;"></i>
+            <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
+              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}" style="width:17px;height:17px;flex-shrink:0;"></i>
               <span>{{ message }}</span>
             </div>
           {% endfor %}
         </div>
       {% endif %}
+
       {% block content %}{% endblock %}
     </main>
 
   </div>
-
 </div>
 
-<!-- ══ SCRIPTS ═══════════════════════════════════════════ -->
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
 <script>
   function refreshIcons() {
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
+    if (typeof lucide !== 'undefined') lucide.createIcons();
   }
   document.addEventListener('DOMContentLoaded', refreshIcons);
   refreshIcons();
 
-  // Theme Management
-  const themeToggleBtn = document.getElementById('flThemeToggle');
-  const sunIcon = document.getElementById('themeSun');
-  const moonIcon = document.getElementById('themeMoon');
+  // ── Unified Theme ──
+  const THEME_KEY = 'freelancehub_theme';
 
-  function updateFreelancerTheme(theme) {
+  function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('freelancehub_freelancer_theme', theme);
-    localStorage.setItem('freelancehub_theme', theme);
-    if (sunIcon && moonIcon) {
-      if (theme === 'light') {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'inline-block';
-      } else {
-        sunIcon.style.display = 'inline-block';
-        moonIcon.style.display = 'none';
-      }
+    localStorage.setItem(THEME_KEY, theme);
+    const sun  = document.getElementById('flThemeSun');
+    const moon = document.getElementById('flThemeMoon');
+    if (sun && moon) {
+      sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
+      moon.style.display = theme === 'light' ? 'inline-block' : 'none';
     }
     refreshIcons();
   }
 
-  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-  updateFreelancerTheme(currentTheme);
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
 
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', () => {
-      const active = document.documentElement.getAttribute('data-theme');
-      const next = active === 'light' ? 'dark' : 'light';
-      updateFreelancerTheme(next);
+  const themeBtn = document.getElementById('flThemeToggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
     });
   }
 
-  // Mobile Sidebar Toggle
+  // ── Mobile Sidebar ──
   const sidebarToggle = document.getElementById('flSidebarToggle');
   const sidebar = document.getElementById('flSidebar');
   if (sidebarToggle && sidebar) {
-    sidebarToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-    });
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    if (window.innerWidth <= 768) sidebarToggle.style.display = 'flex';
   }
+
+  window.addEventListener('resize', () => {
+    if (sidebarToggle) sidebarToggle.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
+  });
 </script>
 
 {% block extra_js %}{% endblock %}

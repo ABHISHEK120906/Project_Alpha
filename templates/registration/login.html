@@ -1,173 +1,186 @@
 {% extends 'auth_base.html' %}
 {% block title %}Sign In — FreelanceHub{% endblock %}
-{% block meta_description %}Sign in to your FreelanceHub account. Access your Client workspace or Freelancer platform.{% endblock %}
+{% block meta_description %}Sign in to your FreelanceHub account to access your Client workspace or Freelancer platform.{% endblock %}
 
 {% block content %}
 
-<!-- Role Tabs -->
-<div class="auth-role-switcher">
-  <button type="button" class="auth-role-tab active-client" id="tabClientBtn" onclick="switchLoginRole('client')">
-    <i class="bi bi-building"></i> Client
+<!-- Header -->
+<div style="text-align:center; margin-bottom:28px;">
+  <h1 style="font-size:24px; font-weight:800; color:#FFFFFF; margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Welcome Back</h1>
+  <p style="font-size:13.5px; color:rgba(240,237,232,0.65); margin:0;">
+    Sign in to your <strong id="roleText" style="color:#D4A853;">Client Workspace</strong>
+  </p>
+</div>
+
+<!-- Role Switcher Tabs -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px; background:rgba(255,255,255,0.04); padding:4px; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
+  <button type="button" id="tabClientBtn" onclick="switchRole('client')"
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:8px; border:1px solid #D4A853; background:rgba(212,168,83,0.18); color:#D4A853; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
+    <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
   </button>
-  <button type="button" class="auth-role-tab" id="tabFreelancerBtn" onclick="switchLoginRole('freelancer')">
-    <i class="bi bi-person-badge"></i> Freelancer
+  <button type="button" id="tabFreelancerBtn" onclick="switchRole('freelancer')"
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:8px; border:1px solid transparent; background:transparent; color:rgba(240,237,232,0.6); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
+    <i data-lucide="search" style="width:15px;height:15px;"></i> Freelancer
   </button>
 </div>
 
-<h1 class="auth-heading" id="authTitle">Welcome back</h1>
-<p class="auth-subheading" id="authSub">Sign in to your <strong style="color:var(--role-client);" id="roleText">Client Workspace</strong></p>
-
+<!-- Messages -->
 {% if messages %}
   {% for message in messages %}
-  <div class="auth-alert auth-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}error{% else %}info{% endif %}" style="padding:12px 16px; border-radius:var(--r-md); margin-bottom:16px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171;">
-    <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %}"></i>
-    <span>{{ message }}</span>
-  </div>
+    <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
+      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
+      <span>{{ message }}</span>
+    </div>
   {% endfor %}
 {% endif %}
 
+{% if form.non_field_errors %}
+  {% for error in form.non_field_errors %}
+    <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
+      <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
+      <span>{{ error }}</span>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Login Form -->
 <form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate>
   {% csrf_token %}
   <input type="hidden" name="login_type" value="user">
 
-  {% if form.non_field_errors %}
-    {% for error in form.non_field_errors %}
-    <div class="auth-alert auth-alert-error">
-      <i class="bi bi-exclamation-triangle-fill"></i>
-      <span>{{ error }}</span>
-    </div>
-    {% endfor %}
-  {% endif %}
-
   <!-- Username -->
-  <div class="auth-form-group">
-    <label class="auth-label" for="id_username">Username</label>
+  <div class="form-group" style="margin-bottom:18px;">
+    <label for="id_username" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:rgba(240,237,232,0.7);">Username</label>
     <div style="position:relative;">
-      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;">
-        <i class="bi bi-person-fill"></i>
+      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#D4A853; pointer-events:none;">
+        <i data-lucide="user" style="width:16px;height:16px;"></i>
       </span>
-      <input
-        type="text"
-        name="username"
-        id="id_username"
-        class="auth-input"
-        style="padding-left: 42px;"
+      <input type="text" name="username" id="id_username" class="form-control"
+        style="width:100%; padding:12px 14px 12px 42px; background:rgba(7,11,17,0.7); border:1px solid rgba(212,168,83,0.25); border-radius:12px; color:#FFFFFF; font-size:14px; outline:none;"
         placeholder="Enter your username"
-        required
-        autocomplete="username"
-        autofocus
-        value="{{ request.POST.username|default:'' }}"
-      >
+        required autocomplete="username" autofocus
+        value="{{ request.POST.username|default:'' }}">
     </div>
     {% if form.username.errors %}
-      <div style="color:var(--role-client-red);font-size:12px;margin-top:4px;">{{ form.username.errors.0 }}</div>
+      <div class="form-error" style="color:#F08080; font-size:12px; margin-top:5px;">{{ form.username.errors.0 }}</div>
     {% endif %}
   </div>
 
   <!-- Password -->
-  <div class="auth-form-group">
-    <label class="auth-label" for="id_password">Password</label>
+  <div class="form-group" style="margin-bottom:20px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;">
+      <label for="id_password" style="margin:0; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:rgba(240,237,232,0.7);">Password</label>
+      <a href="{% url 'core:password_reset' %}" style="font-size:12px; color:#D4A853; font-weight:600; text-decoration:none;">Forgot password?</a>
+    </div>
     <div style="position:relative;">
-      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;">
-        <i class="bi bi-lock-fill"></i>
+      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#D4A853; pointer-events:none;">
+        <i data-lucide="lock" style="width:16px;height:16px;"></i>
       </span>
-      <input
-        type="password"
-        name="password"
-        id="id_password"
-        class="auth-input"
-        style="padding-left: 42px; padding-right: 44px;"
+      <input type="password" name="password" id="id_password" class="form-control"
+        style="width:100%; padding:12px 44px 12px 42px; background:rgba(7,11,17,0.7); border:1px solid rgba(212,168,83,0.25); border-radius:12px; color:#FFFFFF; font-size:14px; outline:none;"
         placeholder="Enter your password"
-        required
-        autocomplete="current-password"
-      >
+        required autocomplete="current-password">
       <button type="button" id="togglePwd" aria-label="Toggle password visibility"
-              style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0;">
-        <i class="bi bi-eye" id="pwdIcon"></i>
+        style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(240,237,232,0.5); cursor:pointer; padding:0; display:flex; align-items:center;">
+        <i data-lucide="eye" id="pwdIcon" style="width:16px;height:16px;"></i>
       </button>
     </div>
     {% if form.password.errors %}
-      <div style="color:var(--role-client-red);font-size:12px;margin-top:4px;">{{ form.password.errors.0 }}</div>
+      <div class="form-error" style="color:#F08080; font-size:12px; margin-top:5px;">{{ form.password.errors.0 }}</div>
     {% endif %}
   </div>
 
-  <!-- Forgot password -->
-  <div style="text-align:right;margin-top:-6px;margin-bottom:18px;">
-    <a href="{% url 'core:password_reset' %}" style="font-size:12.5px;color:var(--text-muted);font-weight:600;transition:color 0.2s;"
-       onmouseover="this.style.color='var(--brand-secondary)'" onmouseout="this.style.color='var(--text-muted)'">Forgot password?</a>
-  </div>
-
-  <button type="submit" class="auth-btn" id="loginSubmitBtn">
-    <i class="bi bi-box-arrow-in-right"></i>
-    <span>Sign In</span>
+  <!-- Submit -->
+  <button type="submit" id="loginSubmitBtn"
+    style="width:100%; padding:13px 20px; border-radius:12px; border:none; background:linear-gradient(135deg, #D4A853 0%, #B8892A 100%); color:#0D0F14; font-size:14.5px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 20px rgba(212,168,83,0.35); transition:all 0.2s ease;">
+    <i data-lucide="log-in" style="width:17px;height:17px;"></i>
+    <span>Sign In to Workspace</span>
   </button>
 </form>
 
-<div class="auth-divider"><span>New to FreelanceHub?</span></div>
+<!-- Divider -->
+<div style="display:flex; align-items:center; gap:12px; margin:24px 0;">
+  <div style="flex:1; height:1px; background:rgba(255,255,255,0.08);"></div>
+  <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:rgba(240,237,232,0.4);">New to FreelanceHub?</span>
+  <div style="flex:1; height:1px; background:rgba(255,255,255,0.08);"></div>
+</div>
 
-<div style="display:flex;flex-direction:column;gap:10px;" id="registerButtonsGroup">
-  <a href="{% url 'marketplace:client_register' %}" class="btn-create-account" id="registerClientLink" style="border-color:rgba(125,60,255,0.35);color:#a78bfa;">
-    <i class="bi bi-building"></i>
+<!-- Register CTA -->
+<div style="display:flex; flex-direction:column; gap:10px;">
+  <a href="{% url 'marketplace:client_register' %}"
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:12px; border:1px solid rgba(212,168,83,0.25); background:rgba(212,168,83,0.06); color:#D4A853; font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
+    <i data-lucide="briefcase" style="width:16px;height:16px;"></i>
     <span>Create Client Account (Post Projects)</span>
   </a>
-  <a href="{% url 'core:register' %}" class="btn-create-account" id="registerFreelancerLink" style="border-color:rgba(255,94,108,0.35);color:#ffaaab;">
-    <i class="bi bi-person-badge"></i>
+  <a href="{% url 'core:register' %}"
+    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); background:transparent; color:rgba(240,237,232,0.8); font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
+    <i data-lucide="search" style="width:16px;height:16px;"></i>
     <span>Create Freelancer Account (Find Work)</span>
   </a>
 </div>
 
-<!-- Admin Login Link -->
-<div style="text-align:center;margin-top:24px;">
+<!-- Admin Link -->
+<div style="text-align:center; margin-top:20px;">
   <a href="{% url 'core:admin_login' %}"
-     style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);padding:6px 14px;border:1px solid var(--border-subtle);border-radius:8px;transition:all 0.2s;text-decoration:none;"
-     onmouseover="this.style.color='var(--brand-secondary)';this.style.borderColor='var(--brand-secondary)'"
-     onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='var(--border-subtle)'">
-    <i class="bi bi-shield-lock-fill"></i> Platform Administrator Login
+    style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:rgba(240,237,232,0.5); text-decoration:none; transition:color 0.2s;">
+    <i data-lucide="shield" style="width:13px;height:13px; color:#D4A853;"></i>
+    <span>Platform Administrator Login</span>
   </a>
 </div>
 
 <script>
-function switchLoginRole(role) {
-  const clientBtn = document.getElementById('tabClientBtn');
-  const freelancerBtn = document.getElementById('tabFreelancerBtn');
-  const roleText = document.getElementById('roleText');
-  const submitBtn = document.getElementById('loginSubmitBtn');
+  function switchRole(role) {
+    const clientBtn     = document.getElementById('tabClientBtn');
+    const freelancerBtn = document.getElementById('tabFreelancerBtn');
+    const roleText      = document.getElementById('roleText');
 
-  if (role === 'freelancer') {
-    clientBtn.className = 'auth-role-tab';
-    freelancerBtn.className = 'auth-role-tab active-freelancer';
-    roleText.textContent = 'Freelancer Portal';
-    roleText.style.color = 'var(--role-freelancer)';
-  } else {
-    clientBtn.className = 'auth-role-tab active-client';
-    freelancerBtn.className = 'auth-role-tab';
-    roleText.textContent = 'Client Workspace';
-    roleText.style.color = 'var(--role-client)';
-  }
-}
+    if (role === 'freelancer') {
+      clientBtn.style.border = '1px solid transparent';
+      clientBtn.style.background = 'transparent';
+      clientBtn.style.color = 'rgba(240,237,232,0.6)';
 
-(function() {
-  const btn = document.getElementById('togglePwd');
-  const input = document.getElementById('id_password');
-  const icon = document.getElementById('pwdIcon');
-  if (btn && input && icon) {
-    btn.addEventListener('click', function() {
-      const visible = input.type === 'text';
-      input.type = visible ? 'password' : 'text';
-      icon.className = visible ? 'bi bi-eye' : 'bi bi-eye-slash';
-    });
+      freelancerBtn.style.border = '1px solid #D4A853';
+      freelancerBtn.style.background = 'rgba(212,168,83,0.18)';
+      freelancerBtn.style.color = '#D4A853';
+
+      roleText.textContent = 'Freelancer Portal';
+    } else {
+      clientBtn.style.border = '1px solid #D4A853';
+      clientBtn.style.background = 'rgba(212,168,83,0.18)';
+      clientBtn.style.color = '#D4A853';
+
+      freelancerBtn.style.border = '1px solid transparent';
+      freelancerBtn.style.background = 'transparent';
+      freelancerBtn.style.color = 'rgba(240,237,232,0.6)';
+
+      roleText.textContent = 'Client Workspace';
+    }
+    if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
-  const form = document.getElementById('userLoginForm');
-  const submitBtn = document.getElementById('loginSubmitBtn');
-  if (form && submitBtn) {
-    form.addEventListener('submit', function() {
-      submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Authenticating…';
-      submitBtn.style.pointerEvents = 'none';
-      submitBtn.style.opacity = '0.8';
-    });
-  }
-})();
+  (function() {
+    const btn   = document.getElementById('togglePwd');
+    const input = document.getElementById('id_password');
+    const icon  = document.getElementById('pwdIcon');
+    if (btn && input && icon) {
+      btn.addEventListener('click', function() {
+        const vis = input.type === 'text';
+        input.type = vis ? 'password' : 'text';
+        icon.setAttribute('data-lucide', vis ? 'eye' : 'eye-off');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      });
+    }
+
+    const form = document.getElementById('userLoginForm');
+    const sb   = document.getElementById('loginSubmitBtn');
+    if (form && sb) {
+      form.addEventListener('submit', function() {
+        sb.innerHTML = '<span>Authenticating…</span>';
+        sb.style.opacity = '0.75';
+        sb.style.pointerEvents = 'none';
+      });
+    }
+  })();
 </script>
 
 {% endblock %}

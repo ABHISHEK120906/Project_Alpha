@@ -2,401 +2,188 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+  <!-- FOUC prevention -->
+  <script>
+    (function(){
+      try {
+        var t = localStorage.getItem('freelancehub_theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        else document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch(e) {}
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{{ page_title|default:"Platform Governance & Admin" }} — FreelanceHub Admin{% endblock %}</title>
+  <title>{% block title %}{{ page_title|default:"Platform Governance" }} — FreelanceHub Admin{% endblock %}</title>
 
-  <!-- Canonical Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239bc400'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%23120e20'/></svg>">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
 
-  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Lucide Icons CDN -->
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <!-- Main + Admin Shared Design System -->
+  <!-- FreelanceHub Unified Design System -->
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" href="{% static 'css/public_landing.css' %}">
-
-  <!-- Zero-FOUC Theme Initializer -->
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('freelancehub_admin_theme') || localStorage.getItem('freelancehub_theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-      }
-    })();
-  </script>
-
-  <style>
-    /* Admin UI Shared Brand Tokens: #9bc400, #8076a3, #f9c5bd, #7c677f */
-    :root, [data-theme="dark"] {
-      --admin-brand-green: #9bc400;
-      --admin-brand-purple: #8076a3;
-      --admin-brand-pink: #f9c5bd;
-      --admin-brand-stone: #7c677f;
-      --admin-bg-base: #0b0914;
-      --admin-bg-surface: #120e20;
-      --admin-bg-card: #181427;
-      --admin-bg-card-hover: #201a34;
-      --admin-border: rgba(128, 118, 163, 0.22);
-      --admin-border-subtle: rgba(128, 118, 163, 0.12);
-      --admin-text-primary: #f8fafc;
-      --admin-text-secondary: #c4bcd8;
-      --admin-text-muted: #8076a3;
-    }
-
-    [data-theme="light"] {
-      --admin-bg-base: #f5f3f9;
-      --admin-bg-surface: #ffffff;
-      --admin-bg-card: #ffffff;
-      --admin-bg-card-hover: #fcfbfe;
-      --admin-border: rgba(124, 103, 127, 0.18);
-      --admin-border-subtle: rgba(124, 103, 127, 0.1);
-      --admin-text-primary: #151122;
-      --admin-text-secondary: #4a405e;
-      --admin-text-muted: #7c677f;
-    }
-
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background-color: var(--admin-bg-base);
-      color: var(--admin-text-primary);
-      min-height: 100vh;
-      display: flex;
-    }
-
-    .admin-sidebar {
-      width: 260px;
-      position: fixed;
-      top: 0; left: 0; bottom: 0;
-      background: var(--admin-bg-surface);
-      border-right: 1px solid var(--admin-border);
-      z-index: 1040;
-      display: flex;
-      flex-direction: column;
-      transition: transform var(--ease-smooth);
-    }
-
-    .admin-brand {
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      border-bottom: 1px solid var(--admin-border);
-    }
-
-    .admin-brand-badge {
-      background: linear-gradient(135deg, var(--admin-brand-purple), var(--admin-brand-green));
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #0b0914;
-      font-size: 18px;
-      box-shadow: 0 2px 10px rgba(155, 196, 0, 0.35);
-    }
-
-    .admin-nav {
-      padding: 1rem 0.75rem;
-      overflow-y: auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .admin-nav-item {
-      padding: 9px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--admin-text-secondary);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 13.5px;
-      border-radius: 10px;
-      transition: all var(--ease-fast);
-    }
-
-    .admin-nav-item [data-lucide] {
-      color: var(--admin-text-muted);
-      width: 17px;
-      height: 17px;
-      transition: color var(--ease-fast);
-    }
-
-    .admin-nav-item:hover, .admin-nav-item.active {
-      color: #ffffff;
-      background: rgba(155, 196, 0, 0.14);
-    }
-
-    .admin-nav-item:hover [data-lucide], .admin-nav-item.active [data-lucide] {
-      color: var(--admin-brand-green);
-    }
-
-    .admin-nav-label {
-      font-size: 10.5px;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--admin-text-muted);
-      padding: 12px 14px 4px;
-      font-weight: 800;
-    }
-
-    .admin-main {
-      margin-left: 260px;
-      padding: 2rem 2.5rem;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .admin-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.5rem;
-      background: var(--admin-bg-card);
-      border: 1px solid var(--admin-border);
-      border-radius: 14px;
-      margin-bottom: 2rem;
-    }
-
-    .admin-card {
-      background: var(--admin-bg-card);
-      border: 1px solid var(--admin-border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .admin-kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .admin-kpi-card {
-      background: var(--admin-bg-card);
-      border: 1px solid var(--admin-border);
-      border-radius: 14px;
-      padding: 18px 16px;
-      transition: transform var(--ease-fast), border-color var(--ease-fast);
-    }
-
-    .admin-kpi-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--admin-brand-green);
-    }
-
-    .admin-kpi-val {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      margin-top: 8px;
-    }
-
-    .admin-kpi-label {
-      font-size: 11.5px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--admin-text-muted);
-    }
-
-    @media (max-width: 1200px) {
-      .admin-kpi-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .admin-sidebar {
-        transform: translateX(-100%);
-      }
-      .admin-sidebar.open {
-        transform: translateX(0);
-      }
-      .admin-main {
-        margin-left: 0;
-        padding: 1rem;
-      }
-      .admin-kpi-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 
   {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body style="background:var(--bg-canvas);color:var(--text-primary);font-family:'Inter',system-ui,sans-serif;margin:0;display:flex;min-height:100vh;">
 
-  <!-- ══ ADMIN SIDEBAR (SAME BRAND AS MAIN PAGE) ═════════════ -->
+  <!-- ══ ADMIN SIDEBAR ══════════════════════════════════════════ -->
   <aside class="admin-sidebar" id="adminSidebar">
-    
+
     <!-- Brand -->
     <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-brand">
-      <div class="admin-brand-badge"><i data-lucide="layers"></i></div>
+      <div class="admin-brand-badge">
+        <i data-lucide="layers"></i>
+      </div>
       <div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:16px; color:var(--admin-text-primary);">FreelanceHub</div>
-        <div style="font-size:10px; font-weight:800; color:var(--admin-brand-green); letter-spacing:1px;">Platform Administration</div>
+        <div class="admin-brand-name">FreelanceHub</div>
+        <div class="admin-brand-sub">ADMIN PANEL</div>
       </div>
     </a>
 
-    <!-- Navigation Items (Exact Required Lucide Icons) -->
-    <nav class="admin-nav">
-      
-      <div class="admin-nav-label">Overview</div>
+    <!-- Navigation -->
+    <nav class="admin-nav" aria-label="Admin navigation">
+
+      <p class="admin-nav-section">OVERVIEW</p>
       <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        <i data-lucide="layout-dashboard"></i>
-        <span>Dashboard</span>
+        <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
       </a>
 
-      <div class="admin-nav-label">User Management</div>
+      <p class="admin-nav-section">USER MANAGEMENT</p>
       <a href="{% url 'marketplace_admin:users_list' %}" class="admin-nav-item {% if 'users' in request.path %}active{% endif %}">
-        <i data-lucide="users"></i>
-        <span>Users</span>
+        <i data-lucide="users"></i><span>All Users</span>
       </a>
       <a href="{% url 'marketplace_admin:users_list' %}?role=client" class="admin-nav-item">
-        <i data-lucide="briefcase"></i>
-        <span>Clients</span>
+        <i data-lucide="briefcase"></i><span>Clients</span>
       </a>
       <a href="{% url 'marketplace_admin:users_list' %}?role=freelancer" class="admin-nav-item">
-        <i data-lucide="user-check"></i>
-        <span>Freelancers</span>
+        <i data-lucide="user-check"></i><span>Freelancers</span>
       </a>
 
-      <div class="admin-nav-label">Marketplace Oversight</div>
+      <p class="admin-nav-section">MARKETPLACE</p>
       <a href="{% url 'marketplace_admin:projects_list' %}" class="admin-nav-item {% if 'projects' in request.path %}active{% endif %}">
-        <i data-lucide="folder-kanban"></i>
-        <span>Projects</span>
+        <i data-lucide="folder-kanban"></i><span>Projects</span>
       </a>
       <a href="{% url 'marketplace_admin:applications_list' %}" class="admin-nav-item {% if 'applications' in request.path %}active{% endif %}">
-        <i data-lucide="clipboard-check"></i>
-        <span>Applications</span>
+        <i data-lucide="clipboard-check"></i><span>Applications</span>
       </a>
       <a href="{% url 'marketplace_admin:reports_list' %}" class="admin-nav-item">
-        <i data-lucide="shield-check"></i>
-        <span>Verification Queue</span>
+        <i data-lucide="shield-check"></i><span>Verification Queue</span>
       </a>
 
-      <div class="admin-nav-label">Reports &amp; Support</div>
+      <p class="admin-nav-section">REPORTS & SUPPORT</p>
       <a href="{% url 'marketplace_admin:reports_list' %}" class="admin-nav-item {% if 'reports' in request.path %}active{% endif %}">
-        <i data-lucide="bar-chart-3"></i>
-        <span>Reports</span>
+        <i data-lucide="bar-chart-3"></i><span>Reports</span>
       </a>
       <a href="{% url 'marketplace_admin:support_list' %}" class="admin-nav-item {% if 'support' in request.path %}active{% endif %}">
-        <i data-lucide="life-buoy"></i>
-        <span>Support</span>
+        <i data-lucide="life-buoy"></i><span>Support</span>
       </a>
       <a href="{% url 'marketplace_admin:analytics' %}" class="admin-nav-item {% if 'analytics' in request.path %}active{% endif %}">
-        <i data-lucide="activity"></i>
-        <span>Activity</span>
+        <i data-lucide="activity"></i><span>Activity</span>
       </a>
 
-      <div class="admin-nav-label">System</div>
+      <p class="admin-nav-section">SYSTEM</p>
       <a href="{% url 'core:settings' %}" class="admin-nav-item">
-        <i data-lucide="settings"></i>
-        <span>Settings</span>
+        <i data-lucide="settings"></i><span>Settings</span>
       </a>
 
     </nav>
 
-    <!-- Sidebar Bottom Actions -->
-    <div style="padding: 16px; border-top: 1px solid var(--admin-border);">
-      <a href="{% url 'core:logout' %}" class="btn-hub-ghost" style="justify-content: center; width: 100%; font-size: 13px;">
-        <i data-lucide="log-out"></i>
-        <span>Sign Out</span>
-      </a>
+    <!-- Sidebar Footer -->
+    <div style="padding:12px 10px;border-top:1px solid var(--sidebar-border,rgba(212,168,83,0.1));flex-shrink:0;">
+      <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" class="admin-nav-item" style="width:100%;background:none;border:none;cursor:pointer;">
+          <i data-lucide="log-out"></i><span>Sign Out</span>
+        </button>
+      </form>
     </div>
 
   </aside>
 
-  <!-- ══ ADMIN MAIN VIEW ═════════════════════════════════════ -->
-  <main class="admin-main">
-    
+  <!-- ══ ADMIN MAIN VIEW ════════════════════════════════════════ -->
+  <main class="admin-main" style="margin-left:260px;flex:1;display:flex;flex-direction:column;padding:24px;">
+
     <!-- Topbar -->
-    <header class="admin-topbar">
+    <header class="admin-topbar" style="margin-bottom:24px;">
       <div>
-        <h1 style="font-size: 18px; font-weight: 800; color: var(--admin-text-primary); margin: 0;">
-          {% block page_title %}Platform Overview{% endblock %}
-        </h1>
-        <div style="font-size: 12px; color: var(--admin-text-muted); margin-top: 2px;">
-          FreelanceHub Central Platform Governance &amp; Administration
+        <h1 class="admin-topbar-title">{% block page_title %}Platform Overview{% endblock %}</h1>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+          {% block page_subtitle %}FreelanceHub Central Platform Governance & Administration{% endblock %}
         </div>
       </div>
 
-      <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="display:flex;align-items:center;gap:10px;">
         <!-- Theme Toggle -->
-        <button class="hub-theme-toggle" id="adminThemeToggle" title="Toggle Light / Dark Mode">
+        <button class="hub-theme-toggle" id="adminThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
           <i data-lucide="sun" id="adminThemeSun"></i>
           <i data-lucide="moon" id="adminThemeMoon" style="display:none;"></i>
         </button>
 
-        <a href="{% url 'core:home' %}" class="btn-hub-ghost" style="font-size: 13px;">
-          <i data-lucide="globe"></i>
-          <span>View Public Hub</span>
+        <a href="{% url 'core:home' %}" class="btn-hub-secondary" style="font-size:12.5px;padding:7px 14px;">
+          <i data-lucide="globe"></i><span>View Public Hub</span>
         </a>
       </div>
     </header>
 
-    <!-- Body -->
+    <!-- Messages -->
+    {% if messages %}
+      <div style="margin-bottom:18px;display:flex;flex-direction:column;gap:8px;">
+        {% for message in messages %}
+          <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
+            <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}" style="width:17px;height:17px;flex-shrink:0;"></i>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Content -->
     {% block content %}{% endblock %}
 
   </main>
 
-  <!-- ══ SCRIPTS ═══════════════════════════════════════════ -->
+  <!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
   <script>
     function refreshIcons() {
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }
     document.addEventListener('DOMContentLoaded', refreshIcons);
     refreshIcons();
 
-    // Theme Switcher
-    const adminToggle = document.getElementById('adminThemeToggle');
-    const adminSun = document.getElementById('adminThemeSun');
-    const adminMoon = document.getElementById('adminThemeMoon');
+    // ── Unified Theme ──
+    const THEME_KEY = 'freelancehub_theme';
 
-    function updateAdminTheme(theme) {
+    function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('freelancehub_admin_theme', theme);
-      localStorage.setItem('freelancehub_theme', theme);
-      if (adminSun && adminMoon) {
-        if (theme === 'light') {
-          adminSun.style.display = 'none';
-          adminMoon.style.display = 'inline-block';
-        } else {
-          adminSun.style.display = 'inline-block';
-          adminMoon.style.display = 'none';
-        }
+      localStorage.setItem(THEME_KEY, theme);
+      const sun  = document.getElementById('adminThemeSun');
+      const moon = document.getElementById('adminThemeMoon');
+      if (sun && moon) {
+        sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
+        moon.style.display = theme === 'light' ? 'inline-block' : 'none';
       }
       refreshIcons();
     }
 
-    const saved = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateAdminTheme(saved);
+    applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
 
-    if (adminToggle) {
-      adminToggle.addEventListener('click', () => {
-        const active = document.documentElement.getAttribute('data-theme');
-        const next = active === 'light' ? 'dark' : 'light';
-        updateAdminTheme(next);
+    const themeBtn = document.getElementById('adminThemeToggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
       });
     }
   </script>

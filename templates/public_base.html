@@ -2,47 +2,50 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+  <!-- FOUC prevention: set theme before paint -->
+  <script>
+    (function(){
+      try {
+        var t = localStorage.getItem('freelancehub_theme');
+        if (t === 'light' || t === 'dark') {
+          document.documentElement.setAttribute('data-theme', t);
+        } else {
+          var d = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{% block meta_description %}FreelanceHub is a premier freelancing marketplace connecting clients with verified freelancers for high-impact project delivery.{% endblock %}">
+  <meta name="description" content="{% block meta_description %}FreelanceHub — Premier freelancing marketplace connecting clients with verified talent.{% endblock %}">
   <title>{% block title %}FreelanceHub — Where Great Projects Meet Great Talent{% endblock %}</title>
 
-  <!-- Canonical Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239bc400'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%2313101e'/></svg>">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
 
-  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Lucide Icons CDN -->
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Public & Admin Shared Design System -->
+  <!-- FreelanceHub Unified Design System -->
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" href="{% static 'css/public_landing.css' %}">
-
-  <!-- Zero-FOUC Theme Initializer -->
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('freelancehub_theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-      } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-      }
-    })();
-  </script>
 
   {% block extra_head %}{% endblock %}
 </head>
 <body>
 
-  <!-- ══ CINEMATIC OVERLAY NAVBAR ═══════════════════════════ -->
+  <!-- ══ NAVBAR ════════════════════════════════════════════════ -->
   <header class="hub-navbar" id="hubNavbar" role="banner">
     <div class="pub-container hub-nav-wrap">
-      
-      <!-- Left: Logo & Wordmark -->
+
+      <!-- Brand -->
       <a href="{% url 'core:home' %}" class="hub-brand" aria-label="FreelanceHub Home">
         <div class="hub-brand-badge">
           <i data-lucide="layers"></i>
@@ -50,260 +53,203 @@
         <span class="hub-brand-name">FreelanceHub</span>
       </a>
 
-      <!-- Center: Navigation Links -->
+      <!-- Desktop Nav Links -->
       <nav class="hub-nav-menu" role="navigation" aria-label="Main Navigation">
-        <a href="{% url 'core:home' %}" class="hub-nav-link">
-          <span>Home</span>
-        </a>
-        <a href="#how-it-works" class="hub-nav-link">
-          <span>How It Works</span>
-        </a>
-        <a href="#browse-projects" class="hub-nav-link">
-          <span>Browse Projects</span>
-        </a>
-        <a href="#find-freelancers" class="hub-nav-link">
-          <span>Find Freelancers</span>
-        </a>
+        <a href="{% url 'core:home' %}" class="hub-nav-link">Home</a>
+        <a href="#how-it-works" class="hub-nav-link">How It Works</a>
+        <a href="#browse-projects" class="hub-nav-link">Browse Projects</a>
+        <a href="#find-freelancers" class="hub-nav-link">Find Freelancers</a>
       </nav>
 
-      <!-- Right: Actions & Theme Toggle -->
+      <!-- Actions -->
       <div class="hub-nav-actions">
-        
-        <!-- Sign In Link -->
-        <a href="{% url 'core:login' %}" class="hub-nav-link" style="font-weight:700;">
-          <span>Sign In</span>
-        </a>
-
-        <!-- Get Started / Role Action -->
+        <a href="{% url 'core:login' %}" class="hub-nav-link" style="font-weight:700;">Sign In</a>
         <a href="#role-selection" class="btn-hub-get-started">
           <span>Get Started</span>
           <i data-lucide="arrow-right"></i>
         </a>
 
         <!-- Theme Toggle -->
-        <button class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle light or dark theme" title="Toggle Light / Dark Mode">
+        <button class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle light or dark theme" title="Toggle Theme">
           <i data-lucide="sun" id="themeIconSun"></i>
           <i data-lucide="moon" id="themeIconMoon" style="display:none;"></i>
         </button>
 
-        <!-- Mobile Drawer Toggle -->
-        <button class="hub-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <!-- Mobile Toggle -->
+        <button class="hub-mobile-toggle" id="mobileMenuToggle" aria-label="Open menu" aria-expanded="false">
           <i data-lucide="menu"></i>
         </button>
-
       </div>
 
     </div>
   </header>
 
-  <!-- ══ MOBILE NAVIGATION DRAWER ═════════════════════════ -->
-  <div class="hub-mobile-drawer" id="mobileDrawer" role="dialog" aria-modal="true">
-    <div class="hub-drawer-inner">
-      <div class="hub-drawer-nav">
-        <a href="{% url 'core:home' %}" class="hub-drawer-link">
-          <i data-lucide="home"></i> Home
-        </a>
-        <a href="#how-it-works" class="hub-drawer-link">
-          <i data-lucide="git-merge"></i> How It Works
-        </a>
-        <a href="#browse-projects" class="hub-drawer-link">
-          <i data-lucide="folder-kanban"></i> Browse Projects
-        </a>
-        <a href="#find-freelancers" class="hub-drawer-link">
-          <i data-lucide="users"></i> Find Freelancers
-        </a>
-        <a href="#role-selection" class="hub-drawer-link">
-          <i data-lucide="layout-grid"></i> Choose Role
-        </a>
-        <a href="#trust" class="hub-drawer-link">
-          <i data-lucide="shield-check"></i> Trust &amp; Security
-        </a>
-      </div>
+  <!-- ══ MOBILE DRAWER ════════════════════════════════════════ -->
+  <div class="hub-drawer-overlay" id="drawerOverlay"></div>
+  <div class="hub-mobile-drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Navigation">
+    <button class="hub-drawer-close" id="drawerClose" aria-label="Close menu">
+      <i data-lucide="x"></i>
+    </button>
 
-      <div class="hub-drawer-actions">
-        <a href="{% url 'marketplace:client_register' %}" class="btn-hero-primary-client" style="justify-content:center;padding:12px;font-size:14px;">
-          <i data-lucide="briefcase"></i> Post a Project
-        </a>
-        <a href="{% url 'freelancer:register' %}" class="btn-hero-secondary-freelancer" style="justify-content:center;padding:12px;font-size:14px;">
-          <i data-lucide="search"></i> Find Work
-        </a>
-        <a href="{% url 'core:login' %}" class="btn-hub-ghost" style="justify-content:center;padding:12px;font-size:14px;">
-          <i data-lucide="log-in"></i> Sign In to Account
-        </a>
-      </div>
+    <!-- Brand in drawer -->
+    <div style="display:flex;align-items:center;gap:10px;padding-bottom:20px;border-bottom:1px solid rgba(212,168,83,0.12);margin-bottom:16px;">
+      <div class="hub-brand-badge" style="width:32px;height:32px;"><i data-lucide="layers"></i></div>
+      <span style="font-size:16px;font-weight:800;color:#F0EDE8;font-family:'Plus Jakarta Sans',sans-serif;">FreelanceHub</span>
+    </div>
+
+    <a href="{% url 'core:home' %}" class="hub-nav-link"><i data-lucide="home"></i> Home</a>
+    <a href="#how-it-works" class="hub-nav-link"><i data-lucide="git-merge"></i> How It Works</a>
+    <a href="#browse-projects" class="hub-nav-link"><i data-lucide="folder-kanban"></i> Browse Projects</a>
+    <a href="#find-freelancers" class="hub-nav-link"><i data-lucide="users"></i> Find Freelancers</a>
+    <a href="#role-selection" class="hub-nav-link"><i data-lucide="layout-grid"></i> Choose Role</a>
+
+    <div style="margin-top:auto;padding-top:20px;border-top:1px solid rgba(212,168,83,0.1);display:flex;flex-direction:column;gap:10px;">
+      <a href="{% url 'marketplace:client_register' %}" class="btn-hub-primary" style="justify-content:center;">
+        <i data-lucide="briefcase"></i> Post a Project
+      </a>
+      <a href="{% url 'freelancer:register' %}" class="btn-hub-secondary" style="justify-content:center;">
+        <i data-lucide="search"></i> Find Work
+      </a>
+      <a href="{% url 'core:login' %}" class="btn-hub-ghost" style="justify-content:center;">
+        <i data-lucide="log-in"></i> Sign In
+      </a>
     </div>
   </div>
 
-  <!-- ══ MAIN PAGE CONTENT ═════════════════════════════════ -->
-  <main id="main-content">
+  <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+  <main id="main-content" style="padding-top:64px;">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- ══ PREMIUM FOOTER ═══════════════════════════════════ -->
+  <!-- ══ FOOTER ════════════════════════════════════════════════ -->
   <footer class="hub-footer" role="contentinfo">
     <div class="pub-container">
-      
+
       <div class="hub-footer-grid">
-        
-        <!-- Col 1: Brand Info -->
-        <div class="hub-footer-brand-info">
-          <a href="{% url 'core:home' %}" class="hub-brand">
-            <div class="hub-brand-badge">
-              <i data-lucide="layers"></i>
-            </div>
+
+        <!-- Brand -->
+        <div class="hub-footer-brand">
+          <a href="{% url 'core:home' %}" class="hub-brand" style="margin-bottom:12px;display:inline-flex;">
+            <div class="hub-brand-badge"><i data-lucide="layers"></i></div>
             <span class="hub-brand-name">FreelanceHub</span>
           </a>
-          <p class="hub-footer-desc">
-            A premium freelancing marketplace connecting clients with verified talent for high-impact project delivery.
-          </p>
-          <div class="hub-footer-status-pill">
-            <span class="status-indicator-dot"></span>
-            <span>All Marketplace Systems Operational</span>
+          <p>A premium freelancing marketplace connecting clients with verified talent for high-impact project delivery.</p>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:16px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:#4CAF7A;display:inline-block;"></span>
+            <span style="font-size:12px;color:var(--text-muted);font-weight:600;">All Systems Operational</span>
           </div>
         </div>
 
-        <!-- Col 2: Platform -->
+        <!-- Platform -->
         <div>
           <h4 class="hub-footer-col-title">Platform</h4>
-          <ul class="hub-footer-links">
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#browse-projects">Browse Projects</a></li>
-            <li><a href="#find-freelancers">Find Freelancers</a></li>
-            <li><a href="#role-selection">Choose Your Role</a></li>
-          </ul>
+          <div class="hub-footer-links">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#browse-projects">Browse Projects</a>
+            <a href="#find-freelancers">Find Freelancers</a>
+            <a href="#role-selection">Choose Your Role</a>
+          </div>
         </div>
 
-        <!-- Col 3: For Clients -->
+        <!-- Clients -->
         <div>
           <h4 class="hub-footer-col-title">For Clients</h4>
-          <ul class="hub-footer-links">
-            <li><a href="{% url 'marketplace:client_register' %}">Post a Project</a></li>
-            <li><a href="{% url 'core:login' %}">My Projects</a></li>
-            <li><a href="{% url 'core:login' %}">Review Applications</a></li>
-          </ul>
+          <div class="hub-footer-links">
+            <a href="{% url 'marketplace:client_register' %}">Post a Project</a>
+            <a href="{% url 'core:login' %}">My Projects</a>
+            <a href="{% url 'core:login' %}">Review Applications</a>
+            <a href="{% url 'core:login' %}">Payments</a>
+          </div>
         </div>
 
-        <!-- Col 4: For Freelancers -->
+        <!-- Freelancers -->
         <div>
           <h4 class="hub-footer-col-title">For Freelancers</h4>
-          <ul class="hub-footer-links">
-            <li><a href="{% url 'freelancer:register' %}">Browse Projects</a></li>
-            <li><a href="{% url 'core:login' %}">My Applications</a></li>
-            <li><a href="{% url 'core:login' %}">Verification Center</a></li>
-          </ul>
-        </div>
-
-        <!-- Col 5: Support & Legal -->
-        <div>
-          <h4 class="hub-footer-col-title">Support &amp; Legal</h4>
-          <ul class="hub-footer-links">
-            <li><a href="{% url 'core:admin_login' %}">Admin Portal</a></li>
-            <li><a href="#trust">Help &amp; Trust</a></li>
-            <li><a href="{% url 'core:login' %}">Reports &amp; Disputes</a></li>
-            <li><a href="{% url 'core:login' %}">Privacy &amp; Terms</a></li>
-          </ul>
+          <div class="hub-footer-links">
+            <a href="{% url 'freelancer:register' %}">Browse Projects</a>
+            <a href="{% url 'core:login' %}">My Applications</a>
+            <a href="{% url 'core:login' %}">Verification Center</a>
+            <a href="{% url 'core:login' %}">Payments</a>
+          </div>
         </div>
 
       </div>
 
       <!-- Footer Bottom -->
       <div class="hub-footer-bottom">
-        <div>
-          &copy; 2026 FreelanceHub Inc. All rights reserved. Professional Freelance Marketplace.
-        </div>
-        <div class="hub-footer-bottom-links">
-          <span>Client &bull; Freelancer &bull; Admin</span>
-          <span>Verified Escrow Security</span>
+        <span class="hub-footer-copy">&copy; 2026 FreelanceHub. Professional Freelance Marketplace.</span>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <a href="{% url 'core:admin_login' %}" style="font-size:12px;color:var(--text-muted);font-weight:600;">Admin Portal</a>
+          <span style="font-size:12px;color:var(--text-muted);">Verified · Secure · Professional</span>
         </div>
       </div>
 
     </div>
   </footer>
 
-  <!-- ══ INTERACTIVE SCRIPTS ═══════════════════════════════ -->
+  <!-- ══ SCRIPTS ═══════════════════════════════════════════════ -->
   <script>
+    // ── Icon Init ──
     function refreshIcons() {
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }
     document.addEventListener('DOMContentLoaded', refreshIcons);
     refreshIcons();
 
-    // 1. Theme Management (Dark / Light toggle)
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-    const sunIcon = document.getElementById('themeIconSun');
-    const moonIcon = document.getElementById('themeIconMoon');
+    // ── Unified Theme Management ──
+    const THEME_KEY = 'freelancehub_theme';
 
-    function updateThemeUI(theme) {
+    function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('freelancehub_theme', theme);
-      if (sunIcon && moonIcon) {
-        if (theme === 'light') {
-          sunIcon.style.display = 'none';
-          moonIcon.style.display = 'inline-block';
-        } else {
-          sunIcon.style.display = 'inline-block';
-          moonIcon.style.display = 'none';
-        }
+      localStorage.setItem(THEME_KEY, theme);
+      const sun  = document.getElementById('themeIconSun');
+      const moon = document.getElementById('themeIconMoon');
+      if (sun && moon) {
+        sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
+        moon.style.display = theme === 'light' ? 'inline-block' : 'none';
       }
       refreshIcons();
     }
 
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateThemeUI(currentTheme);
+    const initTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(initTheme);
 
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', () => {
-        const active = document.documentElement.getAttribute('data-theme');
-        const nextTheme = active === 'light' ? 'dark' : 'light';
-        updateThemeUI(nextTheme);
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
       });
     }
 
-    // 2. Navbar Scroll Behavior
+    // ── Navbar Scroll ──
     const navbar = document.getElementById('hubNavbar');
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 20) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    });
+      navbar && navbar.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
 
-    // 3. Mobile Navigation Drawer Toggle
-    const mobileToggle = document.getElementById('mobileMenuToggle');
-    const mobileDrawer = document.getElementById('mobileDrawer');
+    // ── Mobile Drawer ──
+    const mobileToggle  = document.getElementById('mobileMenuToggle');
+    const mobileDrawer  = document.getElementById('mobileDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose   = document.getElementById('drawerClose');
 
-    if (mobileToggle && mobileDrawer) {
-      mobileToggle.addEventListener('click', () => {
-        const isOpen = mobileDrawer.classList.toggle('open');
-        mobileToggle.setAttribute('aria-expanded', isOpen);
-      });
+    function openDrawer()  { mobileDrawer.classList.add('open'); drawerOverlay.classList.add('open'); mobileToggle.setAttribute('aria-expanded','true'); }
+    function closeDrawer() { mobileDrawer.classList.remove('open'); drawerOverlay.classList.remove('open'); mobileToggle.setAttribute('aria-expanded','false'); }
 
-      mobileDrawer.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          mobileDrawer.classList.remove('open');
-          mobileToggle.setAttribute('aria-expanded', 'false');
-        });
-      });
-    }
+    if (mobileToggle)  mobileToggle.addEventListener('click', openDrawer);
+    if (drawerClose)   drawerClose.addEventListener('click', closeDrawer);
+    if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+    if (mobileDrawer)  mobileDrawer.querySelectorAll('a').forEach(l => l.addEventListener('click', closeDrawer));
 
-    // 4. Smooth Anchor Scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
+    // ── Smooth Scroll ──
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
-        if (href === '#' || !href) return;
-        const target = document.querySelector(href);
-        if (target) {
+        if (!href || href === '#') return;
+        const t = document.querySelector(href);
+        if (t) {
           e.preventDefault();
-          const topOffset = 80;
-          const elementPosition = target.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - topOffset;
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
+          window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
         }
       });
     });

@@ -4,112 +4,140 @@
 
 {% block content %}
 
-<!-- Role Tabs with direct navigation -->
-<div class="auth-role-switcher">
-  <a href="{% url 'marketplace:client_register' %}" class="auth-role-tab">
-    <i class="bi bi-building"></i> Client
-  </a>
-  <a href="{% url 'core:register' %}" class="auth-role-tab active-freelancer">
-    <i class="bi bi-person-badge"></i> Freelancer
-  </a>
-</div>
+<div class="auth-card animate-slide-up">
 
-<h1 class="auth-heading">Join as Freelancer</h1>
-<p class="auth-subheading">Create your profile, complete verification &amp; discover work</p>
-
-{% if messages %}
-  {% for message in messages %}
-  <div class="auth-alert auth-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}error{% else %}info{% endif %}">
-    <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %}"></i>
-    <span>{{ message }}</span>
+  <!-- Brand -->
+  <div class="auth-card-header">
+    <div class="auth-brand-badge">
+      <i data-lucide="search"></i>
+    </div>
+    <h1 style="font-size:22px;font-weight:800;color:var(--text-primary);margin-bottom:6px;">Join as Freelancer</h1>
+    <p style="font-size:13.5px;color:var(--text-muted);">Create your profile, complete verification &amp; discover work</p>
   </div>
-  {% endfor %}
-{% endif %}
 
-<form method="post" action="{% url 'core:register' %}" id="registerForm" novalidate>
-  {% csrf_token %}
+  <!-- Role Tabs -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;">
+    <a href="{% url 'marketplace:client_register' %}"
+      style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:var(--r-md);border:2px solid var(--border-color);background:transparent;color:var(--text-muted);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;text-decoration:none;">
+      <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
+    </a>
+    <a href="{% url 'core:register' %}"
+      style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:var(--r-md);border:2px solid var(--hub-gold);background:var(--hub-gold-soft);color:var(--hub-gold);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;text-decoration:none;">
+      <i data-lucide="search" style="width:15px;height:15px;"></i> Freelancer
+    </a>
+  </div>
 
-  {% for field in form %}
-  <div class="auth-form-group">
-    <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-    <div style="position:relative;">
-      {% if field.name == 'username' %}
-        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;"><i class="bi bi-person-fill"></i></span>
-        {{ field }}
-        <style>#{{ field.id_for_label }} { padding-left: 42px; width:100%; padding-top:12px; padding-bottom:12px; background:var(--bg-input); border:1px solid var(--border-card); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:inherit; outline:none; transition:border-color 0.2s, box-shadow 0.2s; } #{{ field.id_for_label }}:focus { border-color:var(--role-freelancer); box-shadow:0 0 0 3px rgba(255,94,108,0.18); }</style>
-      {% elif 'password' in field.name %}
-        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;"><i class="bi bi-lock-fill"></i></span>
-        {{ field }}
-        <style>#{{ field.id_for_label }} { padding-left: 42px; padding-right: 44px; width:100%; padding-top:12px; padding-bottom:12px; background:var(--bg-input); border:1px solid var(--border-card); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:inherit; outline:none; transition:border-color 0.2s, box-shadow 0.2s; } #{{ field.id_for_label }}:focus { border-color:var(--role-freelancer); box-shadow:0 0 0 3px rgba(255,94,108,0.18); }</style>
-        <button type="button" data-target="{{ field.html_name }}" class="pwd-toggle-btn" aria-label="Toggle password"
-                style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0;">
-          <i class="bi bi-eye"></i>
-        </button>
-      {% else %}
-        {{ field }}
-        <style>#{{ field.id_for_label }} { width:100%; padding:12px 16px; background:var(--bg-input); border:1px solid var(--border-card); border-radius:10px; color:var(--text-primary); font-size:14px; font-family:inherit; outline:none; transition:border-color 0.2s, box-shadow 0.2s; } #{{ field.id_for_label }}:focus { border-color:var(--role-freelancer); box-shadow:0 0 0 3px rgba(255,94,108,0.18); }</style>
+  <!-- Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
+        <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
+        <span>{{ message }}</span>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Register Form -->
+  <form method="post" action="{% url 'core:register' %}" id="registerForm" novalidate>
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      <div style="position:relative;">
+        {% if field.name == 'username' %}
+          <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;">
+            <i data-lucide="user" style="width:15px;height:15px;"></i>
+          </span>
+          <input type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
+            class="form-control" style="padding-left:40px;"
+            placeholder="Choose a username" autocomplete="username"
+            value="{{ field.value|default:'' }}">
+        {% elif 'password' in field.name %}
+          <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;">
+            <i data-lucide="lock" style="width:15px;height:15px;"></i>
+          </span>
+          <input type="password" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
+            class="form-control" style="padding-left:40px;padding-right:44px;"
+            placeholder="{{ field.label }}" autocomplete="new-password">
+          <button type="button" data-target="{{ field.html_name }}" class="pwd-toggle-btn" aria-label="Toggle password"
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;display:flex;align-items:center;">
+            <i data-lucide="eye" style="width:16px;height:16px;"></i>
+          </button>
+        {% elif field.name == 'email' %}
+          <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;">
+            <i data-lucide="mail" style="width:15px;height:15px;"></i>
+          </span>
+          <input type="email" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
+            class="form-control" style="padding-left:40px;"
+            placeholder="Your email address" autocomplete="email"
+            value="{{ field.value|default:'' }}">
+        {% else %}
+          {{ field }}
+        {% endif %}
+      </div>
+
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <div class="form-error">
+            <i data-lucide="alert-circle" style="width:12px;height:12px;"></i> {{ error }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% if field.help_text %}
+        <div class="form-text">{{ field.help_text }}</div>
       {% endif %}
     </div>
+    {% endfor %}
 
-    {% if field.errors %}
-    <div style="margin-top:4px;">
-      {% for error in field.errors %}
-      <div style="color:var(--role-freelancer);font-size:12px;display:flex;align-items:center;gap:4px;">
-        <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
+    <!-- Submit -->
+    <button type="submit" id="registerSubmitBtn" class="btn-hub-primary btn-lg" style="width:100%;justify-content:center;margin-top:4px;">
+      <i data-lucide="user-plus" style="width:17px;height:17px;"></i>
+      <span>Create Freelancer Account</span>
+    </button>
 
-    {% if field.help_text %}
-    <div style="font-size:11.5px;color:var(--text-muted);margin-top:4px;">{{ field.help_text }}</div>
-    {% endif %}
+  </form>
+
+  <!-- Divider -->
+  <div class="hub-divider-label" style="margin-top:20px;">
+    <span>Already Registered?</span>
   </div>
-  {% endfor %}
 
-  <button type="submit" class="auth-btn" id="registerSubmitBtn" style="background:linear-gradient(135deg, var(--role-freelancer), #e04754); color:#ffffff !important; box-shadow:0 4px 18px rgba(255,94,108,0.35);">
-    <i class="bi bi-person-plus-fill"></i>
-    <span>Create Freelancer Account</span>
-  </button>
-</form>
+  <a href="{% url 'core:login' %}" class="btn-hub-secondary" style="justify-content:center;margin-top:12px;">
+    <i data-lucide="log-in" style="width:15px;height:15px;"></i> Sign In to Existing Account
+  </a>
 
-<div class="auth-divider"><span>Already Registered?</span></div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;font-size:12px;color:var(--text-muted);">
+    <i data-lucide="shield-check" style="width:13px;height:13px;color:var(--hub-gold);"></i>
+    <span>Multi-tier KYC verification unlocks full proposal capabilities.</span>
+  </div>
 
-<a href="{% url 'core:login' %}" class="btn-create-account">
-  <i class="bi bi-box-arrow-in-right"></i>
-  <span>Sign In to Existing Account</span>
-</a>
-
-<div style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:20px; display:flex; align-items:center; justify-content:center; gap:6px;">
-  <i class="bi bi-shield-check" style="color:var(--role-freelancer);"></i>
-  <span>Multi-tier KYC verification unlocks full proposal capabilities.</span>
 </div>
 
 <script>
-(function() {
   document.querySelectorAll('.pwd-toggle-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       const input = document.querySelector('[name="' + this.dataset.target + '"]');
-      const icon = this.querySelector('i');
-      if (input) {
+      const icon  = this.querySelector('[data-lucide]');
+      if (input && icon) {
         const isPass = input.type === 'password';
         input.type = isPass ? 'text' : 'password';
-        icon.className = isPass ? 'bi bi-eye-slash' : 'bi bi-eye';
-        input.focus();
+        icon.setAttribute('data-lucide', isPass ? 'eye-off' : 'eye');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
       }
     });
   });
 
   const form = document.getElementById('registerForm');
-  const btn = document.getElementById('registerSubmitBtn');
+  const btn  = document.getElementById('registerSubmitBtn');
   if (form && btn) {
     form.addEventListener('submit', function() {
-      btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating account…';
+      btn.innerHTML = '<span>Creating account…</span>';
+      btn.style.opacity = '0.75';
       btn.style.pointerEvents = 'none';
-      btn.style.opacity = '0.8';
     });
   }
-})();
 </script>
 
 {% endblock %}

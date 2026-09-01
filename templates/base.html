@@ -1,345 +1,410 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+  <!-- FOUC prevention — read unified key -->
   <script>
-    (function() {
+    (function(){
       try {
-        var saved = localStorage.getItem('theme') || (localStorage.getItem('darkMode') === '1' ? 'dark' : (localStorage.getItem('darkMode') === '0' ? 'light' : null));
-        var theme = saved;
-        if (!theme) {
-          theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        document.documentElement.setAttribute('data-theme', theme);
-      } catch (e) {}
+        var t = localStorage.getItem('freelancehub_theme')
+               || (localStorage.getItem('theme'));
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        else document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch(e) {}
     })();
   </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FreelanceHub — Professional Freelancing Marketplace. Connect, collaborate, and manage projects.">
-  <title>{% block title %}FreelanceHub — Workspace{% endblock %}</title>
+  <meta name="description" content="FreelanceHub — Professional Freelancing Workspace. Manage projects, clients, tasks, and finances.">
+  <title>{% block title %}FreelanceHub{% endblock %}</title>
 
-  <!-- Google Fonts: Inter -->
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap 5 (SRI verified) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-        crossorigin="anonymous">
+  <!-- Lucide Icons (primary) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Font Awesome 6 (SRI verified) -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer">
+  <!-- Font Awesome 6 (compat for views using fa-* classes) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 
-  <!-- Chart.js 4.4.0 with Fallback -->
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- Chart.js 4 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script>
-    if (typeof Chart === 'undefined') {
-      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"><\/script>');
-    }
-  </script>
 
-  <!-- Paper-Cut Design System CSS -->
+  <!-- FreelanceHub Unified Design System -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
 
   {% block extra_css %}{% endblock %}
+  {% block extra_head %}{% endblock %}
 </head>
-
 <body>
-<!-- Subtle paper-cut ambient glow for dashboard pages -->
+
+<!-- Ambient background layer for authenticated workspace -->
 <div class="dashboard-ambient" aria-hidden="true"></div>
 
 {% if user.is_authenticated %}
-<!-- ════════════════════════════════════════════════
-     AUTHENTICATED LAYOUT
-     ════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════
+     AUTHENTICATED WORKSPACE LAYOUT
+     ══════════════════════════════════════════════════════════ -->
 
-<!-- Sidebar Overlay (mobile) -->
+<!-- Mobile overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- Sidebar -->
-<aside class="sidebar" id="mainSidebar">
+<aside class="sidebar" id="mainSidebar" role="navigation" aria-label="Workspace navigation">
 
-  <!-- Brand Header -->
-  <a href="{% url 'core:dashboard' %}" class="sidebar-brand">
+  <!-- Brand -->
+  <a href="{% url 'core:dashboard' %}" class="sidebar-brand" aria-label="FreelanceHub home">
     <div class="sidebar-brand-icon">
-      <i class="fas fa-briefcase"></i>
+      <i data-lucide="layers"></i>
     </div>
     <div>
       <div class="sidebar-brand-text">FreelanceHub</div>
-      <div class="sidebar-brand-sub">Freelancer Workspace</div>
+      <div class="sidebar-brand-sub">Workspace Pro</div>
     </div>
   </a>
 
-  <!-- Navigation Links (5 Structured Groups) -->
+  <!-- Navigation -->
   <nav class="sidebar-nav" aria-label="Main navigation">
-    
-    <!-- 1. OVERVIEW -->
+
     <p class="sidebar-section-label">Overview</p>
-    <a href="{% url 'core:dashboard' %}"
-       class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <i class="fas fa-chart-line nav-icon"></i>
+
+    <a href="{% url 'core:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
       <span>Executive Dashboard</span>
     </a>
 
-    <!-- 2. MANAGEMENT -->
     <p class="sidebar-section-label">Management</p>
-    <a href="{% url 'core:project_list' %}"
-       class="sidebar-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-folder nav-icon"></i>
+
+    <a href="{% url 'core:project_list' %}" class="sidebar-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="folder-kanban"></i></span>
       <span>Projects</span>
     </a>
 
-    <a href="{% url 'core:client_list' %}"
-       class="sidebar-link {% if 'client' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-users nav-icon"></i>
+    <a href="{% url 'core:client_list' %}" class="sidebar-link {% if 'client' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="users"></i></span>
       <span>Clients</span>
     </a>
 
-    <a href="{% url 'core:payment_list' %}"
-       class="sidebar-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-dollar-sign nav-icon"></i>
+    <a href="{% url 'core:payment_list' %}" class="sidebar-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="credit-card"></i></span>
       <span>Payments</span>
     </a>
 
-    <a href="{% url 'core:invoice_list' %}"
-       class="sidebar-link {% if 'invoice' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-file-invoice-dollar nav-icon"></i>
+    <a href="{% url 'core:invoice_list' %}" class="sidebar-link {% if 'invoice' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="file-text"></i></span>
       <span>Invoices</span>
     </a>
 
-    <a href="{% url 'core:task_list' %}"
-       class="sidebar-link {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-check-circle nav-icon"></i>
+    <a href="{% url 'core:task_list' %}" class="sidebar-link {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="check-circle-2"></i></span>
       <span>Tasks</span>
     </a>
 
-    <a href="{% url 'core:income_expense_tracker' %}"
-       class="sidebar-link {% if 'income' in request.resolver_match.url_name or 'finances' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-wallet nav-icon"></i>
+    <a href="{% url 'core:income_expense_tracker' %}" class="sidebar-link {% if 'income' in request.resolver_match.url_name or 'finances' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="wallet"></i></span>
       <span>Finances</span>
     </a>
 
-    <a href="{% url 'core:calendar_view' %}"
-       class="sidebar-link {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-calendar-alt nav-icon"></i>
+    <a href="{% url 'core:calendar_view' %}" class="sidebar-link {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="calendar"></i></span>
       <span>Calendar</span>
     </a>
 
-    <a href="{% url 'core:file_manager' %}"
-       class="sidebar-link {% if 'file' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-paperclip nav-icon"></i>
+    <a href="{% url 'core:file_manager' %}" class="sidebar-link {% if 'file' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="paperclip"></i></span>
       <span>File Manager</span>
     </a>
 
-    <!-- 3. INTELLIGENCE -->
     <p class="sidebar-section-label">Intelligence</p>
-    <a href="{% url 'core:analytics_workspace' %}"
-       class="sidebar-link {% if 'analytics' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-chart-pie nav-icon"></i>
+
+    <a href="{% url 'core:analytics_workspace' %}" class="sidebar-link {% if 'analytics' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
       <span>Data Analytics</span>
     </a>
 
-    <a href="{% url 'core:data_science_workspace' %}"
-       class="sidebar-link {% if 'data_science' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-microchip nav-icon"></i>
+    <a href="{% url 'core:data_science_workspace' %}" class="sidebar-link {% if 'data_science' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="cpu"></i></span>
       <span>Data Science</span>
     </a>
 
-    <a href="{% url 'core:chat_home' %}"
-       class="sidebar-link {% if 'chat' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-robot nav-icon"></i>
-      <span>AI Assistant (TrackBot)</span>
+    <a href="{% url 'core:chat_home' %}" class="sidebar-link {% if 'chat' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="bot"></i></span>
+      <span>TrackBot AI</span>
     </a>
 
-    <!-- 4. REPORTING -->
     <p class="sidebar-section-label">Reporting</p>
-    <a href="{% url 'core:reports_dashboard' %}"
-       class="sidebar-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-file-waveform nav-icon"></i>
+
+    <a href="{% url 'core:reports_dashboard' %}" class="sidebar-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="file-bar-chart-2"></i></span>
       <span>Reports Hub</span>
     </a>
 
-    <!-- 5. SYSTEM -->
     <p class="sidebar-section-label">System</p>
-    <a href="{% url 'core:activity_list' %}"
-       class="sidebar-link {% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-history nav-icon"></i>
+
+    <a href="{% url 'core:activity_list' %}" class="sidebar-link {% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="activity"></i></span>
       <span>Activity Log</span>
     </a>
 
-    <a href="{% url 'core:note_list' %}"
-       class="sidebar-link {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-sticky-note nav-icon"></i>
+    <a href="{% url 'core:note_list' %}" class="sidebar-link {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="sticky-note"></i></span>
       <span>Notes</span>
     </a>
 
-    <a href="{% url 'core:profile_view' %}"
-       class="sidebar-link {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-user-circle nav-icon"></i>
+    <a href="{% url 'core:profile_view' %}" class="sidebar-link {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="user-circle"></i></span>
       <span>My Profile</span>
     </a>
 
-    <a href="{% url 'core:settings' %}"
-       class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fas fa-cog nav-icon"></i>
+    <a href="{% url 'core:settings' %}" class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
+      <span class="nav-icon"><i data-lucide="settings"></i></span>
       <span>Settings</span>
     </a>
+
   </nav>
 
-  <!-- Sidebar Intelligence Positioning Card -->
-  <div class="sidebar-promo" style="background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.25);border-radius:12px;padding:12px;margin:16px 12px;">
-    <h6 style="color:#a78bfa;font-size:12px;font-weight:700;margin-bottom:2px;">FreelanceHub Active</h6>
-    <p style="color:var(--text-muted);font-size:11px;margin:0;">Discover &bull; Apply &bull; Deliver &bull; Earn</p>
+  <!-- Sidebar Promo Card -->
+  <div class="sidebar-promo">
+    <div style="font-size:11px;font-weight:800;color:var(--hub-gold);margin-bottom:3px;">FreelanceHub Active</div>
+    <div style="font-size:11px;color:var(--text-muted);">Discover · Apply · Deliver · Earn</div>
   </div>
 
-  <!-- Sidebar User Profile Footer -->
+  <!-- Sidebar User Footer -->
   <div class="sidebar-footer">
     <a href="{% url 'core:profile_view' %}" class="sidebar-user" style="text-decoration:none;">
       {% if user.profile and user.profile.profile_picture %}
-        <img src="{{ user.profile.profile_picture.url }}" class="sidebar-avatar" style="object-fit:cover;width:36px;height:36px;border-radius:50%;">
+        <img src="{{ user.profile.profile_picture.url }}" class="sidebar-avatar" style="object-fit:cover;width:36px;height:36px;border-radius:50%;" alt="{{ user.username }}">
       {% else %}
         <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
       {% endif %}
       <div>
-        <div style="font-size:13.5px;font-weight:700;color:#ffffff;">{{ user.get_full_name|default:user.username }}</div>
-        <div style="font-size:12px;font-weight:500;color:#ffffff;">Freelancer</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text-primary);">{{ user.get_full_name|default:user.username }}</div>
+        <div style="font-size:11.5px;color:var(--text-muted);">Workspace Pro</div>
       </div>
     </a>
-    <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
+    <form method="post" action="{% url 'core:logout' %}" style="margin:0;margin-top:6px;">
       {% csrf_token %}
-      <button type="submit" class="sidebar-link mt-2 w-100 text-start"
-              style="color:#ffffff;font-weight:600;background:none;border:none;cursor:pointer;padding:0;">
-        <i class="fas fa-sign-out-alt nav-icon"></i>
+      <button type="submit" class="sidebar-link" style="width:100%;background:none;border:none;cursor:pointer;color:var(--sidebar-text);justify-content:flex-start;">
+        <span class="nav-icon"><i data-lucide="log-out"></i></span>
         <span>Log Out</span>
       </button>
     </form>
   </div>
+
 </aside>
 
-<!-- Main Content Area -->
+<!-- Main Content -->
 <div class="main-content">
 
-  <!-- Top Bar -->
+  <!-- Topbar -->
   <header class="topbar">
-    <div class="d-flex align-items-center gap-3">
+    <div style="display:flex;align-items:center;gap:12px;">
       <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-        <i class="fas fa-bars"></i>
+        <i data-lucide="menu"></i>
       </button>
-      <div>
-        <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
-      </div>
+      <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
     </div>
 
-    <!-- Global Search Input -->
-    <form action="{% url 'core:global_search' %}" method="get" class="topbar-search d-none d-md-block" style="margin:0;">
-      <i class="fas fa-search search-icon"></i>
-      <input type="text" name="q" placeholder="Search projects, clients, tasks, invoices..." value="{{ request.GET.q|default:'' }}" aria-label="Search">
+    <!-- Search -->
+    <form action="{% url 'core:global_search' %}" method="get" class="topbar-search" style="margin:0;">
+      <span class="search-icon"><i data-lucide="search"></i></span>
+      <input type="text" name="q" placeholder="Search projects, clients, tasks..." value="{{ request.GET.q|default:'' }}" aria-label="Search">
     </form>
 
-    <div class="topbar-actions d-flex align-items-center gap-2">
-      <!-- Theme Toggle Switch -->
-      <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle light and dark theme" title="Toggle Light / Dark Mode">
-        <span class="theme-toggle-icon sun"><i class="fas fa-sun"></i></span>
-        <span class="theme-toggle-icon moon"><i class="fas fa-moon"></i></span>
-        <span class="theme-toggle-thumb"></span>
-        <input type="checkbox" id="themeToggle" aria-label="Theme toggle" style="display:none;">
+    <div class="topbar-actions">
+      <!-- Notifications -->
+      <a href="{% url 'core:notifications_list' %}" class="topbar-btn" title="Notifications" id="notifBellBtn" style="position:relative;">
+        <i data-lucide="bell"></i>
+        <span id="notifBadge" style="display:none;position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--danger);border:2px solid var(--bg-canvas);"></span>
+      </a>
+
+      <!-- Theme Toggle -->
+      <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+        <i data-lucide="sun" id="themeIconSun"></i>
+        <i data-lucide="moon" id="themeIconMoon" style="display:none;"></i>
       </button>
 
-      <!-- Notifications Bell Icon -->
-      <a href="{% url 'core:notifications_list' %}" class="topbar-btn position-relative" title="Notifications" id="notifBellBtn">
-        <i class="fas fa-bell"></i>
-        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="notifBadge" style="display:none;"></span>
+      <!-- Profile -->
+      <a href="{% url 'core:profile_view' %}" class="topbar-btn" title="Profile">
+        <i data-lucide="user-circle"></i>
       </a>
 
-      <!-- Profile Link -->
-      <a href="{% url 'core:profile_view' %}" class="topbar-btn" title="My Profile">
-        <i class="fas fa-user"></i>
-      </a>
-
-      <!-- Quick New Project Action Button -->
-      <a href="{% url 'core:project_create' %}" class="topbar-btn" title="Create New Project">
-        <i class="fas fa-plus"></i>
+      <!-- Quick Create -->
+      <a href="{% url 'core:project_create' %}" class="topbar-btn" title="New Project">
+        <i data-lucide="plus"></i>
       </a>
     </div>
   </header>
 
-  <!-- Page Content Area -->
+  <!-- Page Content -->
   <main class="page-content">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Floating Speed-Dial Quick Action Button (FAB) -->
+  <!-- FAB -->
   <div class="fab-wrapper" id="fabWrapper">
-    <div class="fab-menu">
+    <div class="fab-menu" id="fabMenu">
       <a href="{% url 'core:project_create' %}" class="fab-item" title="New Project">
         <span class="fab-label">New Project</span>
-        <div class="fab-icon-btn"><i class="fas fa-folder-plus"></i></div>
+        <div class="fab-icon-btn"><i data-lucide="folder-plus"></i></div>
       </a>
       <a href="{% url 'core:client_create' %}" class="fab-item" title="New Client">
         <span class="fab-label">New Client</span>
-        <div class="fab-icon-btn"><i class="fas fa-user-plus"></i></div>
+        <div class="fab-icon-btn"><i data-lucide="user-plus"></i></div>
       </a>
-      <a href="{% url 'core:payment_create' %}" class="fab-item" title="Record Payment">
+      <a href="{% url 'core:payment_create' %}" class="fab-item" title="Log Payment">
         <span class="fab-label">Log Payment</span>
-        <div class="fab-icon-btn"><i class="fas fa-dollar-sign"></i></div>
+        <div class="fab-icon-btn"><i data-lucide="credit-card"></i></div>
       </a>
       <a href="{% url 'core:task_create' %}" class="fab-item" title="New Task">
         <span class="fab-label">New Task</span>
-        <div class="fab-icon-btn"><i class="fas fa-check"></i></div>
+        <div class="fab-icon-btn"><i data-lucide="check-circle-2"></i></div>
       </a>
       <a href="{% url 'core:note_create' %}" class="fab-item" title="New Note">
         <span class="fab-label">New Note</span>
-        <div class="fab-icon-btn"><i class="fas fa-sticky-note"></i></div>
+        <div class="fab-icon-btn"><i data-lucide="sticky-note"></i></div>
       </a>
     </div>
     <button class="fab-main-btn" id="fabToggleBtn" aria-label="Quick Actions">
-      <i class="fas fa-plus"></i>
+      <i data-lucide="plus"></i>
     </button>
   </div>
 
-  </div><!-- /.main-content -->
+</div><!-- /.main-content -->
 
-  <!-- TrackBot Floating AI Assistant Button -->
-  <a href="{% url 'core:chat_home' %}" class="chatbot-fab" id="chatbotFab" title="Ask TrackBot" aria-label="Open AI Assistant">
-    <i class="fas fa-robot"></i>
-    <span class="chatbot-fab-pulse"></span>
-  </a>
+<!-- TrackBot AI Chatbot FAB -->
+<a href="{% url 'core:chat_home' %}" class="chatbot-fab" id="chatbotFab" title="TrackBot AI" aria-label="Open AI Assistant">
+  <i data-lucide="bot"></i>
+  <span class="chatbot-fab-pulse"></span>
+</a>
 
 {% else %}
-<!-- ════════════════════════════════════════════════
-     UNAUTHENTICATED LAYOUT
-     ════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════
+     UNAUTHENTICATED / AUTH PAGE LAYOUT
+     ══════════════════════════════════════════════════════════ -->
 {% block auth_content %}{% endblock %}
 {% endif %}
 
-<!-- Toast Container for Notifications -->
+<!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Hidden Message Carriers -->
+<!-- Message Bridges (for JS toast rendering) -->
 {% if messages %}
   {% for message in messages %}
     <div data-toast="{{ message }}" data-toast-type="{{ message.tags }}" style="display:none;"></div>
   {% endfor %}
 {% endif %}
 
-<!-- Bootstrap 5 JS Bundle (SRI verified) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
-<!-- Application JS -->
+<!-- App JS -->
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/visualization_studio.js' %}"></script>
 
-<!-- TrackBot Chatbot styles (loaded globally for FAB button) -->
-<link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+<script>
+  // ── Icon Init ──
+  function refreshIcons() {
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+  document.addEventListener('DOMContentLoaded', refreshIcons);
+  refreshIcons();
+
+  // ── Unified Theme ──
+  const THEME_KEY = 'freelancehub_theme';
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+    localStorage.setItem('theme', theme); // legacy compat
+    const sun  = document.getElementById('themeIconSun');
+    const moon = document.getElementById('themeIconMoon');
+    if (sun && moon) {
+      sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
+      moon.style.display = theme === 'light' ? 'inline-block' : 'none';
+    }
+    refreshIcons();
+  }
+
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
+  const themeBtn = document.getElementById('themeToggleBtn');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    });
+  }
+
+  // ── Sidebar Toggle ──
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const mainSidebar = document.getElementById('mainSidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+  if (sidebarToggle && mainSidebar) {
+    function toggleSidebar() { mainSidebar.classList.toggle('open'); sidebarOverlay && sidebarOverlay.classList.toggle('active'); }
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay && sidebarOverlay.addEventListener('click', toggleSidebar);
+  }
+
+  // ── FAB Quick Actions ──
+  const fabToggle = document.getElementById('fabToggleBtn');
+  const fabMenu = document.getElementById('fabMenu');
+  if (fabToggle && fabMenu) {
+    fabToggle.addEventListener('click', () => {
+      fabMenu.classList.toggle('open');
+      fabToggle.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#fabWrapper')) {
+        fabMenu.classList.remove('open');
+        fabToggle.classList.remove('open');
+      }
+    });
+  }
+
+  // ── Toast System ──
+  function showToast(msg, type) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    const cls = type === 'success' ? 'toast-success' : type === 'error' || type === 'danger' ? 'toast-error' : type === 'warning' ? 'toast-warning' : 'toast-info';
+    toast.className = 'toast-notification ' + cls;
+    toast.innerHTML = `<span>${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 350); }, 4000);
+  }
+
+  document.querySelectorAll('[data-toast]').forEach(el => {
+    const msg = el.getAttribute('data-toast');
+    const type = el.getAttribute('data-toast-type');
+    if (msg) showToast(msg, type);
+  });
+
+  // ── Notification Badge ──
+  function checkNotifications() {
+    fetch('/notifications/unread-count/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(r => r.json())
+      .then(data => {
+        const badge = document.getElementById('notifBadge');
+        if (badge) badge.style.display = data.count > 0 ? 'block' : 'none';
+      }).catch(() => {});
+  }
+
+  if (document.getElementById('notifBellBtn')) {
+    checkNotifications();
+    setInterval(checkNotifications, 60000);
+  }
+</script>
 
 {% block extra_js %}{% endblock %}
 
