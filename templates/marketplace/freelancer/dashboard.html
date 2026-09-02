@@ -23,20 +23,29 @@
         </div>
         <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; color: var(--fl-text-primary); margin-top: 2px;">
           {% if is_verified %}
-            <span style="color: var(--fl-status-verified);">✓ Verified Professional Talent</span>
+            <span style="color: var(--fl-status-verified); display: inline-flex; align-items: center; gap: 6px;">
+              <i data-lucide="check-circle-2" style="width: 17px; height: 17px;"></i> Verified Professional Talent
+            </span>
           {% elif verification.final_verification_status == 'pending_admin_review' %}
-            <span style="color: var(--fl-yellow);">⏳ Submitted — Pending Admin Review</span>
+            <span style="color: var(--fl-yellow); display: inline-flex; align-items: center; gap: 6px;">
+              <i data-lucide="clock" style="width: 17px; height: 17px;"></i> Submitted — Pending Admin Review
+            </span>
           {% else %}
-            <span style="color: var(--fl-coral);">Verification Incomplete (Required to apply)</span>
+            <span style="color: var(--fl-coral); display: inline-flex; align-items: center; gap: 6px;">
+              <i data-lucide="alert-circle" style="width: 17px; height: 17px;"></i> Verification Incomplete (Required to apply)
+            </span>
           {% endif %}
         </div>
-        <div style="font-size: 12.5px; color: var(--fl-text-secondary); margin-top: 4px;">
-          Checkpoints: <strong style="color: var(--fl-yellow);">{{ verification.get_completed_steps_count|default:"0" }}/6 Complete</strong>
-          &nbsp;&bull;&nbsp;
-          Email {% if verification.email_verified %}<span style="color:var(--fl-status-verified);">✓</span>{% else %}<span style="color:var(--fl-coral);">✕</span>{% endif %} &nbsp;|&nbsp;
-          Phone {% if verification.phone_verified %}<span style="color:var(--fl-status-verified);">✓</span>{% else %}<span style="color:var(--fl-coral);">✕</span>{% endif %} &nbsp;|&nbsp;
-          Identity {% if verification.identity_status == 'verified' %}<span style="color:var(--fl-status-verified);">✓</span>{% else %}<span style="color:var(--fl-coral);">✕</span>{% endif %} &nbsp;|&nbsp;
-          Profile {% if verification.profile_status == 'verified' %}<span style="color:var(--fl-status-verified);">✓</span>{% else %}<span style="color:var(--fl-coral);">✕</span>{% endif %}
+        <div style="font-size: 12.5px; color: var(--fl-text-secondary); margin-top: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span>Checkpoints: <strong style="color: var(--fl-yellow);">{{ verification.get_completed_steps_count|default:"0" }}/6 Complete</strong></span>
+          <span style="color: var(--fl-border);">&bull;</span>
+          <span style="display: inline-flex; align-items: center; gap: 3px;">Email {% if verification.email_verified %}<i data-lucide="check" style="width: 13px; height: 13px; color: var(--fl-status-verified);"></i>{% else %}<i data-lucide="x" style="width: 13px; height: 13px; color: var(--fl-coral);"></i>{% endif %}</span>
+          <span style="color: var(--fl-border);">&bull;</span>
+          <span style="display: inline-flex; align-items: center; gap: 3px;">Phone {% if verification.phone_verified %}<i data-lucide="check" style="width: 13px; height: 13px; color: var(--fl-status-verified);"></i>{% else %}<i data-lucide="x" style="width: 13px; height: 13px; color: var(--fl-coral);"></i>{% endif %}</span>
+          <span style="color: var(--fl-border);">&bull;</span>
+          <span style="display: inline-flex; align-items: center; gap: 3px;">Identity {% if verification.identity_status == 'verified' %}<i data-lucide="check" style="width: 13px; height: 13px; color: var(--fl-status-verified);"></i>{% else %}<i data-lucide="x" style="width: 13px; height: 13px; color: var(--fl-coral);"></i>{% endif %}</span>
+          <span style="color: var(--fl-border);">&bull;</span>
+          <span style="display: inline-flex; align-items: center; gap: 3px;">Profile {% if verification.profile_status == 'verified' %}<i data-lucide="check" style="width: 13px; height: 13px; color: var(--fl-status-verified);"></i>{% else %}<i data-lucide="x" style="width: 13px; height: 13px; color: var(--fl-coral);"></i>{% endif %}</span>
         </div>
       </div>
     </div>

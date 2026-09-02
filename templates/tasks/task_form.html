@@ -1,30 +1,77 @@
 {% extends 'base.html' %}
-{% block title %}{{ action }} Task — FreelanceTrack{% endblock %}
-{% block page_title %}<i class="fas fa-check-square"></i> {{ action }} Task{% endblock %}
+{% block title %}{{ action }} Task — FreelanceHub{% endblock %}
+{% block page_title %}{{ action }} Task{% endblock %}
+
 {% block content %}
-<div class="page-header"><div><h1>{{ action }} Task</h1></div><a href="{% url 'core:task_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a></div>
-<div class="row justify-content-center"><div class="col-lg-8">
-  <div class="card">
-    <div class="card-header"><i class="fas fa-edit"></i> Task Details</div>
-    <div class="card-body">
-      <form method="post">
-        {% csrf_token %}
-        <div class="row g-3">
-          <div class="col-12"><label class="form-label">Task Title *</label>{{ form.title }}{% if form.title.errors %}<small class="text-danger">{{ form.title.errors.0 }}</small>{% endif %}</div>
-          <div class="col-md-6"><label class="form-label">Project *</label>{{ form.project }}{% if form.project.errors %}<small class="text-danger">{{ form.project.errors.0 }}</small>{% endif %}</div>
-          <div class="col-md-3"><label class="form-label">Status</label>{{ form.status }}</div>
-          <div class="col-md-3"><label class="form-label">Priority</label>{{ form.priority }}</div>
-          <div class="col-md-4"><label class="form-label">Due Date</label>{{ form.due_date }}</div>
-          <div class="col-md-4"><label class="form-label">Estimated Hours</label>{{ form.estimated_hours }}</div>
-          <div class="col-md-4"><label class="form-label">Actual Hours</label>{{ form.actual_hours }}</div>
-          <div class="col-12"><label class="form-label">Description</label>{{ form.description }}</div>
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="check-square" style="color:var(--hub-gold);width:24px;height:24px;"></i> {{ action }} Task
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Define deliverables, timelines, and project allocation.</p>
+  </div>
+  <a href="{% url 'core:task_list' %}" class="btn-hub-secondary">
+    <i data-lucide="arrow-left"></i> <span>Back to Tasks</span>
+  </a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="edit-3" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Task Details</span>
         </div>
-        <div class="d-flex justify-content-end gap-2 mt-4">
-          <a href="{% url 'core:task_list' %}" class="btn btn-outline-secondary">Cancel</a>
-          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ action }} Task</button>
-        </div>
-      </form>
+      </div>
+      <div class="card-body p-4">
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Task Title *</label>
+              {{ form.title }}
+              {% if form.title.errors %}<small class="form-error">{{ form.title.errors.0 }}</small>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Project *</label>
+              {{ form.project }}
+              {% if form.project.errors %}<small class="form-error">{{ form.project.errors.0 }}</small>{% endif %}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Status</label>
+              {{ form.status }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Priority</label>
+              {{ form.priority }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Due Date</label>
+              {{ form.due_date }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Estimated Hours</label>
+              {{ form.estimated_hours }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Actual Hours</label>
+              {{ form.actual_hours }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description</label>
+              {{ form.description }}
+            </div>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color:var(--border-color) !important;">
+            <a href="{% url 'core:task_list' %}" class="btn-hub-secondary">Cancel</a>
+            <button type="submit" class="btn-hub-primary">
+              <i data-lucide="check"></i> <span>{{ action }} Task</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div></div>
+</div>
 {% endblock %}

@@ -1,160 +1,212 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Calendar & Deadlines — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}Calendar & Deadlines{% endblock %}
+{% block title %}Calendar &amp; Deadlines — FreelanceHub{% endblock %}
+{% block page_title %}Calendar &amp; Schedule{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">Calendar & Schedule</h4>
-    <p class="text-muted small mb-0">Track project deadlines, task due dates, payment milestones, and meetings.</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="calendar" style="color:var(--hub-gold);width:24px;height:24px;"></i> Schedule &amp; Deadlines
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Track project deadlines, task due dates, payment milestones, and meetings.</p>
   </div>
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
-    <i class="fas fa-plus me-1"></i> Add Custom Event / Reminder
+  <button class="btn-hub-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
+    <i data-lucide="plus"></i> <span>Add Event / Reminder</span>
   </button>
 </div>
 
 <div class="row g-4">
-  <!-- Left Side: Upcoming Scheduled Deadlines & Events List -->
+  <!-- Left Side: Scheduled Deadlines -->
   <div class="col-lg-5">
-    <div class="card p-3 mb-4">
-      <h6 class="fw-bold mb-3"><i class="fas fa-clock text-warning me-2"></i> Project Deadlines</h6>
-      <div class="list-group list-group-flush">
-        {% for proj in project_deadlines %}
-          <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
-            <div>
-              <a href="{% url 'core:project_detail' proj.pk %}" class="fw-bold text-decoration-none text-dark">{{ proj.name }}</a>
-              <div class="small text-muted">Client: {{ proj.client.name }}</div>
+    <!-- Project Deadlines -->
+    <div class="card mb-4">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="clock" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Project Deadlines</span>
+        </div>
+        <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">{{ project_deadlines|length }}</span>
+      </div>
+      <div class="card-body p-3">
+        <div class="list-group list-group-flush">
+          {% for proj in project_deadlines %}
+            <div class="list-group-item px-2 py-2 d-flex justify-content-between align-items-center border-0 mb-1" style="border-radius:var(--r-sm);background:transparent;">
+              <div>
+                <a href="{% url 'core:project_detail' proj.pk %}" style="font-weight:600;color:var(--text-primary);text-decoration:none;">{{ proj.name }}</a>
+                <div style="font-size:12px;color:var(--text-muted);">Client: {{ proj.client.name }}</div>
+              </div>
+              <span class="badge {% if proj.is_overdue %}status-rejected{% else %}status-in_review{% endif %}">
+                <i data-lucide="calendar-days" style="width:12px;height:12px;margin-right:2px;"></i> {{ proj.deadline|date:"M d" }}
+              </span>
             </div>
-            <span class="badge {% if proj.is_overdue %}bg-danger{% else %}bg-warning text-dark{% endif %}">
-              <i class="fas fa-calendar-day me-1"></i> {{ proj.deadline|date:"M d" }}
-            </span>
-          </div>
-        {% empty %}
-          <p class="text-muted small mb-0">No upcoming project deadlines.</p>
-        {% endfor %}
+          {% empty %}
+            <p style="font-size:13px;color:var(--text-muted);margin:0;padding:8px;">No upcoming project deadlines.</p>
+          {% endfor %}
+        </div>
       </div>
     </div>
 
-    <div class="card p-3 mb-4">
-      <h6 class="fw-bold mb-3"><i class="fas fa-check-square text-info me-2"></i> Task Due Dates</h6>
-      <div class="list-group list-group-flush">
-        {% for t in task_deadlines %}
-          <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
-            <div>
-              <span class="fw-bold">{{ t.title }}</span>
-              <div class="small text-muted">{{ t.project.name }}</div>
+    <!-- Task Due Dates -->
+    <div class="card mb-4">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="check-square" style="width:18px;height:18px;color:var(--info-text);"></i>
+          <span class="card-title-hub">Task Due Dates</span>
+        </div>
+        <span class="badge" style="background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border-color);">{{ task_deadlines|length }}</span>
+      </div>
+      <div class="card-body p-3">
+        <div class="list-group list-group-flush">
+          {% for t in task_deadlines %}
+            <div class="list-group-item px-2 py-2 d-flex justify-content-between align-items-center border-0 mb-1" style="border-radius:var(--r-sm);background:transparent;">
+              <div>
+                <span style="font-weight:600;color:var(--text-primary);">{{ t.title }}</span>
+                <div style="font-size:12px;color:var(--text-muted);">{{ t.project.name }}</div>
+              </div>
+              <span class="badge" style="background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border-color);font-size:11px;">
+                {{ t.due_date|date:"M d" }}
+              </span>
             </div>
-            <span class="badge bg-info text-dark">{{ t.due_date|date:"M d" }}</span>
-          </div>
-        {% empty %}
-          <p class="text-muted small mb-0">No upcoming task due dates.</p>
-        {% endfor %}
+          {% empty %}
+            <p style="font-size:13px;color:var(--text-muted);margin:0;padding:8px;">No upcoming task due dates.</p>
+          {% endfor %}
+        </div>
       </div>
     </div>
 
-    <div class="card p-3">
-      <h6 class="fw-bold mb-3"><i class="fas fa-dollar-sign text-success me-2"></i> Payment Due Dates</h6>
-      <div class="list-group list-group-flush">
-        {% for pay in payment_dues %}
-          <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
-            <div>
-              <span class="fw-bold">${{ pay.amount }}</span>
-              <div class="small text-muted">{{ pay.project.name }}</div>
+    <!-- Payment Due Dates -->
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="credit-card" style="width:18px;height:18px;color:var(--success-text);"></i>
+          <span class="card-title-hub">Payment Due Dates</span>
+        </div>
+        <span class="badge" style="background:var(--success-soft);color:var(--success-text);border:1px solid rgba(76,175,122,0.3);">{{ payment_dues|length }}</span>
+      </div>
+      <div class="card-body p-3">
+        <div class="list-group list-group-flush">
+          {% for pay in payment_dues %}
+            <div class="list-group-item px-2 py-2 d-flex justify-content-between align-items-center border-0 mb-1" style="border-radius:var(--r-sm);background:transparent;">
+              <div>
+                <span style="font-weight:700;color:var(--success-text);">${{ pay.amount }}</span>
+                <div style="font-size:12px;color:var(--text-muted);">{{ pay.project.name }}</div>
+              </div>
+              <span class="badge" style="background:var(--success-soft);color:var(--success-text);border:1px solid rgba(76,175,122,0.3);font-size:11px;">
+                {{ pay.due_date|date:"M d" }}
+              </span>
             </div>
-            <span class="badge bg-success">{{ pay.due_date|date:"M d" }}</span>
-          </div>
-        {% empty %}
-          <p class="text-muted small mb-0">No pending payment due dates.</p>
-        {% endfor %}
+          {% empty %}
+            <p style="font-size:13px;color:var(--text-muted);margin:0;padding:8px;">No pending payment due dates.</p>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Right Side: Custom Events List & Monthly Calendar Grid -->
+  <!-- Right Side: Custom Events & Meetings Table -->
   <div class="col-lg-7">
-    <div class="card p-4">
-      <h6 class="fw-bold mb-3"><i class="fas fa-calendar-alt text-primary me-2"></i> Custom Meetings & Reminders</h6>
-      <div class="table-responsive">
-        <table class="table table-hover align-middle small">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Date / Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for evt in events %}
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="calendar" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Meetings &amp; Reminders</span>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="hub-table">
+            <thead>
               <tr>
-                <td class="fw-bold">{{ evt.title }}</td>
-                <td><span class="badge bg-primary-subtle text-primary">{{ evt.get_event_type_display }}</span></td>
-                <td>{{ evt.start_time|date:"M d, Y H:i" }}</td>
-                <td>
-                  <form method="post" action="{% url 'core:calendar_event_delete' evt.pk %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Delete event?')" title="Delete"><i class="fas fa-trash"></i></button>
-                  </form>
-                </td>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Date / Time</th>
+                <th style="text-align:right;">Action</th>
               </tr>
-            {% empty %}
-              <tr><td colspan="4" class="text-center text-muted">No custom meetings or reminders logged yet.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for evt in events %}
+                <tr>
+                  <td style="font-weight:600;color:var(--text-primary);">{{ evt.title }}</td>
+                  <td>
+                    <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">
+                      {{ evt.get_event_type_display }}
+                    </span>
+                  </td>
+                  <td style="font-size:13px;color:var(--text-secondary);">{{ evt.start_time|date:"M d, Y H:i" }}</td>
+                  <td style="text-align:right;">
+                    <form method="post" action="{% url 'core:calendar_event_delete' evt.pk %}" style="display:inline;margin:0;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-hub-danger btn-icon btn-sm" onclick="return confirm('Delete event?')" title="Delete">
+                        <i data-lucide="trash-2"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center py-4" style="color:var(--text-muted);font-size:13.5px;">No custom meetings or reminders scheduled yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Modal: Add Event -->
-<div class="modal fade" id="addEventModal" tabindex="-1">
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="background:var(--bg-card);border:1px solid var(--border-color);backdrop-filter:blur(24px);">
       <form method="post" action="{% url 'core:calendar_event_create' %}">
         {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-header-title fw-bold"><i class="fas fa-calendar-plus text-primary me-2"></i> Add Calendar Event</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header" style="border-bottom:1px solid var(--border-color);">
+          <h5 class="modal-title d-flex align-items-center gap-2" id="addEventLabel" style="font-size:16px;font-weight:700;color:var(--text-primary);">
+            <i data-lucide="calendar" style="width:18px;height:18px;color:var(--hub-gold);"></i> Add Calendar Event
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body p-4">
           <div class="mb-3">
-            <label class="form-label fw-bold">Event Title</label>
+            <label class="form-label">Event Title *</label>
             {{ event_form.title }}
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Event Type</label>
+            <label class="form-label">Event Type</label>
             {{ event_form.event_type }}
           </div>
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label fw-bold">Start Time</label>
+              <label class="form-label">Start Time *</label>
               {{ event_form.start_time }}
             </div>
             <div class="col-6">
-              <label class="form-label fw-bold">End Time (Optional)</label>
+              <label class="form-label">End Time (Optional)</label>
               {{ event_form.end_time }}
             </div>
           </div>
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label fw-bold">Associated Project</label>
+              <label class="form-label">Associated Project</label>
               {{ event_form.project }}
             </div>
             <div class="col-6">
-              <label class="form-label fw-bold">Associated Task</label>
+              <label class="form-label">Associated Task</label>
               {{ event_form.task }}
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Description</label>
+            <label class="form-label">Description</label>
             {{ event_form.description }}
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Event</button>
+        <div class="modal-footer" style="border-top:1px solid var(--border-color);">
+          <button type="button" class="btn-hub-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn-hub-primary">
+            <i data-lucide="check"></i> <span>Save Event</span>
+          </button>
         </div>
       </form>
     </div>

@@ -1,58 +1,118 @@
 {% extends 'base.html' %}
-{% block title %}Notes — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}<i class="fas fa-sticky-note"></i> Notes{% endblock %}
+{% block title %}Notes — FreelanceHub{% endblock %}
+{% block page_title %}Notes{% endblock %}
+
 {% block content %}
-<div class="page-header">
-  <div><h1><i class="fas fa-sticky-note"></i> Notes</h1><p class="page-subtitle">Your project and client notes</p></div>
-  <a href="{% url 'core:note_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Note</a>
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+  <div>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="file-text" style="color:var(--hub-gold);width:24px;height:24px;"></i> Notes
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Capture meeting takeaways, project requirements, and personal reminders.</p>
+  </div>
+  <a href="{% url 'core:note_create' %}" class="btn-hub-primary">
+    <i data-lucide="plus"></i> <span>Add Note</span>
+  </a>
 </div>
-<div class="filter-bar">
-  <form method="get" class="row g-2">
-    <div class="col-md-8">
-      <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" name="search" class="form-control" placeholder="Search notes..." value="{{ search_query }}">
+
+<!-- Filter Bar -->
+<div class="card mb-4" style="padding:16px 20px;">
+  <form method="get" class="row g-2 align-items-center">
+    <div class="col-md-9">
+      <div style="position:relative;">
+        <i data-lucide="search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);"></i>
+        <input type="text" name="search" class="form-control" style="padding-left:36px;height:38px;" placeholder="Search notes..." value="{{ search_query }}">
       </div>
     </div>
-    <div class="col-auto"><button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>{% if search_query %}<a href="{% url 'core:note_list' %}" class="btn btn-outline-secondary ms-2">Clear</a>{% endif %}</div>
+    <div class="col-md-3 d-flex gap-2">
+      <button type="submit" class="btn-hub-secondary" style="height:38px;padding:0 16px;">
+        <i data-lucide="search"></i> <span>Search</span>
+      </button>
+      {% if search_query %}
+        <a href="{% url 'core:note_list' %}" class="btn-hub-ghost" style="height:38px;padding:0 12px;">Clear</a>
+      {% endif %}
+    </div>
   </form>
 </div>
+
 {% if page_obj.object_list %}
 <div class="row g-3">
   {% for note in page_obj %}
   <div class="col-md-6 col-lg-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start mb-2">
+    <div class="card h-100 d-flex flex-column" style="padding:0;overflow:hidden;">
+      <div class="card-body p-4 flex-grow-1">
+        <div class="d-flex justify-content-between align-items-start mb-2 gap-2">
           <h5 style="font-weight:700;font-size:15px;color:var(--text-primary);margin:0;">{{ note.title }}</h5>
-          {% if note.is_private %}<span class="badge-status status-on_hold"><i class="fas fa-lock"></i> Private</span>{% endif %}
+          {% if note.is_private %}
+            <span class="badge" style="background:var(--hub-burgundy-soft);color:var(--hub-burgundy-light);border:1px solid var(--hub-burgundy-border);font-size:10.5px;">
+              <i data-lucide="lock" style="width:11px;height:11px;margin-right:2px;"></i> Private
+            </span>
+          {% endif %}
         </div>
-        <p style="font-size:13px;color:var(--text-secondary);flex:1;">{{ note.content|truncatechars:120 }}</p>
-        {% if note.project %}<div style="font-size:12px;color:var(--text-muted);"><i class="fas fa-layer-group me-1"></i>{{ note.project.name }}</div>{% endif %}
-        {% if note.client %}<div style="font-size:12px;color:var(--text-muted);"><i class="fas fa-user me-1"></i>{{ note.client.name }}</div>{% endif %}
-        <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">{{ note.created_at|date:"M d, Y" }}</div>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0 0 12px;">{{ note.content|truncatechars:120 }}</p>
+
+        {% if note.project %}
+          <div style="font-size:12px;color:var(--hub-gold);margin-top:4px;display:flex;align-items:center;gap:4px;">
+            <i data-lucide="layers" style="width:13px;height:13px;"></i> {{ note.project.name }}
+          </div>
+        {% endif %}
+        {% if note.client %}
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:4px;">
+            <i data-lucide="user" style="width:13px;height:13px;"></i> {{ note.client.name }}
+          </div>
+        {% endif %}
+        <div style="font-size:11.5px;color:var(--text-muted);margin-top:8px;">{{ note.created_at|date:"M d, Y" }}</div>
       </div>
-      <div class="card-footer" style="background:transparent;border-top:1px solid var(--border-color);padding:10px 16px;">
-        <div class="d-flex gap-2">
-          <a href="{% url 'core:note_detail' note.id %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i> View</a>
-          <a href="{% url 'core:note_update' note.id %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a>
-          <a href="{% url 'core:note_delete' note.id %}" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></a>
-        </div>
+      <div class="p-3 border-top d-flex gap-2" style="border-color:var(--border-color) !important;background:var(--bg-elevated);">
+        <a href="{% url 'core:note_detail' note.id %}" class="btn-hub-secondary btn-sm flex-grow-1 text-center" style="justify-content:center;">
+          <i data-lucide="eye"></i> <span>View</span>
+        </a>
+        <a href="{% url 'core:note_update' note.id %}" class="btn-hub-secondary btn-icon btn-sm" title="Edit Note">
+          <i data-lucide="edit-3"></i>
+        </a>
+        <a href="{% url 'core:note_delete' note.id %}" class="btn-hub-danger btn-icon btn-sm" title="Delete Note">
+          <i data-lucide="trash-2"></i>
+        </a>
       </div>
     </div>
   </div>
   {% endfor %}
 </div>
+
 {% if page_obj.has_other_pages %}
 <div class="d-flex justify-content-center mt-4">
-  <nav><ul class="pagination mb-0">
-    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"><i class="fas fa-chevron-left"></i></a></li>{% endif %}
-    {% for num in page_obj.paginator.page_range %}{% if page_obj.number == num %}<li class="page-item active"><span class="page-link">{{ num }}</span></li>{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}<li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}">{{ num }}</a></li>{% endif %}{% endfor %}
-    {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"><i class="fas fa-chevron-right"></i></a></li>{% endif %}
-  </ul></nav>
+  <nav aria-label="Notes pagination">
+    <ul class="pagination mb-0" style="gap:4px;">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-left" style="width:14px;height:14px;"></i></a></li>
+      {% endif %}
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <li class="page-item active"><span class="page-link" style="background:var(--hub-gold);border:1px solid var(--hub-gold);color:#0D0F14;font-weight:700;border-radius:var(--r-sm);">{{ num }}</span></li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a></li>
+      {% endif %}
+    </ul>
+  </nav>
 </div>
 {% endif %}
+
 {% else %}
-<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-sticky-note"></i></div><h5>No notes found</h5><p>Start capturing important project notes.</p><a href="{% url 'core:note_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Note</a></div>
+<div class="card py-5 text-center">
+  <div class="empty-state">
+    <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;">
+      <i data-lucide="file-text" style="width:26px;height:26px;"></i>
+    </div>
+    <h5 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No notes found</h5>
+    <p style="font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto 18px;">Start capturing important project takeaways and thoughts.</p>
+    <a href="{% url 'core:note_create' %}" class="btn-hub-primary">
+      <i data-lucide="plus"></i> <span>Add Note</span>
+    </a>
+  </div>
+</div>
 {% endif %}
 {% endblock %}

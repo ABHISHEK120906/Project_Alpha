@@ -1,42 +1,47 @@
 {% extends 'base.html' %}
-{% block title %}Projects — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}<i class="fas fa-layer-group"></i> Projects{% endblock %}
+{% block title %}Projects — FreelanceHub{% endblock %}
+{% block page_title %}Projects{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h1><i class="fas fa-layer-group"></i> Projects</h1>
-    <p class="page-subtitle">Track and manage all your freelance projects</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="layers" style="color:var(--hub-gold);width:24px;height:24px;"></i> Projects
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Manage contracts, deliverables, budgets, and milestones.</p>
   </div>
-  <a href="{% url 'core:project_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> New Project</a>
+  <a href="{% url 'core:project_create' %}" class="btn-hub-primary">
+    <i data-lucide="plus"></i> <span>New Project</span>
+  </a>
 </div>
 
-<div class="filter-bar">
-  <form method="get" class="row g-2 align-items-end">
+<!-- Filter Toolbar -->
+<div class="card mb-4" style="padding:16px 20px;">
+  <form method="get" class="row g-2 align-items-center">
     <div class="col-md-4">
-      <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" name="search" class="form-control" placeholder="Search projects..." value="{{ search_query }}">
+      <div style="position:relative;">
+        <i data-lucide="search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);"></i>
+        <input type="text" name="search" class="form-control" style="padding-left:36px;height:38px;" placeholder="Search projects..." value="{{ search_query }}">
       </div>
     </div>
     <div class="col-md-2">
-      <select name="status" class="form-select">
+      <select name="status" class="form-select" style="height:38px;">
         <option value="">All Statuses</option>
         {% for value, label in status_choices %}
-        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="col-md-2">
-      <select name="priority" class="form-select">
+      <select name="priority" class="form-select" style="height:38px;">
         <option value="">All Priorities</option>
         {% for value, label in priority_choices %}
-        <option value="{{ value }}" {% if priority_filter == value %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ value }}" {% if priority_filter == value %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="col-md-3">
-      <select name="sort" class="form-select">
+      <select name="sort" class="form-select" style="height:38px;">
         <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest First</option>
         <option value="deadline" {% if sort_by == 'deadline' %}selected{% endif %}>Deadline (Earliest)</option>
         <option value="-deadline" {% if sort_by == '-deadline' %}selected{% endif %}>Deadline (Latest)</option>
@@ -45,21 +50,33 @@
         <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name A-Z</option>
       </select>
     </div>
-    <div class="col-md-1">
-      <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i></button>
+    <div class="col-md-1 d-flex gap-1">
+      <button type="submit" class="btn-hub-secondary w-100" style="height:38px;padding:0;" title="Apply Filter">
+        <i data-lucide="filter"></i>
+      </button>
+      {% if search_query or status_filter or priority_filter %}
+        <a href="{% url 'core:project_list' %}" class="btn-hub-ghost" style="height:38px;padding:0 12px;" title="Clear">
+          <i data-lucide="x"></i>
+        </a>
+      {% endif %}
     </div>
   </form>
 </div>
 
+<!-- Project Table Card -->
 <div class="card">
-  <div class="card-header">
-    <i class="fas fa-list"></i> All Projects
-    <span class="ms-2" style="font-size:12px;color:var(--text-muted);">{{ page_obj.paginator.count }} total</span>
+  <div class="card-header-hub">
+    <div class="d-flex align-items-center gap-2">
+      <i data-lucide="list" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+      <span class="card-title-hub">All Projects</span>
+      <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">{{ page_obj.paginator.count }} total</span>
+    </div>
   </div>
+
   <div class="card-body p-0">
     {% if page_obj.object_list %}
     <div class="table-responsive">
-      <table class="table table-hover mb-0">
+      <table class="hub-table">
         <thead>
           <tr>
             <th>Project</th>
@@ -69,46 +86,62 @@
             <th>Progress</th>
             <th>Budget</th>
             <th>Deadline</th>
-            <th>Actions</th>
+            <th style="text-align:right;">Actions</th>
           </tr>
         </thead>
         <tbody>
           {% for project in page_obj %}
-          <tr data-href="{% url 'core:project_detail' project.id %}">
+          <tr>
             <td>
-              <a href="{% url 'core:project_detail' project.id %}" style="font-weight:600;color:var(--text-primary);">{{ project.name }}</a>
-              {% if project.description %}<div style="font-size:12px;color:var(--text-muted);">{{ project.description|truncatechars:40 }}</div>{% endif %}
+              <a href="{% url 'core:project_detail' project.id %}" style="font-weight:700;color:var(--text-primary);">{{ project.name }}</a>
+              {% if project.description %}
+                <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ project.description|truncatechars:45 }}</div>
+              {% endif %}
             </td>
-            <td style="color:var(--text-secondary);">{{ project.client.name }}</td>
+            <td>
+              <a href="{% url 'core:client_detail' project.client.id %}" style="color:var(--hub-gold);font-size:13px;font-weight:500;">{{ project.client.name }}</a>
+            </td>
             <td><span class="badge-status status-{{ project.status }}">{{ project.get_status_display }}</span></td>
-            <td><span class="priority-{{ project.priority }}">{{ project.get_priority_display }}</span></td>
-            <td style="min-width:120px;">
+            <td>
+              <span class="badge" style="background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border-color);font-size:11px;">
+                {{ project.get_priority_display }}
+              </span>
+            </td>
+            <td style="min-width:130px;">
               <div class="d-flex align-items-center gap-2">
-                <div class="progress flex-grow-1">
-                  <div class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress flex-grow-1" style="height:6px;background:var(--bg-elevated);border-radius:99px;overflow:hidden;">
+                  <div class="progress-bar" role="progressbar" style="width:{{ project.progress }}%;background:linear-gradient(90deg,var(--hub-gold),var(--hub-gold-dark));" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-                <span style="font-size:12px;font-weight:600;width:32px;">{{ project.progress }}%</span>
+                <span style="font-size:12px;font-weight:700;color:var(--text-secondary);width:32px;">{{ project.progress }}%</span>
               </div>
             </td>
-            <td style="font-weight:600;">
+            <td style="font-weight:700;color:var(--text-primary);">
               {% if project.budget %}${{ project.budget|floatformat:0 }}{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
             </td>
             <td>
               {% if project.deadline %}
-              {% if project.is_overdue %}
-              <span class="overdue">
-                <i class="fas fa-exclamation-circle me-1"></i>{{ project.deadline|date:"M d, Y" }}
-              </span>
+                {% if project.is_overdue %}
+                  <span style="color:var(--danger-text);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;gap:4px;">
+                    <i data-lucide="alert-circle" style="width:13px;height:13px;"></i>{{ project.deadline|date:"M d, Y" }}
+                  </span>
+                {% else %}
+                  <span style="color:var(--text-secondary);font-size:13px;">{{ project.deadline|date:"M d, Y" }}</span>
+                {% endif %}
               {% else %}
-              <span style="color:var(--text-secondary);font-size:13px;">{{ project.deadline|date:"M d, Y" }}</span>
+                <span style="color:var(--text-muted);">—</span>
               {% endif %}
-              {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
             </td>
-            <td>
-              <div class="d-flex gap-1" onclick="event.stopPropagation();">
-                <a href="{% url 'core:project_detail' project.id %}" class="btn btn-sm btn-outline-primary btn-icon" title="View"><i class="fas fa-eye"></i></a>
-                <a href="{% url 'core:project_update' project.id %}" class="btn btn-sm btn-outline-secondary btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
-                <a href="{% url 'core:project_delete' project.id %}" class="btn btn-sm btn-outline-danger btn-icon" title="Delete"><i class="fas fa-trash"></i></a>
+            <td style="text-align:right;">
+              <div class="d-inline-flex gap-1" onclick="event.stopPropagation();">
+                <a href="{% url 'core:project_detail' project.id %}" class="btn-hub-secondary btn-icon btn-sm" title="View Project">
+                  <i data-lucide="eye"></i>
+                </a>
+                <a href="{% url 'core:project_update' project.id %}" class="btn-hub-secondary btn-icon btn-sm" title="Edit Project">
+                  <i data-lucide="edit-3"></i>
+                </a>
+                <a href="{% url 'core:project_delete' project.id %}" class="btn-hub-danger btn-icon btn-sm" title="Delete Project">
+                  <i data-lucide="trash-2"></i>
+                </a>
               </div>
             </td>
           </tr>
@@ -116,21 +149,41 @@
         </tbody>
       </table>
     </div>
+
     {% if page_obj.has_other_pages %}
-    <div class="d-flex justify-content-center p-3">
-      <nav><ul class="pagination mb-0">
-        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}&priority={{ priority_filter }}"><i class="fas fa-chevron-left"></i></a></li>{% endif %}
-        {% for num in page_obj.paginator.page_range %}{% if page_obj.number == num %}<li class="page-item active"><span class="page-link">{{ num }}</span></li>{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}<li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}&status={{ status_filter }}&priority={{ priority_filter }}">{{ num }}</a></li>{% endif %}{% endfor %}
-        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&status={{ status_filter }}&priority={{ priority_filter }}"><i class="fas fa-chevron-right"></i></a></li>{% endif %}
-      </ul></nav>
+    <div class="d-flex justify-content-center p-3 border-top" style="border-color:var(--border-color) !important;">
+      <nav aria-label="Projects pagination">
+        <ul class="pagination mb-0" style="gap:4px;">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}&priority={{ priority_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-left" style="width:14px;height:14px;"></i></a></li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link" style="background:var(--hub-gold);border:1px solid var(--hub-gold);color:#0D0F14;font-weight:700;border-radius:var(--r-sm);">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}&status={{ status_filter }}&priority={{ priority_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&status={{ status_filter }}&priority={{ priority_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a></li>
+          {% endif %}
+        </ul>
+      </nav>
     </div>
     {% endif %}
+
     {% else %}
-    <div class="empty-state">
-      <div class="empty-state-icon"><i class="fas fa-layer-group"></i></div>
-      <h5>No projects found</h5>
-      <p>{% if search_query or status_filter %}Try adjusting your filters.{% else %}Start by creating your first project.{% endif %}</p>
-      <a href="{% url 'core:project_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> New Project</a>
+    <div class="empty-state py-5 text-center">
+      <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;">
+        <i data-lucide="folder-kanban" style="width:26px;height:26px;"></i>
+      </div>
+      <h5 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No projects found</h5>
+      <p style="font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto 18px;">
+        {% if search_query or status_filter %}Try adjusting your filters.{% else %}Create your first project to start tracking contracts and milestones.{% endif %}
+      </p>
+      <a href="{% url 'core:project_create' %}" class="btn-hub-primary">
+        <i data-lucide="plus"></i> <span>New Project</span>
+      </a>
     </div>
     {% endif %}
   </div>

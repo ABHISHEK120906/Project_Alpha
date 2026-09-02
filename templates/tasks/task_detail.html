@@ -1,34 +1,80 @@
 {% extends 'base.html' %}
-{% block title %}{{ task.title }} — FreelanceTrack{% endblock %}
-{% block page_title %}<i class="fas fa-check-square"></i> Task Detail{% endblock %}
+{% block title %}{{ task.title }} — FreelanceHub{% endblock %}
+{% block page_title %}Task Detail{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <div><h1>{{ task.title }}</h1><p class="page-subtitle">{{ task.project.name }}</p></div>
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="check-square" style="color:var(--hub-gold);width:24px;height:24px;"></i> {{ task.title }}
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">
+      Part of project <a href="{% url 'core:project_detail' task.project.id %}" style="color:var(--hub-gold);font-weight:600;">{{ task.project.name }}</a>
+    </p>
+  </div>
   <div class="d-flex gap-2">
-    <a href="{% url 'core:task_update' task.id %}" class="btn btn-outline-primary"><i class="fas fa-edit"></i> Edit</a>
-    <a href="{% url 'core:task_delete' task.id %}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> Delete</a>
-    <a href="{% url 'core:task_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+    <a href="{% url 'core:task_update' task.id %}" class="btn-hub-secondary">
+      <i data-lucide="edit-3"></i> <span>Edit</span>
+    </a>
+    <a href="{% url 'core:task_delete' task.id %}" class="btn-hub-danger">
+      <i data-lucide="trash-2"></i> <span>Delete</span>
+    </a>
+    <a href="{% url 'core:task_list' %}" class="btn-hub-ghost">
+      <i data-lucide="arrow-left"></i> <span>Back</span>
+    </a>
   </div>
 </div>
+
 <div class="row justify-content-center">
   <div class="col-lg-7">
     <div class="card">
-      <div class="card-header"><i class="fas fa-info-circle"></i> Task Information</div>
-      <div class="card-body">
-        <div class="detail-grid">
-          <span class="detail-label">Project</span><span class="detail-value"><a href="{% url 'core:project_detail' task.project.id %}">{{ task.project.name }}</a></span>
-          <span class="detail-label">Status</span><span class="detail-value"><span class="badge-status status-{{ task.status }}">{{ task.get_status_display }}</span></span>
-          <span class="detail-label">Priority</span><span class="detail-value"><span class="priority-{{ task.priority }}">{{ task.get_priority_display }}</span></span>
-          {% if task.due_date %}<span class="detail-label">Due Date</span><span class="detail-value {% if task.is_overdue %}overdue{% endif %}">{{ task.due_date|date:"M d, Y" }}</span>{% endif %}
-          {% if task.estimated_hours %}<span class="detail-label">Est. Hours</span><span class="detail-value">{{ task.estimated_hours }}h</span>{% endif %}
-          {% if task.actual_hours %}<span class="detail-label">Actual Hours</span><span class="detail-value">{{ task.actual_hours }}h</span>{% endif %}
-          <span class="detail-label">Created</span><span class="detail-value">{{ task.created_at|date:"M d, Y" }}</span>
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="info" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Task Information</span>
         </div>
+      </div>
+      <div class="card-body p-4">
+        <div class="detail-grid" style="display:grid;grid-template-columns:140px 1fr;gap:12px 16px;font-size:13.5px;">
+          <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Project</span>
+          <span class="detail-value"><a href="{% url 'core:project_detail' task.project.id %}" style="color:var(--hub-gold);font-weight:600;">{{ task.project.name }}</a></span>
+
+          <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Status</span>
+          <span class="detail-value"><span class="badge-status status-{{ task.status }}">{{ task.get_status_display }}</span></span>
+
+          <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Priority</span>
+          <span class="detail-value">
+            <span class="badge" style="background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border-color);font-size:11px;">
+              {{ task.get_priority_display }}
+            </span>
+          </span>
+
+          {% if task.due_date %}
+            <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Due Date</span>
+            <span class="detail-value" style="{% if task.is_overdue %}color:var(--danger-text);font-weight:700;{% else %}color:var(--text-primary);{% endif %}">
+              {{ task.due_date|date:"M d, Y" }}
+              {% if task.is_overdue %}<span class="badge ms-1" style="background:var(--danger-soft);color:var(--danger-text);border:1px solid rgba(224,92,92,0.3);font-size:10px;">Overdue</span>{% endif %}
+            </span>
+          {% endif %}
+
+          {% if task.estimated_hours %}
+            <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Est. Hours</span>
+            <span class="detail-value" style="color:var(--text-primary);">{{ task.estimated_hours }}h</span>
+          {% endif %}
+
+          {% if task.actual_hours %}
+            <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Actual Hours</span>
+            <span class="detail-value" style="color:var(--text-primary);">{{ task.actual_hours }}h</span>
+          {% endif %}
+
+          <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Created</span>
+          <span class="detail-value" style="color:var(--text-secondary);">{{ task.created_at|date:"M d, Y" }}</span>
+        </div>
+
         {% if task.description %}
-        <div class="mt-3 pt-3" style="border-top:1px solid var(--border-color);">
-          <label class="detail-label">Description</label>
-          <p style="color:var(--text-secondary);margin-top:6px;">{{ task.description }}</p>
+        <div class="mt-4 pt-3 border-top" style="border-color:var(--border-color) !important;">
+          <div style="font-size:12.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Description</div>
+          <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;margin:0;">{{ task.description }}</p>
         </div>
         {% endif %}
       </div>

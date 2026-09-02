@@ -1,91 +1,144 @@
 {% extends 'base.html' %}
-{% block title %}Payments — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}<i class="fas fa-dollar-sign"></i> Payments{% endblock %}
+{% block title %}Payments — FreelanceHub{% endblock %}
+{% block page_title %}Payments{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h1><i class="fas fa-dollar-sign"></i> Payments</h1>
-    <p class="page-subtitle">Track invoices and payment status</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="credit-card" style="color:var(--hub-gold);width:24px;height:24px;"></i> Payments
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Track accounts receivable, invoices, and transaction logs.</p>
   </div>
-  <a href="{% url 'core:payment_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Payment</a>
+  <a href="{% url 'core:payment_create' %}" class="btn-hub-primary">
+    <i data-lucide="plus"></i> <span>Add Payment</span>
+  </a>
 </div>
 
-<!-- Summary Cards -->
+<!-- Summary Stat Cards -->
 <div class="row g-3 mb-4">
   <div class="col-md-6">
-    <div class="card stat-card success">
-      <div class="card-body d-flex align-items-center gap-3">
-        <div class="stat-icon" style="background:rgba(16,185,129,.12);"><i class="fas fa-check-circle" style="color:#10b981;"></i></div>
-        <div>
-          <div class="stat-value">${{ total_paid|floatformat:2 }}</div>
-          <div class="stat-label">Total Received</div>
-        </div>
+    <div class="card stat-card" style="flex-direction:row;align-items:center;gap:16px;">
+      <div class="stat-icon" style="background:var(--success-soft);border-color:rgba(76,175,122,0.3);color:var(--success-text);">
+        <i data-lucide="check-circle-2"></i>
+      </div>
+      <div>
+        <div class="stat-value" style="color:var(--success-text);">${{ total_paid|floatformat:2 }}</div>
+        <div class="stat-label">Total Received</div>
       </div>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="card stat-card warning">
-      <div class="card-body d-flex align-items-center gap-3">
-        <div class="stat-icon" style="background:rgba(245,158,11,.12);"><i class="fas fa-hourglass-half" style="color:#f59e0b;"></i></div>
-        <div>
-          <div class="stat-value">${{ total_pending|floatformat:2 }}</div>
-          <div class="stat-label">Total Pending</div>
-        </div>
+    <div class="card stat-card" style="flex-direction:row;align-items:center;gap:16px;">
+      <div class="stat-icon" style="background:var(--warning-soft);border-color:rgba(232,168,58,0.3);color:var(--warning-text);">
+        <i data-lucide="clock"></i>
+      </div>
+      <div>
+        <div class="stat-value" style="color:var(--warning-text);">${{ total_pending|floatformat:2 }}</div>
+        <div class="stat-label">Total Pending</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="filter-bar">
-  <form method="get" class="row g-2 align-items-end">
+<!-- Filter Toolbar -->
+<div class="card mb-4" style="padding:16px 20px;">
+  <form method="get" class="row g-2 align-items-center">
     <div class="col-md-5">
-      <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" name="search" class="form-control" placeholder="Search payments..." value="{{ search_query }}">
+      <div style="position:relative;">
+        <i data-lucide="search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);"></i>
+        <input type="text" name="search" class="form-control" style="padding-left:36px;height:38px;" placeholder="Search payments or invoices..." value="{{ search_query }}">
       </div>
     </div>
     <div class="col-md-3">
-      <select name="status" class="form-select">
+      <select name="status" class="form-select" style="height:38px;">
         <option value="">All Statuses</option>
         {% for value, label in status_choices %}
-        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="col-md-3">
-      <select name="sort" class="form-select">
+      <select name="sort" class="form-select" style="height:38px;">
         <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest First</option>
         <option value="-amount" {% if sort_by == '-amount' %}selected{% endif %}>Amount (High-Low)</option>
         <option value="due_date" {% if sort_by == 'due_date' %}selected{% endif %}>Due Date (Earliest)</option>
       </select>
     </div>
-    <div class="col-md-1"><button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i></button></div>
+    <div class="col-md-1 d-flex gap-1">
+      <button type="submit" class="btn-hub-secondary w-100" style="height:38px;padding:0;" title="Apply Filter">
+        <i data-lucide="filter"></i>
+      </button>
+      {% if search_query or status_filter %}
+        <a href="{% url 'core:payment_list' %}" class="btn-hub-ghost" style="height:38px;padding:0 12px;" title="Clear">
+          <i data-lucide="x"></i>
+        </a>
+      {% endif %}
+    </div>
   </form>
 </div>
 
+<!-- Payments Table Card -->
 <div class="card">
-  <div class="card-header"><i class="fas fa-list"></i> All Payments <span class="ms-2" style="font-size:12px;color:var(--text-muted);">{{ page_obj.paginator.count }} total</span></div>
+  <div class="card-header-hub">
+    <div class="d-flex align-items-center gap-2">
+      <i data-lucide="list" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+      <span class="card-title-hub">All Payments</span>
+      <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">{{ page_obj.paginator.count }} total</span>
+    </div>
+  </div>
+
   <div class="card-body p-0">
     {% if page_obj.object_list %}
     <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead><tr><th>Invoice</th><th>Project</th><th>Client</th><th>Amount</th><th>Method</th><th>Status</th><th>Due Date</th><th>Actions</th></tr></thead>
+      <table class="hub-table">
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Project</th>
+            <th>Client</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
         <tbody>
           {% for payment in page_obj %}
-          <tr data-href="{% url 'core:payment_detail' payment.id %}">
-            <td style="font-size:13px;font-weight:600;">{{ payment.invoice_number|default:'—' }}</td>
-            <td><a href="{% url 'core:project_detail' payment.project.id %}" style="color:var(--text-primary);font-weight:600;">{{ payment.project.name }}</a></td>
-            <td style="color:var(--text-secondary);">{{ payment.project.client.name }}</td>
-            <td style="font-weight:700;color:#10b981;">${{ payment.amount|floatformat:2 }}</td>
-            <td style="font-size:13px;color:var(--text-muted);">{{ payment.get_payment_method_display }}</td>
-            <td><span class="badge-status status-{{ payment.status }}">{{ payment.get_status_display }}</span></td>
-            <td>{% if payment.due_date %}{% if payment.is_overdue %}<span class="overdue">{{ payment.due_date|date:"M d, Y" }}</span>{% else %}<span style="color:var(--text-secondary);font-size:13px;">{{ payment.due_date|date:"M d, Y" }}</span>{% endif %}{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}</td>
+          <tr>
+            <td style="font-size:13px;font-weight:700;color:var(--text-primary);">{{ payment.invoice_number|default:'—' }}</td>
             <td>
-              <div class="d-flex gap-1" onclick="event.stopPropagation();">
-                <a href="{% url 'core:payment_detail' payment.id %}" class="btn btn-sm btn-outline-primary btn-icon"><i class="fas fa-eye"></i></a>
-                <a href="{% url 'core:payment_update' payment.id %}" class="btn btn-sm btn-outline-secondary btn-icon"><i class="fas fa-edit"></i></a>
-                <a href="{% url 'core:payment_delete' payment.id %}" class="btn btn-sm btn-outline-danger btn-icon"><i class="fas fa-trash"></i></a>
+              <a href="{% url 'core:project_detail' payment.project.id %}" style="color:var(--text-primary);font-weight:600;">{{ payment.project.name }}</a>
+            </td>
+            <td style="color:var(--hub-gold);font-size:13px;font-weight:500;">{{ payment.project.client.name }}</td>
+            <td style="font-weight:700;color:var(--success-text);font-size:14px;">${{ payment.amount|floatformat:2 }}</td>
+            <td style="font-size:13px;color:var(--text-secondary);">{{ payment.get_payment_method_display }}</td>
+            <td><span class="badge-status status-{{ payment.status }}">{{ payment.get_status_display }}</span></td>
+            <td>
+              {% if payment.due_date %}
+                {% if payment.is_overdue %}
+                  <span style="color:var(--danger-text);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;gap:4px;">
+                    <i data-lucide="alert-circle" style="width:13px;height:13px;"></i>{{ payment.due_date|date:"M d, Y" }}
+                  </span>
+                {% else %}
+                  <span style="color:var(--text-secondary);font-size:13px;">{{ payment.due_date|date:"M d, Y" }}</span>
+                {% endif %}
+              {% else %}
+                <span style="color:var(--text-muted);">—</span>
+              {% endif %}
+            </td>
+            <td style="text-align:right;">
+              <div class="d-inline-flex gap-1" onclick="event.stopPropagation();">
+                <a href="{% url 'core:payment_detail' payment.id %}" class="btn-hub-secondary btn-icon btn-sm" title="View Payment">
+                  <i data-lucide="eye"></i>
+                </a>
+                <a href="{% url 'core:payment_update' payment.id %}" class="btn-hub-secondary btn-icon btn-sm" title="Edit Payment">
+                  <i data-lucide="edit-3"></i>
+                </a>
+                <a href="{% url 'core:payment_delete' payment.id %}" class="btn-hub-danger btn-icon btn-sm" title="Delete Payment">
+                  <i data-lucide="trash-2"></i>
+                </a>
               </div>
             </td>
           </tr>
@@ -93,17 +146,43 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination -->
     {% if page_obj.has_other_pages %}
-    <div class="d-flex justify-content-center p-3">
-      <nav><ul class="pagination mb-0">
-        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}"><i class="fas fa-chevron-left"></i></a></li>{% endif %}
-        {% for num in page_obj.paginator.page_range %}{% if page_obj.number == num %}<li class="page-item active"><span class="page-link">{{ num }}</span></li>{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}<li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}&status={{ status_filter }}">{{ num }}</a></li>{% endif %}{% endfor %}
-        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&status={{ status_filter }}"><i class="fas fa-chevron-right"></i></a></li>{% endif %}
-      </ul></nav>
+    <div class="d-flex justify-content-center p-3 border-top" style="border-color:var(--border-color) !important;">
+      <nav aria-label="Payments pagination">
+        <ul class="pagination mb-0" style="gap:4px;">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-left" style="width:14px;height:14px;"></i></a></li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link" style="background:var(--hub-gold);border:1px solid var(--hub-gold);color:#0D0F14;font-weight:700;border-radius:var(--r-sm);">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}&status={{ status_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&status={{ status_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a></li>
+          {% endif %}
+        </ul>
+      </nav>
     </div>
     {% endif %}
+
     {% else %}
-    <div class="empty-state"><div class="empty-state-icon"><i class="fas fa-dollar-sign"></i></div><h5>No payments found</h5><a href="{% url 'core:payment_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Payment</a></div>
+    <div class="empty-state py-5 text-center">
+      <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;">
+        <i data-lucide="credit-card" style="width:26px;height:26px;"></i>
+      </div>
+      <h5 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No payments found</h5>
+      <p style="font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto 18px;">
+        {% if search_query or status_filter %}Try adjusting your search criteria.{% else %}Record your first payment or deposit to monitor cash flow.{% endif %}
+      </p>
+      <a href="{% url 'core:payment_create' %}" class="btn-hub-primary">
+        <i data-lucide="plus"></i> <span>Add Payment</span>
+      </a>
+    </div>
     {% endif %}
   </div>
 </div>

@@ -1,118 +1,170 @@
 {% extends 'base.html' %}
-{% block title %}{{ client.name }} — FreelanceTrack{% endblock %}
-{% block page_title %}<i class="fas fa-user"></i> Client Detail{% endblock %}
+{% block title %}{{ client.name }} — FreelanceHub{% endblock %}
+{% block page_title %}Client Detail{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h1><i class="fas fa-user"></i> {{ client.name }}</h1>
-    <p class="page-subtitle">{{ client.company|default:'Individual' }}</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="user" style="color:var(--hub-gold);width:24px;height:24px;"></i> {{ client.name }}
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">
+      {{ client.company|default:'Individual Account' }} &middot;
+      <span class="badge-status status-{{ client.status }} ms-1">{{ client.get_status_display }}</span>
+    </p>
   </div>
   <div class="d-flex gap-2">
-    <a href="{% url 'core:client_update' client.id %}" class="btn btn-outline-primary"><i class="fas fa-edit"></i> Edit</a>
-    <a href="{% url 'core:client_delete' client.id %}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> Delete</a>
-    <a href="{% url 'core:client_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+    <a href="{% url 'core:client_update' client.id %}" class="btn-hub-secondary">
+      <i data-lucide="edit-3"></i> <span>Edit</span>
+    </a>
+    <a href="{% url 'core:client_delete' client.id %}" class="btn-hub-danger">
+      <i data-lucide="trash-2"></i> <span>Delete</span>
+    </a>
+    <a href="{% url 'core:client_list' %}" class="btn-hub-ghost">
+      <i data-lucide="arrow-left"></i> <span>Back</span>
+    </a>
   </div>
 </div>
 
 <div class="row g-3">
-  <!-- Client Info -->
+  <!-- Client Profile Card -->
   <div class="col-lg-4">
-    <div class="card">
-      <div class="card-header"><i class="fas fa-id-card"></i> Client Information</div>
-      <div class="card-body">
-        <div style="text-align:center;margin-bottom:20px;">
-          <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;margin:0 auto 12px;">{{ client.name|first|upper }}</div>
-          <h4 style="margin:0;color:var(--text-primary);font-weight:700;">{{ client.name }}</h4>
-          <p style="color:var(--text-muted);font-size:13px;margin:0;">{{ client.company|default:'Individual' }}</p>
-          <span class="badge-status status-{{ client.status }}" style="margin-top:8px;display:inline-block;">{{ client.get_status_display }}</span>
+    <div class="card mb-3">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="id-card" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Client Information</span>
         </div>
-        <div class="detail-grid">
-          <span class="detail-label">Email</span>
-          <span class="detail-value"><a href="mailto:{{ client.email }}">{{ client.email }}</a></span>
+      </div>
+      <div class="card-body p-4">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--hub-gold) 0%,var(--hub-gold-dark) 100%);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#0D0F14;margin:0 auto 12px;box-shadow:0 4px 16px var(--hub-gold-glow);">
+            {{ client.name|first|upper }}
+          </div>
+          <h4 style="margin:0;color:var(--text-primary);font-weight:800;font-size:18px;">{{ client.name }}</h4>
+          <p style="color:var(--text-muted);font-size:13px;margin:3px 0 0;">{{ client.company|default:'Individual Client' }}</p>
+          <div style="margin-top:8px;">
+            <span class="badge-status status-{{ client.status }}">{{ client.get_status_display }}</span>
+          </div>
+        </div>
+
+        <div class="detail-grid" style="display:grid;grid-template-columns:110px 1fr;gap:12px 14px;font-size:13.5px;">
+          <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Email</span>
+          <span class="detail-value"><a href="mailto:{{ client.email }}" style="color:var(--hub-gold);">{{ client.email }}</a></span>
+
           {% if client.phone %}
-          <span class="detail-label">Phone</span>
-          <span class="detail-value">{{ client.phone }}</span>
+            <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Phone</span>
+            <span class="detail-value" style="color:var(--text-primary);">{{ client.phone }}</span>
           {% endif %}
+
           {% if client.address %}
-          <span class="detail-label">Address</span>
-          <span class="detail-value">{{ client.address }}</span>
+            <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Address</span>
+            <span class="detail-value" style="color:var(--text-secondary);">{{ client.address }}</span>
           {% endif %}
-          <span class="detail-label">Member Since</span>
-          <span class="detail-value">{{ client.created_at|date:"M d, Y" }}</span>
+
+          <span class="detail-label" style="color:var(--text-muted);font-weight:600;">Client Since</span>
+          <span class="detail-value" style="color:var(--text-secondary);">{{ client.created_at|date:"M d, Y" }}</span>
         </div>
       </div>
     </div>
 
     <!-- Client Performance Overview -->
-    <div class="card mt-3">
-      <div class="card-header"><i class="fas fa-chart-bar me-1"></i> Client Overview</div>
-      <div class="card-body">
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="bar-chart-2" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Engagement Overview</span>
+        </div>
+      </div>
+      <div class="card-body p-4">
         <div class="row g-3 text-center">
           <div class="col-6">
-            <div style="font-size:22px;font-weight:800;color:var(--primary);">{{ total_projects }}</div>
-            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Total Projects</div>
+            <div style="font-size:22px;font-weight:800;color:var(--hub-gold);">{{ total_projects }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-top:2px;">Total Projects</div>
           </div>
           <div class="col-6">
-            <div style="font-size:22px;font-weight:800;color:#3b82f6;">{{ active_projects }}</div>
-            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Active</div>
+            <div style="font-size:22px;font-weight:800;color:var(--info-text);">{{ active_projects }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-top:2px;">Active</div>
           </div>
           <div class="col-6">
-            <div style="font-size:22px;font-weight:800;color:#10b981;">{{ completed_projects }}</div>
-            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Completed</div>
+            <div style="font-size:22px;font-weight:800;color:var(--success-text);">{{ completed_projects }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-top:2px;">Completed</div>
           </div>
           <div class="col-6">
-            <div style="font-size:22px;font-weight:800;color:#10b981;">${{ total_earned|floatformat:0 }}</div>
-            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;">Total Revenue</div>
+            <div style="font-size:22px;font-weight:800;color:var(--success-text);">${{ total_earned|floatformat:0 }}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-top:2px;">Total Billed</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Projects -->
+  <!-- Projects Column -->
   <div class="col-lg-8">
-    <div class="card">
-      <div class="card-header">
-        <i class="fas fa-layer-group"></i> Projects
-        <a href="{% url 'core:project_create' %}" class="btn btn-primary btn-sm ms-auto"><i class="fas fa-plus"></i> New Project</a>
+    <div class="card mb-3">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="layers" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Client Projects</span>
+        </div>
+        <a href="{% url 'core:project_create' %}" class="btn-hub-primary btn-sm">
+          <i data-lucide="plus"></i> <span>New Project</span>
+        </a>
       </div>
       <div class="card-body p-0">
         {% if projects %}
         <div class="table-responsive">
-          <table class="table table-hover mb-0">
+          <table class="hub-table">
             <thead>
-              <tr><th>Project</th><th>Status</th><th>Progress</th><th>Deadline</th></tr>
+              <tr>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Deadline</th>
+              </tr>
             </thead>
             <tbody>
               {% for project in projects %}
-              <tr data-href="{% url 'core:project_detail' project.id %}">
-                <td><a href="{% url 'core:project_detail' project.id %}" style="font-weight:600;color:var(--text-primary);">{{ project.name }}</a></td>
-                <td><span class="badge-status status-{{ project.status }}">{{ project.get_status_display }}</span></td>
+              <tr>
                 <td>
+                  <a href="{% url 'core:project_detail' project.id %}" style="font-weight:600;color:var(--text-primary);">{{ project.name }}</a>
+                </td>
+                <td><span class="badge-status status-{{ project.status }}">{{ project.get_status_display }}</span></td>
+                <td style="min-width:120px;">
                   <div class="d-flex align-items-center gap-2">
-                    <div class="progress flex-grow-1">
-                      <div class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress flex-grow-1" style="height:6px;background:var(--bg-elevated);border-radius:99px;overflow:hidden;">
+                      <div class="progress-bar" role="progressbar" style="width:{{ project.progress }}%;background:linear-gradient(90deg,var(--hub-gold),var(--hub-gold-dark));" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <span style="font-size:12px;width:30px;">{{ project.progress }}%</span>
+                    <span style="font-size:12px;font-weight:700;color:var(--text-secondary);width:30px;">{{ project.progress }}%</span>
                   </div>
                 </td>
-                <td><span class="{% if project.is_overdue %}overdue{% else %}text-secondary{% endif %}" style="font-size:13px;">{{ project.deadline|date:"M d, Y"|default:"—" }}</span></td>
+                <td>
+                  <span style="font-size:13px;color:var(--text-secondary);">{{ project.deadline|date:"M d, Y"|default:"—" }}</span>
+                </td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
         {% else %}
-        <div class="empty-state"><div class="empty-state-icon"><i class="fas fa-layer-group"></i></div><p>No projects for this client yet.</p></div>
+        <div class="empty-state py-4 text-center">
+          <p style="color:var(--text-muted);font-size:13.5px;margin:0;">No projects linked to this client yet.</p>
+        </div>
         {% endif %}
       </div>
     </div>
 
     {% if client.notes %}
-    <div class="card mt-3">
-      <div class="card-header"><i class="fas fa-sticky-note"></i> Notes</div>
-      <div class="card-body"><p style="color:var(--text-secondary);margin:0;">{{ client.notes }}</p></div>
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="file-text" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Client Notes</span>
+        </div>
+      </div>
+      <div class="card-body p-4">
+        <p style="color:var(--text-secondary);font-size:13.5px;line-height:1.6;margin:0;">{{ client.notes }}</p>
+      </div>
     </div>
     {% endif %}
   </div>

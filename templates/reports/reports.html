@@ -1,224 +1,253 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Reports Hub — Freelancer Intelligence Platform{% endblock %}
+{% block title %}Reports Hub — FreelanceHub{% endblock %}
 {% block page_title %}Executive Reports &amp; Intelligence Hub{% endblock %}
 
 {% block content %}
 
 <!-- Header Banner -->
-<div class="welcome-banner mb-4 reveal-up">
+<div class="card mb-4 p-4" style="background:linear-gradient(135deg,rgba(232,168,58,0.12) 0%,rgba(200,138,34,0.04) 100%);border:1px solid var(--hub-gold-border);border-radius:var(--r-md);">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
-      <div class="d-flex align-items-center gap-2 mb-1">
-        <span class="badge" style="background:rgba(219,153,65,0.2);color:#DB9941;border:1px solid rgba(219,153,65,0.4);font-size:11px;letter-spacing:1px;text-transform:uppercase;">Reporting Engine</span>
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;">
+          <i data-lucide="bar-chart-2" style="width:11px;height:11px;margin-right:3px;"></i> Reporting Engine
+        </span>
       </div>
-      <h2 class="welcome-banner-title gradient-text">Executive Reports &amp; Data Export Hub</h2>
-      <p class="welcome-banner-sub">Generate presentation-ready executive PDF reports, structured multi-sheet Excel workbooks, and raw CSV data streams.</p>
+      <h2 style="font-size:22px;font-weight:900;color:var(--text-primary);margin:0 0 6px;font-family:'Plus Jakarta Sans',sans-serif;">Executive Reports &amp; Data Export Hub</h2>
+      <p style="font-size:13.5px;color:var(--text-muted);margin:0;max-width:640px;">Generate presentation-ready executive PDF reports, structured multi-sheet Excel workbooks, and raw CSV data streams.</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
-      <a href="{% url 'core:export_comprehensive_pdf_report' %}" class="welcome-banner-btn" style="background:#dc2626;color:#fff;border:none;font-weight:700;" title="Download Comprehensive Executive PDF">
-        <i class="fas fa-file-pdf me-1"></i> Executive PDF Report
+      <a href="{% url 'core:export_comprehensive_pdf_report' %}" class="btn-hub-danger" title="Download Comprehensive Executive PDF">
+        <i data-lucide="file-text"></i> <span>Executive PDF</span>
       </a>
-      <a href="{% url 'core:export_comprehensive_excel_report' %}" class="welcome-banner-btn" style="background:#16a34a;color:#fff;border:none;font-weight:700;" title="Download Multi-Sheet Excel Workbook">
-        <i class="fas fa-file-excel me-1"></i> Excel BI Workbook
+      <a href="{% url 'core:export_comprehensive_excel_report' %}" class="btn-hub-success" title="Download Multi-Sheet Excel Workbook">
+        <i data-lucide="file-spreadsheet"></i> <span>Excel Workbook</span>
       </a>
     </div>
   </div>
 </div>
 
-<!-- Summary Cards -->
+<!-- Summary KPI Cards -->
 <div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div class="stat-card h-100 p-3 reveal-up delay-1">
-      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
-      <div class="stat-value text-success fs-4 fw-bold">${{ total_paid|floatformat:2 }}</div>
-      <div class="stat-label text-muted small">Total Realized Revenue</div>
+    <div class="card stat-card" style="border-left:4px solid var(--success);">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stat-label" style="color:var(--text-muted);">Total Realized Revenue</div>
+          <div class="stat-value" style="color:var(--success-text);margin-top:4px;">${{ total_paid|floatformat:2 }}</div>
+        </div>
+        <div class="stat-icon" style="background:var(--success-soft);border-color:rgba(76,175,122,0.3);color:var(--success-text);">
+          <i data-lucide="wallet"></i>
+        </div>
+      </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="stat-card h-100 p-3 reveal-up delay-2">
-      <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
-      <div class="stat-value text-warning fs-4 fw-bold">${{ total_pending|floatformat:2 }}</div>
-      <div class="stat-label text-muted small">Pending Invoices Receivable</div>
+    <div class="card stat-card" style="border-left:4px solid var(--warning);">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stat-label" style="color:var(--text-muted);">Pending Invoices</div>
+          <div class="stat-value" style="color:var(--warning-text);margin-top:4px;">${{ total_pending|floatformat:2 }}</div>
+        </div>
+        <div class="stat-icon" style="background:var(--warning-soft);border-color:rgba(232,168,58,0.3);color:var(--warning-text);">
+          <i data-lucide="clock"></i>
+        </div>
+      </div>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="stat-card h-100 p-3 reveal-up delay-3">
-      <div class="stat-icon mb-2" style="background:var(--danger-soft);color:var(--danger);"><i class="fas fa-exclamation-triangle"></i></div>
-      <div class="stat-value text-danger fs-4 fw-bold">${{ total_overdue|floatformat:2 }}</div>
-      <div class="stat-label text-muted small">Overdue Invoices</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     COMPREHENSIVE EXECUTIVE REPORTS PACKAGES
-     ══════════════════════════════════════════════════════════════ -->
-<div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:18px;">
-  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-    <div>
-      <h5 class="fw-bold mb-1" style="color:var(--text-primary);"><i class="fas fa-file-signature text-primary me-2"></i>Executive Intelligence Reports</h5>
-      <p class="text-muted small mb-0">Complete end-to-end report packages containing Executive KPIs, Data Quality Audit, Statistics, Forecasts, and Recommendations.</p>
-    </div>
-  </div>
-
-  <div class="row g-3">
-    <!-- 1. Executive PDF Report -->
-    <div class="col-md-4">
-      <div class="p-3 h-100 d-flex flex-column justify-content-between" style="border:1px solid rgba(220,38,38,0.25);border-radius:14px;background:rgba(220,38,38,0.03);">
+    <div class="card stat-card" style="border-left:4px solid var(--danger);">
+      <div class="d-flex align-items-center justify-content-between">
         <div>
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <div style="width:38px;height:38px;background:rgba(220,38,38,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#dc2626;">
-              <i class="fas fa-file-pdf fs-5"></i>
-            </div>
-            <div>
-              <h6 class="fw-bold mb-0 text-danger">Executive BI Report (PDF)</h6>
-              <span class="badge bg-danger bg-opacity-10 text-danger" style="font-size:10px;">Presentation Ready</span>
-            </div>
-          </div>
-          <p class="small text-muted mb-3">ReportLab generated PDF with executive KPIs, confidence intervals, time-series forecast, and actionable insights.</p>
+          <div class="stat-label" style="color:var(--text-muted);">Overdue Receivables</div>
+          <div class="stat-value" style="color:var(--danger-text);margin-top:4px;">${{ total_overdue|floatformat:2 }}</div>
         </div>
-        <a href="{% url 'core:export_comprehensive_pdf_report' %}" class="btn btn-sm btn-danger fw-bold w-100">
-          <i class="fas fa-download me-1"></i> Download PDF Report
-        </a>
-      </div>
-    </div>
-
-    <!-- 2. Multi-Sheet Excel Workbook -->
-    <div class="col-md-4">
-      <div class="p-3 h-100 d-flex flex-column justify-content-between" style="border:1px solid rgba(22,163,74,0.25);border-radius:14px;background:rgba(22,163,74,0.03);">
-        <div>
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <div style="width:38px;height:38px;background:rgba(22,163,74,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#16a34a;">
-              <i class="fas fa-file-excel fs-5"></i>
-            </div>
-            <div>
-              <h6 class="fw-bold mb-0 text-success">Analytics Workbook (Excel)</h6>
-              <span class="badge bg-success bg-opacity-10 text-success" style="font-size:10px;">Multi-Sheet .XLSX</span>
-            </div>
-          </div>
-          <p class="small text-muted mb-3">OpenPyXL workbook featuring Executive Summary, Projects, Payments, Clients, and Forecast sheets.</p>
-        </div>
-        <a href="{% url 'core:export_comprehensive_excel_report' %}" class="btn btn-sm btn-success fw-bold w-100">
-          <i class="fas fa-download me-1"></i> Download Excel (.xlsx)
-        </a>
-      </div>
-    </div>
-
-    <!-- 3. Raw Data CSV Streams -->
-    <div class="col-md-4">
-      <div class="p-3 h-100 d-flex flex-column justify-content-between" style="border:1px solid rgba(37,99,235,0.25);border-radius:14px;background:rgba(37,99,235,0.03);">
-        <div>
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <div style="width:38px;height:38px;background:rgba(37,99,235,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#2563eb;">
-              <i class="fas fa-file-csv fs-5"></i>
-            </div>
-            <div>
-              <h6 class="fw-bold mb-0 text-primary">Raw Data Streams (CSV)</h6>
-              <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size:10px;">Authorized Exports</span>
-            </div>
-          </div>
-          <p class="small text-muted mb-3">Instant CSV streams for external data science pipelines, Google Sheets, or local analysis.</p>
-        </div>
-        <div class="btn-group btn-group-sm w-100">
-          <a href="{% url 'core:export_analytics_csv' 'projects' %}" class="btn btn-outline-primary">Projects</a>
-          <a href="{% url 'core:export_analytics_csv' 'payments' %}" class="btn btn-outline-primary">Payments</a>
-          <a href="{% url 'core:export_analytics_csv' 'clients' %}" class="btn btn-outline-primary">Clients</a>
+        <div class="stat-icon" style="background:var(--danger-soft);border-color:rgba(224,92,92,0.3);color:var(--danger-text);">
+          <i data-lucide="alert-triangle"></i>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     INTERACTIVE ANALYTICS VISUALIZATION CARD
-     ══════════════════════════════════════════════════════════════ -->
-<div class="card mb-4 border-0 shadow-sm dash-chart-card" style="border-radius:18px;">
-  <div class="dash-chart-card-strip" style="border-radius:18px 18px 0 0;"></div>
-  <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2 py-3 border-0 bg-transparent">
-    <div>
-      <h5 class="mb-0 fw-bold" style="color:var(--text-primary);"><i class="fas fa-chart-area text-warning me-2"></i>Historical Monthly Revenue Trajectory</h5>
-      <p class="mb-0 small" style="color:var(--text-muted);">Visual representation of earnings across the last 12 months</p>
+<!-- Comprehensive Executive Reports Packages -->
+<div class="card mb-4">
+  <div class="card-header-hub">
+    <div class="d-flex align-items-center gap-2">
+      <i data-lucide="file-check" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+      <span class="card-title-hub">Executive Intelligence Reports</span>
     </div>
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-      <div class="btn-group btn-group-sm" role="group" aria-label="Chart Switcher">
-        <button type="button" class="btn btn-outline-primary active" onclick="switchReportChart('bar', this)" title="Bar Chart"><i class="fas fa-chart-bar me-1"></i>Bar</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('line', this)" title="Line Chart"><i class="fas fa-chart-line me-1"></i>Line</button>
-        <button type="button" class="btn btn-outline-primary" onclick="switchReportChart('area', this)" title="Area Chart"><i class="fas fa-wave-square me-1"></i>Area</button>
+  </div>
+
+  <div class="card-body p-4">
+    <div class="row g-3">
+      <!-- 1. Executive PDF Report -->
+      <div class="col-md-4">
+        <div class="p-3 h-100 d-flex flex-column justify-content-between" style="border:1px solid rgba(224,92,92,0.3);border-radius:var(--r-md);background:var(--danger-soft);">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div style="width:36px;height:36px;background:rgba(224,92,92,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--danger-text);">
+                <i data-lucide="file-text" style="width:18px;height:18px;"></i>
+              </div>
+              <div>
+                <h6 style="font-weight:700;font-size:14px;color:var(--danger-text);margin:0;">Executive BI Report (PDF)</h6>
+                <span class="badge" style="background:rgba(224,92,92,0.2);color:var(--danger-text);font-size:10px;">Presentation Ready</span>
+              </div>
+            </div>
+            <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;">High-resolution PDF with executive KPIs, confidence intervals, time-series forecast, and actionable insights.</p>
+          </div>
+          <a href="{% url 'core:export_comprehensive_pdf_report' %}" class="btn-hub-danger w-100 text-center" style="justify-content:center;">
+            <i data-lucide="download"></i> <span>Download PDF</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. Multi-Sheet Excel Workbook -->
+      <div class="col-md-4">
+        <div class="p-3 h-100 d-flex flex-column justify-content-between" style="border:1px solid rgba(76,175,122,0.3);border-radius:var(--r-md);background:var(--success-soft);">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div style="width:36px;height:36px;background:rgba(76,175,122,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--success-text);">
+                <i data-lucide="file-spreadsheet" style="width:18px;height:18px;"></i>
+              </div>
+              <div>
+                <h6 style="font-weight:700;font-size:14px;color:var(--success-text);margin:0;">Analytics Workbook (Excel)</h6>
+                <span class="badge" style="background:rgba(76,175,122,0.2);color:var(--success-text);font-size:10px;">Multi-Sheet .XLSX</span>
+              </div>
+            </div>
+            <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;">Structured workbook featuring Executive Summary, Projects, Payments, Clients, and Financial Forecasts.</p>
+          </div>
+          <a href="{% url 'core:export_comprehensive_excel_report' %}" class="btn-hub-success w-100 text-center" style="justify-content:center;">
+            <i data-lucide="download"></i> <span>Download Excel</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. Raw Data CSV Streams -->
+      <div class="col-md-4">
+        <div class="p-3 h-100 d-flex flex-column justify-content-between" style="border:1px solid var(--hub-gold-border);border-radius:var(--r-md);background:var(--hub-gold-soft);">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div style="width:36px;height:36px;background:rgba(232,168,58,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--hub-gold);">
+                <i data-lucide="table" style="width:18px;height:18px;"></i>
+              </div>
+              <div>
+                <h6 style="font-weight:700;font-size:14px;color:var(--hub-gold);margin:0;">Raw Data Streams (CSV)</h6>
+                <span class="badge" style="background:rgba(232,168,58,0.2);color:var(--hub-gold);font-size:10px;">Instant Export</span>
+              </div>
+            </div>
+            <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;">Direct tabular CSV streams for external business intelligence tools, Google Sheets, or local analysis.</p>
+          </div>
+          <div class="d-flex gap-1">
+            <a href="{% url 'core:export_analytics_csv' 'projects' %}" class="btn-hub-secondary btn-sm flex-grow-1 text-center" style="justify-content:center;font-size:12px;">Projects</a>
+            <a href="{% url 'core:export_analytics_csv' 'payments' %}" class="btn-hub-secondary btn-sm flex-grow-1 text-center" style="justify-content:center;font-size:12px;">Payments</a>
+            <a href="{% url 'core:export_analytics_csv' 'clients' %}" class="btn-hub-secondary btn-sm flex-grow-1 text-center" style="justify-content:center;font-size:12px;">Clients</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="card-body">
+</div>
+
+<!-- Interactive Analytics Visualization Card -->
+<div class="card mb-4">
+  <div class="card-header-hub">
+    <div>
+      <div class="d-flex align-items-center gap-2">
+        <i data-lucide="trending-up" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+        <span class="card-title-hub">Historical Monthly Revenue Trajectory</span>
+      </div>
+      <p style="margin:2px 0 0;font-size:12.5px;color:var(--text-muted);">Realized earnings trajectory across the previous 12 months</p>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+      <button type="button" class="btn-hub-secondary btn-sm active" onclick="switchReportChart('bar', this)" title="Bar Chart">
+        <i data-lucide="bar-chart-2"></i> <span>Bar</span>
+      </button>
+      <button type="button" class="btn-hub-secondary btn-sm" onclick="switchReportChart('line', this)" title="Line Chart">
+        <i data-lucide="trending-up"></i> <span>Line</span>
+      </button>
+      <button type="button" class="btn-hub-secondary btn-sm" onclick="switchReportChart('area', this)" title="Area Chart">
+        <i data-lucide="activity"></i> <span>Area</span>
+      </button>
+    </div>
+  </div>
+  <div class="card-body p-4">
     <div style="height:300px;position:relative;">
       <canvas id="monthlyChart"></canvas>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     MODULAR REPORT PACKAGES & BREAKDOWN
-     ══════════════════════════════════════════════════════════════ -->
+<!-- Modular Report Packages & Status Breakdown -->
 <div class="row g-4">
   <div class="col-lg-8">
-    <div class="card border-0 shadow-sm p-4" style="border-radius:18px;">
-      <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-folder-open text-primary me-2"></i>Module-Specific Report Packages</h6>
-      <div class="row g-3">
-        <!-- Monthly Report -->
-        <div class="col-md-6">
-          <div class="p-3 rounded-3" style="border:1px solid var(--border-color);background:var(--bg-card);">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <i class="fas fa-calendar-alt text-primary"></i>
-              <span class="fw-bold" style="color:var(--text-primary);">Monthly Revenue Report</span>
-            </div>
-            <p class="small text-muted mb-3">Earnings breakdown for the last 12 months.</p>
-            <div class="d-flex gap-2">
-              <a href="{% url 'core:export_pdf_report' 'monthly' %}" class="btn btn-xs btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
-              <a href="{% url 'core:export_excel_report' 'monthly' %}" class="btn btn-xs btn-outline-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="folder" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Domain-Specific Exports</span>
+        </div>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3">
+          <!-- Monthly Report -->
+          <div class="col-md-6">
+            <div class="p-3 rounded" style="border:1px solid var(--border-color);background:var(--bg-elevated);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i data-lucide="calendar" style="width:16px;height:16px;color:var(--hub-gold);"></i>
+                <span style="font-weight:700;font-size:14px;color:var(--text-primary);">Monthly Revenue</span>
+              </div>
+              <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">Complete 12-month earnings breakdown.</p>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'monthly' %}" class="btn-hub-danger btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">PDF</a>
+                <a href="{% url 'core:export_excel_report' 'monthly' %}" class="btn-hub-success btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">Excel</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Payment Report -->
-        <div class="col-md-6">
-          <div class="p-3 rounded-3" style="border:1px solid var(--border-color);background:var(--bg-card);">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <i class="fas fa-dollar-sign text-success"></i>
-              <span class="fw-bold" style="color:var(--text-primary);">Payment Transaction Ledger</span>
-            </div>
-            <p class="small text-muted mb-3">All invoices, receipts, and payment status records.</p>
-            <div class="d-flex gap-2">
-              <a href="{% url 'core:export_pdf_report' 'payment' %}" class="btn btn-xs btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
-              <a href="{% url 'core:export_excel_report' 'payment' %}" class="btn btn-xs btn-outline-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
+          <!-- Payment Report -->
+          <div class="col-md-6">
+            <div class="p-3 rounded" style="border:1px solid var(--border-color);background:var(--bg-elevated);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i data-lucide="credit-card" style="width:16px;height:16px;color:var(--success-text);"></i>
+                <span style="font-weight:700;font-size:14px;color:var(--text-primary);">Payment Transaction Ledger</span>
+              </div>
+              <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">All invoices, receipts, and clearance statuses.</p>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'payment' %}" class="btn-hub-danger btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">PDF</a>
+                <a href="{% url 'core:export_excel_report' 'payment' %}" class="btn-hub-success btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">Excel</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Project Report -->
-        <div class="col-md-6">
-          <div class="p-3 rounded-3" style="border:1px solid var(--border-color);background:var(--bg-card);">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <i class="fas fa-layer-group text-info"></i>
-              <span class="fw-bold" style="color:var(--text-primary);">Project Portfolio Audit</span>
-            </div>
-            <p class="small text-muted mb-3">Project statuses, budgets, deadlines, and progress.</p>
-            <div class="d-flex gap-2">
-              <a href="{% url 'core:export_pdf_report' 'project' %}" class="btn btn-xs btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
-              <a href="{% url 'core:export_excel_report' 'project' %}" class="btn btn-xs btn-outline-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
+          <!-- Project Report -->
+          <div class="col-md-6">
+            <div class="p-3 rounded" style="border:1px solid var(--border-color);background:var(--bg-elevated);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i data-lucide="layers" style="width:16px;height:16px;color:var(--info-text);"></i>
+                <span style="font-weight:700;font-size:14px;color:var(--text-primary);">Project Portfolio Audit</span>
+              </div>
+              <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">Deliverables, completion rates, and milestones.</p>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'project' %}" class="btn-hub-danger btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">PDF</a>
+                <a href="{% url 'core:export_excel_report' 'project' %}" class="btn-hub-success btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">Excel</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Client Report -->
-        <div class="col-md-6">
-          <div class="p-3 rounded-3" style="border:1px solid var(--border-color);background:var(--bg-card);">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <i class="fas fa-users text-warning"></i>
-              <span class="fw-bold" style="color:var(--text-primary);">Client Accounts Summary</span>
-            </div>
-            <p class="small text-muted mb-3">All clients with contact information and contract history.</p>
-            <div class="d-flex gap-2">
-              <a href="{% url 'core:export_pdf_report' 'client' %}" class="btn btn-xs btn-outline-danger w-50"><i class="fas fa-file-pdf me-1"></i> PDF</a>
-              <a href="{% url 'core:export_excel_report' 'client' %}" class="btn btn-xs btn-outline-success w-50"><i class="fas fa-file-excel me-1"></i> Excel</a>
+          <!-- Client Report -->
+          <div class="col-md-6">
+            <div class="p-3 rounded" style="border:1px solid var(--border-color);background:var(--bg-elevated);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i data-lucide="users" style="width:16px;height:16px;color:var(--hub-gold);"></i>
+                <span style="font-weight:700;font-size:14px;color:var(--text-primary);">Client Accounts Summary</span>
+              </div>
+              <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">Client roster with account history and contacts.</p>
+              <div class="d-flex gap-2">
+                <a href="{% url 'core:export_pdf_report' 'client' %}" class="btn-hub-danger btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">PDF</a>
+                <a href="{% url 'core:export_excel_report' 'client' %}" class="btn-hub-success btn-sm w-50 text-center" style="justify-content:center;font-size:12px;">Excel</a>
+              </div>
             </div>
           </div>
         </div>
@@ -226,16 +255,23 @@
     </div>
   </div>
 
-  <!-- Sidebar: Status Breakdown & Top Clients -->
+  <!-- Right: Status Breakdown -->
   <div class="col-lg-4">
-    <div class="card border-0 shadow-sm mb-4 p-4" style="border-radius:18px;">
-      <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-tasks text-primary me-2"></i> Project Status Breakdown</h6>
-      {% for status, count in projects_by_status.items %}
-      <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
-        <span class="small fw-semibold text-capitalize" style="color:var(--text-primary);">{{ status|cut:'_'|title }}</span>
-        <span class="badge bg-primary bg-opacity-10 text-primary">{{ count }}</span>
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="pie-chart" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Project Status Ratios</span>
+        </div>
       </div>
-      {% endfor %}
+      <div class="card-body p-4">
+        {% for status, count in projects_by_status.items %}
+        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom" style="border-color:var(--border-color) !important;">
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary);text-transform:capitalize;">{{ status|cut:'_'|title }}</span>
+          <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">{{ count }}</span>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>
@@ -251,7 +287,7 @@ let reportChartInstance = null;
 function initReportsChart() {
   const ctx = document.getElementById('monthlyChart');
   if (ctx && typeof Chart !== 'undefined') {
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const dark = document.documentElement.getAttribute('data-theme') !== 'light';
     reportChartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -259,8 +295,8 @@ function initReportsChart() {
         datasets: [{
           label: 'Realized Revenue ($)',
           data: reportValues,
-          backgroundColor: dark ? 'rgba(219, 153, 65, 0.75)' : '#DB9941',
-          borderColor: '#B8791F',
+          backgroundColor: dark ? 'rgba(232, 168, 58, 0.75)' : '#E8A83A',
+          borderColor: '#C88A22',
           borderWidth: 1.5,
           borderRadius: 6
         }]
@@ -289,7 +325,7 @@ if (document.readyState !== 'loading') {
 
 function switchReportChart(type, btnEl) {
   if (btnEl && btnEl.parentNode) {
-    btnEl.parentNode.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+    btnEl.parentNode.querySelectorAll('button').forEach(b => b.classList.remove('active'));
     btnEl.classList.add('active');
   }
   if (reportChartInstance) {
@@ -301,14 +337,13 @@ function switchReportChart(type, btnEl) {
       ds.borderWidth = 2.5;
       ds.pointRadius = 4;
       ds.pointHoverRadius = 7;
-      // Create gradient fill
       const canvas = reportChartInstance.canvas;
       const gradCtx = canvas.getContext('2d');
       const grad = gradCtx.createLinearGradient(0, 0, 0, canvas.clientHeight || 300);
-      grad.addColorStop(0, 'rgba(219, 153, 65, 0.35)');
-      grad.addColorStop(1, 'rgba(219, 153, 65, 0.02)');
+      grad.addColorStop(0, 'rgba(232, 168, 58, 0.35)');
+      grad.addColorStop(1, 'rgba(232, 168, 58, 0.02)');
       ds.backgroundColor = grad;
-      ds.borderColor = '#B8791F';
+      ds.borderColor = '#E8A83A';
       ds.borderRadius = 0;
     } else if (type === 'line') {
       reportChartInstance.config.type = 'line';
@@ -318,17 +353,16 @@ function switchReportChart(type, btnEl) {
       ds.pointRadius = 4;
       ds.pointHoverRadius = 7;
       ds.backgroundColor = 'transparent';
-      ds.borderColor = '#DB9941';
+      ds.borderColor = '#E8A83A';
       ds.borderRadius = 0;
     } else {
-      // bar
       reportChartInstance.config.type = 'bar';
       ds.fill = false;
       ds.tension = 0;
       ds.borderWidth = 1.5;
       ds.pointRadius = 0;
-      ds.backgroundColor = 'rgba(219, 153, 65, 0.75)';
-      ds.borderColor = '#B8791F';
+      ds.backgroundColor = 'rgba(232, 168, 58, 0.75)';
+      ds.borderColor = '#C88A22';
       ds.borderRadius = 6;
     }
     reportChartInstance.update();

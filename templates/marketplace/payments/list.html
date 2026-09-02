@@ -100,12 +100,14 @@
     </table>
   </div>
   {% else %}
-  <div class="empty-state">
-    <span class="empty-icon">💳</span>
-    <div class="empty-title">No payment records yet</div>
-    <div class="empty-desc">Payment records are automatically initialized whenever you post a new project with a budget.</div>
-    <a href="{% url 'marketplace:project_post' %}" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Post a Project
+  <div class="empty-state py-5 text-center">
+    <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;border-radius:14px;background:var(--hub-gold-soft);border:1px solid var(--hub-gold-border);color:var(--hub-gold);display:inline-flex;align-items:center;justify-content:center;">
+      <i data-lucide="credit-card" style="width:26px;height:26px;"></i>
+    </div>
+    <div class="empty-title" style="font-weight:700;font-size:16px;color:var(--text-primary);margin-bottom:6px;">No payment records yet</div>
+    <div class="empty-desc" style="font-size:13px;color:var(--text-muted);max-width:400px;margin:0 auto 16px;">Payment records are automatically initialized whenever you post a new project with a budget.</div>
+    <a href="{% url 'marketplace:project_post' %}" class="btn-hub-primary">
+      <i data-lucide="plus"></i> <span>Post a Project</span>
     </a>
   </div>
   {% endif %}

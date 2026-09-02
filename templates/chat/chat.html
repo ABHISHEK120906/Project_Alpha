@@ -1,358 +1,228 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <script>
-    (function() {
-      try {
-        var saved = localStorage.getItem('theme') || (localStorage.getItem('darkMode') === '1' ? 'dark' : (localStorage.getItem('darkMode') === '0' ? 'light' : null));
-        var theme = saved;
-        if (!theme) {
-          theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        document.documentElement.setAttribute('data-theme', theme);
-      } catch (e) {}
-    })();
-  </script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="TrackBot — Your AI Freelancing Assistant on FreelanceTrack">
-  <title>{{ page_title|default:"TrackBot AI Assistant" }} — FreelanceTrack</title>
 
-  <!-- Google Fonts: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+{% block title %}AI Assistant — FreelanceHub{% endblock %}
+{% block page_title %}AI Assistant{% endblock %}
 
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-        crossorigin="anonymous">
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+<style>
+  .trackbot-page {
+    margin: -28px;
+    height: calc(100vh - var(--topbar-h));
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+  }
+  .tb-sidebar {
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-color);
+  }
+  .tb-brand-icon {
+    background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
+    color: #0D0F14;
+  }
+  .tb-suggestion-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+  }
+  .tb-suggestion-card:hover {
+    border-color: var(--hub-gold-border);
+    background: var(--hub-gold-soft);
+  }
+</style>
+{% endblock %}
 
-  <!-- Font Awesome 6 -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer">
+{% block content %}
+<!-- Hidden: active conversation ID for JS -->
+<input type="hidden" id="tbActiveConvId" value="{{ active_conversation.id|default:'' }}">
 
-  <!-- Paper-Cut Design System CSS -->
-  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-  <!-- TrackBot Chat CSS -->
-  <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
-</head>
+<div class="trackbot-page">
 
-<body>
-<div class="dashboard-ambient" aria-hidden="true"></div>
+  <!-- ── SIDEBAR ────────────────────────────────────────── -->
+  <aside class="tb-sidebar" id="tbSidebar">
 
-<!-- ─── SIDEBAR ──────────────────────────────────────────── -->
-<aside class="sidebar" id="mainSidebar">
-  <a href="{% url 'core:dashboard' %}" class="sidebar-brand">
-    <div class="sidebar-brand-icon"><i class="fas fa-wallet"></i></div>
-    <div>
-      <div class="sidebar-brand-text">FreelanceTrack</div>
-      <div class="sidebar-brand-sub">Project Manager</div>
-    </div>
-  </a>
-
-  <nav class="sidebar-nav" aria-label="Main navigation">
-    <p class="sidebar-section-label">Main Menu</p>
-    <a href="{% url 'core:dashboard' %}" class="sidebar-link"><i class="fas fa-home nav-icon"></i><span>Dashboard</span></a>
-    <a href="{% url 'core:client_list' %}" class="sidebar-link"><i class="fas fa-users nav-icon"></i><span>Clients</span></a>
-    <a href="{% url 'core:project_list' %}" class="sidebar-link"><i class="fas fa-folder nav-icon"></i><span>Projects</span></a>
-    <a href="{% url 'core:task_list' %}" class="sidebar-link"><i class="fas fa-check-circle nav-icon"></i><span>Tasks</span></a>
-    <a href="{% url 'core:calendar_view' %}" class="sidebar-link"><i class="fas fa-calendar-alt nav-icon"></i><span>Calendar</span></a>
-
-    <p class="sidebar-section-label">Finance &amp; Assets</p>
-    <a href="{% url 'core:payment_list' %}" class="sidebar-link"><i class="fas fa-dollar-sign nav-icon"></i><span>Payments</span></a>
-    <a href="{% url 'core:income_expense_tracker' %}" class="sidebar-link"><i class="fas fa-wallet nav-icon"></i><span>Income &amp; Expenses</span></a>
-    <a href="{% url 'core:invoice_list' %}" class="sidebar-link"><i class="fas fa-file-invoice-dollar nav-icon"></i><span>Invoices</span></a>
-    <a href="{% url 'core:file_manager' %}" class="sidebar-link"><i class="fas fa-paperclip nav-icon"></i><span>File Manager</span></a>
-    <a href="{% url 'core:reports_dashboard' %}" class="sidebar-link"><i class="fas fa-chart-line nav-icon"></i><span>Reports</span></a>
-
-    <p class="sidebar-section-label">Account &amp; Tools</p>
-    <a href="{% url 'core:profile_view' %}" class="sidebar-link"><i class="fas fa-user-circle nav-icon"></i><span>My Profile</span></a>
-    <a href="{% url 'core:notifications_list' %}" class="sidebar-link"><i class="fas fa-bell nav-icon"></i><span>Notifications</span></a>
-    <a href="{% url 'core:note_list' %}" class="sidebar-link"><i class="fas fa-sticky-note nav-icon"></i><span>Notes</span></a>
-    <a href="{% url 'core:activity_list' %}" class="sidebar-link"><i class="fas fa-history nav-icon"></i><span>Activity Log</span></a>
-    <a href="{% url 'core:settings' %}" class="sidebar-link"><i class="fas fa-cog nav-icon"></i><span>Settings</span></a>
-    <a href="{% url 'core:chat_home' %}" class="sidebar-link active"><i class="fas fa-robot nav-icon"></i><span>AI Assistant</span></a>
-  </nav>
-
-  <div class="sidebar-promo">
-    <h6>FreelanceTrack Pro</h6>
-    <p>Advanced Analytics &amp; Invoicing Active</p>
-  </div>
-
-  <div class="sidebar-footer">
-    <a href="{% url 'core:profile_view' %}" class="sidebar-user" style="text-decoration:none;">
-      {% if user.profile and user.profile.profile_picture %}
-        <img src="{{ user.profile.profile_picture.url }}" class="sidebar-avatar" style="object-fit:cover;width:36px;height:36px;border-radius:50%;">
-      {% else %}
-        <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
-      {% endif %}
-      <div>
-        <div style="font-size:13.5px;font-weight:700;color:#ffffff;">{{ user.get_full_name|default:user.username }}</div>
-        <div style="font-size:12px;font-weight:500;color:#ffffff;">Freelancer</div>
+    <div class="tb-sidebar-header">
+      <!-- Brand -->
+      <div class="tb-brand">
+        <div class="tb-brand-icon"><i data-lucide="bot" style="width:20px;height:20px;"></i></div>
+        <div>
+          <div class="tb-brand-name">TrackBot</div>
+          <div class="tb-brand-sub">AI Freelancing Assistant</div>
+        </div>
       </div>
-    </a>
-    <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
-      {% csrf_token %}
-      <button type="submit" class="sidebar-link mt-2 w-100 text-start" style="color:#ffffff;font-weight:600;background:none;border:none;cursor:pointer;padding:0;">
-        <i class="fas fa-sign-out-alt nav-icon"></i><span>Log Out</span>
-      </button>
-    </form>
-  </div>
-</aside>
 
-<!-- Sidebar overlay (mobile) -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<!-- ─── MAIN CONTENT ─────────────────────────────────────── -->
-<div class="main-content">
-
-  <!-- Topbar -->
-  <header class="topbar">
-    <div class="d-flex align-items-center gap-3">
-      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
-      <div><h1 class="topbar-title">AI Assistant</h1></div>
-    </div>
-    <div class="topbar-actions d-flex align-items-center gap-2">
-      <!-- Theme toggle -->
-      <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
-        <span class="theme-toggle-icon sun"><i class="fas fa-sun"></i></span>
-        <span class="theme-toggle-icon moon"><i class="fas fa-moon"></i></span>
-        <span class="theme-toggle-thumb"></span>
-        <input type="checkbox" id="themeToggle" aria-label="Theme toggle" style="display:none;">
-      </button>
-      <a href="{% url 'core:notifications_list' %}" class="topbar-btn position-relative" title="Notifications">
-        <i class="fas fa-bell"></i>
-        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="notifBadge" style="display:none;"></span>
+      <!-- New Chat -->
+      <a href="{% url 'core:chat_home' %}" class="tb-new-chat-btn" id="tbNewChatBtn">
+        <i data-lucide="plus" style="width:16px;height:16px;"></i> New Chat
       </a>
-      <a href="{% url 'core:profile_view' %}" class="topbar-btn" title="My Profile"><i class="fas fa-user"></i></a>
-      <a href="{% url 'core:project_create' %}" class="topbar-btn" title="Create New Project"><i class="fas fa-plus"></i></a>
+
+      <!-- Search -->
+      <div class="tb-search-wrap">
+        <i data-lucide="search" class="tb-search-icon" style="width:14px;height:14px;"></i>
+        <input
+          type="text"
+          id="tbSearchInput"
+          class="tb-search-input"
+          placeholder="Search chats…"
+          autocomplete="off"
+        >
+      </div>
     </div>
-  </header>
 
-  <!-- Chat page content -->
-  <main class="page-content" style="padding:16px 24px;">
-
-    <!-- Hidden: active conversation ID for JS -->
-    <input type="hidden" id="tbActiveConvId" value="{{ active_conversation.id|default:'' }}">
-
-    <!-- ─────────────────────────────────────────────────────────
-         FULL TRACKBOT CHAT LAYOUT
-         ───────────────────────────────────────────────────────── -->
-    <div class="trackbot-page">
-
-      <!-- ── SIDEBAR ────────────────────────────────────────── -->
-      <aside class="tb-sidebar" id="tbSidebar">
-
-        <div class="tb-sidebar-header">
-          <!-- Brand -->
-          <div class="tb-brand">
-            <div class="tb-brand-icon"><i class="fas fa-robot"></i></div>
-            <div>
-              <div class="tb-brand-name">TrackBot</div>
-              <div class="tb-brand-sub">AI Freelancing Assistant</div>
+    <!-- Conversations list -->
+    <div class="tb-conv-list" id="tbConvList">
+      {% if conversations %}
+        {% for conv in conversations %}
+          <div class="tb-conv-item{% if active_conversation and active_conversation.id == conv.id %} active{% endif %}" data-id="{{ conv.id }}">
+            <div class="tb-conv-item-icon"><i data-lucide="message-square" style="width:15px;height:15px;"></i></div>
+            <span class="tb-conv-item-title" title="{{ conv.title|truncatechars:60 }}">{{ conv.title|truncatechars:45 }}</span>
+            <div class="tb-conv-item-actions">
+              <button class="tb-conv-action-btn" data-action="rename" data-id="{{ conv.id }}" title="Rename"><i data-lucide="edit-3" style="width:13px;height:13px;"></i></button>
+              <button class="tb-conv-action-btn danger" data-action="delete" data-id="{{ conv.id }}" title="Delete"><i data-lucide="trash-2" style="width:13px;height:13px;"></i></button>
             </div>
           </div>
-
-          <!-- New Chat -->
-          <a href="{% url 'core:chat_home' %}" class="tb-new-chat-btn" id="tbNewChatBtn">
-            <i class="fas fa-plus"></i> New Chat
-          </a>
-
-          <!-- Search -->
-          <div class="tb-search-wrap">
-            <i class="fas fa-search tb-search-icon"></i>
-            <input
-              type="text"
-              id="tbSearchInput"
-              class="tb-search-input"
-              placeholder="Search chats…"
-              autocomplete="off"
-            >
-          </div>
+        {% endfor %}
+      {% else %}
+        <div style="text-align:center;padding:28px 14px;color:var(--text-muted);font-size:12.5px;">
+          No conversations yet.<br>Start chatting to create one!
         </div>
+      {% endif %}
+    </div>
 
-        <!-- Conversations list (populated by JS + server data) -->
-        <div class="tb-conv-list" id="tbConvList">
-          {# Pre-rendered for initial load speed. JS will also update this. #}
-          {% if conversations %}
-            {% for conv in conversations %}
-              <div class="tb-conv-item{% if active_conversation and active_conversation.id == conv.id %} active{% endif %}" data-id="{{ conv.id }}">
-                <div class="tb-conv-item-icon"><i class="fas fa-comment"></i></div>
-                <span class="tb-conv-item-title" title="{{ conv.title|truncatechars:60 }}">{{ conv.title|truncatechars:45 }}</span>
-                <div class="tb-conv-item-actions">
-                  <button class="tb-conv-action-btn" data-action="rename" data-id="{{ conv.id }}" title="Rename"><i class="fas fa-pen"></i></button>
-                  <button class="tb-conv-action-btn danger" data-action="delete" data-id="{{ conv.id }}" title="Delete"><i class="fas fa-trash"></i></button>
-                </div>
-              </div>
-            {% endfor %}
-          {% else %}
-            <div style="text-align:center;padding:28px 14px;color:var(--text-muted);font-size:12.5px;">
-              No conversations yet.<br>Start chatting to create one!
+  </aside>
+
+  <!-- ── MAIN CHAT AREA ──────────────────────────────────── -->
+  <div class="tb-main">
+
+    <!-- Chat header -->
+    <div class="tb-chat-header">
+      <button class="tb-sidebar-toggle" id="tbSidebarToggle" title="Toggle sidebar" aria-label="Toggle chat sidebar">
+        <i data-lucide="menu" style="width:18px;height:18px;"></i>
+      </button>
+      <div class="tb-chat-title" id="tbChatTitle">
+        {% if active_conversation %}
+          {{ active_conversation.title }}
+        {% else %}
+          New Conversation
+        {% endif %}
+      </div>
+      <div class="tb-header-badge">
+        <span class="tb-header-badge-dot"></span>
+        TrackBot Online
+      </div>
+    </div>
+
+    <!-- Messages area -->
+    <div class="tb-messages-area" id="tbMessagesArea" role="log" aria-live="polite" aria-label="Chat messages">
+
+      {% if active_conversation and initial_messages %}
+        {% for msg in initial_messages %}
+          <div class="tb-message {{ msg.role }}" data-id="{{ msg.id }}">
+            <div class="tb-message-avatar">
+              {% if msg.role == 'user' %}
+                <i data-lucide="user" style="width:16px;height:16px;"></i>
+              {% else %}
+                <i data-lucide="bot" style="width:16px;height:16px;"></i>
+              {% endif %}
             </div>
-          {% endif %}
-        </div>
-
-      </aside>
-
-      <!-- ── MAIN CHAT AREA ──────────────────────────────────── -->
-      <div class="tb-main">
-
-        <!-- Chat header -->
-        <div class="tb-chat-header">
-          <button class="tb-sidebar-toggle" id="tbSidebarToggle" title="Toggle sidebar" aria-label="Toggle chat sidebar">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="tb-chat-title" id="tbChatTitle">
-            {% if active_conversation %}
-              {{ active_conversation.title }}
-            {% else %}
-              New Conversation
-            {% endif %}
-          </div>
-          <div class="tb-header-badge">
-            <span class="tb-header-badge-dot"></span>
-            TrackBot Online
-          </div>
-        </div>
-
-        <!-- Messages area -->
-        <div class="tb-messages-area" id="tbMessagesArea" role="log" aria-live="polite" aria-label="Chat messages">
-
-          {% if active_conversation and initial_messages %}
-            {# ── Render existing messages on page load ── #}
-            {% for msg in initial_messages %}
-              <div class="tb-message {{ msg.role }}" data-id="{{ msg.id }}">
-                <div class="tb-message-avatar">
-                  {% if msg.role == 'user' %}
-                    <i class="fas fa-user"></i>
-                  {% else %}
-                    <i class="fas fa-robot"></i>
-                  {% endif %}
+            <div class="tb-message-body">
+              <div class="tb-message-bubble tb-prerendered" data-role="{{ msg.role }}" data-content="{{ msg.content|escapejs }}">
+                {% if msg.role == 'assistant' %}
+                  <span class="tb-raw-content" style="display:none;">{{ msg.content }}</span>
+                {% else %}
+                  {{ msg.content|linebreaksbr }}
+                {% endif %}
+              </div>
+              <div class="tb-message-time">{{ msg.created_at|date:"g:i A" }}</div>
+              {% if msg.role == 'assistant' %}
+                <div class="tb-message-actions">
+                  <button class="tb-msg-action-btn tb-copy-btn" data-content="{{ msg.content|escapejs }}" title="Copy response">
+                    <i data-lucide="copy" style="width:13px;height:13px;"></i> Copy
+                  </button>
                 </div>
-                <div class="tb-message-body">
-                  <div class="tb-message-bubble tb-prerendered" data-role="{{ msg.role }}" data-content="{{ msg.content|escapejs }}">
-                    {% if msg.role == 'assistant' %}
-                      {# Content formatted by JS #}
-                      <span class="tb-raw-content" style="display:none;">{{ msg.content }}</span>
-                    {% else %}
-                      {{ msg.content|linebreaksbr }}
-                    {% endif %}
-                  </div>
-                  <div class="tb-message-time">{{ msg.created_at|date:"g:i A" }}</div>
-                  {% if msg.role == 'assistant' %}
-                    <div class="tb-message-actions">
-                      <button class="tb-msg-action-btn tb-copy-btn" data-content="{{ msg.content|escapejs }}" title="Copy response">
-                        <i class="fas fa-copy"></i> Copy
-                      </button>
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            {% endfor %}
-
-          {% else %}
-            {# ── Welcome screen (new chat) ── #}
-            <div class="tb-welcome" id="tbWelcomeScreen">
-              <div class="tb-welcome-icon">
-                <i class="fas fa-robot"></i>
-              </div>
-              <h2>Hi, I'm TrackBot! 👋</h2>
-              <p>Your intelligent Freelancing Assistant. Ask me anything about your projects, tasks, clients, deadlines, or earnings — I have access to your real data.</p>
-
-              <div class="tb-suggestions">
-                <button class="tb-suggestion-card" data-question="How is my freelancing progress?" aria-label="Ask about freelancing progress">
-                  <div class="tb-suggestion-icon"><i class="fas fa-chart-line"></i></div>
-                  <span class="tb-suggestion-text">How is my freelancing progress?</span>
-                </button>
-                <button class="tb-suggestion-card" data-question="What are my pending tasks?" aria-label="Ask about pending tasks">
-                  <div class="tb-suggestion-icon"><i class="fas fa-tasks"></i></div>
-                  <span class="tb-suggestion-text">What are my pending tasks?</span>
-                </button>
-                <button class="tb-suggestion-card" data-question="Which project deadline is coming up soon?" aria-label="Ask about upcoming deadlines">
-                  <div class="tb-suggestion-icon"><i class="fas fa-calendar-check"></i></div>
-                  <span class="tb-suggestion-text">Which project deadline is coming up soon?</span>
-                </button>
-                <button class="tb-suggestion-card" data-question="How much did I earn this month?" aria-label="Ask about monthly earnings">
-                  <div class="tb-suggestion-icon"><i class="fas fa-dollar-sign"></i></div>
-                  <span class="tb-suggestion-text">How much did I earn this month?</span>
-                </button>
-                <button class="tb-suggestion-card" data-question="What should I focus on today?" aria-label="Ask for today's focus">
-                  <div class="tb-suggestion-icon"><i class="fas fa-bullseye"></i></div>
-                  <span class="tb-suggestion-text">What should I focus on today?</span>
-                </button>
-                <button class="tb-suggestion-card" data-question="Give me a summary of my active projects." aria-label="Ask for project summary">
-                  <div class="tb-suggestion-icon"><i class="fas fa-folder-open"></i></div>
-                  <span class="tb-suggestion-text">Give me a summary of my active projects.</span>
-                </button>
-              </div>
+              {% endif %}
             </div>
-          {% endif %}
+          </div>
+        {% endfor %}
 
-        </div><!-- /.tb-messages-area -->
+      {% else %}
+        <!-- Welcome screen -->
+        <div class="tb-welcome" id="tbWelcomeScreen">
+          <div class="tb-welcome-icon">
+            <i data-lucide="bot" style="width:32px;height:32px;"></i>
+          </div>
+          <h2>Hi, I'm TrackBot!</h2>
+          <p>Your intelligent FreelanceHub assistant. Ask me anything about your projects, tasks, clients, deadlines, or earnings — I have access to your real workspace data.</p>
 
-        <!-- Input area -->
-        <div class="tb-input-area">
-          <div class="tb-input-wrap">
-            <textarea
-              id="tbTextarea"
-              class="tb-textarea"
-              rows="1"
-              placeholder="Ask anything about your freelancing…"
-              aria-label="Chat message input"
-              maxlength="4000"
-            ></textarea>
-            <!-- Send button -->
-            <button class="tb-send-btn" id="tbSendBtn" title="Send message (Enter)" disabled aria-label="Send message">
-              <i class="fas fa-paper-plane"></i>
+          <div class="tb-suggestions">
+            <button class="tb-suggestion-card" data-question="How is my freelancing progress?" aria-label="Ask about freelancing progress">
+              <div class="tb-suggestion-icon"><i data-lucide="trending-up" style="width:16px;height:16px;"></i></div>
+              <span class="tb-suggestion-text">How is my freelancing progress?</span>
             </button>
-            <!-- Stop button (shown while generating) -->
-            <button class="tb-stop-btn" id="tbStopBtn" title="Stop generation" aria-label="Stop response generation" style="display:none;">
-              <i class="fas fa-stop"></i>
+            <button class="tb-suggestion-card" data-question="What are my pending tasks?" aria-label="Ask about pending tasks">
+              <div class="tb-suggestion-icon"><i data-lucide="check-square" style="width:16px;height:16px;"></i></div>
+              <span class="tb-suggestion-text">What are my pending tasks?</span>
+            </button>
+            <button class="tb-suggestion-card" data-question="Which project deadline is coming up soon?" aria-label="Ask about upcoming deadlines">
+              <div class="tb-suggestion-icon"><i data-lucide="calendar" style="width:16px;height:16px;"></i></div>
+              <span class="tb-suggestion-text">Which project deadline is coming up soon?</span>
+            </button>
+            <button class="tb-suggestion-card" data-question="How much did I earn this month?" aria-label="Ask about monthly earnings">
+              <div class="tb-suggestion-icon"><i data-lucide="dollar-sign" style="width:16px;height:16px;"></i></div>
+              <span class="tb-suggestion-text">How much did I earn this month?</span>
+            </button>
+            <button class="tb-suggestion-card" data-question="What should I focus on today?" aria-label="Ask for today's focus">
+              <div class="tb-suggestion-icon"><i data-lucide="target" style="width:16px;height:16px;"></i></div>
+              <span class="tb-suggestion-text">What should I focus on today?</span>
+            </button>
+            <button class="tb-suggestion-card" data-question="Give me a summary of my active projects." aria-label="Ask for project summary">
+              <div class="tb-suggestion-icon"><i data-lucide="folder" style="width:16px;height:16px;"></i></div>
+              <span class="tb-suggestion-text">Give me a summary of my active projects.</span>
             </button>
           </div>
-          <p class="tb-input-hint">
-            Press <kbd style="font-size:10px;padding:1px 4px;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-secondary);">Enter</kbd> to send &nbsp;·&nbsp;
-            <kbd style="font-size:10px;padding:1px 4px;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-secondary);">Shift+Enter</kbd> for new line
-            &nbsp;·&nbsp; TrackBot uses your real FreelanceTrack data
-          </p>
         </div>
+      {% endif %}
 
-      </div><!-- /.tb-main -->
-    </div><!-- /.trackbot-page -->
+    </div><!-- /.tb-messages-area -->
 
-  </main>
-</div><!-- /.main-content -->
+    <!-- Input area -->
+    <div class="tb-input-area">
+      <div class="tb-input-wrap">
+        <textarea
+          id="tbTextarea"
+          class="tb-textarea"
+          rows="1"
+          placeholder="Ask anything about your projects, finances or tasks…"
+          aria-label="Chat message input"
+          maxlength="4000"
+        ></textarea>
+        <!-- Send button -->
+        <button class="tb-send-btn" id="tbSendBtn" title="Send message (Enter)" disabled aria-label="Send message">
+          <i data-lucide="send" style="width:16px;height:16px;"></i>
+        </button>
+        <!-- Stop button -->
+        <button class="tb-stop-btn" id="tbStopBtn" title="Stop generation" aria-label="Stop response generation" style="display:none;">
+          <i data-lucide="square" style="width:14px;height:14px;"></i>
+        </button>
+      </div>
+      <p class="tb-input-hint">
+        Press <kbd style="font-size:10px;padding:1px 4px;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-elevated);">Enter</kbd> to send &nbsp;·&nbsp;
+        <kbd style="font-size:10px;padding:1px 4px;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-elevated);">Shift+Enter</kbd> for new line
+        &nbsp;·&nbsp; TrackBot is connected to your live FreelanceHub data
+      </p>
+    </div>
 
-<!-- Toast container -->
-<div class="toast-container" id="toastContainer"></div>
+  </div><!-- /.tb-main -->
+</div><!-- /.trackbot-page -->
+{% endblock %}
 
-{% if messages %}
-  {% for message in messages %}
-    <div data-toast="{{ message }}" data-toast-type="{{ message.tags }}" style="display:none;"></div>
-  {% endfor %}
-{% endif %}
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-
-<!-- App JS (theme engine, toast, sidebar) -->
-<script src="{% static 'js/main.js' %}"></script>
-
-<!-- TrackBot Chatbot JS -->
+{% block extra_js %}
 <script src="{% static 'js/chatbot.js' %}"></script>
-
 <script>
-// ── Post-render: format assistant messages & wire copy buttons ──
 document.addEventListener('DOMContentLoaded', function () {
-  // Format pre-rendered assistant messages (markdown)
+  // Format pre-rendered assistant messages
   document.querySelectorAll('.tb-prerendered[data-role="assistant"]').forEach(function (bubble) {
     var rawEl = bubble.querySelector('.tb-raw-content');
     if (rawEl) {
@@ -361,18 +231,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Wire copy buttons for pre-rendered messages
+  // Wire copy buttons
   document.querySelectorAll('.tb-copy-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var content = this.dataset.content || '';
       navigator.clipboard.writeText(content).then(function () {
-        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        setTimeout(function () { btn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000);
+        btn.innerHTML = '<i data-lucide="check" style="width:13px;height:13px;"></i> Copied!';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        setTimeout(function () {
+          btn.innerHTML = '<i data-lucide="copy" style="width:13px;height:13px;"></i> Copy';
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        }, 2000);
       });
     });
   });
 
-  // Wire sidebar conversation clicks for pre-rendered items
+  // Wire sidebar conversation clicks
   document.querySelectorAll('.tb-conv-item').forEach(function (item) {
     if (!item._wired) {
       item._wired = true;
@@ -384,12 +258,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Scroll to bottom on load (existing conversation)
+  // Scroll to bottom
   var area = document.getElementById('tbMessagesArea');
   if (area) area.scrollTop = area.scrollHeight;
+
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 });
 
-// Simple inline markdown formatter (mirrors chatbot.js)
 function formatMarkdownInline(text) {
   if (!text) return '';
   function esc(s) {
@@ -397,12 +272,12 @@ function formatMarkdownInline(text) {
              .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
   }
   var html = esc(text);
-  html = html.replace(/^### (.+)$/gm, '<strong style="font-size:14px;color:var(--primary);">$1</strong>');
-  html = html.replace(/^## (.+)$/gm, '<strong style="font-size:15px;color:var(--primary);">$1</strong>');
-  html = html.replace(/^# (.+)$/gm, '<strong style="font-size:16px;color:var(--primary);">$1</strong>');
+  html = html.replace(/^### (.+)$/gm, '<strong style="font-size:14px;color:var(--hub-gold);">$1</strong>');
+  html = html.replace(/^## (.+)$/gm, '<strong style="font-size:15px;color:var(--hub-gold);">$1</strong>');
+  html = html.replace(/^# (.+)$/gm, '<strong style="font-size:16px;color:var(--hub-gold);">$1</strong>');
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+  html = html.replace(/`(.+?)`/g, '<code style="background:var(--bg-elevated);padding:1px 4px;border-radius:3px;color:var(--hub-gold);">$1</code>');
   html = html.replace(/^[\•\-\*]\s+(.+)$/gm, '<li>$1</li>');
   html = html.replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>');
   html = html.replace(/<\/ul>\s*<ul>/g, '');
@@ -413,6 +288,4 @@ function formatMarkdownInline(text) {
   return html;
 }
 </script>
-
-</body>
-</html>
+{% endblock %}

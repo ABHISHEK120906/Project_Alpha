@@ -1,64 +1,87 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Notifications — Freelancer Intelligence Platform{% endblock %}
+{% block title %}Notifications — FreelanceHub{% endblock %}
 {% block page_title %}Notification Center{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">Notification History</h4>
-    <p class="text-muted small mb-0">Project updates, payment reminders, deadlines, and system notices.</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="bell" style="color:var(--hub-gold);width:24px;height:24px;"></i> Notifications
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Project alerts, payment logs, upcoming deadlines, and platform updates.</p>
   </div>
   <form method="post" action="{% url 'core:notification_read_all' %}">
     {% csrf_token %}
-    <button type="submit" class="btn btn-outline-primary btn-sm">
-      <i class="fas fa-check-double me-1"></i> Mark All as Read
+    <button type="submit" class="btn-hub-secondary">
+      <i data-lucide="check-check"></i> <span>Mark All as Read</span>
     </button>
   </form>
 </div>
 
-<div class="card p-3">
-  <div class="list-group list-group-flush">
-    {% for notif in notifications %}
-      <div class="list-group-item px-3 py-3 d-flex justify-content-between align-items-center {% if not notif.is_read %}bg-light border-start border-primary border-4{% endif %}">
-        <div class="d-flex align-items-center gap-3">
-          <div class="p-2 rounded-circle bg-primary-subtle text-primary">
-            {% if notif.notification_type == 'deadline' %}
-              <i class="fas fa-exclamation-triangle text-warning"></i>
-            {% elif notif.notification_type == 'payment' %}
-              <i class="fas fa-dollar-sign text-success"></i>
-            {% elif notif.notification_type == 'invoice' %}
-              <i class="fas fa-file-invoice text-info"></i>
-            {% else %}
-              <i class="fas fa-bell text-primary"></i>
-            {% endif %}
-          </div>
-          <div>
-            <h6 class="fw-bold mb-1">{{ notif.title }}</h6>
-            <p class="small text-secondary mb-1">{{ notif.message }}</p>
-            <span class="small text-muted">{{ notif.created_at|date:"M d, Y H:i" }}</span>
-          </div>
-        </div>
+<div class="card">
+  <div class="card-header-hub">
+    <div class="d-flex align-items-center gap-2">
+      <i data-lucide="bell" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+      <span class="card-title-hub">Activity Alerts</span>
+      <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">{{ notifications|length }} total</span>
+    </div>
+  </div>
 
-        <div class="d-flex align-items-center gap-2">
-          {% if not notif.is_read %}
-            <form method="post" action="{% url 'core:notification_mark_read' notif.pk %}" style="display:inline;">
+  <div class="card-body p-0">
+    <div class="list-group list-group-flush">
+      {% for notif in notifications %}
+        <div class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center border-0 mb-1" style="background:{% if not notif.is_read %}var(--bg-elevated){% else %}transparent{% endif %};border-left:3px solid {% if not notif.is_read %}var(--hub-gold){% else %}transparent{% endif %} !important;transition:background 0.15s ease;">
+          <div class="d-flex align-items-center gap-3">
+            <div style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+              {% if notif.notification_type == 'deadline' %}background:var(--danger-soft);border:1px solid rgba(224,92,92,0.3);color:var(--danger-text);
+              {% elif notif.notification_type == 'payment' %}background:var(--success-soft);border:1px solid rgba(76,175,122,0.3);color:var(--success-text);
+              {% elif notif.notification_type == 'invoice' %}background:var(--hub-gold-soft);border:1px solid var(--hub-gold-border);color:var(--hub-gold);
+              {% else %}background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-secondary);{% endif %}">
+              {% if notif.notification_type == 'deadline' %}
+                <i data-lucide="alert-triangle" style="width:18px;height:18px;"></i>
+              {% elif notif.notification_type == 'payment' %}
+                <i data-lucide="dollar-sign" style="width:18px;height:18px;"></i>
+              {% elif notif.notification_type == 'invoice' %}
+                <i data-lucide="file-text" style="width:18px;height:18px;"></i>
+              {% else %}
+                <i data-lucide="bell" style="width:18px;height:18px;"></i>
+              {% endif %}
+            </div>
+            <div>
+              <h6 style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:2px;">{{ notif.title }}</h6>
+              <p style="font-size:13px;color:var(--text-secondary);margin:0 0 3px;">{{ notif.message }}</p>
+              <span style="font-size:11.5px;color:var(--text-muted);">{{ notif.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            {% if not notif.is_read %}
+              <form method="post" action="{% url 'core:notification_mark_read' notif.pk %}" style="display:inline;margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="btn-hub-secondary btn-icon btn-sm" title="Mark as Read">
+                  <i data-lucide="check"></i>
+                </button>
+              </form>
+            {% endif %}
+            <form method="post" action="{% url 'core:notification_delete' notif.pk %}" style="display:inline;margin:0;">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-outline-secondary" title="Mark Read"><i class="fas fa-check"></i></button>
+              <button type="submit" class="btn-hub-danger btn-icon btn-sm" title="Delete Notification">
+                <i data-lucide="trash-2"></i>
+              </button>
             </form>
-          {% endif %}
-          <form method="post" action="{% url 'core:notification_delete' notif.pk %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
-          </form>
+          </div>
         </div>
-      </div>
-    {% empty %}
-      <div class="text-center py-5 text-muted">
-        <i class="fas fa-bell-slash fa-3x mb-3 text-secondary d-block"></i>
-        No notifications to display.
-      </div>
-    {% endfor %}
+      {% empty %}
+        <div class="empty-state py-5 text-center">
+          <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;">
+            <i data-lucide="bell-off" style="width:26px;height:26px;"></i>
+          </div>
+          <h5 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No notifications</h5>
+          <p style="font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto;">You are all caught up with your projects, payments, and deadlines.</p>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock %}

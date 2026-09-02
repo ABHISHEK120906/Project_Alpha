@@ -120,6 +120,19 @@
   --transition:       all var(--ease-smooth);
   --transition-fast:  all var(--ease-fast);
   --topbar-h:         64px;
+
+  /* ── Admin Portal Tokens (Unified) ── */
+  --admin-brand-purple: var(--hub-gold);
+  --admin-brand-green:  var(--success);
+  --admin-brand-pink:   var(--hub-burgundy-light);
+  --admin-bg-base:      var(--bg-canvas);
+  --admin-bg-surface:   var(--bg-surface);
+  --admin-bg-card:      var(--bg-card);
+  --admin-border:       var(--border-color);
+  --admin-border-subtle:var(--border-subtle);
+  --admin-text-primary: var(--text-primary);
+  --admin-text-secondary:var(--text-secondary);
+  --admin-text-muted:   var(--text-muted);
 }
 
 /* ── 2. LIGHT MODE TOKENS (Translucent Luminous Veils) ───────────────────── */
@@ -197,6 +210,19 @@
   --transition:       all var(--ease-smooth);
   --transition-fast:  all var(--ease-fast);
   --topbar-h:         64px;
+
+  /* ── Admin Portal Tokens (Unified Light) ── */
+  --admin-brand-purple: var(--hub-gold);
+  --admin-brand-green:  var(--success);
+  --admin-brand-pink:   var(--hub-burgundy);
+  --admin-bg-base:      var(--bg-canvas);
+  --admin-bg-surface:   var(--bg-surface);
+  --admin-bg-card:      var(--bg-card);
+  --admin-border:       var(--border-color);
+  --admin-border-subtle:var(--border-subtle);
+  --admin-text-primary: var(--text-primary);
+  --admin-text-secondary:var(--text-secondary);
+  --admin-text-muted:   var(--text-muted);
 }
 
 /* ── 3. RESET & BASE ────────────────────────────────────────────────────── */
@@ -273,20 +299,21 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
     radial-gradient(ellipse at 70% 30%, rgba(248, 245, 240, 0.15) 0%, rgba(248, 245, 240, 0.44) 100%);
 }
 
-/* ── Dashboard Ambient — artwork clearly visible (high opacity) ── */
+/* ── Dashboard Ambient — subtle vignette layer allowing artwork to shine through ── */
 .dashboard-ambient {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center / cover;
-  background-attachment: fixed;
-  opacity: 0.78;
+  background:
+    linear-gradient(180deg, rgba(8, 13, 20, 0.38) 0%, rgba(8, 13, 20, 0.12) 40%, rgba(8, 13, 20, 0.46) 100%),
+    radial-gradient(ellipse at 75% 30%, rgba(8, 13, 20, 0.08) 0%, rgba(8, 13, 20, 0.40) 100%);
 }
 
 [data-theme="light"] .dashboard-ambient {
-  opacity: 0.72;
-  filter: brightness(1.12) contrast(0.92) saturate(0.95);
+  background:
+    linear-gradient(180deg, rgba(245, 241, 232, 0.42) 0%, rgba(245, 241, 232, 0.18) 40%, rgba(245, 241, 232, 0.52) 100%),
+    radial-gradient(ellipse at 75% 30%, rgba(245, 241, 232, 0.10) 0%, rgba(245, 241, 232, 0.44) 100%);
 }
 
 /* Translucent Glass Surfaces */
@@ -527,20 +554,48 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
 /* ── 8. THEME TOGGLE ────────────────────────────────────────────────────── */
 .theme-toggle-btn,
 .hub-theme-toggle {
-  width: 38px; height: 38px; border-radius: var(--r-sm);
-  background: var(--hub-gold-soft);
-  border: 1px solid var(--hub-gold-border);
+  width: 40px; height: 40px; min-width: 40px;
+  border-radius: var(--r-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   color: var(--hub-gold);
-  display: flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; justify-content: center;
   cursor: pointer; transition: all var(--ease-fast);
-  font-size: 15px;
+  font-size: 16px;
+  box-shadow: var(--shadow-sm);
+  padding: 0;
+  flex-shrink: 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .theme-toggle-btn:hover,
 .hub-theme-toggle:hover {
-  background: rgba(212,168,83,0.2);
+  background: var(--hub-gold-soft);
+  border-color: var(--hub-gold-border);
   color: var(--hub-gold-light);
-  transform: scale(1.05);
+  box-shadow: 0 0 14px var(--hub-gold-glow);
+}
+
+.theme-toggle-btn:focus-visible,
+.hub-theme-toggle:focus-visible {
+  outline: 2px solid var(--hub-gold);
+  outline-offset: 2px;
+}
+
+.theme-toggle-btn i,
+.theme-toggle-btn svg,
+.hub-theme-toggle i,
+.hub-theme-toggle svg {
+  width: 18px; height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle-btn:hover i,
+.theme-toggle-btn:hover svg,
+.hub-theme-toggle:hover i,
+.hub-theme-toggle:hover svg {
+  transform: rotate(15deg);
 }
 
 /* ── 9. PAGE CONTENT ────────────────────────────────────────────────────── */
@@ -644,8 +699,8 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
 
 /* ── 11. BUTTONS ────────────────────────────────────────────────────────── */
 .btn-hub-primary, .btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 20px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; height: 40px;
   background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
   color: #0D0F14 !important;
   border: none; border-radius: var(--r-md);
@@ -658,7 +713,7 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
 }
 
 .btn-hub-primary:hover, .btn-primary:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
   transform: translateY(-1px);
   box-shadow: 0 6px 20px var(--hub-gold-glow);
 }
@@ -671,66 +726,143 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
 }
 
 .btn-hub-secondary, .btn-secondary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 18px;
-  background: transparent;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 18px; height: 40px;
+  background: var(--bg-card);
   color: var(--text-secondary) !important;
   border: 1px solid var(--border-color); border-radius: var(--r-md);
   font-size: 13.5px; font-weight: 600;
   cursor: pointer; text-decoration: none;
   transition: all var(--ease-fast);
   font-family: 'Inter', sans-serif;
+  white-space: nowrap;
 }
 
 .btn-hub-secondary:hover, .btn-secondary:hover {
   border-color: var(--hub-gold-border);
   color: var(--hub-gold) !important;
   background: var(--hub-gold-soft);
+  transform: translateY(-1px);
 }
 
-.btn-hub-ghost {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 18px;
-  background: transparent; color: var(--hub-gold) !important;
+.btn-hub-outline {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 18px; height: 40px;
+  background: transparent;
+  color: var(--hub-gold) !important;
   border: 1px solid var(--hub-gold-border); border-radius: var(--r-md);
   font-size: 13.5px; font-weight: 600;
   cursor: pointer; text-decoration: none;
   transition: all var(--ease-fast);
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
 }
 
-.btn-hub-ghost:hover { background: var(--hub-gold-soft); }
+.btn-hub-outline:hover {
+  background: var(--hub-gold-soft);
+  border-color: var(--hub-gold);
+  color: var(--hub-gold-light) !important;
+  transform: translateY(-1px);
+}
 
-.btn-hub-danger {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 18px;
+.btn-hub-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 16px; height: 40px;
+  background: transparent; color: var(--hub-gold) !important;
+  border: 1px solid transparent; border-radius: var(--r-md);
+  font-size: 13.5px; font-weight: 600;
+  cursor: pointer; text-decoration: none;
+  transition: all var(--ease-fast);
+  white-space: nowrap;
+}
+
+.btn-hub-ghost:hover {
+  background: var(--hub-gold-soft);
+  border-color: var(--hub-gold-border);
+}
+
+.btn-hub-danger, .btn-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 18px; height: 40px;
   background: var(--danger-soft); color: var(--danger-text) !important;
   border: 1px solid rgba(224,92,92,0.3); border-radius: var(--r-md);
   font-size: 13.5px; font-weight: 600;
   cursor: pointer; text-decoration: none;
   transition: all var(--ease-fast);
+  white-space: nowrap;
 }
 
-.btn-hub-danger:hover { background: rgba(224,92,92,0.2); }
+.btn-hub-danger:hover, .btn-danger:hover {
+  background: rgba(224,92,92,0.24);
+  border-color: var(--danger);
+  transform: translateY(-1px);
+}
+
+.btn-hub-success, .btn-success {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 18px; height: 40px;
+  background: var(--success); color: #0D0F14 !important;
+  border: none; border-radius: var(--r-md);
+  font-size: 13.5px; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all var(--ease-fast);
+  box-shadow: 0 4px 14px rgba(76,175,122,0.25);
+  white-space: nowrap;
+}
+
+.btn-hub-success:hover, .btn-success:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
 
 .btn-hub-burgundy {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 18px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 18px; height: 40px;
   background: var(--hub-burgundy-soft); color: var(--hub-burgundy-light) !important;
   border: 1px solid var(--hub-burgundy-border); border-radius: var(--r-md);
   font-size: 13.5px; font-weight: 600;
   cursor: pointer; text-decoration: none;
   transition: all var(--ease-fast);
+  white-space: nowrap;
 }
 
-.btn-hub-burgundy:hover { background: rgba(155,35,53,0.22); }
+.btn-hub-burgundy:hover {
+  background: rgba(155,35,53,0.24);
+  transform: translateY(-1px);
+}
 
-.btn-sm { padding: 6px 14px; font-size: 12.5px; }
-.btn-lg { padding: 13px 26px; font-size: 15px; }
-.btn-icon-only { padding: 9px; gap: 0; }
+.btn-sm { padding: 5px 12px; height: 32px; font-size: 12.5px; }
+.btn-lg { padding: 12px 24px; height: 48px; font-size: 15px; }
+
+.btn-icon, .btn-icon-only {
+  width: 36px; height: 36px; min-width: 36px;
+  padding: 0 !important;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+}
+
+.btn-sm.btn-icon, .btn-icon.btn-sm {
+  width: 30px; height: 30px; min-width: 30px;
+  padding: 0 !important;
+}
+
+.btn-icon i, .btn-icon svg,
+.btn-icon-only i, .btn-icon-only svg {
+  width: 16px; height: 16px;
+}
 
 /* Loading state */
 .btn-loading { opacity: 0.7; pointer-events: none; }
 .btn-loading::after {
+  content: '';
+  width: 14px; height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
   content: '';
   width: 14px; height: 14px;
   border: 2px solid currentColor;
@@ -878,6 +1010,41 @@ input:focus, textarea:focus, select:focus {
   font-size: 11.5px; font-weight: 700; white-space: nowrap;
 }
 
+.status-verified,
+.badge-status.status-verified,
+.status-approved,
+.badge-status.status-approved,
+.status-paid,
+.badge-status.status-paid,
+.status-available,
+.badge-status.status-available {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: var(--r-full);
+  background: var(--success-soft); color: var(--success-text);
+  border: 1px solid rgba(76,175,122,0.25);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap;
+}
+
+.status-unpaid,
+.badge-status.status-unpaid {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: var(--r-full);
+  background: var(--warning-soft); color: var(--warning-text);
+  border: 1px solid rgba(232,168,58,0.25);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap;
+}
+
+.status-unavailable,
+.badge-status.status-unavailable,
+.status-draft,
+.badge-status.status-draft {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: var(--r-full);
+  background: var(--border-subtle); color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  font-size: 11.5px; font-weight: 700; white-space: nowrap;
+}
+
 /* Generic badge-status base */
 .badge-status {
   display: inline-flex; align-items: center; gap: 4px;
@@ -885,6 +1052,11 @@ input:focus, textarea:focus, select:focus {
   font-size: 11.5px; font-weight: 700; white-space: nowrap;
   background: var(--border-subtle); color: var(--text-muted);
   border: 1px solid var(--border-color);
+}
+
+.badge i, .badge svg,
+.badge-status i, .badge-status svg {
+  width: 13px; height: 13px; flex-shrink: 0;
 }
 
 /* ── 14. TABLES ─────────────────────────────────────────────────────────── */

@@ -1,32 +1,75 @@
 {% extends 'base.html' %}
-{% block title %}{{ action }} Payment — FreelanceTrack{% endblock %}
-{% block page_title %}<i class="fas fa-dollar-sign"></i> {{ action }} Payment{% endblock %}
+{% block title %}{{ action }} Payment — FreelanceHub{% endblock %}
+{% block page_title %}{{ action }} Payment{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <div><h1>{{ action }} Payment</h1></div>
-  <a href="{% url 'core:payment_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="credit-card" style="color:var(--hub-gold);width:24px;height:24px;"></i> {{ action }} Payment
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">
+      {% if action == 'Create' %}Record a new incoming payment or milestone disbursement.{% else %}Update transaction status and reference details.{% endif %}
+    </p>
+  </div>
+  <a href="{% url 'core:payment_list' %}" class="btn-hub-secondary">
+    <i data-lucide="arrow-left"></i> <span>Back to Payments</span>
+  </a>
 </div>
+
 <div class="row justify-content-center">
   <div class="col-lg-8">
     <div class="card">
-      <div class="card-header"><i class="fas fa-edit"></i> Payment Details</div>
-      <div class="card-body">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="edit-3" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Payment Details</span>
+        </div>
+      </div>
+      <div class="card-body p-4">
         <form method="post">
           {% csrf_token %}
           <div class="row g-3">
-            <div class="col-md-6"><label class="form-label">Project *</label>{{ form.project }}{% if form.project.errors %}<small class="text-danger">{{ form.project.errors.0 }}</small>{% endif %}</div>
-            <div class="col-md-6"><label class="form-label">Amount ($) *</label>{{ form.amount }}{% if form.amount.errors %}<small class="text-danger">{{ form.amount.errors.0 }}</small>{% endif %}</div>
-            <div class="col-md-6"><label class="form-label">Status</label>{{ form.status }}</div>
-            <div class="col-md-6"><label class="form-label">Payment Method</label>{{ form.payment_method }}</div>
-            <div class="col-md-6"><label class="form-label">Invoice Number</label>{{ form.invoice_number }}</div>
-            <div class="col-md-6"><label class="form-label">Due Date</label>{{ form.due_date }}</div>
-            <div class="col-md-6"><label class="form-label">Paid Date</label>{{ form.paid_date }}</div>
-            <div class="col-12"><label class="form-label">Description / Notes</label>{{ form.description }}</div>
+            <div class="col-md-6">
+              <label class="form-label">Project *</label>
+              {{ form.project }}
+              {% if form.project.errors %}<small class="form-error">{{ form.project.errors.0 }}</small>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Amount ($) *</label>
+              {{ form.amount }}
+              {% if form.amount.errors %}<small class="form-error">{{ form.amount.errors.0 }}</small>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Status</label>
+              {{ form.status }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Payment Method</label>
+              {{ form.payment_method }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Invoice Number</label>
+              {{ form.invoice_number }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Due Date</label>
+              {{ form.due_date }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Paid Date</label>
+              {{ form.paid_date }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description / Notes</label>
+              {{ form.description }}
+            </div>
           </div>
-          <div class="d-flex justify-content-end gap-2 mt-4">
-            <a href="{% url 'core:payment_list' %}" class="btn btn-outline-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ action }} Payment</button>
+          <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color:var(--border-color) !important;">
+            <a href="{% url 'core:payment_list' %}" class="btn-hub-secondary">Cancel</a>
+            <button type="submit" class="btn-hub-primary">
+              <i data-lucide="check"></i> <span>{{ action }} Payment</span>
+            </button>
           </div>
         </form>
       </div>

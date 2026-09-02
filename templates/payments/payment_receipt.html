@@ -1,78 +1,94 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Payment Receipt — FreelanceTrack{% endblock %}
+{% block title %}Payment Receipt — FreelanceHub{% endblock %}
 {% block page_title %}Payment Receipt{% endblock %}
 
 {% block content %}
+<style>
+  @media print {
+    body { background: #ffffff !important; color: #000000 !important; }
+    .sidebar, .topbar, .d-print-none, .dashboard-ambient { display: none !important; }
+    .main-content, .page-content { margin: 0 !important; padding: 0 !important; }
+    .receipt-card {
+      box-shadow: none !important;
+      border: 1px solid #ddd !important;
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+  }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
-  <a href="{% url 'core:payment_list' %}" class="btn btn-outline-secondary">
-    <i class="fas fa-arrow-left me-1"></i> Back to Payments
+  <a href="{% url 'core:payment_list' %}" class="btn-hub-secondary">
+    <i data-lucide="arrow-left"></i> <span>Back to Payments</span>
   </a>
-  <button onclick="window.print()" class="btn btn-primary">
-    <i class="fas fa-print me-1"></i> Print Receipt
+  <button onclick="window.print()" class="btn-hub-primary">
+    <i data-lucide="printer"></i> <span>Print Receipt</span>
   </button>
 </div>
 
-<div class="card p-5 shadow-sm mx-auto" style="max-width:700px;background:#fff;color:#1e293b;">
-  <div class="text-center mb-4 pb-3 border-bottom">
-    <div class="p-3 rounded-circle bg-success-subtle text-success d-inline-block mb-2">
-      <i class="fas fa-check-circle fa-3x"></i>
+<div class="card receipt-card p-4 p-md-5 mx-auto" style="max-width:720px;">
+  <div class="text-center mb-4 pb-3 border-bottom" style="border-color:var(--border-color) !important;">
+    <div style="width:60px;height:60px;border-radius:50%;background:var(--success-soft);border:1px solid rgba(76,175,122,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:var(--success-text);">
+      <i data-lucide="check-circle-2" style="width:30px;height:30px;"></i>
     </div>
-    <h3 class="fw-bold mb-1">PAYMENT RECEIPT</h3>
-    <p class="text-muted small mb-0">Official proof of payment receipt</p>
+    <h3 style="font-weight:900;color:var(--text-primary);letter-spacing:-0.5px;margin:0;">PAYMENT RECEIPT</h3>
+    <p style="color:var(--text-muted);font-size:13px;margin:4px 0 0;">Official proof of payment transaction</p>
   </div>
 
   <div class="row mb-4">
     <div class="col-6">
-      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;">Issued By</h6>
-      <h6 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h6>
-      <p class="small text-muted mb-0">{{ user.email }}</p>
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Issued By</div>
+      <div style="font-weight:700;font-size:15px;color:var(--text-primary);">{{ user.get_full_name|default:user.username }}</div>
+      <div style="font-size:13px;color:var(--text-secondary);">{{ user.email }}</div>
     </div>
     <div class="col-6 text-end">
-      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;">Client</h6>
-      <h6 class="fw-bold mb-1">{{ payment.project.client.name }}</h6>
-      <p class="small text-muted mb-0">{{ payment.project.client.company|default:"" }}</p>
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Client</div>
+      <div style="font-weight:700;font-size:15px;color:var(--text-primary);">{{ payment.project.client.name }}</div>
+      <div style="font-size:13px;color:var(--text-secondary);">{{ payment.project.client.company|default:"" }}</div>
     </div>
   </div>
 
-  <table class="table table-bordered mb-4">
-    <tbody>
-      <tr>
-        <th class="bg-light">Project Name</th>
-        <td>{{ payment.project.name }}</td>
-      </tr>
-      <tr>
-        <th class="bg-light">Amount Received</th>
-        <td class="fw-bold text-success fs-5">${{ payment.amount }}</td>
-      </tr>
-      <tr>
-        <th class="bg-light">Payment Method</th>
-        <td>{{ payment.get_payment_method_display }}</td>
-      </tr>
-      <tr>
-        <th class="bg-light">Payment Date</th>
-        <td>{{ payment.paid_date|date:"F d, Y"|default:payment.created_at|date:"F d, Y" }}</td>
-      </tr>
-      <tr>
-        <th class="bg-light">Invoice Reference</th>
-        <td>#{{ payment.invoice_number|default:"N/A" }}</td>
-      </tr>
-      <tr>
-        <th class="bg-light">Status</th>
-        <td><span class="badge bg-success">PAID / CONFIRMED</span></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive mb-4">
+    <table class="hub-table" style="border:1px solid var(--border-color);">
+      <tbody>
+        <tr>
+          <th style="width:180px;background:var(--bg-elevated);color:var(--text-secondary);">Project Name</th>
+          <td style="font-weight:600;color:var(--text-primary);">{{ payment.project.name }}</td>
+        </tr>
+        <tr>
+          <th style="background:var(--bg-elevated);color:var(--text-secondary);">Amount Received</th>
+          <td style="font-weight:800;color:var(--success-text);font-size:18px;">${{ payment.amount }}</td>
+        </tr>
+        <tr>
+          <th style="background:var(--bg-elevated);color:var(--text-secondary);">Payment Method</th>
+          <td style="color:var(--text-primary);">{{ payment.get_payment_method_display }}</td>
+        </tr>
+        <tr>
+          <th style="background:var(--bg-elevated);color:var(--text-secondary);">Payment Date</th>
+          <td style="color:var(--text-primary);">{{ payment.paid_date|date:"F d, Y"|default:payment.created_at|date:"F d, Y" }}</td>
+        </tr>
+        <tr>
+          <th style="background:var(--bg-elevated);color:var(--text-secondary);">Invoice Reference</th>
+          <td style="color:var(--text-primary);font-weight:600;">#{{ payment.invoice_number|default:"N/A" }}</td>
+        </tr>
+        <tr>
+          <th style="background:var(--bg-elevated);color:var(--text-secondary);">Status</th>
+          <td><span class="badge-status status-completed">PAID / CONFIRMED</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   {% if payment.description %}
-    <div class="mb-4">
-      <h6 class="fw-bold small text-muted">Description / Notes</h6>
-      <p class="small text-secondary mb-0">{{ payment.description }}</p>
+    <div class="mb-4 p-3 rounded" style="background:var(--bg-elevated);border:1px solid var(--border-color);">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Description / Notes</div>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0;">{{ payment.description }}</p>
     </div>
   {% endif %}
 
-  <div class="text-center pt-4 border-top text-muted small">
-    Thank you for your prompt payment! If you have any questions, please contact {{ user.email }}.
+  <div class="text-center pt-4 border-top" style="border-color:var(--border-color) !important;font-size:12.5px;color:var(--text-muted);">
+    Thank you for your business! If you have any inquiries regarding this receipt, please reach out to {{ user.email }}.
   </div>
 </div>
 {% endblock %}

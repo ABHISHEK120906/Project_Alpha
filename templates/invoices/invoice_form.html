@@ -1,48 +1,135 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Create Invoice — FreelanceTrack{% endblock %}
+{% block title %}Create Invoice — FreelanceHub{% endblock %}
 {% block page_title %}Create New Invoice{% endblock %}
 
 {% block content %}
-<div class="card p-4 mx-auto" style="max-width:850px;">
-  <h4 class="fw-bold mb-4"><i class="fas fa-file-invoice-dollar text-primary me-2"></i> Invoice Builder</h4>
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="file-text" style="color:var(--hub-gold);width:24px;height:24px;"></i> Invoice Builder
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Draft a new itemized client invoice with automated calculations.</p>
+  </div>
+  <a href="{% url 'core:invoice_list' %}" class="btn-hub-secondary">
+    <i data-lucide="arrow-left"></i> <span>Back to Invoices</span>
+  </a>
+</div>
 
-  <form method="post" action="{% url 'core:invoice_create' %}" id="invoiceForm">
-    {% csrf_token %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="edit-3" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Invoice Configuration</span>
+        </div>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" action="{% url 'core:invoice_create' %}" id="invoiceForm">
+          {% csrf_token %}
 
-    <div class="row g-3 mb-3">
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Invoice Number</label>
-        {{ form.invoice_number }}
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Status</label>
-        {{ form.status }}
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Client</label>
-        {{ form.client }}
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Associated Project</label>
-        {{ form.project }}
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Issue Date</label>
-        {{ form.issue_date }}
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Due Date</label>
-        {{ form.due_date }}
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label">Invoice Number *</label>
+              {{ form.invoice_number }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Status</label>
+              {{ form.status }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Client *</label>
+              {{ form.client }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Associated Project</label>
+              {{ form.project }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Issue Date</label>
+              {{ form.issue_date }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Due Date</label>
+              {{ form.due_date }}
+            </div>
+          </div>
+
+          <!-- Line Items Section -->
+          <div class="pt-3 border-top mb-4" style="border-color:var(--border-color) !important;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <i data-lucide="list" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+                <h5 style="margin:0;font-size:15px;font-weight:700;color:var(--text-primary);">Line Items</h5>
+              </div>
+              <button type="button" class="btn-hub-secondary btn-sm" id="addRowBtn">
+                <i data-lucide="plus"></i> <span>Add Item</span>
+              </button>
+            </div>
+
+            <div id="lineItemsContainer">
+              <div class="row g-2 mb-2 item-row align-items-center">
+                <div class="col-6">
+                  <input type="text" name="item_description" class="form-control" placeholder="Item description (e.g. Frontend Development)" required>
+                </div>
+                <div class="col-2">
+                  <input type="number" step="0.01" name="item_quantity" class="form-control qty-input" value="1" placeholder="Qty">
+                </div>
+                <div class="col-3">
+                  <input type="number" step="0.01" name="item_unit_price" class="form-control price-input" placeholder="Unit Price ($)">
+                </div>
+                <div class="col-1 text-end">
+                  <button type="button" class="btn-hub-danger btn-icon btn-sm remove-row-btn" title="Remove row">
+                    <i data-lucide="x"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Taxes, Discount & Notes -->
+          <div class="row g-3 mb-4 pt-3 border-top" style="border-color:var(--border-color) !important;">
+            <div class="col-md-6">
+              <label class="form-label">Tax Rate (%)</label>
+              {{ form.tax_rate }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Discount Amount ($)</label>
+              {{ form.discount_amount }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Invoice Notes / Bank Wire Details</label>
+              {{ form.notes }}
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 pt-3 border-top" style="border-color:var(--border-color) !important;">
+            <a href="{% url 'core:invoice_list' %}" class="btn-hub-secondary">Cancel</a>
+            <button type="submit" class="btn-hub-primary">
+              <i data-lucide="check"></i> <span>Save &amp; Generate Invoice</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
+</div>
+{% endblock %}
 
-    <!-- Line Items Section -->
-    <h5 class="fw-bold mt-4 mb-3"><i class="fas fa-list me-2"></i> Line Items</h5>
-    <div id="lineItemsContainer">
-      <div class="row g-2 mb-2 item-row">
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.getElementById('lineItemsContainer');
+  const addBtn = document.getElementById('addRowBtn');
+
+  if (addBtn && container) {
+    addBtn.addEventListener('click', function() {
+      const row = document.createElement('div');
+      row.className = 'row g-2 mb-2 item-row align-items-center';
+      row.innerHTML = `
         <div class="col-6">
-          <input type="text" name="item_description" class="form-control" placeholder="Item description (e.g. Web Development)" required>
+          <input type="text" name="item_description" class="form-control" placeholder="Item description" required>
         </div>
         <div class="col-2">
           <input type="number" step="0.01" name="item_quantity" class="form-control qty-input" value="1" placeholder="Qty">
@@ -50,71 +137,25 @@
         <div class="col-3">
           <input type="number" step="0.01" name="item_unit_price" class="form-control price-input" placeholder="Unit Price ($)">
         </div>
-        <div class="col-1 d-flex align-items-center">
-          <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn"><i class="fas fa-times"></i></button>
+        <div class="col-1 text-end">
+          <button type="button" class="btn-hub-danger btn-icon btn-sm remove-row-btn" title="Remove row">
+            <i data-lucide="x"></i>
+          </button>
         </div>
-      </div>
-    </div>
+      `;
+      container.appendChild(row);
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
 
-    <button type="button" class="btn btn-sm btn-outline-primary mt-2 mb-4" id="addRowBtn">
-      <i class="fas fa-plus me-1"></i> Add Line Item
-    </button>
-
-    <div class="row g-3 mb-4">
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Tax Rate (%)</label>
-        {{ form.tax_rate }}
-      </div>
-      <div class="col-md-6">
-        <label class="form-label fw-bold">Discount Amount ($)</label>
-        {{ form.discount_amount }}
-      </div>
-      <div class="col-12">
-        <label class="form-label fw-bold">Invoice Notes / Bank Details</label>
-        {{ form.notes }}
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-end gap-2">
-      <a href="{% url 'core:invoice_list' %}" class="btn btn-secondary">Cancel</a>
-      <button type="submit" class="btn btn-primary px-4"><i class="fas fa-check me-1"></i> Save & Generate Invoice</button>
-    </div>
-  </form>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const container = document.getElementById('lineItemsContainer');
-  const addBtn = document.getElementById('addRowBtn');
-
-  addBtn.addEventListener('click', function() {
-    const row = document.createElement('div');
-    row.className = 'row g-2 mb-2 item-row';
-    row.innerHTML = `
-      <div class="col-6">
-        <input type="text" name="item_description" class="form-control" placeholder="Item description" required>
-      </div>
-      <div class="col-2">
-        <input type="number" step="0.01" name="item_quantity" class="form-control qty-input" value="1" placeholder="Qty">
-      </div>
-      <div class="col-3">
-        <input type="number" step="0.01" name="item_unit_price" class="form-control price-input" placeholder="Unit Price ($)">
-      </div>
-      <div class="col-1 d-flex align-items-center">
-        <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn"><i class="fas fa-times"></i></button>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-
-  container.addEventListener('click', function(e) {
-    if (e.target.closest('.remove-row-btn')) {
-      const rows = container.querySelectorAll('.item-row');
-      if (rows.length > 1) {
-        e.target.closest('.item-row').remove();
+    container.addEventListener('click', function(e) {
+      if (e.target.closest('.remove-row-btn')) {
+        const rows = container.querySelectorAll('.item-row');
+        if (rows.length > 1) {
+          e.target.closest('.item-row').remove();
+        }
       }
-    }
-  });
+    });
+  }
 });
 </script>
 {% endblock %}

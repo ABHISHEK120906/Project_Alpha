@@ -1,198 +1,232 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Finances — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}Income & Expense Tracker{% endblock %}
+{% block title %}Finances — FreelanceHub{% endblock %}
+{% block page_title %}Finances &amp; Cash Flow{% endblock %}
 
 {% block content %}
-<div class="row g-3 mb-4">
-  <!-- Financial Summary KPI Cards -->
-  <div class="col-md-4">
-    <div class="card p-3 border-start border-success border-4">
-      <div class="d-flex align-items-center justify-content-between">
-        <div>
-          <div class="text-muted small fw-bold">TOTAL INCOME</div>
-          <h3 class="fw-bold text-success mb-0">${{ total_income|floatformat:2 }}</h3>
-        </div>
-        <div class="p-3 bg-success-subtle text-success rounded-circle">
-          <i class="fas fa-arrow-down fa-2x"></i>
-        </div>
-      </div>
-    </div>
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+  <div>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="trending-up" style="color:var(--hub-gold);width:24px;height:24px;"></i> Financial Overview
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Track revenue, business expenses, and operating margins.</p>
   </div>
-
-  <div class="col-md-4">
-    <div class="card p-3 border-start border-danger border-4">
-      <div class="d-flex align-items-center justify-content-between">
-        <div>
-          <div class="text-muted small fw-bold">TOTAL EXPENSES</div>
-          <h3 class="fw-bold text-danger mb-0">${{ total_expenses|floatformat:2 }}</h3>
-        </div>
-        <div class="p-3 bg-danger-subtle text-danger rounded-circle">
-          <i class="fas fa-arrow-up fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card p-3 border-start border-primary border-4">
-      <div class="d-flex align-items-center justify-content-between">
-        <div>
-          <div class="text-muted small fw-bold">NET PROFIT</div>
-          <h3 class="fw-bold text-primary mb-0">${{ net_profit|floatformat:2 }}</h3>
-        </div>
-        <div class="p-3 bg-primary-subtle text-primary rounded-circle">
-          <i class="fas fa-balance-scale fa-2x"></i>
-        </div>
-      </div>
-    </div>
+  <div class="d-flex gap-2">
+    <button class="btn-hub-success" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
+      <i data-lucide="plus-circle"></i> <span>Add Income</span>
+    </button>
+    <button class="btn-hub-danger" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+      <i data-lucide="minus-circle"></i> <span>Add Expense</span>
+    </button>
   </div>
 </div>
 
-<!-- Header Action Buttons -->
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h5 class="fw-bold mb-0">Financial Transactions</h5>
-  <div class="d-flex gap-2">
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
-      <i class="fas fa-plus-circle me-1"></i> Add Income
-    </button>
-    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
-      <i class="fas fa-minus-circle me-1"></i> Add Expense
-    </button>
+<!-- Financial Summary KPI Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card stat-card" style="border-left:4px solid var(--success);">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stat-label" style="color:var(--text-muted);">Total Income</div>
+          <div class="stat-value" style="color:var(--success-text);margin-top:4px;">${{ total_income|floatformat:2 }}</div>
+        </div>
+        <div class="stat-icon" style="background:var(--success-soft);border-color:rgba(76,175,122,0.3);color:var(--success-text);">
+          <i data-lucide="arrow-down-left" style="width:24px;height:24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card stat-card" style="border-left:4px solid var(--danger);">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stat-label" style="color:var(--text-muted);">Total Expenses</div>
+          <div class="stat-value" style="color:var(--danger-text);margin-top:4px;">${{ total_expenses|floatformat:2 }}</div>
+        </div>
+        <div class="stat-icon" style="background:var(--danger-soft);border-color:rgba(224,92,92,0.3);color:var(--danger-text);">
+          <i data-lucide="arrow-up-right" style="width:24px;height:24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card stat-card" style="border-left:4px solid var(--hub-gold);">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stat-label" style="color:var(--text-muted);">Net Profit</div>
+          <div class="stat-value" style="color:var(--hub-gold);margin-top:4px;">${{ net_profit|floatformat:2 }}</div>
+        </div>
+        <div class="stat-icon" style="background:var(--hub-gold-soft);border-color:var(--hub-gold-border);color:var(--hub-gold);">
+          <i data-lucide="scale" style="width:24px;height:24px;"></i>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="row g-4">
   <!-- Incomes Table -->
   <div class="col-lg-6">
-    <div class="card p-3">
-      <h6 class="fw-bold text-success mb-3"><i class="fas fa-plus-circle me-2"></i> Income Log</h6>
-      <div class="table-responsive">
-        <table class="table table-hover align-middle small">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for inc in incomes %}
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="plus-circle" style="width:18px;height:18px;color:var(--success-text);"></i>
+          <span class="card-title-hub" style="color:var(--success-text);">Income Log</span>
+        </div>
+        <span class="badge" style="background:var(--success-soft);color:var(--success-text);border:1px solid rgba(76,175,122,0.3);">{{ incomes|length }} entries</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="hub-table">
+            <thead>
               <tr>
-                <td class="fw-bold">{{ inc.title }}</td>
-                <td><span class="badge bg-success-subtle text-success">{{ inc.get_category_display }}</span></td>
-                <td class="fw-bold text-success">+${{ inc.amount }}</td>
-                <td>{{ inc.date|date:"M d, Y" }}</td>
-                <td>
-                  <form method="post" action="{% url 'core:income_delete' inc.pk %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Delete this income?')" title="Delete"><i class="fas fa-trash"></i></button>
-                  </form>
-                </td>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th style="text-align:right;">Action</th>
               </tr>
-            {% empty %}
-              <tr><td colspan="5" class="text-center text-muted">No income records added yet.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for inc in incomes %}
+                <tr>
+                  <td style="font-weight:600;color:var(--text-primary);">{{ inc.title }}</td>
+                  <td><span class="badge" style="background:var(--success-soft);color:var(--success-text);border:1px solid rgba(76,175,122,0.25);">{{ inc.get_category_display }}</span></td>
+                  <td style="font-weight:700;color:var(--success-text);font-size:14px;">+${{ inc.amount }}</td>
+                  <td style="font-size:13px;color:var(--text-secondary);">{{ inc.date|date:"M d, Y" }}</td>
+                  <td style="text-align:right;">
+                    <form method="post" action="{% url 'core:income_delete' inc.pk %}" style="display:inline;margin:0;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-hub-danger btn-icon btn-sm" onclick="return confirm('Delete this income record?')" title="Delete">
+                        <i data-lucide="trash-2"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center py-4" style="color:var(--text-muted);font-size:13.5px;">No income records logged yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Expenses Table -->
   <div class="col-lg-6">
-    <div class="card p-3">
-      <h6 class="fw-bold text-danger mb-3"><i class="fas fa-minus-circle me-2"></i> Expense Log</h6>
-      <div class="table-responsive">
-        <table class="table table-hover align-middle small">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Receipt</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for exp in expenses %}
+    <div class="card">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="minus-circle" style="width:18px;height:18px;color:var(--danger-text);"></i>
+          <span class="card-title-hub" style="color:var(--danger-text);">Expense Log</span>
+        </div>
+        <span class="badge" style="background:var(--danger-soft);color:var(--danger-text);border:1px solid rgba(224,92,92,0.3);">{{ expenses|length }} entries</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="hub-table">
+            <thead>
               <tr>
-                <td class="fw-bold">{{ exp.title }}</td>
-                <td><span class="badge bg-danger-subtle text-danger">{{ exp.get_category_display }}</span></td>
-                <td class="fw-bold text-danger">-${{ exp.amount }}</td>
-                <td>
-                  {% if exp.receipt %}
-                    <a href="{{ exp.receipt.url }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-2"><i class="fas fa-paperclip"></i> View</a>
-                  {% else %}
-                    <span class="text-muted">—</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <form method="post" action="{% url 'core:expense_delete' exp.pk %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Delete this expense?')" title="Delete"><i class="fas fa-trash"></i></button>
-                  </form>
-                </td>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Receipt</th>
+                <th style="text-align:right;">Action</th>
               </tr>
-            {% empty %}
-              <tr><td colspan="5" class="text-center text-muted">No expense records added yet.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for exp in expenses %}
+                <tr>
+                  <td style="font-weight:600;color:var(--text-primary);">{{ exp.title }}</td>
+                  <td><span class="badge" style="background:var(--danger-soft);color:var(--danger-text);border:1px solid rgba(224,92,92,0.25);">{{ exp.get_category_display }}</span></td>
+                  <td style="font-weight:700;color:var(--danger-text);font-size:14px;">-${{ exp.amount }}</td>
+                  <td>
+                    {% if exp.receipt %}
+                      <a href="{{ exp.receipt.url }}" target="_blank" class="btn-hub-secondary btn-sm" style="font-size:11.5px;padding:3px 8px;">
+                        <i data-lucide="paperclip" style="width:12px;height:12px;"></i> View
+                      </a>
+                    {% else %}
+                      <span style="color:var(--text-muted);">—</span>
+                    {% endif %}
+                  </td>
+                  <td style="text-align:right;">
+                    <form method="post" action="{% url 'core:expense_delete' exp.pk %}" style="display:inline;margin:0;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-hub-danger btn-icon btn-sm" onclick="return confirm('Delete this expense record?')" title="Delete">
+                        <i data-lucide="trash-2"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center py-4" style="color:var(--text-muted);font-size:13.5px;">No expense records logged yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Modal: Add Income -->
-<div class="modal fade" id="addIncomeModal" tabindex="-1">
+<div class="modal fade" id="addIncomeModal" tabindex="-1" aria-labelledby="addIncomeLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="background:var(--bg-card);border:1px solid var(--border-color);backdrop-filter:blur(24px);">
       <form method="post" action="{% url 'core:income_create' %}">
         {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-header-title fw-bold text-success"><i class="fas fa-plus-circle me-2"></i> Record Income</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header" style="border-bottom:1px solid var(--border-color);">
+          <h5 class="modal-title d-flex align-items-center gap-2" id="addIncomeLabel" style="font-size:16px;font-weight:700;color:var(--success-text);">
+            <i data-lucide="plus-circle" style="width:18px;height:18px;"></i> Record Income
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body p-4">
           <div class="mb-3">
-            <label class="form-label fw-bold">Income Title</label>
+            <label class="form-label">Income Title *</label>
             {{ income_form.title }}
           </div>
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label fw-bold">Client (Optional)</label>
+              <label class="form-label">Client (Optional)</label>
               {{ income_form.client }}
             </div>
             <div class="col-6">
-              <label class="form-label fw-bold">Project (Optional)</label>
+              <label class="form-label">Project (Optional)</label>
               {{ income_form.project }}
             </div>
           </div>
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label fw-bold">Amount ($)</label>
+              <label class="form-label">Amount ($) *</label>
               {{ income_form.amount }}
             </div>
             <div class="col-6">
-              <label class="form-label fw-bold">Category</label>
+              <label class="form-label">Category</label>
               {{ income_form.category }}
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Date</label>
+            <label class="form-label">Date</label>
             {{ income_form.date }}
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Notes</label>
+            <label class="form-label">Notes</label>
             {{ income_form.notes }}
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-success">Save Income</button>
+        <div class="modal-footer" style="border-top:1px solid var(--border-color);">
+          <button type="button" class="btn-hub-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn-hub-success">
+            <i data-lucide="check"></i> <span>Save Income</span>
+          </button>
         </div>
       </form>
     </div>
@@ -200,52 +234,56 @@
 </div>
 
 <!-- Modal: Add Expense -->
-<div class="modal fade" id="addExpenseModal" tabindex="-1">
+<div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="background:var(--bg-card);border:1px solid var(--border-color);backdrop-filter:blur(24px);">
       <form method="post" action="{% url 'core:expense_create' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-header-title fw-bold text-danger"><i class="fas fa-minus-circle me-2"></i> Record Expense</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header" style="border-bottom:1px solid var(--border-color);">
+          <h5 class="modal-title d-flex align-items-center gap-2" id="addExpenseLabel" style="font-size:16px;font-weight:700;color:var(--danger-text);">
+            <i data-lucide="minus-circle" style="width:18px;height:18px;"></i> Record Expense
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body p-4">
           <div class="mb-3">
-            <label class="form-label fw-bold">Expense Title</label>
+            <label class="form-label">Expense Title *</label>
             {{ expense_form.title }}
           </div>
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label fw-bold">Project (Optional)</label>
+              <label class="form-label">Project (Optional)</label>
               {{ expense_form.project }}
             </div>
             <div class="col-6">
-              <label class="form-label fw-bold">Category</label>
+              <label class="form-label">Category</label>
               {{ expense_form.category }}
             </div>
           </div>
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label fw-bold">Amount ($)</label>
+              <label class="form-label">Amount ($) *</label>
               {{ expense_form.amount }}
             </div>
             <div class="col-6">
-              <label class="form-label fw-bold">Date</label>
+              <label class="form-label">Date</label>
               {{ expense_form.date }}
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Upload Receipt</label>
+            <label class="form-label">Upload Receipt</label>
             {{ expense_form.receipt }}
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold">Notes</label>
+            <label class="form-label">Notes</label>
             {{ expense_form.notes }}
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-danger">Save Expense</button>
+        <div class="modal-footer" style="border-top:1px solid var(--border-color);">
+          <button type="button" class="btn-hub-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn-hub-danger">
+            <i data-lucide="check"></i> <span>Save Expense</span>
+          </button>
         </div>
       </form>
     </div>

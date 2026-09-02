@@ -43,14 +43,32 @@
   --client-blue:          var(--info, #5B9FD4);
 }
 
+[data-theme="light"] {
+  --client-bg-base:       var(--bg-canvas);
+  --client-bg-surface:    var(--bg-surface);
+  --client-bg-card:       var(--bg-card);
+  --client-bg-elevated:   var(--bg-elevated);
+  --client-bg-input:      var(--bg-input);
+  --client-text-primary:  var(--text-primary);
+  --client-text-secondary:var(--text-secondary);
+  --client-text-muted:    var(--text-muted);
+  --client-border:        var(--border-color);
+  --client-border-strong: var(--border-strong);
+}
+
 /* ── 2. FULL APP LAYOUT ─────────────────────────────────────────────────── */
 body, html { min-height: 100vh; }
 
 body.client-workspace {
   font-family: 'Inter', system-ui, sans-serif;
   background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center fixed / cover !important;
-  color: var(--text-primary, #F0EDE8);
+  color: var(--text-primary);
   font-size: 14.5px;
+}
+
+[data-theme="light"] body.client-workspace {
+  background: #F5F1E8 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center fixed / cover !important;
+  color: var(--text-primary);
 }
 
 .client-app-layout {
@@ -97,7 +115,7 @@ body.client-workspace {
 
 .client-brand-link span {
   font-size: 16px; font-weight: 800;
-  color: #F0EDE8;
+  color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: -0.3px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -106,9 +124,9 @@ body.client-workspace {
 .client-role-badge {
   display: inline-flex; align-items: center;
   padding: 2px 8px; border-radius: var(--r-full);
-  background: rgba(212,168,83,0.12);
-  border: 1px solid rgba(212,168,83,0.25);
-  color: var(--hub-gold, #D4A853);
+  background: var(--hub-gold-soft);
+  border: 1px solid var(--hub-gold-border);
+  color: var(--hub-gold);
   font-size: 9.5px; font-weight: 800;
   letter-spacing: 1px; text-transform: uppercase;
   flex-shrink: 0;
@@ -117,13 +135,13 @@ body.client-workspace {
 .client-sidebar-user {
   display: flex; align-items: center; gap: 10px;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--sidebar-border, rgba(212,168,83,0.08));
+  border-bottom: 1px solid var(--sidebar-border);
   flex-shrink: 0;
 }
 
 .client-user-avatar {
   width: 38px; height: 38px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--hub-gold, #D4A853) 0%, var(--hub-gold-dark, #B8892A) 100%);
+  background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
   color: #0D0F14; font-size: 14px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   border: 2px solid rgba(212,168,83,0.3);
@@ -135,12 +153,12 @@ body.client-workspace {
 
 .client-user-name {
   font-size: 13px; font-weight: 700;
-  color: #F0EDE8;
+  color: var(--text-primary);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 .client-user-company {
-  font-size: 11.5px; color: var(--sidebar-text, #8A8480);
+  font-size: 11.5px; color: var(--sidebar-text);
   font-weight: 500;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -150,20 +168,20 @@ body.client-workspace {
 .client-nav-group-title {
   font-size: 9.5px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1.3px;
-  color: rgba(212,168,83,0.4);
+  color: var(--text-muted);
   padding: 14px 10px 5px; margin: 0;
 }
 
 .client-nav-item {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 12px; border-radius: var(--r-md);
-  color: var(--sidebar-text, #8A8480);
+  color: var(--sidebar-text);
   font-size: 13px; font-weight: 500;
   text-decoration: none;
   transition: all var(--ease-fast); margin-bottom: 2px;
 }
 
-.client-nav-item:hover { background: rgba(212,168,83,0.08); color: #F0EDE8; }
+.client-nav-item:hover { background: var(--hub-gold-soft); color: var(--hub-gold); }
 .client-nav-item.active {
   background: rgba(212,168,83,0.12); color: var(--hub-gold, #D4A853);
   border-left: 3px solid var(--hub-gold, #D4A853);

@@ -1,96 +1,117 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Invoice #{{ invoice.invoice_number }} — FreelanceTrack{% endblock %}
+{% block title %}Invoice #{{ invoice.invoice_number }} — FreelanceHub{% endblock %}
 {% block page_title %}Invoice Detail{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
-  <a href="{% url 'core:invoice_list' %}" class="btn btn-outline-secondary">
-    <i class="fas fa-arrow-left me-1"></i> Back to Invoices
+<style>
+  @media print {
+    body { background: #ffffff !important; color: #000000 !important; }
+    .sidebar, .topbar, .d-print-none, .dashboard-ambient { display: none !important; }
+    .main-content, .page-content { margin: 0 !important; padding: 0 !important; }
+    .invoice-card {
+      box-shadow: none !important;
+      border: 1px solid #ddd !important;
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+  }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 d-print-none">
+  <a href="{% url 'core:invoice_list' %}" class="btn-hub-secondary">
+    <i data-lucide="arrow-left"></i> <span>Back to Invoices</span>
   </a>
   <div class="d-flex gap-2">
-    <button onclick="window.print()" class="btn btn-primary">
-      <i class="fas fa-print me-1"></i> Print / Save as PDF
+    <button onclick="window.print()" class="btn-hub-primary">
+      <i data-lucide="printer"></i> <span>Print / Save PDF</span>
     </button>
-    <form method="post" action="{% url 'core:invoice_email' invoice.pk %}" style="display:inline;">
+    <form method="post" action="{% url 'core:invoice_email' invoice.pk %}" style="display:inline;margin:0;">
       {% csrf_token %}
-      <button type="submit" class="btn btn-info text-white">
-        <i class="fas fa-paper-plane me-1"></i> Email to Client
+      <button type="submit" class="btn-hub-secondary">
+        <i data-lucide="send"></i> <span>Email to Client</span>
       </button>
     </form>
   </div>
 </div>
 
-<div class="card p-5 shadow-sm mx-auto" style="max-width:850px;background:#fff;color:#1e293b;">
+<div class="card invoice-card p-4 p-md-5 mx-auto" style="max-width:850px;">
   <!-- Invoice Header -->
-  <div class="row align-items-center mb-4 pb-3 border-bottom">
+  <div class="row align-items-center mb-4 pb-3 border-bottom" style="border-color:var(--border-color) !important;">
     <div class="col-6">
-      <h2 class="fw-bold text-primary mb-1"><i class="fas fa-brain me-2"></i>Freelancer Intelligence Platform</h2>
-      <p class="text-muted small mb-0">Professional Freelance &amp; Intelligence Services</p>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <div style="width:32px;height:32px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--hub-gold),var(--hub-gold-dark));display:flex;align-items:center;justify-content:center;color:#0D0F14;">
+          <i data-lucide="layers" style="width:18px;height:18px;"></i>
+        </div>
+        <h2 style="font-size:20px;font-weight:900;color:var(--text-primary);margin:0;font-family:'Plus Jakarta Sans',sans-serif;">FreelanceHub</h2>
+      </div>
+      <p style="color:var(--text-muted);font-size:12.5px;margin:0;">Professional Freelance Contract &amp; Deliverable Services</p>
     </div>
     <div class="col-6 text-end">
-      <h3 class="fw-bold mb-0">INVOICE</h3>
-      <div class="text-muted">#{{ invoice.invoice_number }}</div>
-      <span class="badge bg-primary text-white mt-1">{{ invoice.get_status_display|upper }}</span>
+      <h3 style="font-weight:900;color:var(--text-primary);margin:0;letter-spacing:1px;">INVOICE</h3>
+      <div style="color:var(--hub-gold);font-weight:700;font-size:15px;">#{{ invoice.invoice_number }}</div>
+      <div style="margin-top:4px;">
+        <span class="badge-status status-{{ invoice.status }}">{{ invoice.get_status_display }}</span>
+      </div>
     </div>
   </div>
 
   <!-- Parties Info -->
   <div class="row mb-4">
     <div class="col-6">
-      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;letter-spacing:1px;">Billed From</h6>
-      <h5 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h5>
-      <p class="small text-muted mb-0">{{ user.email }}</p>
-      {% if profile.phone_number %}<p class="small text-muted mb-0">Phone: {{ profile.phone_number }}</p>{% endif %}
-      {% if profile.address %}<p class="small text-muted mb-0">{{ profile.address }}</p>{% endif %}
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Billed From</div>
+      <div style="font-weight:700;font-size:15px;color:var(--text-primary);">{{ user.get_full_name|default:user.username }}</div>
+      <div style="font-size:13px;color:var(--text-secondary);">{{ user.email }}</div>
+      {% if profile.phone_number %}<div style="font-size:13px;color:var(--text-secondary);">Phone: {{ profile.phone_number }}</div>{% endif %}
+      {% if profile.address %}<div style="font-size:13px;color:var(--text-secondary);">{{ profile.address }}</div>{% endif %}
     </div>
     <div class="col-6 text-end">
-      <h6 class="text-uppercase fw-bold text-secondary mb-2" style="font-size:11px;letter-spacing:1px;">Billed To</h6>
-      <h5 class="fw-bold mb-1">{{ invoice.client.name }}</h5>
-      {% if invoice.client.company %}<p class="small text-muted mb-0">{{ invoice.client.company }}</p>{% endif %}
-      <p class="small text-muted mb-0">{{ invoice.client.email }}</p>
-      {% if invoice.client.address %}<p class="small text-muted mb-0">{{ invoice.client.address }}</p>{% endif %}
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Billed To</div>
+      <div style="font-weight:700;font-size:15px;color:var(--text-primary);">{{ invoice.client.name }}</div>
+      {% if invoice.client.company %}<div style="font-size:13px;color:var(--text-secondary);">{{ invoice.client.company }}</div>{% endif %}
+      <div style="font-size:13px;color:var(--text-secondary);">{{ invoice.client.email }}</div>
+      {% if invoice.client.address %}<div style="font-size:13px;color:var(--text-secondary);">{{ invoice.client.address }}</div>{% endif %}
     </div>
   </div>
 
   <!-- Dates & Metadata -->
-  <div class="row bg-light rounded p-3 mb-4 mx-0">
+  <div class="row rounded p-3 mb-4 mx-0" style="background:var(--bg-elevated);border:1px solid var(--border-color);">
     <div class="col-4">
-      <span class="small text-muted d-block">Issue Date</span>
-      <strong class="small">{{ invoice.issue_date|date:"F d, Y" }}</strong>
+      <span style="font-size:11.5px;color:var(--text-muted);display:block;text-transform:uppercase;">Issue Date</span>
+      <strong style="font-size:13.5px;color:var(--text-primary);">{{ invoice.issue_date|date:"F d, Y" }}</strong>
     </div>
     <div class="col-4">
-      <span class="small text-muted d-block">Due Date</span>
-      <strong class="small text-danger">{{ invoice.due_date|date:"F d, Y" }}</strong>
+      <span style="font-size:11.5px;color:var(--text-muted);display:block;text-transform:uppercase;">Due Date</span>
+      <strong style="font-size:13.5px;color:var(--danger-text);">{{ invoice.due_date|date:"F d, Y" }}</strong>
     </div>
     <div class="col-4 text-end">
-      <span class="small text-muted d-block">Associated Project</span>
-      <strong class="small">{{ invoice.project.name|default:"General Services" }}</strong>
+      <span style="font-size:11.5px;color:var(--text-muted);display:block;text-transform:uppercase;">Project</span>
+      <strong style="font-size:13.5px;color:var(--hub-gold);">{{ invoice.project.name|default:"General Services" }}</strong>
     </div>
   </div>
 
   <!-- Line Items Table -->
   <div class="table-responsive mb-4">
-    <table class="table align-middle border-bottom">
-      <thead class="bg-light">
+    <table class="hub-table" style="border:1px solid var(--border-color);">
+      <thead>
         <tr>
           <th>Description</th>
-          <th class="text-center">Qty</th>
-          <th class="text-end">Unit Price</th>
-          <th class="text-end">Amount</th>
+          <th style="text-align:center;">Qty</th>
+          <th style="text-align:right;">Unit Price</th>
+          <th style="text-align:right;">Amount</th>
         </tr>
       </thead>
       <tbody>
         {% for item in invoice.items.all %}
           <tr>
-            <td>{{ item.description }}</td>
-            <td class="text-center">{{ item.quantity }}</td>
-            <td class="text-end">${{ item.unit_price|floatformat:2 }}</td>
-            <td class="text-end fw-bold">${{ item.amount|floatformat:2 }}</td>
+            <td style="color:var(--text-primary);font-weight:500;">{{ item.description }}</td>
+            <td style="text-align:center;color:var(--text-secondary);">{{ item.quantity }}</td>
+            <td style="text-align:right;color:var(--text-secondary);">${{ item.unit_price|floatformat:2 }}</td>
+            <td style="text-align:right;font-weight:700;color:var(--text-primary);">${{ item.amount|floatformat:2 }}</td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="4" class="text-center text-muted">Project Services as agreed</td>
+            <td colspan="4" class="text-center" style="color:var(--text-muted);padding:18px;">Project Services as agreed</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -100,34 +121,33 @@
   <!-- Totals Summary -->
   <div class="row justify-content-end">
     <div class="col-md-5">
-      <div class="d-flex justify-content-between mb-2">
-        <span class="text-muted">Subtotal:</span>
-        <strong>${{ invoice.subtotal|floatformat:2 }}</strong>
+      <div class="d-flex justify-content-between mb-2" style="font-size:13.5px;">
+        <span style="color:var(--text-muted);">Subtotal:</span>
+        <strong style="color:var(--text-primary);">${{ invoice.subtotal|floatformat:2 }}</strong>
       </div>
       {% if invoice.tax_amount > 0 %}
-        <div class="d-flex justify-content-between mb-2">
-          <span class="text-muted">Tax ({{ invoice.tax_rate }}%):</span>
-          <strong>+${{ invoice.tax_amount|floatformat:2 }}</strong>
+        <div class="d-flex justify-content-between mb-2" style="font-size:13.5px;">
+          <span style="color:var(--text-muted);">Tax ({{ invoice.tax_rate }}%):</span>
+          <strong style="color:var(--text-primary);">+${{ invoice.tax_amount|floatformat:2 }}</strong>
         </div>
       {% endif %}
       {% if invoice.discount_amount > 0 %}
-        <div class="d-flex justify-content-between mb-2">
-          <span class="text-muted">Discount:</span>
-          <strong class="text-success">-${{ invoice.discount_amount|floatformat:2 }}</strong>
+        <div class="d-flex justify-content-between mb-2" style="font-size:13.5px;">
+          <span style="color:var(--text-muted);">Discount:</span>
+          <strong style="color:var(--success-text);">-${{ invoice.discount_amount|floatformat:2 }}</strong>
         </div>
       {% endif %}
-      <hr>
-      <div class="d-flex justify-content-between fs-5 fw-bold">
-        <span>Total Due:</span>
-        <span class="text-primary">${{ invoice.total|floatformat:2 }}</span>
+      <div class="pt-2 border-top d-flex justify-content-between align-items-center" style="border-color:var(--border-color) !important;">
+        <span style="font-size:15px;font-weight:700;color:var(--text-primary);">Total Due:</span>
+        <span style="font-size:20px;font-weight:900;color:var(--hub-gold);">${{ invoice.total|floatformat:2 }}</span>
       </div>
     </div>
   </div>
 
   {% if invoice.notes %}
-    <div class="mt-4 pt-3 border-top">
-      <h6 class="fw-bold small text-muted">Payment Notes & Terms</h6>
-      <p class="small text-secondary mb-0">{{ invoice.notes }}</p>
+    <div class="mt-4 pt-3 border-top" style="border-color:var(--border-color) !important;">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Payment Notes &amp; Terms</div>
+      <p style="font-size:13px;color:var(--text-secondary);margin:0;line-height:1.5;">{{ invoice.notes }}</p>
     </div>
   {% endif %}
 </div>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}My Profile — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}My Profile{% endblock %}
+{% block title %}My Profile — FreelanceHub{% endblock %}
+{% block page_title %}Account Profile{% endblock %}
 
 {% block content %}
 <div class="row g-4">
@@ -10,73 +10,97 @@
     <div class="card text-center p-4">
       <div class="position-relative d-inline-block mx-auto mb-3">
         {% if profile.profile_picture %}
-          <img src="{{ profile.profile_picture.url }}" alt="Profile" class="rounded-circle" style="width:120px;height:120px;object-fit:cover;border:3px solid var(--primary);">
+          <img src="{{ profile.profile_picture.url }}" alt="Profile" class="rounded-circle" style="width:110px;height:110px;object-fit:cover;border:3px solid var(--hub-gold);box-shadow:0 4px 16px var(--hub-gold-glow);">
         {% else %}
-          <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width:120px;height:120px;background:var(--primary-soft);color:var(--primary);font-size:48px;font-weight:800;">
+          <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width:110px;height:110px;background:linear-gradient(135deg,var(--hub-gold) 0%,var(--hub-gold-dark) 100%);color:#0D0F14;font-size:42px;font-weight:900;box-shadow:0 4px 16px var(--hub-gold-glow);">
             {{ user.username|first|upper }}
           </div>
         {% endif %}
       </div>
-      <h4 class="fw-bold mb-1" style="color:var(--text-primary);">{{ user.get_full_name|default:user.username }}</h4>
-      <p class="text-muted small mb-2">@{{ user.username }} • Freelancer</p>
-      
+      <h4 style="font-weight:800;font-size:18px;color:var(--text-primary);margin-bottom:2px;">{{ user.get_full_name|default:user.username }}</h4>
+      <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">@{{ user.username }} &middot; Active Workspace</p>
+
       {% if profile.bio %}
-        <p class="small text-secondary mb-3">{{ profile.bio }}</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:16px;">{{ profile.bio }}</p>
       {% endif %}
 
       <div class="d-flex justify-content-center gap-2 mb-3">
         {% if profile.portfolio_website %}
-          <a href="{{ profile.portfolio_website }}" target="_blank" class="btn btn-sm btn-outline-primary" title="Portfolio"><i class="fas fa-globe"></i></a>
+          <a href="{{ profile.portfolio_website }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="Portfolio Website">
+            <i data-lucide="globe"></i>
+          </a>
         {% endif %}
         {% if profile.social_github %}
-          <a href="{{ profile.social_github }}" target="_blank" class="btn btn-sm btn-outline-dark" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="{{ profile.social_github }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="GitHub Profile">
+            <i data-lucide="github"></i>
+          </a>
         {% endif %}
         {% if profile.social_linkedin %}
-          <a href="{{ profile.social_linkedin }}" target="_blank" class="btn btn-sm btn-outline-primary" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="{{ profile.social_linkedin }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="LinkedIn Profile">
+            <i data-lucide="linkedin"></i>
+          </a>
         {% endif %}
         {% if profile.social_twitter %}
-          <a href="{{ profile.social_twitter }}" target="_blank" class="btn btn-sm btn-outline-info" title="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="{{ profile.social_twitter }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="Twitter / X Profile">
+            <i data-lucide="twitter"></i>
+          </a>
         {% endif %}
       </div>
 
       {% if profile.profile_picture %}
         <form method="post" action="{% url 'core:profile_remove_picture' %}" class="mt-2">
           {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-            <i class="fas fa-trash"></i> Remove Picture
+          <button type="submit" class="btn-hub-danger btn-sm w-100" style="justify-content:center;">
+            <i data-lucide="trash-2"></i> <span>Remove Picture</span>
           </button>
         </form>
       {% endif %}
     </div>
 
-    <!-- Account Details Quick Card -->
-    <div class="card mt-3 p-3">
-      <h6 class="fw-bold mb-3"><i class="fas fa-info-circle text-primary me-2"></i> Account Information</h6>
-      <ul class="list-unstyled mb-0 small">
-        <li class="mb-2"><strong>Email:</strong> {{ user.email|default:"Not specified" }}</li>
-        <li class="mb-2"><strong>Phone:</strong> {{ profile.phone_number|default:"Not specified" }}</li>
-        <li class="mb-2"><strong>Location:</strong> {{ profile.address|default:"Not specified" }}</li>
-        <li class="mb-2"><strong>Member Since:</strong> {{ user.date_joined|date:"M d, Y" }}</li>
-      </ul>
+    <!-- Account Information Card -->
+    <div class="card mt-3 p-4">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i data-lucide="info" style="width:16px;height:16px;color:var(--hub-gold);"></i>
+        <h6 style="font-weight:700;font-size:14px;color:var(--text-primary);margin:0;">Account Information</h6>
+      </div>
+      <div class="detail-grid" style="display:grid;grid-template-columns:100px 1fr;gap:10px 12px;font-size:13px;">
+        <span style="color:var(--text-muted);font-weight:600;">Email</span>
+        <span style="color:var(--text-primary);word-break:break-all;">{{ user.email|default:"Not specified" }}</span>
+
+        <span style="color:var(--text-muted);font-weight:600;">Phone</span>
+        <span style="color:var(--text-secondary);">{{ profile.phone_number|default:"Not specified" }}</span>
+
+        <span style="color:var(--text-muted);font-weight:600;">Location</span>
+        <span style="color:var(--text-secondary);">{{ profile.address|default:"Not specified" }}</span>
+
+        <span style="color:var(--text-muted);font-weight:600;">Joined</span>
+        <span style="color:var(--text-secondary);">{{ user.date_joined|date:"M d, Y" }}</span>
+      </div>
     </div>
   </div>
 
-  <!-- Right Column: Tabs (Edit Profile, Change Password, Login History) -->
+  <!-- Right Column: Tabs -->
   <div class="col-lg-8">
     <div class="card p-4">
-      <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+      <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist" style="border-bottom:1px solid var(--border-color);gap:4px;">
         <li class="nav-item">
-          <button class="nav-link active fw-semibold" id="edit-tab" data-bs-toggle="tab" data-bs-target="#editProfile" type="button"><i class="fas fa-user-edit me-2"></i>Edit Profile</button>
+          <button class="nav-link active" id="edit-tab" data-bs-toggle="tab" data-bs-target="#editProfile" type="button" style="color:var(--text-primary);font-weight:700;border:none;border-bottom:2px solid var(--hub-gold);background:transparent;padding:8px 16px;">
+            <i data-lucide="user-check" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Edit Profile
+          </button>
         </li>
         <li class="nav-item">
-          <button class="nav-link fw-semibold" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button"><i class="fas fa-lock me-2"></i>Password</button>
+          <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" style="color:var(--text-secondary);font-weight:600;border:none;border-bottom:2px solid transparent;background:transparent;padding:8px 16px;">
+            <i data-lucide="lock" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Password
+          </button>
         </li>
         <li class="nav-item">
-          <button class="nav-link fw-semibold" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button"><i class="fas fa-history me-2"></i>Login History</button>
+          <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" style="color:var(--text-secondary);font-weight:600;border:none;border-bottom:2px solid transparent;background:transparent;padding:8px 16px;">
+            <i data-lucide="history" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Security Log
+          </button>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-semibold" href="{% url 'social_auth:connected_accounts' %}">
-            <i class="fas fa-link me-2"></i>Connected Accounts
+          <a class="nav-link" href="{% url 'social_auth:connected_accounts' %}" style="color:var(--text-secondary);font-weight:600;border:none;border-bottom:2px solid transparent;background:transparent;padding:8px 16px;">
+            <i data-lucide="link" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Connected Accounts
           </a>
         </li>
       </ul>
@@ -88,102 +112,112 @@
             {% csrf_token %}
             <div class="row g-3 mb-3">
               <div class="col-md-6">
-                <label class="form-label fw-bold">First Name</label>
+                <label class="form-label">First Name</label>
                 {{ user_form.first_name }}
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-bold">Last Name</label>
+                <label class="form-label">Last Name</label>
                 {{ user_form.last_name }}
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-bold">Email Address</label>
+                <label class="form-label">Email Address</label>
                 {{ user_form.email }}
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-bold">Phone Number</label>
+                <label class="form-label">Phone Number</label>
                 {{ profile_form.phone_number }}
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold">Profile Picture</label>
+              <label class="form-label">Profile Picture</label>
               {{ profile_form.profile_picture }}
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold">Bio</label>
+              <label class="form-label">Bio / Professional Summary</label>
               {{ profile_form.bio }}
             </div>
 
             <div class="row g-3 mb-3">
               <div class="col-md-6">
-                <label class="form-label fw-bold">Skills</label>
+                <label class="form-label">Skills &amp; Technologies</label>
                 {{ profile_form.skills }}
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-bold">Experience Summary</label>
+                <label class="form-label">Experience Summary</label>
                 {{ profile_form.experience }}
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold">Address</label>
+              <label class="form-label">Billing / Physical Address</label>
               {{ profile_form.address }}
             </div>
 
-            <h6 class="fw-bold mt-4 mb-3"><i class="fas fa-link text-primary me-2"></i> Portfolio & Social Links</h6>
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <label class="form-label">Portfolio Website</label>
-                {{ profile_form.portfolio_website }}
+            <div class="pt-3 border-top mb-3" style="border-color:var(--border-color) !important;">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <i data-lucide="link" style="width:16px;height:16px;color:var(--hub-gold);"></i>
+                <h6 style="font-weight:700;font-size:14px;color:var(--text-primary);margin:0;">Portfolio &amp; Social Links</h6>
               </div>
-              <div class="col-md-6">
-                <label class="form-label">GitHub URL</label>
-                {{ profile_form.social_github }}
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">LinkedIn URL</label>
-                {{ profile_form.social_linkedin }}
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Twitter / X URL</label>
-                {{ profile_form.social_twitter }}
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Portfolio Website</label>
+                  {{ profile_form.portfolio_website }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">GitHub URL</label>
+                  {{ profile_form.social_github }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">LinkedIn URL</label>
+                  {{ profile_form.social_linkedin }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Twitter / X URL</label>
+                  {{ profile_form.social_twitter }}
+                </div>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary px-4">
-              <i class="fas fa-save me-2"></i> Save Profile Changes
-            </button>
+            <div class="d-flex justify-content-end pt-3 border-top" style="border-color:var(--border-color) !important;">
+              <button type="submit" class="btn-hub-primary">
+                <i data-lucide="check"></i> <span>Save Profile Changes</span>
+              </button>
+            </div>
           </form>
         </div>
 
         <!-- Change Password -->
         <div class="tab-pane fade" id="security">
-          <form method="post" action="{% url 'core:profile_change_password' %}">
+          <form method="post" action="{% url 'core:profile_change_password' %}" style="max-width:480px;">
             {% csrf_token %}
             <div class="mb-3">
-              <label class="form-label fw-bold">Old Password</label>
+              <label class="form-label">Old Password *</label>
               <input type="password" name="old_password" class="form-control" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-bold">New Password</label>
+              <label class="form-label">New Password *</label>
               <input type="password" name="new_password1" class="form-control" required>
             </div>
             <div class="mb-4">
-              <label class="form-label fw-bold">Confirm New Password</label>
+              <label class="form-label">Confirm New Password *</label>
               <input type="password" name="new_password2" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-danger px-4">
-              <i class="fas fa-key me-2"></i> Update Password
+            <button type="submit" class="btn-hub-danger">
+              <i data-lucide="key"></i> <span>Update Password</span>
             </button>
           </form>
         </div>
 
         <!-- Login History -->
         <div class="tab-pane fade" id="history">
-          <h6 class="fw-bold mb-3"><i class="fas fa-shield-alt text-success me-2"></i> Recent Security Logins</h6>
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <i data-lucide="shield-check" style="width:16px;height:16px;color:var(--success-text);"></i>
+            <h6 style="font-weight:700;font-size:14px;color:var(--text-primary);margin:0;">Recent Security Logins</h6>
+          </div>
           <div class="table-responsive">
-            <table class="table table-hover align-middle small">
+            <table class="hub-table">
               <thead>
                 <tr>
                   <th>Timestamp</th>
@@ -195,19 +229,19 @@
               <tbody>
                 {% for log in login_history %}
                   <tr>
-                    <td>{{ log.timestamp|date:"M d, Y H:i:s" }}</td>
+                    <td style="font-size:13px;color:var(--text-secondary);">{{ log.timestamp|date:"M d, Y H:i:s" }}</td>
                     <td>
                       {% if log.action == 'login' %}
-                        <span class="badge bg-success">Logged In</span>
+                        <span class="badge-status status-completed">Logged In</span>
                       {% else %}
-                        <span class="badge bg-secondary">Logged Out</span>
+                        <span class="badge-status status-draft">Logged Out</span>
                       {% endif %}
                     </td>
-                    <td><code>{{ log.ip_address|default:"127.0.0.1" }}</code></td>
-                    <td class="text-truncate" style="max-width:200px;">{{ log.user_agent|default:"Unknown Browser" }}</td>
+                    <td><code style="color:var(--hub-gold);font-size:12px;">{{ log.ip_address|default:"127.0.0.1" }}</code></td>
+                    <td class="text-truncate" style="max-width:220px;font-size:12.5px;color:var(--text-secondary);">{{ log.user_agent|default:"Unknown Browser" }}</td>
                   </tr>
                 {% empty %}
-                  <tr><td colspan="4" class="text-center text-muted">No login history recorded yet.</td></tr>
+                  <tr><td colspan="4" class="text-center py-4" style="color:var(--text-muted);font-size:13.5px;">No login history recorded yet.</td></tr>
                 {% endfor %}
               </tbody>
             </table>

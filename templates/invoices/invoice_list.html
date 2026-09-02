@@ -1,78 +1,106 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Invoices — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}Invoice Management{% endblock %}
+{% block title %}Invoices — FreelanceHub{% endblock %}
+{% block page_title %}Invoices{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">Invoices</h4>
-    <p class="text-muted small mb-0">Create, track, send, and download client invoices.</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="file-text" style="color:var(--hub-gold);width:24px;height:24px;"></i> Invoices
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Create, issue, track, and download client invoices.</p>
   </div>
-  <a href="{% url 'core:invoice_create' %}" class="btn btn-primary">
-    <i class="fas fa-plus me-2"></i> Create Invoice
+  <a href="{% url 'core:invoice_create' %}" class="btn-hub-primary">
+    <i data-lucide="plus"></i> <span>Create Invoice</span>
   </a>
 </div>
 
-<div class="card p-3">
-  <div class="table-responsive">
-    <table class="table table-hover align-middle">
-      <thead>
-        <tr>
-          <th>Invoice #</th>
-          <th>Client</th>
-          <th>Project</th>
-          <th>Issue Date</th>
-          <th>Due Date</th>
-          <th>Total</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for inv in invoices %}
+<div class="card">
+  <div class="card-header-hub">
+    <div class="d-flex align-items-center gap-2">
+      <i data-lucide="list" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+      <span class="card-title-hub">All Invoices</span>
+      <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">{{ invoices|length }} total</span>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="hub-table">
+        <thead>
           <tr>
-            <td><a href="{% url 'core:invoice_detail' inv.pk %}" class="fw-bold text-primary">#{{ inv.invoice_number }}</a></td>
-            <td class="fw-bold">{{ inv.client.name }}</td>
-            <td>{{ inv.project.name|default:"—" }}</td>
-            <td>{{ inv.issue_date|date:"M d, Y" }}</td>
-            <td>{{ inv.due_date|date:"M d, Y" }}</td>
-            <td class="fw-bold text-success">${{ inv.total|floatformat:2 }}</td>
-            <td>
-              {% if inv.status == 'paid' %}
-                <span class="badge bg-success">Paid</span>
-              {% elif inv.status == 'sent' %}
-                <span class="badge bg-info text-dark">Sent</span>
-              {% elif inv.status == 'overdue' %}
-                <span class="badge bg-danger">Overdue</span>
-              {% else %}
-                <span class="badge bg-secondary">Draft</span>
-              {% endif %}
-            </td>
-            <td>
-              <div class="d-flex gap-2">
-                <a href="{% url 'core:invoice_detail' inv.pk %}" class="btn btn-sm btn-outline-primary" title="View / Print"><i class="fas fa-eye"></i></a>
-                <form method="post" action="{% url 'core:invoice_email' inv.pk %}" style="display:inline;">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-info" title="Email Client"><i class="fas fa-paper-plane"></i></button>
-                </form>
-                <form method="post" action="{% url 'core:invoice_delete' inv.pk %}" style="display:inline;">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this invoice?')" title="Delete"><i class="fas fa-trash"></i></button>
-                </form>
-              </div>
-            </td>
+            <th>Invoice #</th>
+            <th>Client</th>
+            <th>Project</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th style="text-align:right;">Actions</th>
           </tr>
-        {% empty %}
-          <tr>
-            <td colspan="8" class="text-center text-muted py-4">
-              <i class="fas fa-file-invoice fa-3x mb-3 text-secondary d-block"></i>
-              No invoices generated yet. Click "Create Invoice" to issue your first invoice.
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for inv in invoices %}
+            <tr>
+              <td>
+                <a href="{% url 'core:invoice_detail' inv.pk %}" style="font-weight:700;color:var(--hub-gold);">#{{ inv.invoice_number }}</a>
+              </td>
+              <td style="font-weight:600;color:var(--text-primary);">{{ inv.client.name }}</td>
+              <td style="color:var(--text-secondary);font-size:13px;">{{ inv.project.name|default:"—" }}</td>
+              <td style="font-size:13px;color:var(--text-secondary);">{{ inv.issue_date|date:"M d, Y" }}</td>
+              <td style="font-size:13px;color:var(--text-secondary);">{{ inv.due_date|date:"M d, Y" }}</td>
+              <td style="font-weight:700;color:var(--success-text);font-size:14px;">${{ inv.total|floatformat:2 }}</td>
+              <td>
+                {% if inv.status == 'paid' %}
+                  <span class="badge-status status-completed">Paid</span>
+                {% elif inv.status == 'sent' %}
+                  <span class="badge-status status-open">Sent</span>
+                {% elif inv.status == 'overdue' %}
+                  <span class="badge-status status-rejected">Overdue</span>
+                {% else %}
+                  <span class="badge-status status-draft">Draft</span>
+                {% endif %}
+              </td>
+              <td style="text-align:right;">
+                <div class="d-inline-flex gap-1" onclick="event.stopPropagation();">
+                  <a href="{% url 'core:invoice_detail' inv.pk %}" class="btn-hub-secondary btn-icon btn-sm" title="View / Print">
+                    <i data-lucide="eye"></i>
+                  </a>
+                  <form method="post" action="{% url 'core:invoice_email' inv.pk %}" style="display:inline;margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-hub-secondary btn-icon btn-sm" title="Email Client">
+                      <i data-lucide="send"></i>
+                    </button>
+                  </form>
+                  <form method="post" action="{% url 'core:invoice_delete' inv.pk %}" style="display:inline;margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-hub-danger btn-icon btn-sm" onclick="return confirm('Delete this invoice?')" title="Delete Invoice">
+                      <i data-lucide="trash-2"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="8" class="text-center py-5">
+                <div class="empty-state">
+                  <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;">
+                    <i data-lucide="file-text" style="width:26px;height:26px;"></i>
+                  </div>
+                  <h5 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No invoices generated yet</h5>
+                  <p style="font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto 18px;">Click "Create Invoice" to generate and issue your first professional invoice.</p>
+                  <a href="{% url 'core:invoice_create' %}" class="btn-hub-primary">
+                    <i data-lucide="plus"></i> <span>Create Invoice</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 {% endblock %}

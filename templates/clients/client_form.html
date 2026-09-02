@@ -1,33 +1,44 @@
 {% extends 'base.html' %}
-{% block title %}{{ action }} Client — FreelanceTrack{% endblock %}
-{% block page_title %}<i class="fas fa-users"></i> {{ action }} Client{% endblock %}
+{% block title %}{{ action }} Client — FreelanceHub{% endblock %}
+{% block page_title %}{{ action }} Client{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
   <div>
-    <h1>{{ action }} Client</h1>
-    <p class="page-subtitle">{% if action == 'Create' %}Add a new client to your roster{% else %}Update client information{% endif %}</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="users" style="color:var(--hub-gold);width:24px;height:24px;"></i> {{ action }} Client
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">
+      {% if action == 'Create' %}Add a new client account to manage contracts and invoices.{% else %}Update contact information and billing status.{% endif %}
+    </p>
   </div>
-  <a href="{% url 'core:client_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+  <a href="{% url 'core:client_list' %}" class="btn-hub-secondary">
+    <i data-lucide="arrow-left"></i> <span>Back to Clients</span>
+  </a>
 </div>
 
 <div class="row justify-content-center">
   <div class="col-lg-8">
     <div class="card">
-      <div class="card-header"><i class="fas fa-edit"></i> Client Details</div>
-      <div class="card-body">
+      <div class="card-header-hub">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="edit-3" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+          <span class="card-title-hub">Client Details</span>
+        </div>
+      </div>
+      <div class="card-body p-4">
         <form method="post">
           {% csrf_token %}
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">Full Name *</label>
               {{ form.name }}
-              {% if form.name.errors %}<small class="text-danger">{{ form.name.errors.0 }}</small>{% endif %}
+              {% if form.name.errors %}<small class="form-error">{{ form.name.errors.0 }}</small>{% endif %}
             </div>
             <div class="col-md-6">
               <label class="form-label">Email Address *</label>
               {{ form.email }}
-              {% if form.email.errors %}<small class="text-danger">{{ form.email.errors.0 }}</small>{% endif %}
+              {% if form.email.errors %}<small class="form-error">{{ form.email.errors.0 }}</small>{% endif %}
             </div>
             <div class="col-md-6">
               <label class="form-label">Phone Number</label>
@@ -50,9 +61,11 @@
               {{ form.notes }}
             </div>
           </div>
-          <div class="d-flex justify-content-end gap-2 mt-4">
-            <a href="{% url 'core:client_list' %}" class="btn btn-outline-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ action }} Client</button>
+          <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color:var(--border-color) !important;">
+            <a href="{% url 'core:client_list' %}" class="btn-hub-secondary">Cancel</a>
+            <button type="submit" class="btn-hub-primary">
+              <i data-lucide="check"></i> <span>{{ action }} Client</span>
+            </button>
           </div>
         </form>
       </div>

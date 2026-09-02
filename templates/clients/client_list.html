@@ -1,58 +1,72 @@
 {% extends 'base.html' %}
-{% block title %}Clients — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}<i class="fas fa-users"></i> Clients{% endblock %}
+{% block title %}Clients — FreelanceHub{% endblock %}
+{% block page_title %}Clients{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h1><i class="fas fa-users"></i> Clients</h1>
-    <p class="page-subtitle">Manage your client relationships</p>
+    <h1 class="page-title d-flex align-items-center gap-2" style="font-size:24px;font-weight:800;margin:0;">
+      <i data-lucide="users" style="color:var(--hub-gold);width:24px;height:24px;"></i> Clients
+    </h1>
+    <p class="page-subtitle" style="font-size:13.5px;color:var(--text-muted);margin:4px 0 0;">Manage your client directory, accounts, and relationships.</p>
   </div>
-  <a href="{% url 'core:client_create' %}" class="btn btn-primary">
-    <i class="fas fa-plus"></i> Add Client
+  <a href="{% url 'core:client_create' %}" class="btn-hub-primary">
+    <i data-lucide="user-plus"></i> <span>Add Client</span>
   </a>
 </div>
 
 <!-- Filter Bar -->
-<div class="filter-bar">
-  <form method="get" class="row g-2 align-items-end">
+<div class="card mb-4" style="padding:16px 20px;">
+  <form method="get" class="row g-2 align-items-center">
     <div class="col-md-5">
-      <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" name="search" class="form-control" placeholder="Search clients..." value="{{ search_query }}">
+      <div style="position:relative;">
+        <i data-lucide="search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);"></i>
+        <input type="text" name="search" class="form-control" style="padding-left:36px;height:38px;" placeholder="Search clients..." value="{{ search_query }}">
       </div>
     </div>
     <div class="col-md-3">
-      <select name="status" class="form-select">
+      <select name="status" class="form-select" style="height:38px;">
         <option value="">All Statuses</option>
         {% for value, label in status_choices %}
-        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+          <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
     </div>
     <div class="col-md-3">
-      <select name="sort" class="form-select">
+      <select name="sort" class="form-select" style="height:38px;">
         <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest First</option>
         <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Oldest First</option>
         <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name A-Z</option>
         <option value="-name" {% if sort_by == '-name' %}selected{% endif %}>Name Z-A</option>
       </select>
     </div>
-    <div class="col-md-1">
-      <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i></button>
+    <div class="col-md-1 d-flex gap-1">
+      <button type="submit" class="btn-hub-secondary w-100" style="height:38px;padding:0;" title="Apply Filter">
+        <i data-lucide="filter"></i>
+      </button>
+      {% if search_query or status_filter %}
+        <a href="{% url 'core:client_list' %}" class="btn-hub-ghost" style="height:38px;padding:0 12px;" title="Clear">
+          <i data-lucide="x"></i>
+        </a>
+      {% endif %}
     </div>
   </form>
 </div>
 
+<!-- Clients Table Card -->
 <div class="card">
-  <div class="card-header">
-    <i class="fas fa-list"></i> All Clients
-    <span class="ms-2" style="font-size:12px;color:var(--text-muted);">{{ page_obj.paginator.count }} total</span>
+  <div class="card-header-hub">
+    <div class="d-flex align-items-center gap-2">
+      <i data-lucide="list" style="width:18px;height:18px;color:var(--hub-gold);"></i>
+      <span class="card-title-hub">All Clients</span>
+      <span class="badge" style="background:var(--hub-gold-soft);color:var(--hub-gold);border:1px solid var(--hub-gold-border);">{{ page_obj.paginator.count }} total</span>
+    </div>
   </div>
+
   <div class="card-body p-0">
     {% if page_obj.object_list %}
     <div class="table-responsive">
-      <table class="table table-hover mb-0">
+      <table class="hub-table">
         <thead>
           <tr>
             <th>Client</th>
@@ -60,30 +74,44 @@
             <th>Email</th>
             <th>Status</th>
             <th>Projects</th>
-            <th>Actions</th>
+            <th style="text-align:right;">Actions</th>
           </tr>
         </thead>
         <tbody>
           {% for client in page_obj %}
-          <tr data-href="{% url 'core:client_detail' client.id %}">
+          <tr>
             <td>
-              <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">{{ client.name|first|upper }}</div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--hub-gold) 0%,var(--hub-gold-dark) 100%);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#0D0F14;flex-shrink:0;box-shadow:0 2px 8px var(--hub-gold-glow);">
+                  {{ client.name|first|upper }}
+                </div>
                 <div>
-                  <a href="{% url 'core:client_detail' client.id %}" style="font-weight:600;color:var(--text-primary);">{{ client.name }}</a>
-                  {% if client.phone %}<div style="font-size:12px;color:var(--text-muted);">{{ client.phone }}</div>{% endif %}
+                  <a href="{% url 'core:client_detail' client.id %}" style="font-weight:700;color:var(--text-primary);">{{ client.name }}</a>
+                  {% if client.phone %}
+                    <div style="font-size:12px;color:var(--text-muted);">{{ client.phone }}</div>
+                  {% endif %}
                 </div>
               </div>
             </td>
-            <td style="color:var(--text-secondary);">{{ client.company|default:'—' }}</td>
-            <td style="font-size:13px;">{{ client.email }}</td>
+            <td style="color:var(--text-secondary);font-size:13.5px;">{{ client.company|default:'—' }}</td>
+            <td style="font-size:13px;color:var(--text-secondary);">{{ client.email }}</td>
             <td><span class="badge-status status-{{ client.status }}">{{ client.get_status_display }}</span></td>
-            <td><span class="badge" style="background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color);">{{ client.get_total_projects }}</span></td>
             <td>
-              <div class="d-flex gap-1" onclick="event.stopPropagation();">
-                <a href="{% url 'core:client_detail' client.id %}" class="btn btn-sm btn-outline-primary btn-icon" title="View"><i class="fas fa-eye"></i></a>
-                <a href="{% url 'core:client_update' client.id %}" class="btn btn-sm btn-outline-secondary btn-icon" title="Edit"><i class="fas fa-edit"></i></a>
-                <a href="{% url 'core:client_delete' client.id %}" class="btn btn-sm btn-outline-danger btn-icon" title="Delete"><i class="fas fa-trash"></i></a>
+              <span class="badge" style="background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-color);">
+                {{ client.get_total_projects }}
+              </span>
+            </td>
+            <td style="text-align:right;">
+              <div class="d-inline-flex gap-1" onclick="event.stopPropagation();">
+                <a href="{% url 'core:client_detail' client.id %}" class="btn-hub-secondary btn-icon btn-sm" title="View Client">
+                  <i data-lucide="eye"></i>
+                </a>
+                <a href="{% url 'core:client_update' client.id %}" class="btn-hub-secondary btn-icon btn-sm" title="Edit Client">
+                  <i data-lucide="edit-3"></i>
+                </a>
+                <a href="{% url 'core:client_delete' client.id %}" class="btn-hub-danger btn-icon btn-sm" title="Delete Client">
+                  <i data-lucide="trash-2"></i>
+                </a>
               </div>
             </td>
           </tr>
@@ -91,32 +119,42 @@
         </tbody>
       </table>
     </div>
+
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
-    <div class="d-flex justify-content-center p-3">
-      <nav><ul class="pagination mb-0">
-        {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}"><i class="fas fa-chevron-left"></i></a></li>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}&status={{ status_filter }}">{{ num }}</a></li>
-        {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&status={{ status_filter }}"><i class="fas fa-chevron-right"></i></a></li>
-        {% endif %}
-      </ul></nav>
+    <div class="d-flex justify-content-center p-3 border-top" style="border-color:var(--border-color) !important;">
+      <nav aria-label="Clients pagination">
+        <ul class="pagination mb-0" style="gap:4px;">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&status={{ status_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-left" style="width:14px;height:14px;"></i></a></li>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link" style="background:var(--hub-gold);border:1px solid var(--hub-gold);color:#0D0F14;font-weight:700;border-radius:var(--r-sm);">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ search_query }}&status={{ status_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&status={{ status_filter }}" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--r-sm);"><i data-lucide="chevron-right" style="width:14px;height:14px;"></i></a></li>
+          {% endif %}
+        </ul>
+      </nav>
     </div>
     {% endif %}
+
     {% else %}
-    <div class="empty-state">
-      <div class="empty-state-icon"><i class="fas fa-users"></i></div>
-      <h5>No clients found</h5>
-      <p>{% if search_query %}No clients match your search.{% else %}Start by adding your first client.{% endif %}</p>
-      <a href="{% url 'core:client_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Client</a>
+    <div class="empty-state py-5 text-center">
+      <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;">
+        <i data-lucide="users" style="width:26px;height:26px;"></i>
+      </div>
+      <h5 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No clients found</h5>
+      <p style="font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto 18px;">
+        {% if search_query or status_filter %}Try adjusting your filters.{% else %}Add your first client to start linking projects and invoices.{% endif %}
+      </p>
+      <a href="{% url 'core:client_create' %}" class="btn-hub-primary">
+        <i data-lucide="user-plus"></i> <span>Add Client</span>
+      </a>
     </div>
     {% endif %}
   </div>
