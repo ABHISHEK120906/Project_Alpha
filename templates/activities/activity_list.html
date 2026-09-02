@@ -1,49 +1,134 @@
 {% extends 'base.html' %}
-{% block title %}Activity Log — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}<i class="fas fa-history"></i> Activity Log{% endblock %}
+{% block title %}Activity Log — FreelanceHub{% endblock %}
+{% block page_title %}Activity Log{% endblock %}
+
 {% block content %}
-<div class="page-header">
-  <div><h1><i class="fas fa-history"></i> Activity Log</h1><p class="page-subtitle">Complete audit trail of all your actions</p></div>
-</div>
-<div class="card">
-  <div class="card-header"><i class="fas fa-history"></i> All Activities <span class="ms-2" style="font-size:12px;color:var(--text-muted);">{{ page_obj.paginator.count }} total</span></div>
-  <div class="card-body p-0">
-    {% if page_obj.object_list %}
-    <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead><tr><th>Action</th><th>Type</th><th>Description</th><th>IP Address</th><th>Timestamp</th></tr></thead>
-        <tbody>
-          {% for activity in page_obj %}
-          <tr>
-            <td>
-              {% if activity.action == 'create' %}<span class="badge-status status-active"><i class="fas fa-plus me-1"></i>{{ activity.get_action_display }}</span>
-              {% elif activity.action == 'update' or activity.action == 'status_change' %}<span class="badge-status status-in_progress"><i class="fas fa-edit me-1"></i>{{ activity.get_action_display }}</span>
-              {% elif activity.action == 'delete' %}<span class="badge-status status-overdue"><i class="fas fa-trash me-1"></i>{{ activity.get_action_display }}</span>
-              {% elif activity.action == 'login' %}<span class="badge-status status-pending"><i class="fas fa-sign-in-alt me-1"></i>{{ activity.get_action_display }}</span>
-              {% else %}<span class="badge-status status-on_hold">{{ activity.get_action_display }}</span>
-              {% endif %}
-            </td>
-            <td style="color:var(--text-secondary);font-size:13px;">{{ activity.get_model_type_display }}</td>
-            <td style="font-size:13px;">{{ activity.description|truncatechars:60 }}</td>
-            <td style="font-size:12px;color:var(--text-muted);">{{ activity.ip_address|default:'—' }}</td>
-            <td style="font-size:12px;color:var(--text-muted);white-space:nowrap;">{{ activity.timestamp|date:"M d, Y H:i" }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+<!-- Page Header -->
+<div class="page-header reveal-up">
+  <div class="page-header-left">
+    <div class="page-header-eyebrow">
+      <i data-lucide="shield" style="width:14px;height:14px;"></i>
+      Audit Trail
     </div>
-    {% if page_obj.has_other_pages %}
-    <div class="d-flex justify-content-center p-3">
-      <nav><ul class="pagination mb-0">
-        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-chevron-left"></i></a></li>{% endif %}
-        {% for num in page_obj.paginator.page_range %}{% if page_obj.number == num %}<li class="page-item active"><span class="page-link">{{ num }}</span></li>{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}<li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>{% endif %}{% endfor %}
-        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-chevron-right"></i></a></li>{% endif %}
-      </ul></nav>
-    </div>
-    {% endif %}
-    {% else %}
-    <div class="empty-state"><div class="empty-state-icon"><i class="fas fa-history"></i></div><h5>No activities yet</h5><p>Your actions will appear here.</p></div>
-    {% endif %}
+    <h1 class="page-header-title">Activity Log</h1>
+    <p class="page-subtitle">Complete audit trail of all platform actions and events.</p>
   </div>
+</div>
+
+<!-- Activity Table Card -->
+<div class="card reveal-up delay-1" style="overflow:hidden;">
+
+  <!-- Card Header -->
+  <div class="card-header-hub">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="stat-icon" style="width:36px;height:36px;">
+        <i data-lucide="activity" style="width:17px;height:17px;"></i>
+      </div>
+      <div>
+        <h2 class="card-title-hub" style="margin:0;">All Activities</h2>
+        <span style="font-size:12px;color:var(--text-muted);">{{ page_obj.paginator.count }} total records</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  {% if page_obj.object_list %}
+  <div class="table-responsive">
+    <table class="hub-table">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>IP Address</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for activity in page_obj %}
+        <tr>
+          <td>
+            {% if activity.action == 'create' %}
+              <span class="badge-status status-active">
+                <i data-lucide="plus-circle" style="width:12px;height:12px;"></i>
+                {{ activity.get_action_display }}
+              </span>
+            {% elif activity.action == 'update' or activity.action == 'status_change' %}
+              <span class="badge-status status-in_progress">
+                <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                {{ activity.get_action_display }}
+              </span>
+            {% elif activity.action == 'delete' %}
+              <span class="badge-status status-overdue">
+                <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                {{ activity.get_action_display }}
+              </span>
+            {% elif activity.action == 'login' %}
+              <span class="badge-status status-pending">
+                <i data-lucide="log-in" style="width:12px;height:12px;"></i>
+                {{ activity.get_action_display }}
+              </span>
+            {% else %}
+              <span class="badge-status status-on_hold">{{ activity.get_action_display }}</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--text-secondary);font-size:13px;">{{ activity.get_model_type_display }}</td>
+          <td style="font-size:13px;color:var(--text-primary);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ activity.description|truncatechars:70 }}</td>
+          <td>
+            <span style="font-size:12px;color:var(--text-muted);font-family:monospace;">{{ activity.ip_address|default:'—' }}</span>
+          </td>
+          <td style="font-size:12px;color:var(--text-muted);white-space:nowrap;">
+            <i data-lucide="clock" style="width:12px;height:12px;vertical-align:middle;margin-right:4px;"></i>
+            {{ activity.timestamp|date:"M d, Y H:i" }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if page_obj.has_other_pages %}
+  <div style="display:flex;justify-content:center;padding:18px;border-top:1px solid var(--border-subtle);">
+    <nav aria-label="Activity log pagination">
+      <ul class="pagination mb-0">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+              <i data-lucide="chevron-left" style="width:15px;height:15px;"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              <i data-lucide="chevron-right" style="width:15px;height:15px;"></i>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <!-- Empty State -->
+  <div class="empty-state">
+    <div class="empty-state-icon">
+      <i data-lucide="activity" style="width:28px;height:28px;"></i>
+    </div>
+    <h3 class="empty-state-title">No activities yet</h3>
+    <p class="empty-state-text">Your platform actions and events will appear here as an audit trail.</p>
+  </div>
+  {% endif %}
+
 </div>
 {% endblock %}

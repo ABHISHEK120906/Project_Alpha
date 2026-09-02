@@ -4,19 +4,26 @@
 {% block page_title %}Access Restricted{% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
-  <div class="mb-4">
-    <span class="p-4 rounded-circle bg-danger-subtle text-danger d-inline-block" style="font-size:48px;">
-      <i class="fas fa-user-shield"></i>
-    </span>
+<div class="d-flex justify-content-center align-items-center py-5">
+  <div class="card reveal-up text-center p-5" style="max-width: 540px; border-top: 4px solid var(--danger);">
+    <div class="mb-4">
+      <div style="width:72px; height:72px; background:var(--danger-soft); border:1px solid rgba(224,92,92,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; margin: 0 auto;">
+        <i data-lucide="shield-alert" style="width:36px; height:36px; color:var(--danger-text);"></i>
+      </div>
+    </div>
+    <h2 style="font-weight:800; color:var(--danger-text); margin-bottom:8px;">403 Forbidden</h2>
+    <h5 style="font-weight:600; color:var(--text-secondary); margin-bottom:14px;">Unauthorized System Resource Access</h5>
+    <p style="color:var(--text-muted); font-size:14px; line-height:1.6; margin-bottom:24px;">
+      You do not have permission to access this resource or administrative console. Access is strictly governed according to your role (Client, Freelancer, or Platform Admin).
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{% url 'core:dashboard' %}" class="btn-hub-primary">
+        <i data-lucide="layout-dashboard" style="width:16px; height:16px;"></i> Return to Dashboard
+      </a>
+      <a href="{% url 'core:home' %}" class="btn-hub-secondary">
+        <i data-lucide="home" style="width:16px; height:16px;"></i> Home
+      </a>
+    </div>
   </div>
-  <h2 class="fw-bold text-danger mb-2">403 Forbidden</h2>
-  <h5 class="fw-semibold text-secondary mb-3">Unauthorized System Resource Access</h5>
-  <p class="text-muted mx-auto mb-4" style="max-width:500px;">
-    You do not have permission to access this resource or administrative dashboard. Access is restricted according to your role (Client, Freelancer, or Admin).
-  </p>
-  <a href="{% url 'core:dashboard' %}" class="btn btn-primary btn-lg px-4">
-    <i class="fas fa-home me-2"></i> Return to User Dashboard
-  </a>
 </div>
 {% endblock %}

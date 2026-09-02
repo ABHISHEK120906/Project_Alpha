@@ -37,7 +37,9 @@
 
   {% block extra_head %}{% endblock %}
 </head>
-<body class="dashboard-ambient" style="color:var(--text-primary);font-family:'Inter',system-ui,sans-serif;margin:0;display:flex;min-height:100vh;">
+<body style="color:var(--text-primary);font-family:'Inter',system-ui,sans-serif;margin:0;display:flex;min-height:100vh;">
+<!-- Background artwork layer -->
+<div class="dashboard-ambient" aria-hidden="true"></div>
 
   <!-- ══ ADMIN SIDEBAR ══════════════════════════════════════════ -->
   <aside class="admin-sidebar" id="adminSidebar">
@@ -186,6 +188,25 @@
         applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
       });
     }
+
+    // ── Scroll Reveal ──
+    (function() {
+      const revealEls = document.querySelectorAll('.reveal-up');
+      if (!revealEls.length) return;
+      if (!window.IntersectionObserver) {
+        revealEls.forEach(function(el) { el.classList.add('visible'); });
+        return;
+      }
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      revealEls.forEach(function(el) { observer.observe(el); });
+    })();
   </script>
 
   {% block extra_js %}{% endblock %}

@@ -10,26 +10,26 @@
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
       <div class="d-flex align-items-center gap-2 mb-1">
-        <span class="badge" style="background:rgba(219,153,65,0.2);color:#DB9941;border:1px solid rgba(219,153,65,0.4);font-size:11px;letter-spacing:1px;text-transform:uppercase;">Executive Overview</span>
+        <span class="badge" style="background:rgba(212,168,83,0.18);color:var(--hub-gold);border:1px solid var(--hub-gold-border);font-size:11px;letter-spacing:1px;text-transform:uppercase;">Executive Overview</span>
       </div>
-      <h2 class="welcome-banner-title gradient-text">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
+      <h2 class="welcome-banner-title gradient-text">Welcome back, {{ user.get_full_name|default:user.username }}!</h2>
       <p class="welcome-banner-sub">Here is your comprehensive business performance, operational velocity, and revenue health summary.</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
-      <a href="{% url 'core:analytics_workspace' %}" class="welcome-banner-btn" style="background:var(--primary);border:none;font-weight:700;" title="Open Data Analytics Workspace">
-        <i class="fas fa-chart-pie me-1"></i> Data Analytics
+      <a href="{% url 'core:analytics_workspace' %}" class="welcome-banner-btn" style="background:var(--hub-gold);color:#0D0F14;border:none;font-weight:700;" title="Open Data Analytics Workspace">
+        <i data-lucide="bar-chart-2" style="width:15px;height:15px;"></i> Data Analytics
       </a>
       <a href="{% url 'core:project_create' %}" class="welcome-banner-btn" title="Create Project">
-        <i class="fas fa-plus"></i> New Project
+        <i data-lucide="plus" style="width:15px;height:15px;"></i> New Project
       </a>
       <a href="{% url 'core:payment_create' %}" class="welcome-banner-btn" title="Record Payment">
-        <i class="fas fa-dollar-sign"></i> Log Payment
+        <i data-lucide="dollar-sign" style="width:15px;height:15px;"></i> Log Payment
       </a>
       {% if total_projects == 0 %}
       <form method="post" action="{% url 'core:load_sample_data' %}" style="display:inline;margin:0;">
         {% csrf_token %}
-        <button type="submit" class="welcome-banner-btn" style="background:#10b981;color:#fff;border:none;" title="Load Demo Data">
-          <i class="fas fa-magic"></i> Load Demo Data
+        <button type="submit" class="welcome-banner-btn" style="background:var(--success);color:#fff;border:none;" title="Load Demo Data">
+          <i data-lucide="sparkles" style="width:15px;height:15px;"></i> Load Demo Data
         </button>
       </form>
       {% endif %}
@@ -37,14 +37,14 @@
   </div>
 </div>
 
-<!-- Super Admin Announcement Banner -->
+<!-- Announcement Banner -->
 {% if announcements %}
   {% for ann in announcements %}
-  <div class="alert alert-info border-0 shadow-sm mb-4 d-flex align-items-start gap-3 reveal-up" style="background: rgba(111, 66, 193, 0.15); border-left: 4px solid #6f42c1 !important;">
-    <i class="fas fa-bullhorn text-purple fa-lg mt-1"></i>
+  <div class="hub-alert hub-alert-info reveal-up" style="border-left:4px solid var(--hub-burgundy);">
+    <i data-lucide="megaphone" style="width:18px;height:18px;flex-shrink:0;color:var(--hub-burgundy-light);"></i>
     <div>
-      <h6 class="fw-bold mb-1 text-purple">{{ ann.title }}</h6>
-      <p class="mb-0 small text-white">{{ ann.message }}</p>
+      <div style="font-weight:700;margin-bottom:3px;">{{ ann.title }}</div>
+      <div style="font-size:13px;color:var(--text-secondary);">{{ ann.message }}</div>
     </div>
   </div>
   {% endfor %}
@@ -54,61 +54,61 @@
 <div class="row g-3 mb-4">
   <!-- 1. Total Realized Revenue -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-1">
+    <div class="stat-card h-100 reveal-up delay-1">
       <div class="d-flex justify-content-between align-items-start">
-        <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-wallet"></i></div>
-        <span class="badge bg-success bg-opacity-10 text-success small" style="font-size:10px;">Realized</span>
+        <div class="stat-icon" style="background:var(--success-soft);color:var(--success);"><i data-lucide="wallet" style="width:22px;height:22px;"></i></div>
+        <span class="badge-success" style="font-size:10px;">Realized</span>
       </div>
-      <div class="stat-value fw-bold fs-4 text-success stat-number" id="totalRevenueStat" data-target="{{ total_earnings|floatformat:0 }}" data-prefix="$">${{ total_earnings|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Total Revenue</div>
+      <div class="stat-value" style="color:var(--success-text);" id="totalRevenueStat" data-target="{{ total_earnings|floatformat:0 }}" data-prefix="$">${{ total_earnings|floatformat:0 }}</div>
+      <div class="stat-label">Total Revenue</div>
     </div>
   </div>
 
   <!-- 2. Pending Payments (Accounts Receivable) -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-2">
+    <div class="stat-card h-100 reveal-up delay-2">
       <div class="d-flex justify-content-between align-items-start">
-        <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-hourglass-half"></i></div>
-        <span class="badge bg-warning bg-opacity-10 text-warning small" style="font-size:10px;">Receivable</span>
+        <div class="stat-icon" style="background:var(--warning-soft);color:var(--warning);"><i data-lucide="hourglass" style="width:22px;height:22px;"></i></div>
+        <span class="badge-warning" style="font-size:10px;">Receivable</span>
       </div>
-      <div class="stat-value fw-bold fs-4 text-warning stat-number" id="pendingAmountStat" data-target="{{ pending_payments|floatformat:0 }}" data-prefix="$">${{ pending_payments|floatformat:0 }}</div>
-      <div class="stat-label small text-muted">Pending Invoices</div>
+      <div class="stat-value" style="color:var(--warning-text);" id="pendingAmountStat" data-target="{{ pending_payments|floatformat:0 }}" data-prefix="$">${{ pending_payments|floatformat:0 }}</div>
+      <div class="stat-label">Pending Invoices</div>
     </div>
   </div>
 
   <!-- 3. Average Project Value -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-3">
+    <div class="stat-card h-100 reveal-up delay-3">
       <div class="d-flex justify-content-between align-items-start">
-        <div class="stat-icon mb-2" style="background:var(--primary-soft);color:var(--primary);"><i class="fas fa-scale-balanced"></i></div>
-        <span class="badge bg-primary bg-opacity-10 text-primary small" style="font-size:10px;">Empirical</span>
+        <div class="stat-icon" style="background:var(--hub-gold-soft);color:var(--hub-gold);"><i data-lucide="scale" style="width:22px;height:22px;"></i></div>
+        <span class="badge-gold" style="font-size:10px;">Empirical</span>
       </div>
-      <div class="stat-value fw-bold fs-4 text-primary">
+      <div class="stat-value" style="color:var(--hub-gold);">
         {% if avg_project_value is not None %}
           ${{ avg_project_value|floatformat:0 }}
         {% else %}
-          <span class="text-muted fs-5">N/A</span>
+          <span style="color:var(--text-muted);font-size:18px;">N/A</span>
         {% endif %}
       </div>
-      <div class="stat-label small text-muted">Avg. Project Value</div>
+      <div class="stat-label">Avg. Project Value</div>
     </div>
   </div>
 
   <!-- 4. Portfolio Completion Rate -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-4">
+    <div class="stat-card h-100 reveal-up delay-4">
       <div class="d-flex justify-content-between align-items-start">
-        <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-trophy"></i></div>
-        <span class="badge bg-info bg-opacity-10 text-info small" style="font-size:10px;">Velocity</span>
+        <div class="stat-icon" style="background:var(--info-soft);color:var(--info);"><i data-lucide="trophy" style="width:22px;height:22px;"></i></div>
+        <span class="badge-info" style="font-size:10px;">Velocity</span>
       </div>
-      <div class="stat-value fw-bold fs-4 text-info">
+      <div class="stat-value" style="color:var(--info-text);">
         {% if completion_rate is not None %}
           {{ completion_rate }}%
         {% else %}
-          <span class="text-muted fs-5">N/A</span>
+          <span style="color:var(--text-muted);font-size:18px;">N/A</span>
         {% endif %}
       </div>
-      <div class="stat-label small text-muted">Completion Rate</div>
+      <div class="stat-label">Completion Rate</div>
     </div>
   </div>
 </div>
@@ -116,39 +116,39 @@
 <div class="row g-3 mb-4">
   <!-- 5. Active Projects -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-1">
-      <div class="stat-icon mb-2" style="background:var(--info-soft);color:var(--info);"><i class="fas fa-spinner"></i></div>
-      <div class="stat-value fw-bold fs-5 stat-number" data-target="{{ active_projects }}">{{ active_projects }}</div>
-      <div class="stat-label small text-muted">Active Projects (of {{ total_projects }})</div>
+    <div class="stat-card h-100 reveal-up delay-1">
+      <div class="stat-icon" style="background:var(--info-soft);color:var(--info);"><i data-lucide="loader" style="width:22px;height:22px;"></i></div>
+      <div class="stat-value stat-number" data-target="{{ active_projects }}">{{ active_projects }}</div>
+      <div class="stat-label">Active Projects (of {{ total_projects }})</div>
     </div>
   </div>
 
   <!-- 6. Active Clients -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-2">
-      <div class="stat-icon mb-2" style="background:rgba(111,66,193,0.15);color:#6f42c1;"><i class="fas fa-users"></i></div>
-      <div class="stat-value fw-bold fs-5 stat-number" data-target="{{ active_clients }}">{{ active_clients }}</div>
-      <div class="stat-label small text-muted">Active Clients (of {{ total_clients }})</div>
+    <div class="stat-card h-100 reveal-up delay-2">
+      <div class="stat-icon" style="background:var(--hub-burgundy-soft);color:var(--hub-burgundy-light);"><i data-lucide="users" style="width:22px;height:22px;"></i></div>
+      <div class="stat-value stat-number" data-target="{{ active_clients }}">{{ active_clients }}</div>
+      <div class="stat-label">Active Clients (of {{ total_clients }})</div>
     </div>
   </div>
 
   <!-- 7. Net Profit -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-3">
-      <div class="stat-icon mb-2" style="background:var(--success-soft);color:var(--success);"><i class="fas fa-chart-line"></i></div>
-      <div class="stat-value fw-bold fs-5 {% if net_profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+    <div class="stat-card h-100 reveal-up delay-3">
+      <div class="stat-icon" style="background:var(--success-soft);color:var(--success);"><i data-lucide="trending-up" style="width:22px;height:22px;"></i></div>
+      <div class="stat-value {% if net_profit >= 0 %}" style="color:var(--success-text);{% else %}" style="color:var(--danger-text);{% endif %}">
         ${{ net_profit|floatformat:0 }}
       </div>
-      <div class="stat-label small text-muted">Net Operating Profit</div>
+      <div class="stat-label">Net Operating Profit</div>
     </div>
   </div>
 
   <!-- 8. Pending Tasks -->
   <div class="col-6 col-lg-3">
-    <div class="stat-card h-100 p-3 reveal-up delay-4">
-      <div class="stat-icon mb-2" style="background:var(--warning-soft);color:var(--warning);"><i class="fas fa-tasks"></i></div>
-      <div class="stat-value fw-bold fs-5 text-warning stat-number" data-target="{{ pending_tasks_count }}">{{ pending_tasks_count }}</div>
-      <div class="stat-label small text-muted">Pending Tasks ({{ overdue_tasks_count }} Overdue)</div>
+    <div class="stat-card h-100 reveal-up delay-4">
+      <div class="stat-icon" style="background:var(--warning-soft);color:var(--warning);"><i data-lucide="list-checks" style="width:22px;height:22px;"></i></div>
+      <div class="stat-value" style="color:var(--warning-text);" data-target="{{ pending_tasks_count }}">{{ pending_tasks_count }}</div>
+      <div class="stat-label">Pending Tasks ({{ overdue_tasks_count }} Overdue)</div>
     </div>
   </div>
 </div>
@@ -158,10 +158,12 @@
   <!-- Left Side: Recent Projects & Pending Tasks -->
   <div class="col-lg-8">
     <!-- Recent Projects Table -->
-    <div class="card border-0 shadow-sm p-3 mb-4 reveal-up delay-1" style="border-radius:18px;">
+    <div class="card border-0 p-3 mb-4 reveal-up delay-1" style="border-radius:var(--r-lg);">
       <div class="d-flex align-items-center justify-content-between mb-3 px-2 card-header-accent">
-        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-folder-open text-primary me-2"></i> Recent Projects</h6>
-        <a href="{% url 'core:project_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+          <i data-lucide="folder-open" style="width:16px;height:16px;color:var(--hub-gold);"></i> Recent Projects
+        </h6>
+        <a href="{% url 'core:project_list' %}" class="btn-hub-secondary btn-sm">View All</a>
       </div>
       {% if recent_projects %}
       <div class="table-responsive">
@@ -212,18 +214,22 @@
         </table>
       </div>
       {% else %}
-      <div class="empty-state p-4 text-center">
-        <i class="fas fa-folder-open text-muted fs-2 mb-2"></i>
-        <p class="text-muted small mb-0">No active projects yet. Click "New Project" to start tracking!</p>
+      <div class="empty-state" style="padding:32px;">
+        <div class="empty-state-icon">
+          <i data-lucide="folder-open" style="width:26px;height:26px;"></i>
+        </div>
+        <p class="empty-state-text">No active projects yet. Click "New Project" to start tracking!</p>
       </div>
       {% endif %}
     </div>
 
     <!-- Recent Payments Table -->
-    <div class="card border-0 shadow-sm p-3 reveal-up delay-2" style="border-radius:18px;">
+    <div class="card border-0 p-3 reveal-up delay-2" style="border-radius:var(--r-lg);">
       <div class="d-flex align-items-center justify-content-between mb-3 px-2 card-header-accent">
-        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-dollar-sign text-success me-2"></i> Recent Payments</h6>
-        <a href="{% url 'core:payment_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+          <i data-lucide="circle-dollar-sign" style="width:16px;height:16px;color:var(--success);"></i> Recent Payments
+        </h6>
+        <a href="{% url 'core:payment_list' %}" class="btn-hub-secondary btn-sm">View All</a>
       </div>
       {% if recent_payments %}
       <div class="table-responsive">
@@ -251,9 +257,11 @@
         </table>
       </div>
       {% else %}
-      <div class="empty-state p-4 text-center">
-        <i class="fas fa-receipt text-muted fs-2 mb-2"></i>
-        <p class="text-muted small mb-0">No payment records logged yet.</p>
+      <div class="empty-state" style="padding:32px;">
+        <div class="empty-state-icon">
+          <i data-lucide="receipt" style="width:26px;height:26px;"></i>
+        </div>
+        <p class="empty-state-text">No payment records logged yet.</p>
       </div>
       {% endif %}
     </div>
@@ -262,10 +270,12 @@
   <!-- Right Side: Upcoming Deadlines & Pending Tasks -->
   <div class="col-lg-4">
     <!-- Upcoming Deadlines Card -->
-    <div class="card p-3 mb-4 shadow-sm border-0 reveal-up delay-3" style="border-radius:18px;background:var(--bg-card);">
+    <div class="card p-3 mb-4 border-0 reveal-up delay-3" style="border-radius:var(--r-lg);">
       <div class="d-flex justify-content-between align-items-center mb-3 card-header-accent">
-        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-calendar-alt text-warning me-2"></i> Upcoming Deadlines</h6>
-        <a href="{% url 'core:calendar_view' %}" class="btn btn-sm btn-link text-primary text-decoration-none">Calendar</a>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+          <i data-lucide="calendar-clock" style="width:16px;height:16px;color:var(--warning);"></i> Upcoming Deadlines
+        </h6>
+        <a href="{% url 'core:calendar_view' %}" class="btn-hub-secondary btn-sm">Calendar</a>
       </div>
       {% if upcoming_deadlines %}
       <div class="list-group list-group-flush">
@@ -284,15 +294,20 @@
         {% endfor %}
       </div>
       {% else %}
-      <div class="text-center py-3 text-muted small"><i class="fas fa-check-double me-1"></i> No upcoming deadlines this week.</div>
+      <div style="text-align:center;padding:16px;">
+        <i data-lucide="check-circle-2" style="width:20px;height:20px;color:var(--success);margin-bottom:6px;"></i>
+        <p style="font-size:12px;color:var(--text-muted);margin:0;">No upcoming deadlines this week.</p>
+      </div>
       {% endif %}
     </div>
 
     <!-- Pending Tasks Card -->
-    <div class="card p-3 shadow-sm border-0 reveal-up delay-4" style="border-radius:18px;background:var(--bg-card);">
+    <div class="card p-3 border-0 reveal-up delay-4" style="border-radius:var(--r-lg);">
       <div class="d-flex justify-content-between align-items-center mb-3 card-header-accent">
-        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-check-square text-info me-2"></i> Pending Tasks</h6>
-        <a href="{% url 'core:task_list' %}" class="btn btn-sm btn-link text-primary text-decoration-none">View Tasks</a>
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+          <i data-lucide="list-checks" style="width:16px;height:16px;color:var(--info);"></i> Pending Tasks
+        </h6>
+        <a href="{% url 'core:task_list' %}" class="btn-hub-secondary btn-sm">View Tasks</a>
       </div>
       {% if pending_tasks_list %}
       <div class="list-group list-group-flush">
@@ -315,7 +330,10 @@
         {% endfor %}
       </div>
       {% else %}
-      <div class="text-center py-3 text-muted small"><i class="fas fa-smile me-1"></i> All tasks completed!</div>
+      <div style="text-align:center;padding:16px;">
+        <i data-lucide="smile" style="width:20px;height:20px;color:var(--success);margin-bottom:6px;"></i>
+        <p style="font-size:12px;color:var(--text-muted);margin:0;">All tasks completed!</p>
+      </div>
       {% endif %}
     </div>
   </div>
@@ -330,14 +348,22 @@
       <div class="dash-chart-card-body">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
           <div>
-            <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-chart-line text-warning me-2"></i>Financial Performance</h6>
-            <p class="mb-0 small" style="color:var(--text-muted);">Monthly revenue & expenses trend</p>
+            <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+              <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--warning);"></i>Financial Performance
+            </h6>
+            <p class="mb-0 small" style="color:var(--text-muted);">Monthly revenue &amp; expenses trend</p>
           </div>
           <div class="d-flex gap-2 align-items-center flex-wrap">
             <div class="btn-group btn-group-sm" role="group" aria-label="Chart type switcher">
-              <button type="button" class="btn btn-outline-primary active" onclick="switchDashboardChart('line', this)" title="Line Chart"><i class="fas fa-chart-line me-1"></i>Line</button>
-              <button type="button" class="btn btn-outline-primary" onclick="switchDashboardChart('bar', this)" title="Bar Chart"><i class="fas fa-chart-bar me-1"></i>Bar</button>
-              <button type="button" class="btn btn-outline-primary" onclick="switchDashboardChart('area', this)" title="Area Chart"><i class="fas fa-wave-square me-1"></i>Area</button>
+              <button type="button" class="btn btn-outline-primary active" onclick="switchDashboardChart('line', this)" title="Line Chart">
+                <i data-lucide="trending-up" style="width:13px;height:13px;"></i> Line
+              </button>
+              <button type="button" class="btn btn-outline-primary" onclick="switchDashboardChart('bar', this)" title="Bar Chart">
+                <i data-lucide="bar-chart-2" style="width:13px;height:13px;"></i> Bar
+              </button>
+              <button type="button" class="btn btn-outline-primary" onclick="switchDashboardChart('area', this)" title="Area Chart">
+                <i data-lucide="area-chart" style="width:13px;height:13px;"></i> Area
+              </button>
             </div>
           </div>
         </div>
@@ -351,14 +377,16 @@
   <!-- Project Status Doughnut (4 cols) -->
   <div class="col-lg-4">
     <div class="card p-0 h-100 reveal-up delay-2 dash-chart-card">
-      <div class="dash-chart-card-strip" style="background:linear-gradient(90deg,var(--success),var(--primary));"></div>
+      <div class="dash-chart-card-strip" style="background:linear-gradient(90deg,var(--success),var(--hub-gold));"></div>
       <div class="dash-chart-card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div>
-            <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-chart-pie text-success me-2"></i>Project Status</h6>
+            <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+              <i data-lucide="pie-chart" style="width:16px;height:16px;color:var(--success);"></i>Project Status
+            </h6>
             <p class="mb-0 small" style="color:var(--text-muted);">Distribution overview</p>
           </div>
-          <span class="badge" style="background:var(--primary-soft);color:var(--primary);font-size:0.7rem;">{{ total_projects }} total</span>
+          <span class="badge-gold" style="font-size:0.7rem;">{{ total_projects }} total</span>
         </div>
         <div style="height:240px;position:relative;">
           <canvas id="statusDistChart"></canvas>

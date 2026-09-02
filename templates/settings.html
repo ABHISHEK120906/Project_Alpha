@@ -1,41 +1,84 @@
 {% extends 'base.html' %}
-{% block title %}Settings — Freelancer Intelligence Platform{% endblock %}
-{% block page_title %}<i class="fas fa-cog"></i> Settings{% endblock %}
+{% block title %}Settings — FreelanceHub{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
 {% block content %}
-<div class="page-header">
-  <div><h1><i class="fas fa-cog"></i> Settings</h1><p class="page-subtitle">Manage your account preferences</p></div>
+<div class="page-header reveal-up">
+  <div class="page-header-left">
+    <div class="page-header-eyebrow">
+      <i data-lucide="settings" style="width:14px;height:14px;"></i>
+      Account Preferences
+    </div>
+    <h1 class="page-header-title">Settings</h1>
+    <p class="page-subtitle">Manage your profile, security, and appearance settings</p>
+  </div>
 </div>
+
 <div class="row g-4">
   <!-- Profile Settings -->
   <div class="col-lg-6">
-    <div class="card">
-      <div class="card-header"><i class="fas fa-user-circle"></i> Profile Settings</div>
-      <div class="card-body">
+    <div class="card h-100 reveal-up delay-1">
+      <div class="card-header-hub">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="stat-icon" style="width:36px;height:36px;">
+            <i data-lucide="user-round" style="width:18px;height:18px;"></i>
+          </div>
+          <h2 class="card-title-hub">Profile Settings</h2>
+        </div>
+      </div>
+      <div class="card-body-hub">
         <div class="text-center mb-4">
-          <div style="width:72px;height:72px;border-radius:50%;background:var(--brand-primary-teal);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#fff;margin:0 auto 12px;box-shadow:0 4px 14px rgba(0,127,127,0.3);">{{ user.username|first|upper }}</div>
-          <h4 style="font-weight:700;">{{ user.get_full_name|default:user.username }}</h4>
+          <div class="hub-avatar hub-avatar-xl mx-auto mb-2" style="font-size: 26px;">
+            {{ user.username|first|upper }}
+          </div>
+          <h4 style="font-weight:700;color:var(--text-primary);margin-bottom:2px;">{{ user.get_full_name|default:user.username }}</h4>
           <p style="color:var(--text-muted);font-size:13px;">@{{ user.username }}</p>
         </div>
         <form method="post">
           {% csrf_token %}
           <input type="hidden" name="action" value="profile">
           <div class="row g-3">
-            <div class="col-md-6"><label class="form-label">First Name</label><input type="text" name="first_name" class="form-control" value="{{ user.first_name }}"></div>
-            <div class="col-md-6"><label class="form-label">Last Name</label><input type="text" name="last_name" class="form-control" value="{{ user.last_name }}"></div>
-            <div class="col-12"><label class="form-label">Email Address</label><input type="email" name="email" class="form-control" value="{{ user.email }}"></div>
-            <div class="col-12"><label class="form-label">Username</label><input type="text" class="form-control" value="{{ user.username }}" disabled style="opacity:.6;"><small style="font-size:12px;color:var(--text-muted);">Username cannot be changed.</small></div>
+            <div class="col-md-6">
+              <label class="form-label">First Name</label>
+              <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Last Name</label>
+              <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Email Address</label>
+              <input type="email" name="email" class="form-control" value="{{ user.email }}">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" value="{{ user.username }}" disabled style="opacity:.6;">
+              <small class="form-text">Username cannot be changed.</small>
+            </div>
           </div>
-          <div class="mt-4"><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Profile</button></div>
+          <div class="mt-4">
+            <button type="submit" class="btn-hub-primary">
+              <i data-lucide="save" style="width:16px;height:16px;"></i> Save Profile
+            </button>
+          </div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Password Change -->
+  <!-- Right Column -->
   <div class="col-lg-6">
-    <div class="card">
-      <div class="card-header"><i class="fas fa-lock"></i> Change Password</div>
-      <div class="card-body">
+    <!-- Password Change -->
+    <div class="card mb-4 reveal-up delay-2">
+      <div class="card-header-hub">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="stat-icon" style="width:36px;height:36px;">
+            <i data-lucide="lock" style="width:18px;height:18px;"></i>
+          </div>
+          <h2 class="card-title-hub">Change Password</h2>
+        </div>
+      </div>
+      <div class="card-body-hub">
         <form method="post">
           {% csrf_token %}
           <input type="hidden" name="action" value="password">
@@ -44,47 +87,106 @@
             <div class="col-12">
               <label class="form-label">{{ field.label }}</label>
               {{ field }}
-              {% if field.errors %}<small class="text-danger">{{ field.errors.0 }}</small>{% endif %}
-              {% if field.help_text %}<small style="font-size:11px;color:var(--text-muted);">{{ field.help_text }}</small>{% endif %}
+              {% if field.errors %}<small class="form-error">{{ field.errors.0 }}</small>{% endif %}
+              {% if field.help_text %}<small class="form-text">{{ field.help_text }}</small>{% endif %}
             </div>
             {% endfor %}
           </div>
-          <div class="mt-4"><button type="submit" class="btn btn-outline-primary"><i class="fas fa-key"></i> Change Password</button></div>
+          <div class="mt-4">
+            <button type="submit" class="btn-hub-secondary">
+              <i data-lucide="key" style="width:16px;height:16px;"></i> Change Password
+            </button>
+          </div>
         </form>
       </div>
     </div>
 
-    <!-- Theme Settings -->
-    <div class="card mt-4">
-      <div class="card-header"><i class="fas fa-palette"></i> Appearance</div>
-      <div class="card-body">
+    <!-- Appearance -->
+    <div class="card mb-4 reveal-up delay-3">
+      <div class="card-header-hub">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="stat-icon" style="width:36px;height:36px;">
+            <i data-lucide="palette" style="width:18px;height:18px;"></i>
+          </div>
+          <h2 class="card-title-hub">Appearance</h2>
+        </div>
+      </div>
+      <div class="card-body-hub">
         <div class="d-flex align-items-center justify-content-between">
           <div>
             <div style="font-weight:600;color:var(--text-primary);">Theme Preference</div>
-            <div style="font-size:13px;color:var(--text-muted);">Switch between Light Mode and Dark Mode instantly</div>
+            <div style="font-size:13px;color:var(--text-muted);">Switch between Light Mode and Dark Mode</div>
           </div>
-          <button type="button" class="theme-toggle-btn" id="themeToggleSettingsBtn" aria-label="Toggle light and dark theme" title="Toggle Light / Dark Mode">
-            <span class="theme-toggle-icon sun"><i class="fas fa-sun"></i></span>
-            <span class="theme-toggle-icon moon"><i class="fas fa-moon"></i></span>
-            <span class="theme-toggle-thumb"></span>
-            <input type="checkbox" id="themeToggleSettings" aria-label="Theme toggle settings" style="display:none;">
+          <button type="button" class="hub-theme-toggle" id="themeToggleSettingsBtn" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+            <i data-lucide="sun" id="settingsThemeSun"></i>
+            <i data-lucide="moon" id="settingsThemeMoon" style="display:none;"></i>
           </button>
         </div>
       </div>
     </div>
 
     <!-- Account Info -->
-    <div class="card mt-4">
-      <div class="card-header"><i class="fas fa-info-circle"></i> Account Info</div>
-      <div class="card-body">
-        <div class="detail-grid">
-          <span class="detail-label">Username</span><span class="detail-value">{{ user.username }}</span>
-          <span class="detail-label">Joined</span><span class="detail-value">{{ user.date_joined|date:"M d, Y" }}</span>
-          <span class="detail-label">Last Login</span><span class="detail-value">{{ user.last_login|date:"M d, Y H:i" }}</span>
-          <span class="detail-label">Is Admin</span><span class="detail-value">{% if user.is_staff %}Yes{% else %}No{% endif %}</span>
+    <div class="card reveal-up delay-4">
+      <div class="card-header-hub">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="stat-icon" style="width:36px;height:36px;">
+            <i data-lucide="info" style="width:18px;height:18px;"></i>
+          </div>
+          <h2 class="card-title-hub">Account Information</h2>
+        </div>
+      </div>
+      <div class="card-body-hub">
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex justify-content-between pb-2" style="border-bottom:1px solid var(--border-subtle);">
+            <span style="color:var(--text-muted);font-size:13px;">Username</span>
+            <span style="color:var(--text-primary);font-weight:600;font-size:13px;">{{ user.username }}</span>
+          </div>
+          <div class="d-flex justify-content-between pb-2" style="border-bottom:1px solid var(--border-subtle);">
+            <span style="color:var(--text-muted);font-size:13px;">Joined</span>
+            <span style="color:var(--text-primary);font-weight:600;font-size:13px;">{{ user.date_joined|date:"M d, Y" }}</span>
+          </div>
+          <div class="d-flex justify-content-between pb-2" style="border-bottom:1px solid var(--border-subtle);">
+            <span style="color:var(--text-muted);font-size:13px;">Last Login</span>
+            <span style="color:var(--text-primary);font-weight:600;font-size:13px;">{{ user.last_login|date:"M d, Y H:i"|default:"First Session" }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span style="color:var(--text-muted);font-size:13px;">Role / Permissions</span>
+            <span>
+              {% if user.is_staff %}
+                <span class="badge-gold">Administrator</span>
+              {% else %}
+                <span class="badge-info">Member</span>
+              {% endif %}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Connect settings toggle with theme switcher
+  const sBtn = document.getElementById('themeToggleSettingsBtn');
+  if (sBtn) {
+    sBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const target = current === 'dark' ? 'light' : 'dark';
+      if (typeof applyTheme === 'function') {
+        applyTheme(target);
+      } else {
+        document.documentElement.setAttribute('data-theme', target);
+        localStorage.setItem('freelancehub_theme', target);
+      }
+      const sSun = document.getElementById('settingsThemeSun');
+      const sMoon = document.getElementById('settingsThemeMoon');
+      if (sSun && sMoon) {
+        sSun.style.display = target === 'light' ? 'none' : 'inline-block';
+        sMoon.style.display = target === 'light' ? 'inline-block' : 'none';
+      }
+    });
+  }
+</script>
 {% endblock %}
