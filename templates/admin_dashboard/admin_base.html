@@ -38,8 +38,9 @@
   {% block extra_head %}{% endblock %}
 </head>
 <body style="color:var(--text-primary);font-family:'Inter',system-ui,sans-serif;margin:0;display:flex;min-height:100vh;">
-<!-- Background artwork layer -->
-<div class="dashboard-ambient" aria-hidden="true"></div>
+<!-- Full-Viewport Fixed Background Canvas & Ambient Overlay -->
+<div class="fh-fixed-bg-canvas" aria-hidden="true"></div>
+<div class="fh-fixed-bg-overlay" aria-hidden="true"></div>
 
   <!-- ══ ADMIN SIDEBAR ══════════════════════════════════════════ -->
   <aside class="admin-sidebar" id="adminSidebar">

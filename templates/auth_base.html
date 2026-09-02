@@ -313,9 +313,12 @@
 
   {% block extra_head %}{% endblock %}
 </head>
-<body style="background:#080D14; color:var(--text-primary); margin:0; font-family:'Inter',sans-serif;">
+<body style="color:var(--text-primary); margin:0; font-family:'Inter',sans-serif; min-height:100vh;">
+  <!-- Full-Viewport Fixed Background Canvas & Ambient Overlay -->
+  <div class="fh-fixed-bg-canvas" aria-hidden="true"></div>
+  <div class="fh-fixed-bg-overlay" aria-hidden="true"></div>
 
-  <div class="auth-split-wrapper">
+  <div class="auth-split-wrapper" style="background:transparent;">
     <!-- Vignette overlay -->
     <div class="auth-split-overlay" aria-hidden="true"></div>
 

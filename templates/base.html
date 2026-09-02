@@ -48,8 +48,9 @@
 </head>
 <body>
 
-<!-- Ambient background layer for authenticated workspace -->
-<div class="dashboard-ambient" aria-hidden="true"></div>
+<!-- Full-Viewport Fixed Background Canvas & Ambient Overlay -->
+<div class="fh-fixed-bg-canvas" aria-hidden="true"></div>
+<div class="fh-fixed-bg-overlay" aria-hidden="true"></div>
 
 {% if user.is_authenticated %}
 <!-- ══════════════════════════════════════════════════════════

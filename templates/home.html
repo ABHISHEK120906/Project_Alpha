@@ -11,12 +11,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
 <style>
-  /* ── Hero with Exact Paper-Cut Background ── */
+  /* ── Hero floats seamlessly on unified fixed background canvas ── */
   .hero-paper-cut-section {
     position: relative;
     min-height: calc(100vh - 64px);
-    background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center / cover;
-    background-attachment: fixed;
+    background: transparent !important;
     display: flex;
     align-items: center;
     padding: 60px 0 50px;
@@ -24,19 +23,7 @@
   }
 
   .hero-paper-cut-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(180deg, rgba(8, 12, 20, 0.40) 0%, rgba(8, 12, 20, 0.15) 40%, rgba(8, 12, 20, 0.48) 100%),
-      radial-gradient(ellipse at 75% 35%, rgba(8, 12, 20, 0.10) 0%, rgba(8, 12, 20, 0.45) 100%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  [data-theme="light"] .hero-paper-cut-overlay {
-    background:
-      linear-gradient(180deg, rgba(248, 245, 240, 0.55) 0%, rgba(248, 245, 240, 0.30) 40%, rgba(248, 245, 240, 0.65) 100%),
-      radial-gradient(ellipse at 75% 35%, rgba(248, 245, 240, 0.20) 0%, rgba(248, 245, 240, 0.55) 100%);
+    display: none;
   }
 
   .hero-grid-split {

@@ -7,20 +7,33 @@
 @import url('/static/css/custom.css');
 
 /* Global Signature Artwork Background for Public Landing Pages */
-body {
-  background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center fixed / cover !important;
-  color: var(--text-primary);
-  min-height: 100vh;
+html {
+  background-color: #080D14;
+}
+[data-theme="light"] html {
+  background-color: #F5F1E8;
 }
 
-[data-theme="light"] body {
-  background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center fixed / cover !important;
+body {
+  background: transparent !important;
+  color: var(--text-primary);
+  min-height: 100vh;
 }
 
 /* ── 1. PUBLIC LAYOUT ───────────────────────────────────────────────────── */
 .pub-container {
   width: 100%; max-width: 1280px;
   margin: 0 auto; padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+main,
+.hub-section,
+.hub-hero {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── 2. NAVBAR ──────────────────────────────────────────────────────────── */
@@ -164,31 +177,21 @@ body {
   background: var(--hub-gold-soft); color: var(--hub-gold);
 }
 
-/* ── 4. HERO SECTION WITH SIGNATURE UPLOADED ARTWORK ────────────────────── */
+/* ── 4. HERO SECTION (Floats on the Unified Fixed Background Canvas) ────── */
 .hub-hero,
 .hero-paper-cut-section {
   min-height: calc(100vh - 64px);
   display: flex; align-items: center;
   padding: 60px 0 60px;
   position: relative; overflow: hidden;
-  background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center / cover;
-  background-attachment: fixed;
+  background: transparent !important;
 }
 
 .hub-hero-ambient,
 .hero-paper-cut-overlay {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(8, 12, 20, 0.40) 0%, rgba(8, 12, 20, 0.15) 40%, rgba(8, 12, 20, 0.48) 100%),
-    radial-gradient(ellipse at 75% 35%, rgba(8, 12, 20, 0.10) 0%, rgba(8, 12, 20, 0.45) 100%);
+  display: none;
 }
 
-[data-theme="light"] .hub-hero-ambient,
-[data-theme="light"] .hero-paper-cut-overlay {
-  background:
-    linear-gradient(180deg, rgba(248, 245, 240, 0.55) 0%, rgba(248, 245, 240, 0.30) 40%, rgba(248, 245, 240, 0.65) 100%),
-    radial-gradient(ellipse at 75% 35%, rgba(248, 245, 240, 0.20) 0%, rgba(248, 245, 240, 0.55) 100%);
-}
 
 .hero-grid-split {
   position: relative; z-index: 2;
@@ -266,6 +269,7 @@ body {
   letter-spacing: 0.6px;
   margin-top: 3px;
 }
+.btn-hero-secondary-freelancer {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 13px 24px;
   background: transparent;
