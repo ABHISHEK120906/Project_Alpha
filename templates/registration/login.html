@@ -133,6 +133,8 @@
     const clientBtn     = document.getElementById('tabClientBtn');
     const freelancerBtn = document.getElementById('tabFreelancerBtn');
     const roleText      = document.getElementById('roleText');
+    // *** FIX: update the hidden login_type so backend receives correct role ***
+    const loginTypeInput = document.querySelector('input[name="login_type"]');
 
     if (role === 'freelancer') {
       clientBtn.style.border = '1px solid transparent';
@@ -144,6 +146,7 @@
       freelancerBtn.style.color = 'var(--hub-gold)';
 
       roleText.textContent = 'Freelancer Portal';
+      if (loginTypeInput) loginTypeInput.value = 'freelancer';
     } else {
       clientBtn.style.border = '1px solid var(--hub-gold)';
       clientBtn.style.background = 'var(--hub-gold-soft)';
@@ -154,6 +157,7 @@
       freelancerBtn.style.color = 'var(--text-muted)';
 
       roleText.textContent = 'Client Workspace';
+      if (loginTypeInput) loginTypeInput.value = 'client';
     }
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }

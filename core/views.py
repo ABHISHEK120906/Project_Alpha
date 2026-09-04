@@ -103,7 +103,7 @@ def register(request):
 
             # Create UserProfile for the new user
             profile, _ = UserProfile.objects.get_or_create(user=user)
-            profile.role = 'user'
+            profile.role = 'freelancer'  # core register page = Freelancer signup
             profile.is_verified = True
             profile.save()
 
