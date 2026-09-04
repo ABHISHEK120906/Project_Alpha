@@ -856,14 +856,6 @@ body, .sidebar, .topbar, .main-content, .card, .stat-card,
   animation: spin 0.7s linear infinite;
   flex-shrink: 0;
 }
-  content: '';
-  width: 14px; height: 14px;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
 
 /* ── 12. FORM INPUTS ────────────────────────────────────────────────────── */
 .form-group { margin-bottom: 20px; }
@@ -1678,3 +1670,835 @@ input:focus, textarea:focus, select:focus {
   text-decoration: none; transition: all var(--ease-fast);
 }
 .btn-create-account:hover { border-color: var(--hub-gold-border); color: var(--hub-gold) !important; background: var(--hub-gold-soft); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   42. ADMIN PORTAL — SIDEBAR, NAV, TOPBAR, LAYOUT
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Admin Layout Wrapper */
+body.admin-body {
+  display: flex;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Admin Sidebar */
+.admin-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  z-index: 1040;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid var(--sidebar-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 4px 0 30px rgba(0,0,0,0.35);
+  transition: transform var(--ease-smooth);
+}
+
+.admin-sidebar::before {
+  content: '';
+  position: absolute; bottom: 0; right: 0;
+  width: 160px; height: 180px;
+  background: radial-gradient(ellipse at 80% 100%, rgba(212,168,83,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Admin Brand */
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 18px 18px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--sidebar-border);
+  flex-shrink: 0;
+}
+
+.admin-brand-badge {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: #0D0F14; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(212,168,83,0.35);
+}
+
+.admin-brand-badge svg,
+.admin-brand-badge i { width: 20px; height: 20px; font-size: 18px; }
+
+.admin-brand-name {
+  font-size: 16px; font-weight: 800;
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.admin-brand-sub {
+  font-size: 9.5px; font-weight: 700;
+  color: var(--hub-gold);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-top: 2px;
+  opacity: 0.75;
+}
+
+/* Admin Navigation */
+.admin-nav {
+  flex: 1;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-nav-section {
+  font-size: 9.5px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.4px;
+  color: rgba(212,168,83,0.45);
+  padding: 16px 12px 5px;
+  margin: 0;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: var(--r-md);
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  transition: all var(--ease-fast);
+  margin-bottom: 1px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-nav-item svg,
+.admin-nav-item i {
+  width: 17px; height: 17px;
+  font-size: 14px; flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.admin-nav-item:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--text-primary);
+  transform: translateX(2px);
+}
+
+.admin-nav-item:hover svg,
+.admin-nav-item:hover i { opacity: 1; }
+
+.admin-nav-item.active {
+  background: rgba(212,168,83,0.14);
+  color: var(--hub-gold);
+  font-weight: 600;
+  border-left: 3px solid var(--hub-gold);
+  padding-left: 9px;
+}
+
+.admin-nav-item.active svg,
+.admin-nav-item.active i { opacity: 1; color: var(--hub-gold); }
+
+/* Admin Main Content */
+.admin-main {
+  margin-left: 260px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Admin Topbar */
+.admin-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.admin-topbar-title {
+  font-size: 22px; font-weight: 800;
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin: 0; line-height: 1.2;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   43. GLASS CARD — Legacy alias used across admin templates
+   ════════════════════════════════════════════════════════════════════════════ */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--hub-gold-border);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   44. KPI CARDS — Admin dashboard stat cards
+   ════════════════════════════════════════════════════════════════════════════ */
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 90px;
+}
+
+.kpi-title {
+  font-size: 12px; font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.kpi-value {
+  font-size: 28px; font-weight: 800;
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.kpi-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   45. btn-purple / bg-purple / text-purple — Legacy color aliases → Gold
+   ════════════════════════════════════════════════════════════════════════════ */
+.btn-purple,
+.btn.btn-purple {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 9px 18px; height: 38px;
+  background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
+  color: #0D0F14 !important;
+  border: none; border-radius: var(--r-md);
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all var(--ease-fast);
+  box-shadow: 0 3px 12px var(--hub-gold-glow);
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+
+.btn-purple:hover,
+.btn.btn-purple:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px var(--hub-gold-glow);
+  color: #0D0F14 !important;
+}
+
+.btn-purple:focus,
+.btn.btn-purple:focus {
+  outline: 2px solid var(--hub-gold);
+  outline-offset: 2px;
+  color: #0D0F14 !important;
+}
+
+/* btn-sm modifier for admin tables */
+.btn-purple.btn-sm { padding: 5px 12px; height: 30px; font-size: 12px; }
+
+/* bg-purple */
+.bg-purple { background-color: var(--hub-gold) !important; color: #0D0F14 !important; }
+
+/* text-purple */
+.text-purple { color: var(--hub-gold) !important; }
+
+/* badge bg-purple */
+.badge.bg-purple {
+  background: var(--hub-gold-soft) !important;
+  color: var(--hub-gold) !important;
+  border: 1px solid var(--hub-gold-border);
+  font-weight: 700;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   46. ADMIN TABLE OVERRIDES — Force design-system styling on Bootstrap tables
+       when used in admin templates (table-dark, bg-dark, etc.)
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Override Bootstrap table-dark to use our dark translucent system */
+.table-dark,
+.table-dark > thead,
+.table-dark > tbody,
+.table-dark > tfoot {
+  --bs-table-bg: transparent !important;
+  --bs-table-color: var(--text-secondary) !important;
+  --bs-table-border-color: var(--border-subtle) !important;
+  --bs-table-striped-bg: var(--hub-gold-soft) !important;
+  --bs-table-hover-bg: var(--hub-gold-soft) !important;
+  background-color: transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+.table-dark thead th,
+.table.table-dark thead th {
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  font-weight: 700 !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  background: transparent !important;
+}
+
+.table-dark tbody tr td {
+  color: var(--text-secondary) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  vertical-align: middle !important;
+  background: transparent !important;
+}
+
+.table-dark tbody tr:hover td {
+  background: var(--hub-gold-soft) !important;
+}
+
+/* Override Bootstrap bg-dark to use design system surface */
+.bg-dark {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Override input-group-text bg-dark */
+.input-group-text.bg-dark,
+.input-group-text[class*="bg-dark"] {
+  background: var(--bg-input) !important;
+  border-color: var(--border-input) !important;
+  color: var(--text-muted) !important;
+}
+
+/* Override form controls with bg-dark text-white border-secondary */
+.form-control.bg-dark,
+.form-select.bg-dark,
+input.bg-dark,
+select.bg-dark {
+  background: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-input) !important;
+}
+
+.form-control.bg-dark:focus,
+.form-select.bg-dark:focus,
+input.bg-dark:focus,
+select.bg-dark:focus {
+  border-color: var(--border-input-focus) !important;
+  box-shadow: 0 0 0 3px var(--hub-gold-soft) !important;
+}
+
+.form-control.bg-dark::placeholder,
+input.bg-dark::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Override border-secondary to use design system border */
+.border-secondary { border-color: var(--border-color) !important; }
+
+/* Override dropdown-menu-dark */
+.dropdown-menu-dark {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--r-md) !important;
+  box-shadow: var(--shadow-lg) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.dropdown-menu-dark .dropdown-item {
+  color: var(--text-secondary) !important;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--r-sm);
+  transition: all var(--ease-fast);
+}
+
+.dropdown-menu-dark .dropdown-item:hover {
+  background: var(--hub-gold-soft) !important;
+  color: var(--hub-gold) !important;
+}
+
+.dropdown-menu-dark .dropdown-divider {
+  border-color: var(--border-color) !important;
+}
+
+/* btn-outline-light in admin context */
+.btn-outline-light {
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+  background: transparent !important;
+}
+
+.btn-outline-light:hover {
+  background: var(--hub-gold-soft) !important;
+  border-color: var(--hub-gold-border) !important;
+  color: var(--hub-gold) !important;
+}
+
+/* btn-outline-* overrides for admin quick actions */
+.btn-outline-info {
+  color: var(--info-text) !important;
+  border-color: rgba(91,159,212,0.3) !important;
+  background: var(--info-soft) !important;
+}
+.btn-outline-info:hover {
+  background: rgba(91,159,212,0.22) !important;
+  border-color: var(--info) !important;
+}
+
+.btn-outline-warning {
+  color: var(--warning-text) !important;
+  border-color: rgba(232,168,58,0.3) !important;
+  background: var(--warning-soft) !important;
+}
+.btn-outline-warning:hover {
+  background: rgba(232,168,58,0.22) !important;
+  border-color: var(--warning) !important;
+}
+
+.btn-outline-success {
+  color: var(--success-text) !important;
+  border-color: rgba(76,175,122,0.3) !important;
+  background: var(--success-soft) !important;
+}
+.btn-outline-success:hover {
+  background: rgba(76,175,122,0.22) !important;
+  border-color: var(--success) !important;
+}
+
+.btn-outline-danger {
+  color: var(--danger-text) !important;
+  border-color: rgba(224,92,92,0.3) !important;
+  background: var(--danger-soft) !important;
+}
+.btn-outline-danger:hover {
+  background: rgba(224,92,92,0.22) !important;
+  border-color: var(--danger) !important;
+}
+
+.btn-outline-primary {
+  color: var(--hub-gold) !important;
+  border-color: var(--hub-gold-border) !important;
+  background: var(--hub-gold-soft) !important;
+}
+.btn-outline-primary:hover {
+  background: rgba(212,168,83,0.22) !important;
+  border-color: var(--hub-gold) !important;
+}
+
+/* list-group overrides for admin modals */
+.list-group-item.bg-dark,
+.list-group-item.list-group-item-dark {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* badge overrides */
+.badge.bg-warning { background: var(--warning-soft) !important; color: var(--warning-text) !important; border: 1px solid rgba(232,168,58,0.25); }
+.badge.bg-secondary { background: var(--border-subtle) !important; color: var(--text-muted) !important; border: 1px solid var(--border-color); }
+.badge.bg-danger { background: var(--danger-soft) !important; color: var(--danger-text) !important; border: 1px solid rgba(224,92,92,0.25); }
+.badge.bg-success { background: var(--success-soft) !important; color: var(--success-text) !important; border: 1px solid rgba(76,175,122,0.25); }
+.badge.bg-info    { background: var(--info-soft) !important; color: var(--info-text) !important; border: 1px solid rgba(91,159,212,0.25); }
+
+/* text-white override — prevent invisible text on transparent surfaces */
+.text-white { color: var(--text-primary) !important; }
+
+/* modal-content override for admin (bg-dark on modal) */
+.modal-content.bg-dark {
+  background: var(--bg-glass) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* modal-header border-secondary */
+.modal-header.border-secondary {
+  border-color: var(--border-color) !important;
+}
+
+.modal-footer.border-secondary {
+  border-color: var(--border-color) !important;
+}
+
+/* btn-close-white → unified close button */
+.btn-close-white,
+.btn-close {
+  filter: none !important;
+  color: var(--text-muted) !important;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%237A7268'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat !important;
+  opacity: 0.75;
+}
+.btn-close:hover { opacity: 1; }
+
+/* Avatar circle for admin user list */
+.bg-purple.rounded-circle {
+  background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%) !important;
+  color: #0D0F14 !important;
+  font-weight: 800;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   47. FREELANCER THEME — fl-sidebar, fl-nav-item (alias classes)
+   ════════════════════════════════════════════════════════════════════════════ */
+.fl-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  z-index: 1040;
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  border-right: 1px solid var(--sidebar-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 4px 0 30px rgba(0,0,0,0.35);
+}
+
+.fl-main {
+  margin-left: 260px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   48. PUBLIC LANDING BODY OVERRIDE FIX
+       When public_landing.css sets body to transparent,
+       ensure the background canvas still shows via body fallback.
+   ════════════════════════════════════════════════════════════════════════════ */
+/* The fh-fixed-bg-canvas is the authoritative background for ALL pages.
+   Body background on pages that use fh-fixed-bg-canvas is transparent (correct). */
+html {
+  background: #080D14;
+}
+
+[data-theme="light"] html {
+  background: #F5F1E8;
+}
+
+/* Ensure admin pages with public_landing.css loaded still show content */
+body {
+  position: relative;
+  z-index: 0;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   49. ADMIN RESPONSIVE
+   ════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .admin-main { padding: 16px; }
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+    z-index: 1041;
+  }
+  .admin-sidebar.open { transform: translateX(0); }
+  .admin-main { margin-left: 0 !important; }
+  .fl-main { margin-left: 0 !important; }
+  .fl-sidebar { transform: translateX(-100%); }
+  .fl-sidebar.open { transform: translateX(0); }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   50. INPUT-GROUP DESIGN SYSTEM ALIGNMENT
+   ════════════════════════════════════════════════════════════════════════════ */
+.input-group {
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.input-group-text {
+  background: var(--bg-input);
+  border-color: var(--border-input);
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+
+.input-group .form-control,
+.input-group input {
+  border-left: none;
+}
+
+.input-group .form-control:focus,
+.input-group input:focus {
+  border-color: var(--border-input-focus);
+  box-shadow: none;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   51. FREELANCER WORKSPACE CARD COMPONENTS
+   ════════════════════════════════════════════════════════════════════════════ */
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+  transition: all var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--hub-gold-border);
+  transform: translateY(-2px);
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--hub-gold), var(--hub-gold-dark));
+  opacity: 0;
+  transition: opacity var(--ease-fast);
+}
+
+.project-card:hover::before { opacity: 1; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   52. VERIFICATION / KYC STEPPER
+   ════════════════════════════════════════════════════════════════════════════ */
+.kyc-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--r-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 12px;
+  transition: all var(--ease-fast);
+}
+
+.kyc-step.completed {
+  border-color: rgba(76,175,122,0.25);
+  background: var(--success-soft);
+}
+
+.kyc-step.pending {
+  border-color: rgba(232,168,58,0.25);
+  background: var(--warning-soft);
+}
+
+.kyc-step-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.kyc-step.completed .kyc-step-icon {
+  background: var(--success-soft);
+  border: 2px solid rgba(76,175,122,0.35);
+  color: var(--success);
+}
+
+.kyc-step.pending .kyc-step-icon {
+  background: var(--warning-soft);
+  border: 2px solid rgba(232,168,58,0.35);
+  color: var(--warning);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   53. ANALYTICS CHART CONTAINERS
+   ════════════════════════════════════════════════════════════════════════════ */
+.chart-container {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px);
+}
+
+.chart-container canvas {
+  max-height: 320px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   54. SIDEBAR LIGHT MODE ADJUSTMENTS
+   ════════════════════════════════════════════════════════════════════════════ */
+[data-theme="light"] .admin-sidebar {
+  background: var(--sidebar-bg);
+  border-right-color: var(--sidebar-border);
+}
+
+[data-theme="light"] .admin-nav-item {
+  color: var(--sidebar-text);
+}
+
+[data-theme="light"] .admin-nav-item:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .admin-nav-item.active {
+  background: rgba(184,137,42,0.12);
+  color: var(--hub-gold);
+  border-left-color: var(--hub-gold);
+}
+
+[data-theme="light"] .glass-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+[data-theme="light"] .table-dark,
+[data-theme="light"] .table-dark tbody tr td {
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+}
+
+[data-theme="light"] .table-dark thead th {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .dropdown-menu-dark {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="light"] .dropdown-menu-dark .dropdown-item {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="light"] .modal-content.bg-dark {
+  background: var(--bg-glass) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .kpi-value {
+  color: var(--text-primary);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   55. BUTTON TEXT-START OVERRIDE (used in admin quick actions)
+   ════════════════════════════════════════════════════════════════════════════ */
+.btn.text-start {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   56. P-2, P-3 GLASS CARD INNER PADDING COMPAT
+   ════════════════════════════════════════════════════════════════════════════ */
+.glass-card.p-3 { padding: 16px !important; }
+.glass-card.h-100 { height: 100% !important; }
+.glass-card.mb-4 { margin-bottom: 24px !important; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   57. ADMIN MARKETPLACE DASHBOARD COMPONENTS
+   ════════════════════════════════════════════════════════════════════════════ */
+.admin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all var(--ease-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--hub-gold-border);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-kpi-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.admin-kpi-val {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 8px;
+}
+
+.admin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--r-md);
+  padding: 22px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Light theme overrides for form controls and Bootstrap dark classes */
+[data-theme="light"] .form-control.bg-dark,
+[data-theme="light"] .form-select.bg-dark,
+[data-theme="light"] .input-group-text.bg-dark {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="light"] .form-control.bg-dark::placeholder {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .border-secondary {
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="light"] .bg-dark {
+  background-color: var(--bg-card) !important;
+}
+
+[data-theme="light"] .text-white {
+  color: var(--text-primary) !important;
+}
