@@ -2,188 +2,465 @@
 {% block title %}Sign In — FreelanceHub{% endblock %}
 {% block meta_description %}Sign in to your FreelanceHub account to access your Client workspace or Freelancer platform.{% endblock %}
 
+{% block extra_head %}
+<style>
+  /* ── Role Toggle Tabs ── */
+  .role-tab-rail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    margin-bottom: 26px;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .role-tab-btn {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    border: 1.5px solid transparent;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .role-tab-btn:hover:not(.tab-active) {
+    color: var(--text-secondary);
+  }
+  .role-tab-btn:active { transform: scale(0.97); }
+  .role-tab-btn.tab-active {
+    border-color: var(--hub-gold);
+    background: var(--hub-gold-soft);
+    color: var(--hub-gold);
+    box-shadow: 0 2px 10px rgba(212,168,83,0.18);
+  }
+  /* Pill indicator (sliding) */
+  .role-tab-pill {
+    position: absolute;
+    top: 4px; bottom: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    background: var(--hub-gold-soft);
+    border: 1.5px solid var(--hub-gold);
+    border-radius: 9px;
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    z-index: 0;
+    box-shadow: 0 2px 10px rgba(212,168,83,0.15);
+  }
+
+  /* ── Input focus state ── */
+  .fh-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px 12px 42px;
+    background: var(--bg-input);
+    border: 1.5px solid var(--border-input);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .fh-input:focus {
+    border-color: var(--hub-gold);
+    box-shadow: 0 0 0 3px rgba(212,168,83,0.14);
+    background: var(--bg-card);
+  }
+  .fh-input.has-right { padding-right: 46px; }
+  .fh-input.is-error { border-color: #e05555; box-shadow: 0 0 0 3px rgba(224,85,85,0.10); }
+
+  .fh-label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    color: var(--text-secondary);
+    transition: color 0.18s;
+  }
+  .fh-group:focus-within .fh-label { color: var(--hub-gold); }
+
+  .fh-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--hub-gold);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── Password toggle ── */
+  .pwd-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    transition: color 0.18s, background 0.18s, transform 0.15s;
+    line-height: 0;
+  }
+  .pwd-toggle:hover { color: var(--hub-gold); background: rgba(212,168,83,0.1); }
+  .pwd-toggle:active { transform: translateY(-50%) scale(0.88); }
+
+  /* ── Submit button ── */
+  .login-btn {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
+    color: #0D0F14;
+    font-size: 14.5px;
+    font-weight: 800;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px var(--hub-gold-glow);
+    transition: box-shadow 0.2s, transform 0.18s, opacity 0.18s;
+  }
+  .login-btn:hover:not(:disabled) {
+    box-shadow: 0 6px 28px var(--hub-gold-glow);
+    transform: translateY(-1px);
+  }
+  .login-btn:active:not(:disabled) { transform: scale(0.98); box-shadow: 0 2px 10px var(--hub-gold-glow); }
+  .login-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+  /* Spinner */
+  .btn-spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(13,15,20,0.25);
+    border-top-color: #0D0F14;
+    border-radius: 50%;
+    animation: fh-spin 0.7s linear infinite;
+  }
+  @keyframes fh-spin { to { transform: rotate(360deg); } }
+
+  /* ── Field error ── */
+  .fh-error {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #e05555;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  /* ── Alert slide-in ── */
+  .fh-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    animation: alertIn 0.25s ease both;
+  }
+  @keyframes alertIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+  .fh-alert-success { background: rgba(52,199,89,.10); border:1px solid rgba(52,199,89,.22); color:#34c759; }
+  .fh-alert-danger  { background: rgba(224,85,85,.10);  border:1px solid rgba(224,85,85,.22);  color:#e05555; }
+  .fh-alert-warning { background: rgba(255,193,7,.10);  border:1px solid rgba(255,193,7,.22);  color:#ffc107; }
+  .fh-alert-info    { background: rgba(212,168,83,.10); border:1px solid rgba(212,168,83,.20); color:var(--hub-gold); }
+
+  /* ── CTA Buttons ── */
+  .cta-register-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    border: 1.5px solid transparent;
+    transition: all 0.2s ease;
+  }
+  .cta-register-btn .arrow { margin-left: auto; opacity: 0.55; transition: transform 0.2s, opacity 0.2s; }
+  .cta-register-btn:hover .arrow { transform: translateX(3px); opacity: 0.9; }
+  .cta-gold { border-color: var(--hub-gold-border); background: var(--hub-gold-soft); color: var(--hub-gold); }
+  .cta-gold:hover { background: rgba(212,168,83,.18); border-color: var(--hub-gold); box-shadow: 0 3px 14px rgba(212,168,83,.2); transform: translateY(-1px); }
+  .cta-ghost { border-color: var(--border-color); background: transparent; color: var(--text-secondary); }
+  .cta-ghost:hover { background: var(--bg-input); border-color: var(--border-input); color: var(--text-primary); transform: translateY(-1px); }
+
+  /* ── Divider ── */
+  .fh-divider { display:flex; align-items:center; gap:12px; margin:20px 0; }
+  .fh-divider-line { flex:1; height:1px; background:var(--border-subtle); }
+  .fh-divider-text { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-muted); white-space:nowrap; }
+
+  /* ── Admin link ── */
+  .admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: color 0.18s, background 0.18s;
+  }
+  .admin-link:hover { color: var(--hub-gold); background: rgba(212,168,83,.08); }
+
+  /* ── Forgot link ── */
+  .forgot-link {
+    font-size: 12px; color: var(--hub-gold); font-weight: 600;
+    text-decoration: none; padding: 2px 5px; border-radius: 4px;
+    transition: background 0.18s;
+  }
+  .forgot-link:hover { background: rgba(212,168,83,.1); }
+</style>
+{% endblock %}
+
 {% block content %}
 
-<!-- Header -->
-<div style="text-align:center; margin-bottom:24px;">
-  <h1 style="font-size:24px; font-weight:800; color:var(--text-primary); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Welcome Back</h1>
-  <p style="font-size:13.5px; color:var(--text-muted); margin:0;">
-    Sign in to your <strong id="roleText" style="color:var(--hub-gold);">Client Workspace</strong>
+<!-- ── Header ── -->
+<div style="text-align:center; margin-bottom:22px;">
+  <h1 style="font-size:23px; font-weight:800; color:var(--text-primary); margin:0 0 5px; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.4px;">
+    Welcome Back
+  </h1>
+  <p style="font-size:13px; color:var(--text-muted); margin:0;">
+    Sign in to your
+    <strong id="roleText" style="color:var(--hub-gold); transition:opacity 0.18s;">Client Workspace</strong>
   </p>
 </div>
 
-<!-- Role Switcher Tabs (Segmented Control) -->
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:24px; background:var(--bg-input); padding:4px; border-radius:var(--r-md); border:1px solid var(--border-color); box-sizing:border-box;">
-  <button type="button" id="tabClientBtn" onclick="switchRole('client')"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:var(--r-sm); border:1px solid var(--hub-gold); background:var(--hub-gold-soft); color:var(--hub-gold); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
-    <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
+<!-- ── Role Tab Toggle ── -->
+<div class="role-tab-rail" role="tablist" aria-label="Login role">
+  <div class="role-tab-pill" id="rolePill"></div>
+  <button type="button" id="tabClientBtn" class="role-tab-btn tab-active"
+    role="tab" aria-selected="true" onclick="switchRole('client')">
+    <i data-lucide="briefcase" style="width:15px;height:15px;"></i>
+    <span>Client</span>
   </button>
-  <button type="button" id="tabFreelancerBtn" onclick="switchRole('freelancer')"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:var(--r-sm); border:1px solid transparent; background:transparent; color:var(--text-muted); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;">
-    <i data-lucide="search" style="width:15px;height:15px;"></i> Freelancer
+  <button type="button" id="tabFreelancerBtn" class="role-tab-btn"
+    role="tab" aria-selected="false" onclick="switchRole('freelancer')">
+    <i data-lucide="search" style="width:15px;height:15px;"></i>
+    <span>Freelancer</span>
   </button>
 </div>
 
-<!-- Messages -->
+<!-- ── Messages ── -->
 {% if messages %}
   {% for message in messages %}
-    <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
-      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
+    <div class="fh-alert fh-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
+      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:15px;height:15px;flex-shrink:0;margin-top:1px;"></i>
       <span>{{ message }}</span>
     </div>
   {% endfor %}
 {% endif %}
-
 {% if form.non_field_errors %}
   {% for error in form.non_field_errors %}
-    <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
-      <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
+    <div class="fh-alert fh-alert-danger">
+      <i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0;margin-top:1px;"></i>
       <span>{{ error }}</span>
     </div>
   {% endfor %}
 {% endif %}
 
-<!-- Login Form -->
-<form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate style="box-sizing:border-box; width:100%;">
+<!-- ── Login Form ── -->
+<form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate style="width:100%;box-sizing:border-box;">
   {% csrf_token %}
-  <input type="hidden" name="login_type" value="user">
+  <input type="hidden" name="login_type" id="loginTypeInput" value="client">
 
   <!-- Username -->
-  <div class="form-group" style="margin-bottom:18px;">
-    <label for="id_username" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Username</label>
+  <div class="fh-group" style="margin-bottom:16px;">
+    <label for="id_username" class="fh-label">Username</label>
     <div style="position:relative; width:100%; box-sizing:border-box;">
-      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--hub-gold); pointer-events:none;">
-        <i data-lucide="user" style="width:16px;height:16px;"></i>
-      </span>
-      <input type="text" name="username" id="id_username" class="form-control"
-        style="width:100%; box-sizing:border-box; padding:12px 14px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
+      <span class="fh-icon"><i data-lucide="user" style="width:16px;height:16px;"></i></span>
+      <input type="text" name="username" id="id_username"
+        class="fh-input{% if form.username.errors %} is-error{% endif %}"
         placeholder="Enter your username"
         required autocomplete="username" autofocus
         value="{{ request.POST.username|default:'' }}">
     </div>
     {% if form.username.errors %}
-      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.username.errors.0 }}</div>
+      <div class="fh-error">
+        <i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i>
+        <span>{{ form.username.errors.0 }}</span>
+      </div>
     {% endif %}
   </div>
 
   <!-- Password -->
-  <div class="form-group" style="margin-bottom:20px;">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;">
-      <label for="id_password" style="margin:0; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Password</label>
-      <a href="{% url 'core:password_reset' %}" style="font-size:12px; color:var(--hub-gold); font-weight:600; text-decoration:none;">Forgot password?</a>
+  <div class="fh-group" style="margin-bottom:20px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+      <label for="id_password" class="fh-label" style="margin:0;">Password</label>
+      <a href="{% url 'core:password_reset' %}" class="forgot-link">Forgot password?</a>
     </div>
     <div style="position:relative; width:100%; box-sizing:border-box;">
-      <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--hub-gold); pointer-events:none;">
-        <i data-lucide="lock" style="width:16px;height:16px;"></i>
-      </span>
-      <input type="password" name="password" id="id_password" class="form-control"
-        style="width:100%; box-sizing:border-box; padding:12px 44px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
+      <span class="fh-icon"><i data-lucide="lock" style="width:16px;height:16px;"></i></span>
+      <input type="password" name="password" id="id_password"
+        class="fh-input has-right{% if form.password.errors %} is-error{% endif %}"
         placeholder="Enter your password"
         required autocomplete="current-password">
-      <button type="button" id="togglePwd" aria-label="Toggle password visibility"
-        style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0; display:flex; align-items:center;">
+      <!-- Toggle visibility -->
+      <button type="button" id="togglePwd" class="pwd-toggle" aria-label="Toggle password visibility" title="Show / hide password">
         <i data-lucide="eye" id="pwdIcon" style="width:16px;height:16px;"></i>
       </button>
     </div>
     {% if form.password.errors %}
-      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.password.errors.0 }}</div>
+      <div class="fh-error">
+        <i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i>
+        <span>{{ form.password.errors.0 }}</span>
+      </div>
     {% endif %}
   </div>
 
   <!-- Submit -->
-  <button type="submit" id="loginSubmitBtn"
-    style="width:100%; box-sizing:border-box; padding:13px 20px; border-radius:var(--r-md); border:none; background:linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%); color:#0D0F14; font-size:14.5px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 20px var(--hub-gold-glow); transition:all 0.2s ease;">
+  <button type="submit" id="loginSubmitBtn" class="login-btn">
     <i data-lucide="log-in" style="width:17px;height:17px;"></i>
-    <span>Sign In to Workspace</span>
+    <span id="loginBtnText">Sign In to Workspace</span>
   </button>
 </form>
 
-<!-- Divider -->
-<div style="display:flex; align-items:center; gap:12px; margin:22px 0;">
-  <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
-  <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">New to FreelanceHub?</span>
-  <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+<!-- ── Divider ── -->
+<div class="fh-divider">
+  <div class="fh-divider-line"></div>
+  <span class="fh-divider-text">New to FreelanceHub?</span>
+  <div class="fh-divider-line"></div>
 </div>
 
-<!-- Register CTA -->
-<div style="display:flex; flex-direction:column; gap:10px; width:100%; box-sizing:border-box;">
-  <a href="{% url 'marketplace:client_register' %}"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:var(--r-md); border:1px solid var(--hub-gold-border); background:var(--hub-gold-soft); color:var(--hub-gold); font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
-    <i data-lucide="briefcase" style="width:16px;height:16px;"></i>
-    <span>Create Client Account (Post Projects)</span>
+<!-- ── Register CTAs ── -->
+<div style="display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box;">
+  <a href="{% url 'marketplace:client_register' %}" class="cta-register-btn cta-gold">
+    <i data-lucide="briefcase" style="width:15px;height:15px;"></i>
+    <span>Create Client Account</span>
+    <i data-lucide="arrow-right" class="arrow" style="width:14px;height:14px;"></i>
   </a>
-  <a href="{% url 'core:register' %}"
-    style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:var(--r-md); border:1px solid var(--border-color); background:transparent; color:var(--text-secondary); font-size:13.5px; font-weight:700; text-decoration:none; transition:all 0.2s;">
-    <i data-lucide="search" style="width:16px;height:16px;"></i>
-    <span>Create Freelancer Account (Find Work)</span>
+  <a href="{% url 'core:register' %}" class="cta-register-btn cta-ghost">
+    <i data-lucide="search" style="width:15px;height:15px;"></i>
+    <span>Create Freelancer Account</span>
+    <i data-lucide="arrow-right" class="arrow" style="width:14px;height:14px;"></i>
   </a>
 </div>
 
-<!-- Admin Link -->
-<div style="text-align:center; margin-top:20px;">
-  <a href="{% url 'core:admin_login' %}"
-    style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); text-decoration:none; transition:color 0.2s;">
-    <i data-lucide="shield" style="width:13px;height:13px; color:var(--hub-gold);"></i>
+<!-- ── Admin Link ── -->
+<div style="text-align:center;margin-top:18px;">
+  <a href="{% url 'core:admin_login' %}" class="admin-link">
+    <i data-lucide="shield" style="width:13px;height:13px;color:var(--hub-gold);"></i>
     <span>Platform Administrator Login</span>
   </a>
 </div>
 
 <script>
+(function () {
+  'use strict';
+
+  /* ── Role Tab Switcher with sliding pill ── */
+  const clientBtn      = document.getElementById('tabClientBtn');
+  const freelancerBtn  = document.getElementById('tabFreelancerBtn');
+  const roleText       = document.getElementById('roleText');
+  const loginTypeInput = document.getElementById('loginTypeInput');
+  const rolePill       = document.getElementById('rolePill');
+
   function switchRole(role) {
-    const clientBtn     = document.getElementById('tabClientBtn');
-    const freelancerBtn = document.getElementById('tabFreelancerBtn');
-    const roleText      = document.getElementById('roleText');
-    // *** FIX: update the hidden login_type so backend receives correct role ***
-    const loginTypeInput = document.querySelector('input[name="login_type"]');
+    const isFreelancer = role === 'freelancer';
 
-    if (role === 'freelancer') {
-      clientBtn.style.border = '1px solid transparent';
-      clientBtn.style.background = 'transparent';
-      clientBtn.style.color = 'var(--text-muted)';
+    /* slide the pill */
+    rolePill.style.transform = isFreelancer ? 'translateX(calc(100% + 4px))' : 'translateX(0)';
 
-      freelancerBtn.style.border = '1px solid var(--hub-gold)';
-      freelancerBtn.style.background = 'var(--hub-gold-soft)';
-      freelancerBtn.style.color = 'var(--hub-gold)';
+    /* button active states */
+    clientBtn.classList.toggle('tab-active', !isFreelancer);
+    freelancerBtn.classList.toggle('tab-active', isFreelancer);
+    clientBtn.setAttribute('aria-selected', String(!isFreelancer));
+    freelancerBtn.setAttribute('aria-selected', String(isFreelancer));
 
-      roleText.textContent = 'Freelancer Portal';
-      if (loginTypeInput) loginTypeInput.value = 'freelancer';
-    } else {
-      clientBtn.style.border = '1px solid var(--hub-gold)';
-      clientBtn.style.background = 'var(--hub-gold-soft)';
-      clientBtn.style.color = 'var(--hub-gold)';
+    /* role subtitle fade */
+    roleText.style.opacity = '0';
+    setTimeout(function () {
+      roleText.textContent = isFreelancer ? 'Freelancer Portal' : 'Client Workspace';
+      roleText.style.opacity = '1';
+    }, 120);
 
-      freelancerBtn.style.border = '1px solid transparent';
-      freelancerBtn.style.background = 'transparent';
-      freelancerBtn.style.color = 'var(--text-muted)';
+    /* update hidden input */
+    loginTypeInput.value = role;
 
-      roleText.textContent = 'Client Workspace';
-      if (loginTypeInput) loginTypeInput.value = 'client';
-    }
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
-  (function() {
-    const btn   = document.getElementById('togglePwd');
-    const input = document.getElementById('id_password');
-    const icon  = document.getElementById('pwdIcon');
-    if (btn && input && icon) {
-      btn.addEventListener('click', function() {
-        const vis = input.type === 'text';
-        input.type = vis ? 'password' : 'text';
-        icon.setAttribute('data-lucide', vis ? 'eye' : 'eye-off');
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-      });
-    }
+  /* expose for onclick */
+  window.switchRole = switchRole;
 
-    const form = document.getElementById('userLoginForm');
-    const sb   = document.getElementById('loginSubmitBtn');
-    if (form && sb) {
-      form.addEventListener('submit', function() {
-        sb.innerHTML = '<span>Authenticating…</span>';
-        sb.style.opacity = '0.75';
-        sb.style.pointerEvents = 'none';
-      });
-    }
-  })();
+  /* restore selected role if form was re-rendered after POST */
+  var postedType = '{{ request.POST.login_type|default:"" }}';
+  if (postedType === 'freelancer') {
+    switchRole('freelancer');
+  }
+
+  /* ── Password toggle ── */
+  var toggleBtn = document.getElementById('togglePwd');
+  var pwdInput  = document.getElementById('id_password');
+  var pwdIcon   = document.getElementById('pwdIcon');
+
+  if (toggleBtn && pwdInput && pwdIcon) {
+    toggleBtn.addEventListener('click', function () {
+      var show = pwdInput.type === 'password';
+      pwdInput.type = show ? 'text' : 'password';
+      pwdIcon.setAttribute('data-lucide', show ? 'eye-off' : 'eye');
+      /* pulse */
+      toggleBtn.style.transform = 'translateY(-50%) scale(1.22)';
+      setTimeout(function () { toggleBtn.style.transform = 'translateY(-50%) scale(1)'; }, 140);
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      pwdInput.focus();
+    });
+  }
+
+  /* ── Submit loading state ── */
+  var form      = document.getElementById('userLoginForm');
+  var submitBtn = document.getElementById('loginSubmitBtn');
+
+  if (form && submitBtn) {
+    form.addEventListener('submit', function () {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<div class="btn-spinner"></div><span>Authenticating\u2026</span>';
+    });
+  }
+
+  /* ── Label highlight on input focus ── */
+  document.querySelectorAll('.fh-input').forEach(function (inp) {
+    var group = inp.closest('.fh-group');
+    if (!group) return;
+    var label = group.querySelector('.fh-label');
+    inp.addEventListener('focus',  function () { if (label) label.style.color = 'var(--hub-gold)'; });
+    inp.addEventListener('blur',   function () { if (label) label.style.color = ''; });
+  });
+
+  /* ── Init icons ── */
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}());
 </script>
 {% endblock %}
