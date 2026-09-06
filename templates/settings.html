@@ -118,8 +118,9 @@
             <div style="font-size:13px;color:var(--text-muted);">Switch between Light Mode and Dark Mode</div>
           </div>
           <button type="button" class="hub-theme-toggle" id="themeToggleSettingsBtn" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
-            <i data-lucide="sun" id="settingsThemeSun"></i>
-            <i data-lucide="moon" id="settingsThemeMoon" style="display:none;"></i>
+            <span class="icon-sun"><i data-lucide="sun"></i></span>
+            <span class="icon-moon"><i data-lucide="moon"></i></span>
+            <span class="theme-toggle-thumb"></span>
           </button>
         </div>
       </div>
@@ -179,13 +180,9 @@
       } else {
         document.documentElement.setAttribute('data-theme', target);
         localStorage.setItem('freelancehub_theme', target);
+        localStorage.setItem('theme', target);
       }
-      const sSun = document.getElementById('settingsThemeSun');
-      const sMoon = document.getElementById('settingsThemeMoon');
-      if (sSun && sMoon) {
-        sSun.style.display = target === 'light' ? 'none' : 'inline-block';
-        sMoon.style.display = target === 'light' ? 'inline-block' : 'none';
-      }
+      if (typeof refreshIcons === 'function') refreshIcons();
     });
   }
 </script>

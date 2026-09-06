@@ -150,9 +150,10 @@
 
       <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
         <!-- Theme Toggle -->
-        <button class="hub-theme-toggle" id="adminThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
-          <i data-lucide="sun" id="adminThemeSun"></i>
-          <i data-lucide="moon" id="adminThemeMoon" style="display:none;"></i>
+        <button type="button" class="hub-theme-toggle" id="adminThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+          <span class="icon-sun"><i data-lucide="sun"></i></span>
+          <span class="icon-moon"><i data-lucide="moon"></i></span>
+          <span class="theme-toggle-thumb"></span>
         </button>
 
         <a href="{% url 'core:home' %}" class="btn-hub-secondary" style="font-size:12.5px;padding:7px 14px;height:36px;display:inline-flex;align-items:center;gap:6px;">
@@ -196,12 +197,6 @@
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem(THEME_KEY, theme);
       localStorage.setItem('theme', theme); // legacy compat
-      const sun  = document.getElementById('adminThemeSun');
-      const moon = document.getElementById('adminThemeMoon');
-      if (sun && moon) {
-        sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
-        moon.style.display = theme === 'light' ? 'inline-block' : 'none';
-      }
       refreshIcons();
     }
 

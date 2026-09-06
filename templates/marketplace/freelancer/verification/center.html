@@ -54,6 +54,31 @@
     justify-content: flex-end;
     gap: 12px;
   }
+  .client-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-input, rgba(12, 17, 26, 0.90));
+    border: 1px solid var(--border-input, rgba(212,168,83,0.22));
+    border-radius: var(--r-md);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .client-input:focus {
+    border-color: var(--border-input-focus, var(--hub-gold));
+    box-shadow: 0 0 0 3px var(--hub-gold-soft);
+  }
+  .client-label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .client-input-group {
+    margin-bottom: 16px;
+  }
 </style>
 {% endblock %}
 

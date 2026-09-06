@@ -164,9 +164,10 @@
         </a>
 
         <!-- Theme Toggle -->
-        <button class="hub-theme-toggle" id="clientThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
-          <i data-lucide="sun" id="clientThemeSun"></i>
-          <i data-lucide="moon" id="clientThemeMoon" style="display:none;"></i>
+        <button type="button" class="hub-theme-toggle" id="clientThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+          <span class="icon-sun"><i data-lucide="sun"></i></span>
+          <span class="icon-moon"><i data-lucide="moon"></i></span>
+          <span class="theme-toggle-thumb"></span>
         </button>
 
         <!-- Avatar -->
@@ -215,12 +216,7 @@
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_KEY, theme);
-    const sun  = document.getElementById('clientThemeSun');
-    const moon = document.getElementById('clientThemeMoon');
-    if (sun && moon) {
-      sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
-      moon.style.display = theme === 'light' ? 'inline-block' : 'none';
-    }
+    localStorage.setItem('theme', theme);
     refreshIcons();
   }
 

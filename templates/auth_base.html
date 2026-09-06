@@ -324,9 +324,10 @@
 
     <!-- Top Theme Toggle Pill -->
     <div class="auth-top-theme-pill">
-      <button class="auth-theme-icon-btn" id="authThemeToggleBtn" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
-        <i data-lucide="sun" id="authSunIcon" style="width:16px;height:16px;"></i>
-        <i data-lucide="moon" id="authMoonIcon" style="width:16px;height:16px;display:none;"></i>
+      <button type="button" class="hub-theme-toggle" id="authThemeToggleBtn" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <span class="icon-sun"><i data-lucide="sun"></i></span>
+        <span class="icon-moon"><i data-lucide="moon"></i></span>
+        <span class="theme-toggle-thumb"></span>
       </button>
       <a href="{% url 'core:home' %}" style="font-size:12px; color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:4px; font-weight:600;">
         <i data-lucide="home" style="width:13px;height:13px;"></i>
@@ -425,12 +426,7 @@
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem(THEME_KEY, theme);
-      const sun  = document.getElementById('authSunIcon');
-      const moon = document.getElementById('authMoonIcon');
-      if (sun && moon) {
-        sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
-        moon.style.display = theme === 'light' ? 'inline-block' : 'none';
-      }
+      localStorage.setItem('theme', theme);
       refreshIcons();
     }
 

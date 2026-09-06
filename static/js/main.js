@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (save) {
       localStorage.setItem('theme', theme);
+      localStorage.setItem('freelancehub_theme', theme);
       localStorage.setItem('darkMode', isDark ? '1' : '0');
     }
 
@@ -152,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Bind Click Event to Theme Toggle Buttons
   document.addEventListener('click', function(e) {
-    const btn = e.target.closest('#themeToggleBtn, #themeToggleAuthBtn, .theme-toggle-btn');
+    const btn = e.target.closest('#themeToggleBtn, #themeToggleAuthBtn, #adminThemeToggle, #clientThemeToggle, #flThemeToggle, #authThemeToggleBtn, #themeToggleSettingsBtn, .theme-toggle-btn, .hub-theme-toggle');
     if (btn) {
       e.preventDefault();
       const activeTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';

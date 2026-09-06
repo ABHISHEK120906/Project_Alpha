@@ -86,7 +86,7 @@
             <th>Progress</th>
             <th>Budget</th>
             <th>Deadline</th>
-            <th style="text-align:right;">Actions</th>
+            <th class="actions-cell">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -131,8 +131,8 @@
                 <span style="color:var(--text-muted);">—</span>
               {% endif %}
             </td>
-            <td style="text-align:right;">
-              <div class="d-inline-flex gap-1" onclick="event.stopPropagation();">
+            <td class="actions-cell">
+              <div class="table-actions-group" onclick="event.stopPropagation();">
                 <a href="{% url 'core:project_detail' project.id %}" class="btn-hub-secondary btn-icon btn-sm" title="View Project">
                   <i data-lucide="eye"></i>
                 </a>

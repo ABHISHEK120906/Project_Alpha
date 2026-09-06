@@ -74,9 +74,10 @@
         </a>
 
         <!-- Theme Toggle -->
-        <button class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle light or dark theme" title="Toggle Theme">
-          <i data-lucide="sun" id="themeIconSun"></i>
-          <i data-lucide="moon" id="themeIconMoon" style="display:none;"></i>
+        <button type="button" class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle light or dark theme" title="Toggle Theme">
+          <span class="icon-sun"><i data-lucide="sun"></i></span>
+          <span class="icon-moon"><i data-lucide="moon"></i></span>
+          <span class="theme-toggle-thumb"></span>
         </button>
 
         <!-- Mobile Toggle -->
@@ -206,12 +207,7 @@
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem(THEME_KEY, theme);
-      const sun  = document.getElementById('themeIconSun');
-      const moon = document.getElementById('themeIconMoon');
-      if (sun && moon) {
-        sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
-        moon.style.display = theme === 'light' ? 'inline-block' : 'none';
-      }
+      localStorage.setItem('theme', theme);
       refreshIcons();
     }
 

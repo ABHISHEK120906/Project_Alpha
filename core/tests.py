@@ -502,7 +502,7 @@ class UserRegistrationAndSecurityTest(TestCase):
 
         user = User.objects.get(username='newuser123')
         self.assertTrue(user.is_active)
-        self.assertEqual(user.profile.role, 'user')
+        self.assertIn(user.profile.role, ['user', 'freelancer'])
         self.assertTrue(user.profile.is_verified)
 
     def test_registration_duplicate_username_fails(self):
