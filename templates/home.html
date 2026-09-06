@@ -1,8 +1,8 @@
 {% extends 'public_base.html' %}
 {% load static %}
 
-{% block title %}FreelanceHub — Where Ambition Meets Order{% endblock %}
-{% block meta_description %}Stop juggling spreadsheets. Start running a real business. FreelanceHub puts your clients, invoices, projects and payments in one place — beautifully.{% endblock %}
+{% block title %}FreelanceHub — Where Great Projects Meet Great Talent{% endblock %}
+{% block meta_description %}FreelanceHub connects clients with top talent. Post projects, review verified proposals, and collaborate seamlessly.{% endblock %}
 
 {% block extra_head %}
 <!-- Google Fonts: Playfair Display for editorial heading matching reference -->
@@ -359,7 +359,7 @@
     <div class="role-grid" style="max-width:1000px;grid-template-columns:repeat(3,1fr);">
 
       <!-- Client -->
-      <a href="{% url 'marketplace:client_register' %}" class="role-card">
+      <a href="{% url 'marketplace:client_register' %}" class="role-card role-card-client">
         <div class="role-icon">
           <i data-lucide="briefcase"></i>
         </div>
@@ -371,13 +371,13 @@
           <li>Milestone escrow payments</li>
           <li>Real-time collaboration tools</li>
         </ul>
-        <div class="btn-hub-primary" style="width:100%;justify-content:center;">
+        <div class="btn-client-primary" style="width:100%;justify-content:center;">
           Post a Project <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
         </div>
       </a>
 
       <!-- Freelancer -->
-      <a href="{% url 'freelancer:register' %}" class="role-card">
+      <a href="{% url 'freelancer:register' %}" class="role-card role-card-fl">
         <div class="role-icon">
           <i data-lucide="search"></i>
         </div>
@@ -389,13 +389,13 @@
           <li>Secure milestone-based payments</li>
           <li>Complete KYC verification process</li>
         </ul>
-        <div class="btn-hub-primary" style="width:100%;justify-content:center;">
+        <div class="btn-fl-primary" style="width:100%;justify-content:center;">
           Find Projects <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
         </div>
       </a>
 
       <!-- Admin -->
-      <a href="{% url 'core:admin_login' %}" class="role-card">
+      <a href="{% url 'core:admin_login' %}" class="role-card role-card-admin">
         <div class="role-icon">
           <i data-lucide="shield-check"></i>
         </div>
@@ -407,7 +407,7 @@
           <li>Marketplace analytics & reporting</li>
           <li>Support & dispute handling</li>
         </ul>
-        <div class="btn-hub-secondary" style="width:100%;justify-content:center;">
+        <div class="btn-admin-primary" style="width:100%;justify-content:center;">
           Admin Portal <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
         </div>
       </a>

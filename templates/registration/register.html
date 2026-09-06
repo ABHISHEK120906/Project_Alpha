@@ -20,8 +20,8 @@
     <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
   </a>
   <a href="{% url 'core:register' %}"
-    style="display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border-radius:var(--r-sm);border:1px solid var(--hub-gold);background:var(--hub-gold-soft);color:var(--hub-gold);font-size:13px;font-weight:700;text-decoration:none;transition:all 0.2s;">
-    <i data-lucide="search" style="width:15px;height:15px;"></i> Freelancer
+    style="display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border-radius:var(--r-sm);border:1px solid #FF5E6C;background:rgba(255,94,108,0.15);color:#FF5E6C;font-size:13px;font-weight:700;text-decoration:none;transition:all 0.2s;">
+    <i data-lucide="compass" style="width:15px;height:15px;"></i> Freelancer
   </a>
 </div>
 
@@ -44,7 +44,7 @@
     <label for="{{ field.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12.5px; font-weight:700; color:var(--text-secondary);">{{ field.label }}</label>
     <div style="position:relative; width:100%; box-sizing:border-box;">
       {% if field.name == 'username' %}
-        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--hub-gold);pointer-events:none;">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#FF5E6C;pointer-events:none;">
           <i data-lucide="user" style="width:16px;height:16px;"></i>
         </span>
         <input type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
@@ -52,7 +52,7 @@
           placeholder="Choose a username" autocomplete="username"
           value="{{ field.value|default:'' }}">
       {% elif 'password' in field.name %}
-        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--hub-gold);pointer-events:none;">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#FF5E6C;pointer-events:none;">
           <i data-lucide="lock" style="width:16px;height:16px;"></i>
         </span>
         <input type="password" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
@@ -63,7 +63,7 @@
           <i data-lucide="eye" style="width:16px;height:16px;"></i>
         </button>
       {% elif field.name == 'email' %}
-        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--hub-gold);pointer-events:none;">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#FF5E6C;pointer-events:none;">
           <i data-lucide="mail" style="width:16px;height:16px;"></i>
         </span>
         <input type="email" name="{{ field.html_name }}" id="{{ field.id_for_label }}"
@@ -90,11 +90,10 @@
   {% endfor %}
 
   <!-- Submit -->
-  <button type="submit" id="registerSubmitBtn" class="btn-hub-primary" style="width:100%; box-sizing:border-box; padding:13px; justify-content:center; margin-top:8px;">
+  <button type="submit" id="registerSubmitBtn" class="btn-hub-primary" style="width:100%; box-sizing:border-box; padding:13px; justify-content:center; margin-top:8px; background:linear-gradient(135deg, #FF5E6C 0%, #E84553 100%); color:#FFF; border:none; box-shadow:0 4px 18px rgba(255,94,108,0.35);">
     <i data-lucide="user-plus" style="width:17px;height:17px;"></i>
     <span>Create Freelancer Account</span>
   </button>
-
 </form>
 
 <!-- Divider -->

@@ -506,6 +506,46 @@ main,
 
 .role-features li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--hub-gold); flex-shrink: 0; }
 
+/* Role Card Variants */
+.role-card.role-card-client:hover {
+  border-color: var(--client-primary);
+  box-shadow: 0 12px 40px rgba(125, 60, 255, 0.22);
+}
+.role-card.role-card-client .role-icon {
+  background: linear-gradient(135deg, var(--client-primary) 0%, #4c1d95 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(125, 60, 255, 0.35);
+}
+.role-card.role-card-client .role-features li::before {
+  background: var(--client-primary);
+}
+
+.role-card.role-card-fl:hover {
+  border-color: var(--fl-primary);
+  box-shadow: 0 12px 40px rgba(255, 94, 108, 0.22);
+}
+.role-card.role-card-fl .role-icon {
+  background: linear-gradient(135deg, var(--fl-primary) 0%, #d93d4c 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(255, 94, 108, 0.35);
+}
+.role-card.role-card-fl .role-features li::before {
+  background: var(--fl-primary);
+}
+
+.role-card.role-card-admin:hover {
+  border-color: var(--admin-primary);
+  box-shadow: 0 12px 40px rgba(128, 118, 163, 0.22);
+}
+.role-card.role-card-admin .role-icon {
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-mauve) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(128, 118, 163, 0.35);
+}
+.role-card.role-card-admin .role-features li::before {
+  background: var(--admin-lime);
+}
+
 /* ── 8. PROJECT DISCOVERY CARDS ─────────────────────────────────────────── */
 .project-card-pub {
   background: var(--bg-card);

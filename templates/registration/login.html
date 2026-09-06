@@ -1,19 +1,19 @@
 {% extends 'auth_base.html' %}
 {% block title %}Sign In — FreelanceHub{% endblock %}
-{% block meta_description %}Sign in to your FreelanceHub account to access your Client workspace or Freelancer platform.{% endblock %}
+{% block meta_description %}Sign in to your FreelanceHub account to access your Client workspace, Freelancer portal, or Platform Admin console.{% endblock %}
 
 {% block extra_head %}
 <style>
-  /* ── Role Toggle Tabs ── */
+  /* ── 3-Way Role Toggle Tabs ── */
   .role-tab-rail {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 4px;
     padding: 4px;
     border-radius: 12px;
     background: var(--bg-input);
     border: 1px solid var(--border-color);
-    margin-bottom: 26px;
+    margin-bottom: 24px;
     position: relative;
     box-sizing: border-box;
   }
@@ -23,44 +23,44 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    padding: 10px 12px;
+    gap: 6px;
+    padding: 10px 8px;
     border-radius: 9px;
     border: 1.5px solid transparent;
     background: transparent;
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
     cursor: pointer;
     font-family: 'Inter', sans-serif;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
   .role-tab-btn:hover:not(.tab-active) {
-    color: var(--text-secondary);
+    color: var(--text-primary);
   }
   .role-tab-btn:active { transform: scale(0.97); }
-  .role-tab-btn.tab-active {
-    border-color: var(--hub-gold);
-    background: var(--hub-gold-soft);
-    color: var(--hub-gold);
-    box-shadow: 0 2px 10px rgba(212,168,83,0.18);
-  }
-  /* Pill indicator (sliding) */
+
+  /* Pill indicator (sliding 3-segment) */
   .role-tab-pill {
     position: absolute;
     top: 4px; bottom: 4px;
     left: 4px;
-    width: calc(50% - 4px);
-    background: var(--hub-gold-soft);
-    border: 1.5px solid var(--hub-gold);
+    width: calc((100% - 8px) / 3);
+    background: rgba(125,60,255,0.14);
+    border: 1.5px solid #7D3CFF;
     border-radius: 9px;
-    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s, border-color 0.25s;
     pointer-events: none;
     z-index: 0;
-    box-shadow: 0 2px 10px rgba(212,168,83,0.15);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
   }
+
+  /* Specific Role Active Styles */
+  .tab-client.tab-active { color: #7D3CFF; }
+  .tab-freelancer.tab-active { color: #FF5E6C; }
+  .tab-admin.tab-active { color: #9BC400; }
 
   /* ── Input focus state ── */
   .fh-input {
@@ -77,8 +77,8 @@
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
   }
   .fh-input:focus {
-    border-color: var(--hub-gold);
-    box-shadow: 0 0 0 3px rgba(212,168,83,0.14);
+    border-color: var(--login-accent, #7D3CFF);
+    box-shadow: 0 0 0 3px var(--login-glow, rgba(125,60,255,0.20));
     background: var(--bg-card);
   }
   .fh-input.has-right { padding-right: 46px; }
@@ -94,16 +94,17 @@
     color: var(--text-secondary);
     transition: color 0.18s;
   }
-  .fh-group:focus-within .fh-label { color: var(--hub-gold); }
+  .fh-group:focus-within .fh-label { color: var(--login-accent, #7D3CFF); }
 
   .fh-icon {
     position: absolute;
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--hub-gold);
+    color: var(--login-accent, #7D3CFF);
     pointer-events: none;
     z-index: 1;
+    transition: color 0.2s;
   }
 
   /* ── Password toggle ── */
@@ -123,7 +124,7 @@
     transition: color 0.18s, background 0.18s, transform 0.15s;
     line-height: 0;
   }
-  .pwd-toggle:hover { color: var(--hub-gold); background: rgba(212,168,83,0.1); }
+  .pwd-toggle:hover { color: var(--login-accent, #7D3CFF); background: rgba(255,255,255,0.06); }
   .pwd-toggle:active { transform: translateY(-50%) scale(0.88); }
 
   /* ── Submit button ── */
@@ -133,31 +134,32 @@
     padding: 13px 20px;
     border-radius: 10px;
     border: none;
-    background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
-    color: #0D0F14;
+    background: linear-gradient(135deg, #7D3CFF 0%, #6428D6 100%);
+    color: #FFFFFF;
     font-size: 14.5px;
     font-weight: 800;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 4px 20px var(--hub-gold-glow);
-    transition: box-shadow 0.2s, transform 0.18s, opacity 0.18s;
+    box-shadow: 0 4px 20px rgba(125,60,255,0.35);
+    transition: box-shadow 0.2s, transform 0.18s, opacity 0.18s, background 0.25s;
   }
   .login-btn:hover:not(:disabled) {
-    box-shadow: 0 6px 28px var(--hub-gold-glow);
+    box-shadow: 0 6px 28px rgba(125,60,255,0.45);
     transform: translateY(-1px);
+    color: #FFFFFF;
   }
-  .login-btn:active:not(:disabled) { transform: scale(0.98); box-shadow: 0 2px 10px var(--hub-gold-glow); }
+  .login-btn:active:not(:disabled) { transform: scale(0.98); }
   .login-btn:disabled { opacity: 0.65; cursor: not-allowed; }
 
   /* Spinner */
   .btn-spinner {
     width: 16px; height: 16px;
-    border: 2px solid rgba(13,15,20,0.25);
-    border-top-color: #0D0F14;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #FFFFFF;
     border-radius: 50%;
     animation: fh-spin 0.7s linear infinite;
   }
@@ -188,10 +190,10 @@
     animation: alertIn 0.25s ease both;
   }
   @keyframes alertIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
-  .fh-alert-success { background: rgba(52,199,89,.10); border:1px solid rgba(52,199,89,.22); color:#34c759; }
-  .fh-alert-danger  { background: rgba(224,85,85,.10);  border:1px solid rgba(224,85,85,.22);  color:#e05555; }
-  .fh-alert-warning { background: rgba(255,193,7,.10);  border:1px solid rgba(255,193,7,.22);  color:#ffc107; }
-  .fh-alert-info    { background: rgba(212,168,83,.10); border:1px solid rgba(212,168,83,.20); color:var(--hub-gold); }
+  .fh-alert-success { background: rgba(52,199,89,.12); border:1px solid rgba(52,199,89,.25); color:#34c759; }
+  .fh-alert-danger  { background: rgba(224,85,85,.12);  border:1px solid rgba(224,85,85,.25);  color:#e05555; }
+  .fh-alert-warning { background: rgba(255,193,7,.12);  border:1px solid rgba(255,193,7,.25);  color:#ffc107; }
+  .fh-alert-info    { background: rgba(125,60,255,.12); border:1px solid rgba(125,60,255,.25); color:#7D3CFF; }
 
   /* ── CTA Buttons ── */
   .cta-register-btn {
@@ -203,15 +205,17 @@
     font-size: 13.5px;
     font-weight: 700;
     text-decoration: none;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     box-sizing: border-box;
     border: 1.5px solid transparent;
     transition: all 0.2s ease;
   }
   .cta-register-btn .arrow { margin-left: auto; opacity: 0.55; transition: transform 0.2s, opacity 0.2s; }
   .cta-register-btn:hover .arrow { transform: translateX(3px); opacity: 0.9; }
-  .cta-gold { border-color: var(--hub-gold-border); background: var(--hub-gold-soft); color: var(--hub-gold); }
-  .cta-gold:hover { background: rgba(212,168,83,.18); border-color: var(--hub-gold); box-shadow: 0 3px 14px rgba(212,168,83,.2); transform: translateY(-1px); }
+  .cta-purple { border-color: rgba(125,60,255,0.3); background: rgba(125,60,255,0.12); color: #7D3CFF; }
+  .cta-purple:hover { background: rgba(125,60,255,.20); border-color: #7D3CFF; transform: translateY(-1px); color: #7D3CFF; }
+  .cta-coral { border-color: rgba(255,94,108,0.3); background: rgba(255,94,108,0.12); color: #FF5E6C; }
+  .cta-coral:hover { background: rgba(255,94,108,.20); border-color: #FF5E6C; transform: translateY(-1px); color: #FF5E6C; }
   .cta-ghost { border-color: var(--border-color); background: transparent; color: var(--text-secondary); }
   .cta-ghost:hover { background: var(--bg-input); border-color: var(--border-input); color: var(--text-primary); transform: translateY(-1px); }
 
@@ -220,56 +224,46 @@
   .fh-divider-line { flex:1; height:1px; background:var(--border-subtle); }
   .fh-divider-text { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-muted); white-space:nowrap; }
 
-  /* ── Admin link ── */
-  .admin-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: color 0.18s, background 0.18s;
-  }
-  .admin-link:hover { color: var(--hub-gold); background: rgba(212,168,83,.08); }
-
   /* ── Forgot link ── */
   .forgot-link {
-    font-size: 12px; color: var(--hub-gold); font-weight: 600;
+    font-size: 12px; color: var(--login-accent, #7D3CFF); font-weight: 600;
     text-decoration: none; padding: 2px 5px; border-radius: 4px;
-    transition: background 0.18s;
+    transition: background 0.18s, color 0.2s;
   }
-  .forgot-link:hover { background: rgba(212,168,83,.1); }
+  .forgot-link:hover { background: rgba(255,255,255,0.06); }
 </style>
 {% endblock %}
 
 {% block content %}
 
 <!-- ── Header ── -->
-<div style="text-align:center; margin-bottom:22px;">
+<div style="text-align:center; margin-bottom:20px;">
   <h1 style="font-size:23px; font-weight:800; color:var(--text-primary); margin:0 0 5px; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.4px;">
     Welcome Back
   </h1>
   <p style="font-size:13px; color:var(--text-muted); margin:0;">
     Sign in to your
-    <strong id="roleText" style="color:var(--hub-gold); transition:opacity 0.18s;">Client Workspace</strong>
+    <strong id="roleText" style="color:#7D3CFF; transition:all 0.2s ease;">Client Workspace</strong>
   </p>
 </div>
 
-<!-- ── Role Tab Toggle ── -->
-<div class="role-tab-rail" role="tablist" aria-label="Login role">
+<!-- ── 3-Way Role Tab Toggle ── -->
+<div class="role-tab-rail" role="tablist" aria-label="Login role selection">
   <div class="role-tab-pill" id="rolePill"></div>
-  <button type="button" id="tabClientBtn" class="role-tab-btn tab-active"
+  <button type="button" id="tabClientBtn" class="role-tab-btn tab-client tab-active"
     role="tab" aria-selected="true" onclick="switchRole('client')">
     <i data-lucide="briefcase" style="width:15px;height:15px;"></i>
     <span>Client</span>
   </button>
-  <button type="button" id="tabFreelancerBtn" class="role-tab-btn"
+  <button type="button" id="tabFreelancerBtn" class="role-tab-btn tab-freelancer"
     role="tab" aria-selected="false" onclick="switchRole('freelancer')">
-    <i data-lucide="search" style="width:15px;height:15px;"></i>
+    <i data-lucide="compass" style="width:15px;height:15px;"></i>
     <span>Freelancer</span>
+  </button>
+  <button type="button" id="tabAdminBtn" class="role-tab-btn tab-admin"
+    role="tab" aria-selected="false" onclick="switchRole('admin')">
+    <i data-lucide="shield" style="width:15px;height:15px;"></i>
+    <span>Admin</span>
   </button>
 </div>
 
@@ -343,82 +337,131 @@
   <!-- Submit -->
   <button type="submit" id="loginSubmitBtn" class="login-btn">
     <i data-lucide="log-in" style="width:17px;height:17px;"></i>
-    <span id="loginBtnText">Sign In to Workspace</span>
+    <span id="loginBtnText">Sign In to Client Workspace</span>
   </button>
 </form>
 
 <!-- ── Divider ── -->
-<div class="fh-divider">
+<div class="fh-divider" id="registerDivider">
   <div class="fh-divider-line"></div>
   <span class="fh-divider-text">New to FreelanceHub?</span>
   <div class="fh-divider-line"></div>
 </div>
 
 <!-- ── Register CTAs ── -->
-<div style="display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box;">
-  <a href="{% url 'marketplace:client_register' %}" class="cta-register-btn cta-gold">
+<div id="registerCtas" style="display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box;">
+  <a href="{% url 'marketplace:client_register' %}" class="cta-register-btn cta-purple" id="ctaClientBtn">
     <i data-lucide="briefcase" style="width:15px;height:15px;"></i>
     <span>Create Client Account</span>
     <i data-lucide="arrow-right" class="arrow" style="width:14px;height:14px;"></i>
   </a>
-  <a href="{% url 'core:register' %}" class="cta-register-btn cta-ghost">
-    <i data-lucide="search" style="width:15px;height:15px;"></i>
+  <a href="{% url 'core:register' %}" class="cta-register-btn cta-coral" id="ctaFreelancerBtn">
+    <i data-lucide="compass" style="width:15px;height:15px;"></i>
     <span>Create Freelancer Account</span>
     <i data-lucide="arrow-right" class="arrow" style="width:14px;height:14px;"></i>
   </a>
 </div>
 
-<!-- ── Admin Link ── -->
-<div style="text-align:center;margin-top:18px;">
-  <a href="{% url 'core:admin_login' %}" class="admin-link">
-    <i data-lucide="shield" style="width:13px;height:13px;color:var(--hub-gold);"></i>
-    <span>Platform Administrator Login</span>
-  </a>
+<!-- ── Admin Notice (when Admin role active) ── -->
+<div id="adminNotice" style="display:none; text-align:center; padding:12px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:10px; margin-top:8px;">
+  <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:12px; color:var(--text-secondary);">
+    <i data-lucide="shield-check" style="width:14px; height:14px; color:#9BC400;"></i>
+    <span>Elevated Staff &amp; Super Admin access is audited.</span>
+  </div>
 </div>
 
 <script>
 (function () {
   'use strict';
 
-  /* ── Role Tab Switcher with sliding pill ── */
   const clientBtn      = document.getElementById('tabClientBtn');
   const freelancerBtn  = document.getElementById('tabFreelancerBtn');
+  const adminBtn       = document.getElementById('tabAdminBtn');
   const roleText       = document.getElementById('roleText');
   const loginTypeInput = document.getElementById('loginTypeInput');
   const rolePill       = document.getElementById('rolePill');
+  const submitBtn      = document.getElementById('loginSubmitBtn');
+  const submitText     = document.getElementById('loginBtnText');
+  const registerDivider= document.getElementById('registerDivider');
+  const registerCtas   = document.getElementById('registerCtas');
+  const adminNotice    = document.getElementById('adminNotice');
 
   function switchRole(role) {
-    const isFreelancer = role === 'freelancer';
+    // 0: client, 1: freelancer, 2: admin
+    let index = 0;
+    if (role === 'freelancer') index = 1;
+    if (role === 'admin') index = 2;
 
-    /* slide the pill */
-    rolePill.style.transform = isFreelancer ? 'translateX(calc(100% + 4px))' : 'translateX(0)';
+    // Slide pill
+    rolePill.style.transform = `translateX(${index * 100}%)`;
 
-    /* button active states */
-    clientBtn.classList.toggle('tab-active', !isFreelancer);
-    freelancerBtn.classList.toggle('tab-active', isFreelancer);
-    clientBtn.setAttribute('aria-selected', String(!isFreelancer));
-    freelancerBtn.setAttribute('aria-selected', String(isFreelancer));
+    // Reset active states
+    clientBtn.classList.toggle('tab-active', index === 0);
+    freelancerBtn.classList.toggle('tab-active', index === 1);
+    adminBtn.classList.toggle('tab-active', index === 2);
 
-    /* role subtitle fade */
-    roleText.style.opacity = '0';
-    setTimeout(function () {
-      roleText.textContent = isFreelancer ? 'Freelancer Portal' : 'Client Workspace';
-      roleText.style.opacity = '1';
-    }, 120);
+    clientBtn.setAttribute('aria-selected', String(index === 0));
+    freelancerBtn.setAttribute('aria-selected', String(index === 1));
+    adminBtn.setAttribute('aria-selected', String(index === 2));
 
-    /* update hidden input */
-    loginTypeInput.value = role;
+    // Dynamic role branding colors
+    if (index === 0) {
+      document.documentElement.style.setProperty('--login-accent', '#7D3CFF');
+      document.documentElement.style.setProperty('--login-glow', 'rgba(125,60,255,0.25)');
+      rolePill.style.background = 'rgba(125,60,255,0.14)';
+      rolePill.style.borderColor = '#7D3CFF';
+      submitBtn.style.background = 'linear-gradient(135deg, #7D3CFF 0%, #6428D6 100%)';
+      submitBtn.style.boxShadow = '0 4px 20px rgba(125,60,255,0.35)';
+      submitText.textContent = 'Sign In to Client Workspace';
+      roleText.textContent = 'Client Workspace';
+      roleText.style.color = '#7D3CFF';
+      loginTypeInput.value = 'client';
+      registerDivider.style.display = 'flex';
+      registerCtas.style.display = 'flex';
+      adminNotice.style.display = 'none';
+    } else if (index === 1) {
+      document.documentElement.style.setProperty('--login-accent', '#FF5E6C');
+      document.documentElement.style.setProperty('--login-glow', 'rgba(255,94,108,0.25)');
+      rolePill.style.background = 'rgba(255,94,108,0.14)';
+      rolePill.style.borderColor = '#FF5E6C';
+      submitBtn.style.background = 'linear-gradient(135deg, #FF5E6C 0%, #E84553 100%)';
+      submitBtn.style.boxShadow = '0 4px 20px rgba(255,94,108,0.35)';
+      submitText.textContent = 'Sign In to Freelancer Portal';
+      roleText.textContent = 'Freelancer Portal';
+      roleText.style.color = '#FF5E6C';
+      loginTypeInput.value = 'freelancer';
+      registerDivider.style.display = 'flex';
+      registerCtas.style.display = 'flex';
+      adminNotice.style.display = 'none';
+    } else {
+      document.documentElement.style.setProperty('--login-accent', '#8076A3');
+      document.documentElement.style.setProperty('--login-glow', 'rgba(128,118,163,0.25)');
+      rolePill.style.background = 'rgba(128,118,163,0.18)';
+      rolePill.style.borderColor = '#9BC400';
+      submitBtn.style.background = 'linear-gradient(135deg, #8076A3 0%, #675E88 100%)';
+      submitBtn.style.boxShadow = '0 4px 20px rgba(128,118,163,0.35)';
+      submitText.textContent = 'Sign In to Admin Governance';
+      roleText.textContent = 'Platform Governance';
+      roleText.style.color = '#9BC400';
+      loginTypeInput.value = 'admin';
+      registerDivider.style.display = 'none';
+      registerCtas.style.display = 'none';
+      adminNotice.style.display = 'block';
+    }
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
-  /* expose for onclick */
   window.switchRole = switchRole;
 
-  /* restore selected role if form was re-rendered after POST */
-  var postedType = '{{ request.POST.login_type|default:"" }}';
+  // Restore posted role if returning from error
+  var postedType = '{{ request.POST.login_type|default:login_type|default:"" }}';
   if (postedType === 'freelancer') {
     switchRole('freelancer');
+  } else if (postedType === 'admin') {
+    switchRole('admin');
+  } else {
+    switchRole('client');
   }
 
   /* ── Password toggle ── */
@@ -431,18 +474,13 @@
       var show = pwdInput.type === 'password';
       pwdInput.type = show ? 'text' : 'password';
       pwdIcon.setAttribute('data-lucide', show ? 'eye-off' : 'eye');
-      /* pulse */
-      toggleBtn.style.transform = 'translateY(-50%) scale(1.22)';
-      setTimeout(function () { toggleBtn.style.transform = 'translateY(-50%) scale(1)'; }, 140);
       if (typeof lucide !== 'undefined') lucide.createIcons();
       pwdInput.focus();
     });
   }
 
   /* ── Submit loading state ── */
-  var form      = document.getElementById('userLoginForm');
-  var submitBtn = document.getElementById('loginSubmitBtn');
-
+  var form = document.getElementById('userLoginForm');
   if (form && submitBtn) {
     form.addEventListener('submit', function () {
       submitBtn.disabled = true;
@@ -450,16 +488,6 @@
     });
   }
 
-  /* ── Label highlight on input focus ── */
-  document.querySelectorAll('.fh-input').forEach(function (inp) {
-    var group = inp.closest('.fh-group');
-    if (!group) return;
-    var label = group.querySelector('.fh-label');
-    inp.addEventListener('focus',  function () { if (label) label.style.color = 'var(--hub-gold)'; });
-    inp.addEventListener('blur',   function () { if (label) label.style.color = ''; });
-  });
-
-  /* ── Init icons ── */
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }());
 </script>

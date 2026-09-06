@@ -114,12 +114,12 @@
     <div style="padding:14px;border-top:1px solid var(--sidebar-border);flex-shrink:0;">
       <!-- Admin user info -->
       <div style="display:flex;align-items:center;gap:10px;padding:8px 4px 10px;">
-        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--hub-gold),var(--hub-gold-dark));display:flex;align-items:center;justify-content:center;color:#0D0F14;font-size:13px;font-weight:800;flex-shrink:0;">
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--admin-primary),var(--admin-mauve));display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:13px;font-weight:800;flex-shrink:0;">
           {{ request.user.username|first|upper }}
         </div>
         <div style="min-width:0;">
           <div style="font-size:12.5px;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ request.user.get_full_name|default:request.user.username }}</div>
-          <div style="font-size:10.5px;color:var(--hub-gold);font-weight:600;">Super Admin</div>
+          <div style="font-size:10.5px;color:var(--admin-lime);font-weight:600;">Super Admin</div>
         </div>
       </div>
       <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
@@ -138,7 +138,7 @@
     <!-- Topbar -->
     <header class="admin-topbar">
       <div>
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--hub-gold);margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--admin-lime);margin-bottom:4px;display:flex;align-items:center;gap:6px;">
           <i data-lucide="shield" style="width:13px;height:13px;"></i>
           Platform Administration
         </div>

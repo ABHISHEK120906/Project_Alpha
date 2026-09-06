@@ -17,43 +17,56 @@
   --ease-fast:  160ms cubic-bezier(0.16,1,0.3,1);
   --ease-smooth:240ms cubic-bezier(0.16,1,0.3,1);
 
-  /* Client Legacy Aliases mapped to Unified Gold System */
-  --client-purple:        var(--hub-gold, #D4A853);
-  --client-purple-dark:   var(--hub-gold-dark, #B8892A);
-  --client-purple-soft:   var(--hub-gold-soft, rgba(212,168,83,0.12));
-  --client-purple-glow:   var(--hub-gold-glow, rgba(212,168,83,0.28));
-  --client-purple-border: var(--hub-gold-border, rgba(212,168,83,0.22));
+  /* Client Role Palette: #7d3cff (Purple), #fceed1 (Cream), #f2d53c (Amber), #c80e13 (Crimson) */
+  --client-purple:        #7D3CFF;
+  --client-purple-dark:   #6428D6;
+  --client-purple-soft:   rgba(125,60,255,0.15);
+  --client-purple-glow:   rgba(125,60,255,0.35);
+  --client-purple-border: rgba(125,60,255,0.28);
+  --client-cream:         #FCEED1;
+  --client-yellow:        #F2D53C;
+  --client-yellow-soft:   rgba(242,213,60,0.15);
+  --client-red:           #C80E13;
+  --client-red-soft:      rgba(200,14,19,0.15);
+  --client-green:         #4CAF7A;
+  --client-blue:          #5B9FD4;
 
-  --client-bg-base:       var(--bg-canvas, #0D0F14);
-  --client-bg-surface:    var(--bg-surface, #13161C);
-  --client-bg-card:       var(--bg-card, #1A1E27);
-  --client-bg-elevated:   var(--bg-elevated, #222736);
-  --client-bg-input:      var(--bg-input, #111419);
+  --client-bg-base:       var(--bg-canvas, transparent);
+  --client-bg-surface:    rgba(16, 22, 34, 0.74);
+  --client-bg-card:       rgba(20, 26, 38, 0.78);
+  --client-bg-elevated:   rgba(26, 34, 48, 0.84);
+  --client-bg-input:      rgba(14, 19, 28, 0.82);
 
-  --client-text-primary:  var(--text-primary, #F0EDE8);
-  --client-text-secondary:var(--text-secondary, #A8A099);
-  --client-text-muted:    var(--text-muted, #5C5650);
+  --client-text-primary:  #F8FAFC;
+  --client-text-secondary:#CBD5E1;
+  --client-text-muted:    #94A3B8;
 
-  --client-border:        var(--border-color, rgba(212,168,83,0.15));
-  --client-border-strong: var(--border-strong, rgba(212,168,83,0.35));
-
-  --client-green:         var(--success, #4CAF7A);
-  --client-yellow:        var(--warning, #E8A83A);
-  --client-red:           var(--danger, #E05C5C);
-  --client-blue:          var(--info, #5B9FD4);
+  --client-border:        rgba(255,255,255,0.10);
+  --client-border-strong: rgba(125,60,255,0.35);
 }
 
 [data-theme="light"] {
-  --client-bg-base:       var(--bg-canvas);
-  --client-bg-surface:    var(--bg-surface);
-  --client-bg-card:       var(--bg-card);
-  --client-bg-elevated:   var(--bg-elevated);
-  --client-bg-input:      var(--bg-input);
-  --client-text-primary:  var(--text-primary);
-  --client-text-secondary:var(--text-secondary);
-  --client-text-muted:    var(--text-muted);
-  --client-border:        var(--border-color);
-  --client-border-strong: var(--border-strong);
+  --client-purple:        #6A26E5;
+  --client-purple-dark:   #5318BE;
+  --client-purple-soft:   rgba(106,38,229,0.12);
+  --client-purple-glow:   rgba(106,38,229,0.25);
+  --client-purple-border: rgba(106,38,229,0.22);
+  --client-cream:         #FCEED1;
+  --client-yellow:        #CFA81A;
+  --client-yellow-soft:   rgba(207,168,26,0.14);
+  --client-red:           #B30C10;
+  --client-red-soft:      rgba(179,12,16,0.12);
+
+  --client-bg-base:       var(--bg-canvas, transparent);
+  --client-bg-surface:    rgba(255, 255, 255, 0.82);
+  --client-bg-card:       rgba(255, 255, 255, 0.86);
+  --client-bg-elevated:   rgba(250, 248, 244, 0.90);
+  --client-bg-input:      rgba(255, 255, 255, 0.92);
+  --client-text-primary:  #0F172A;
+  --client-text-secondary:#334155;
+  --client-text-muted:    #64748B;
+  --client-border:        rgba(0,0,0,0.08);
+  --client-border-strong: rgba(106,38,229,0.30);
 }
 
 /* ── 2. FULL APP LAYOUT ─────────────────────────────────────────────────── */
@@ -105,10 +118,10 @@ body.client-workspace {
 
 .client-brand-icon {
   width: 36px; height: 36px; border-radius: var(--r-sm);
-  background: linear-gradient(135deg, var(--hub-gold, #D4A853) 0%, var(--hub-gold-dark, #B8892A) 100%);
+  background: linear-gradient(135deg, var(--client-purple) 0%, var(--client-purple-dark) 100%);
   display: flex; align-items: center; justify-content: center;
-  color: #0D0F14; flex-shrink: 0;
-  box-shadow: 0 0 14px rgba(212,168,83,0.3);
+  color: #FFFFFF; flex-shrink: 0;
+  box-shadow: 0 4px 14px var(--client-purple-glow);
 }
 
 .client-brand-icon svg, .client-brand-icon i { width: 18px; height: 18px; font-size: 16px; }
@@ -124,9 +137,9 @@ body.client-workspace {
 .client-role-badge {
   display: inline-flex; align-items: center;
   padding: 2px 8px; border-radius: var(--r-full);
-  background: var(--hub-gold-soft);
-  border: 1px solid var(--hub-gold-border);
-  color: var(--hub-gold);
+  background: var(--client-cream);
+  border: 1px solid rgba(125,60,255,0.28);
+  color: var(--client-purple);
   font-size: 9.5px; font-weight: 800;
   letter-spacing: 1px; text-transform: uppercase;
   flex-shrink: 0;
@@ -141,10 +154,10 @@ body.client-workspace {
 
 .client-user-avatar {
   width: 38px; height: 38px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
-  color: #0D0F14; font-size: 14px; font-weight: 700;
+  background: linear-gradient(135deg, var(--client-purple) 0%, var(--client-purple-dark) 100%);
+  color: #FFFFFF; font-size: 14px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
-  border: 2px solid rgba(212,168,83,0.3);
+  border: 2px solid var(--client-purple-border);
   flex-shrink: 0;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
@@ -181,10 +194,10 @@ body.client-workspace {
   transition: all var(--ease-fast); margin-bottom: 2px;
 }
 
-.client-nav-item:hover { background: var(--hub-gold-soft); color: var(--hub-gold); }
+.client-nav-item:hover { background: var(--client-purple-soft); color: var(--client-purple); }
 .client-nav-item.active {
-  background: rgba(212,168,83,0.12); color: var(--hub-gold, #D4A853);
-  border-left: 3px solid var(--hub-gold, #D4A853);
+  background: var(--client-purple-soft); color: var(--client-purple);
+  border-left: 3px solid var(--client-purple);
   padding-left: 9px; font-weight: 600;
 }
 
@@ -192,8 +205,8 @@ body.client-workspace {
 
 .client-nav-badge {
   margin-left: auto;
-  background: rgba(212,168,83,0.12); color: var(--hub-gold, #D4A853);
-  border: 1px solid rgba(212,168,83,0.25);
+  background: var(--client-purple-soft); color: var(--client-purple);
+  border: 1px solid var(--client-purple-border);
   border-radius: var(--r-full);
   font-size: 10.5px; font-weight: 700;
   padding: 1px 7px; flex-shrink: 0;
@@ -201,7 +214,7 @@ body.client-workspace {
 
 .client-sidebar-footer {
   padding: 12px 10px;
-  border-top: 1px solid var(--sidebar-border, rgba(212,168,83,0.1));
+  border-top: 1px solid var(--sidebar-border, rgba(255,255,255,0.08));
   flex-shrink: 0;
 }
 
@@ -301,9 +314,33 @@ body.client-workspace {
   width: 46px; height: 46px; border-radius: var(--r-md);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  background: rgba(212,168,83,0.12);
-  color: var(--hub-gold, #D4A853);
-  border: 1px solid rgba(212,168,83,0.2);
+  background: var(--client-purple-soft);
+  color: var(--client-purple);
+  border: 1px solid var(--client-purple-border);
+}
+
+.client-kpi-icon.purple {
+  background: var(--client-purple-soft);
+  color: var(--client-purple);
+  border: 1px solid var(--client-purple-border);
+}
+
+.client-kpi-icon.yellow {
+  background: var(--client-yellow-soft);
+  color: var(--client-yellow);
+  border: 1px solid rgba(242,213,60,0.28);
+}
+
+.client-kpi-icon.green {
+  background: rgba(76,175,122,0.14);
+  color: var(--client-green);
+  border: 1px solid rgba(76,175,122,0.28);
+}
+
+.client-kpi-icon.red {
+  background: var(--client-red-soft);
+  color: var(--client-red);
+  border: 1px solid rgba(200,14,19,0.28);
 }
 
 .client-kpi-icon svg, .client-kpi-icon i { width: 20px; height: 20px; font-size: 18px; }
@@ -427,29 +464,30 @@ body.client-workspace {
 .btn-client-primary {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 18px;
-  background: linear-gradient(135deg, var(--hub-gold, #D4A853) 0%, var(--hub-gold-dark, #B8892A) 100%);
-  color: #0D0F14; border: none; border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--client-purple) 0%, var(--client-purple-dark) 100%);
+  color: #FFFFFF !important; border: none; border-radius: var(--r-md);
   font-size: 13px; font-weight: 700; cursor: pointer;
   text-decoration: none;
   transition: all var(--ease-fast);
-  box-shadow: 0 4px 14px rgba(212,168,83,0.28);
+  box-shadow: 0 4px 14px var(--client-purple-glow);
   white-space: nowrap;
 }
 
-.btn-client-primary:hover { filter: brightness(1.1); transform: translateY(-1px); color: #0D0F14; }
+.btn-client-primary:hover { filter: brightness(1.1); transform: translateY(-1px); color: #FFFFFF !important; }
 
 .btn-client-secondary {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 8px 16px;
-  background: transparent;
-  color: var(--text-secondary, #A8A099); border: 1px solid var(--border-color, rgba(212,168,83,0.15));
+  background: var(--client-purple-soft);
+  color: var(--client-purple) !important;
+  border: 1px solid var(--client-purple-border);
   border-radius: var(--r-md);
   font-size: 13px; font-weight: 600; cursor: pointer;
   text-decoration: none;
   transition: all var(--ease-fast);
 }
 
-.btn-client-secondary:hover { border-color: rgba(212,168,83,0.35); color: var(--hub-gold, #D4A853); background: rgba(212,168,83,0.08); }
+.btn-client-secondary:hover { border-color: var(--client-purple); color: var(--client-purple) !important; background: rgba(125,60,255,0.22); transform: translateY(-1px); }
 
 /* ── 12. RESPONSIVE ─────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
