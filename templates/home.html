@@ -2,418 +2,289 @@
 {% load static %}
 
 {% block title %}FreelanceHub — Where Great Projects Meet Great Talent{% endblock %}
-{% block meta_description %}FreelanceHub connects verified clients with world-class independent professionals. Post projects, review proposals, and escrow payments securely.{% endblock %}
+{% block meta_description %}FreelanceHub connects verified clients with world-class independent professionals with built-in analytics, escrow protection, and intelligent forecasting.{% endblock %}
 
 {% block content %}
 <!-- ══ HERO SECTION ════════════════════════════════════════════ -->
-<section class="hub-hero-section" id="top">
+<section class="hub-hero" id="top">
   <div class="pub-container">
-    <div class="hub-hero-grid">
+    <div class="hero-pill-badge">
+      <i data-lucide="sparkles" class="fh-icon-xs"></i>
+      <span>Where Great Projects Meet Great Talent</span>
+    </div>
 
-      <!-- Left Column -->
-      <div>
-        <div class="hub-badge-pill">
-          <i data-lucide="sparkles" style="width:14px; height:14px;"></i>
-          <span>Next-Generation Freelance Marketplace</span>
-        </div>
+    <h1 class="hero-title">
+      Where Great Projects<br>
+      <span class="gradient-text">Meet Great Talent.</span>
+    </h1>
 
-        <h1 class="hub-hero-title">
-          Where Great Projects<br>
-          <span class="highlight-text">Meet Great Talent.</span>
-        </h1>
+    <p class="hero-subtitle">
+      The premier marketplace combining verified talent matchmaking, milestone escrow security, and institutional-grade business intelligence.
+    </p>
 
-        <p class="hub-hero-desc">
-          Empowering modern enterprises to hire verified top 3% talent, and connecting elite freelancers with high-impact, escrow-protected projects worldwide.
-        </p>
+    <div class="hero-cta-group">
+      <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum btn-lg">
+        <i data-lucide="briefcase" class="fh-icon-sm"></i>
+        <span>Hire as Client</span>
+      </a>
 
-        <div class="hub-hero-actions">
-          <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-client btn-fh-lg">
-            <i data-lucide="briefcase"></i>
-            <span>Post a Project</span>
-          </a>
+      <a href="{% url 'freelancer:register' %}" class="btn btn-primary btn-lg">
+        <i data-lucide="sparkles" class="fh-icon-sm"></i>
+        <span>Join as Freelancer</span>
+      </a>
 
-          <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-freelancer btn-fh-lg">
-            <i data-lucide="search"></i>
-            <span>Find Freelance Work</span>
-          </a>
+      <a href="{% url 'core:login' %}" class="btn btn-secondary btn-lg">
+        <i data-lucide="log-in" class="fh-icon-sm"></i>
+        <span>Sign In</span>
+      </a>
+    </div>
 
-          <a href="{% url 'core:login' %}" class="btn-fh btn-fh-outline btn-fh-lg">
-            <i data-lucide="log-in"></i>
-            <span>Sign In</span>
-          </a>
-        </div>
-
-        <!-- Live Metrics Strip -->
-        <div class="hub-hero-stats">
-          <div class="hub-stat-item">
-            <div class="hub-stat-item-number">{{ open_projects|length|default:"12" }}+</div>
-            <div class="hub-stat-item-label">Active Projects</div>
-          </div>
-          <div class="hub-stat-item">
-            <div class="hub-stat-item-number">{{ freelancers|length|default:"8" }}+</div>
-            <div class="hub-stat-item-label">Verified Specialists</div>
-          </div>
-          <div class="hub-stat-item">
-            <div class="hub-stat-item-number">100%</div>
-            <div class="hub-stat-item-label">Escrow Protected</div>
-          </div>
-        </div>
+    <!-- ── LIVE ANALYTICAL COUNTERS BANNER ── -->
+    <div class="hub-live-metrics">
+      <div class="metric-item">
+        <div class="metric-val">{{ open_projects|length|default:"24" }}<span class="accent">+</span></div>
+        <div class="metric-label">Active Briefs</div>
       </div>
-
-      <!-- Right Column: Interactive Marketplace Visual Deck -->
-      <div class="hub-hero-visual">
-        <div class="hub-live-card-main">
-          <div class="hub-live-badge-glow">
-            <span class="hub-live-pulse-dot"></span>
-            <span>Live Marketplace</span>
-          </div>
-
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--border-subtle);">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div style="width:10px; height:10px; border-radius:50%; background:var(--success);"></div>
-              <span style="font-size:0.85rem; font-weight:700; color:var(--text-primary);">Recently Posted Opportunities</span>
-            </div>
-            <span class="fh-badge fh-badge-primary">Real-Time</span>
-          </div>
-
-          <!-- Mini Project Previews -->
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            {% for project in open_projects|slice:":3" %}
-              <div style="padding:14px 16px; background:var(--bg-surface-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-md); display:flex; align-items:center; justify-content:space-between;">
-                <div style="min-width:0; flex:1; padding-right:12px;">
-                  <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ project.title }}</div>
-                  <div style="font-size:0.78rem; color:var(--text-muted); display:flex; gap:8px; margin-top:3px;">
-                    <span>{{ project.get_category_display|default:project.category }}</span>
-                    <span>•</span>
-                    <span>{{ project.client.display_name }}</span>
-                  </div>
-                </div>
-                <div style="text-align:right; flex-shrink:0;">
-                  <div style="font-family:var(--font-heading); font-weight:800; color:var(--brand-primary); font-size:1.05rem;">
-                    {% if project.budget %}${{ project.budget|floatformat:0 }}{% else %}Negotiable{% endif %}
-                  </div>
-                  <span class="fh-badge fh-badge-neutral" style="font-size:0.7rem;">{{ project.get_budget_type_display|default:"Fixed" }}</span>
-                </div>
-              </div>
-            {% empty %}
-              <div style="padding:14px 16px; background:var(--bg-surface-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-md); display:flex; align-items:center; justify-content:space-between;">
-                <div>
-                  <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary);">Enterprise AI SaaS Architecture</div>
-                  <div style="font-size:0.78rem; color:var(--text-muted);">Web &amp; AI Development • Verified Client</div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-family:var(--font-heading); font-weight:800; color:var(--brand-primary); font-size:1.05rem;">$4,500</div>
-                  <span class="fh-badge fh-badge-neutral" style="font-size:0.7rem;">Fixed Price</span>
-                </div>
-              </div>
-              <div style="padding:14px 16px; background:var(--bg-surface-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-md); display:flex; align-items:center; justify-content:space-between;">
-                <div>
-                  <div style="font-size:0.92rem; font-weight:700; color:var(--text-primary);">Fintech Mobile Application Redesign</div>
-                  <div style="font-size:0.78rem; color:var(--text-muted);">UI/UX Design • Verified Client</div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-family:var(--font-heading); font-weight:800; color:var(--brand-primary); font-size:1.05rem;">$2,800</div>
-                  <span class="fh-badge fh-badge-neutral" style="font-size:0.7rem;">Milestone</span>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-
-          <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text-muted);">
-              <i data-lucide="shield-check" style="width:16px; height:16px; color:var(--success);"></i>
-              <span>Milestone Protection Guaranteed</span>
-            </div>
-            <a href="{% url 'freelancer:register' %}" style="font-size:0.82rem; font-weight:700; color:var(--brand-primary); display:flex; align-items:center; gap:4px;">
-              <span>Explore All</span>
-              <i data-lucide="arrow-right" style="width:14px; height:14px;"></i>
-            </a>
-          </div>
-        </div>
+      <div class="metric-item">
+        <div class="metric-val">{{ freelancers|length|default:"18" }}<span class="accent">+</span></div>
+        <div class="metric-label">Verified Specialists</div>
       </div>
-
+      <div class="metric-item">
+        <div class="metric-val">100<span class="accent">%</span></div>
+        <div class="metric-label">Escrow Protected</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-val">99.4<span class="accent">%</span></div>
+        <div class="metric-label">On-Time Completion</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ══ ROLE SELECTION SHOWCASE ══════════════════════════════════ -->
-<section class="hub-section" id="role-selection" style="background:var(--border-subtle);">
+<!-- ══ DUAL ROLE VALUE PROPOSITION ═════════════════════════════ -->
+<section class="hub-roles-section" id="role-selection">
   <div class="pub-container">
-    <div class="hub-section-header">
-      <span class="hub-section-tag">CHOOSE YOUR PATHWAY</span>
-      <h2 class="hub-section-title">Built for Ambitious Clients and Elite Talent</h2>
-      <p class="hub-section-desc">Whether you need to hire specialists for a critical launch or want to discover premium freelance contracts, FreelanceHub has a dedicated workspace for you.</p>
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="users" class="fh-icon-xs"></i> Built For Both Sides</span>
+      <h2 class="section-title">Two Dedicated Workspaces</h2>
+      <p class="section-subtitle">Whether driving enterprise product milestones or scaling your independent freelancing practice.</p>
     </div>
 
-    <div class="hub-role-selector-grid">
-
+    <div class="roles-grid">
       <!-- Client Card -->
-      <div class="hub-role-choice-card client-card">
+      <div class="role-card">
         <div>
-          <span class="hub-role-badge">FOR CLIENTS &amp; ENTERPRISES</span>
-          <h3 class="hub-role-card-title">Hire Vetted Talent &amp; Scale Delivery</h3>
-          <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6;">
-            Publish projects in minutes, receive competitive proposals from verified specialists, compare candidates side-by-side, and release payments only when milestones meet your standards.
-          </p>
-
-          <ul class="hub-role-feature-list">
-            <li><i data-lucide="check-circle-2"></i> Instant project posting with customized skills and budgets</li>
-            <li><i data-lucide="check-circle-2"></i> Side-by-side candidate comparison with KYC verification</li>
-            <li><i data-lucide="check-circle-2"></i> Secure escrow milestone holding and invoice generation</li>
-            <li><i data-lucide="check-circle-2"></i> Dispute protection with dedicated platform arbitration</li>
+          <div class="role-tag client">
+            <i data-lucide="briefcase" class="fh-icon-xs"></i> For Clients &amp; Companies
+          </div>
+          <h3 class="role-title">Build High-Performing Teams On Demand</h3>
+          <p class="role-desc">Post technical project requirements, receive verified candidate proposals, and track milestone velocity with automated financial ledgers.</p>
+          
+          <ul class="role-features">
+            <li><i data-lucide="check-circle-2"></i> Multi-tier milestone escrow protection</li>
+            <li><i data-lucide="check-circle-2"></i> Verified identity &amp; skills badging</li>
+            <li><i data-lucide="check-circle-2"></i> Real-time spending analysis &amp; invoices</li>
+            <li><i data-lucide="check-circle-2"></i> Direct dispute mediation &amp; support</li>
           </ul>
         </div>
 
-        <div style="display:flex; align-items:center; gap:12px; margin-top:20px;">
-          <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-client btn-fh-lg" style="flex:1;">
-            <i data-lucide="briefcase"></i>
-            <span>Register as Client</span>
-          </a>
-          <a href="{% url 'core:login' %}" class="btn-fh btn-fh-outline btn-fh-lg">
-            <span>Client Login</span>
-          </a>
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum">Post a Project</a>
+          <a href="{% url 'core:login' %}" class="btn btn-secondary">Client Portal</a>
         </div>
       </div>
 
       <!-- Freelancer Card -->
-      <div class="hub-role-choice-card freelancer-card">
+      <div class="role-card">
         <div>
-          <span class="hub-role-badge">FOR SPECIALISTS &amp; FREELANCERS</span>
-          <h3 class="hub-role-card-title">Win Great Projects &amp; Build Your Career</h3>
-          <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6;">
-            Showcase your skills with verified credentials, browse high-value open contracts, submit detailed proposals with bid calculations, and receive guaranteed on-time payouts.
-          </p>
-
-          <ul class="hub-role-feature-list">
-            <li><i data-lucide="check-circle-2"></i> Advanced search filters by category, budget type, and duration</li>
-            <li><i data-lucide="check-circle-2"></i> Transparent fee calculator with automated net payout previews</li>
-            <li><i data-lucide="check-circle-2"></i> 5-Step KYC Verification (Email, Phone, ID, Tax/PAN, Bank)</li>
-            <li><i data-lucide="check-circle-2"></i> Automated milestone tracking and performance analytics</li>
+          <div class="role-tag freelancer">
+            <i data-lucide="sparkles" class="fh-icon-xs"></i> For Elite Freelancers
+          </div>
+          <h3 class="role-title">Monetize Your Craft With Reliable Escrow</h3>
+          <p class="role-desc">Discover curated briefs matching your exact hourly rates and technical stack. Submit proposals and receive guaranteed disbursements.</p>
+          
+          <ul class="role-features">
+            <li><i data-lucide="check-circle-2"></i> Zero-scam guaranteed escrow payout</li>
+            <li><i data-lucide="check-circle-2"></i> Transparent candidate competition tracking</li>
+            <li><i data-lucide="check-circle-2"></i> Portfolio showcase &amp; verified reviews</li>
+            <li><i data-lucide="check-circle-2"></i> Earnings forecasting &amp; tax-ready exports</li>
           </ul>
         </div>
 
-        <div style="display:flex; align-items:center; gap:12px; margin-top:20px;">
-          <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-freelancer btn-fh-lg" style="flex:1;">
-            <i data-lucide="search"></i>
-            <span>Register as Freelancer</span>
-          </a>
-          <a href="{% url 'core:login' %}" class="btn-fh btn-fh-outline btn-fh-lg">
-            <span>Freelancer Login</span>
-          </a>
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <a href="{% url 'freelancer:register' %}" class="btn btn-primary">Find Freelance Work</a>
+          <a href="{% url 'core:login' %}" class="btn btn-secondary">Freelancer Login</a>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ══ HOW IT WORKS ════════════════════════════════════════════ -->
-<section class="hub-section" id="how-it-works">
+<!-- ══ ANALYTICS PREVIEW SECTION ═══════════════════════════════ -->
+<section class="hub-analytics-preview" id="analytics-preview">
   <div class="pub-container">
-    <div class="hub-section-header">
-      <span class="hub-section-tag">STREAMLINED COLLABORATION</span>
-      <h2 class="hub-section-title">How FreelanceHub Works</h2>
-      <p class="hub-section-desc">A frictionless end-to-end workflow designed for clarity, accountability, and security.</p>
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="bar-chart-3" class="fh-icon-xs"></i> Institutional Intelligence</span>
+      <h2 class="section-title">Built-In Analytical Business Platform</h2>
+      <p class="section-subtitle">Real-time financial telemetry, project status distributions, and forward-looking risk models.</p>
     </div>
 
-    <div class="hub-steps-grid">
-      <div class="hub-step-card">
-        <div class="hub-step-num">01</div>
-        <div class="hub-step-icon"><i data-lucide="file-plus"></i></div>
-        <h4 class="hub-step-title">Post or Find Work</h4>
-        <p class="hub-step-text">Clients specify technical scope, milestones, and budget. Freelancers filter verified listings and submit structured bids.</p>
+    <div class="analytics-cards-grid">
+      <!-- 1. Revenue & Spend Telemetry -->
+      <div class="preview-card">
+        <div class="preview-card-icon">
+          <i data-lucide="trending-up" class="fh-icon-md"></i>
+        </div>
+        <h4 class="preview-card-title">Real-Time Revenue Telemetry</h4>
+        <p class="preview-card-text">
+          Track realized earnings, accounts receivable, and cash velocity through smooth, interactive charts supporting both Light and Dark mode.
+        </p>
       </div>
 
-      <div class="hub-step-card">
-        <div class="hub-step-num">02</div>
-        <div class="hub-step-icon"><i data-lucide="git-merge"></i></div>
-        <h4 class="hub-step-title">Align &amp; Fund Escrow</h4>
-        <p class="hub-step-text">Clients evaluate verified credentials and select candidates. Funds are held in secure escrow before work begins.</p>
+      <!-- 2. Project Health & Risk Scoring -->
+      <div class="preview-card">
+        <div class="preview-card-icon">
+          <i data-lucide="shield-alert" class="fh-icon-md"></i>
+        </div>
+        <h4 class="preview-card-title">Health Score &amp; Risk Forecasting</h4>
+        <p class="preview-card-text">
+          Predict delivery bottlenecks before they happen. Our heuristics analyze milestone progress, review cycles, and deadline compliance.
+        </p>
       </div>
 
-      <div class="hub-step-card">
-        <div class="hub-step-num">03</div>
-        <div class="hub-step-icon"><i data-lucide="check-circle"></i></div>
-        <h4 class="hub-step-title">Deliver &amp; Get Paid</h4>
-        <p class="hub-step-text">Collaborate through milestone updates. Upon client review and approval, payment releases immediately to the freelancer.</p>
+      <!-- 3. Multi-Format Reporting Hub -->
+      <div class="preview-card">
+        <div class="preview-card-icon">
+          <i data-lucide="file-spreadsheet" class="fh-icon-md"></i>
+        </div>
+        <h4 class="preview-card-title">Executive Reports &amp; Exports</h4>
+        <p class="preview-card-text">
+          Export presentation-grade executive PDF summaries, multi-tab Excel financial workbooks, and raw CSV data streams on demand.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ BROWSE OPEN PROJECTS ════════════════════════════════════ -->
-<section class="hub-section" id="browse-projects" style="background:var(--border-subtle);">
+<!-- ══ WORKFLOW PIPELINE ═══════════════════════════════════════ -->
+<section class="hub-workflow" id="how-it-works">
   <div class="pub-container">
-    <div class="hub-section-header">
-      <span class="hub-section-tag">OPPORTUNITIES CATALOG</span>
-      <h2 class="hub-section-title">Featured Open Projects</h2>
-      <p class="hub-section-desc">Discover active projects from verified clients looking for talent right now.</p>
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="git-merge" class="fh-icon-xs"></i> End-To-End Architecture</span>
+      <h2 class="section-title">How FreelanceHub Works</h2>
+      <p class="section-subtitle">A linear, transparent collaboration lifecycle designed for security and speed.</p>
     </div>
 
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(360px, 1fr)); gap:24px;">
+    <div class="workflow-steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4 class="step-title">Scope &amp; Publish</h4>
+        <p class="step-desc">Clients define technical deliverables, target milestones, budget brackets, and required domain skills.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4 class="step-title">Review &amp; Align</h4>
+        <p class="step-desc">Freelancers submit structured proposals. Clients compare ratings, portfolios, and proposed delivery timelines.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4 class="step-title">Escrow Funding</h4>
+        <p class="step-desc">Funds are locked securely in platform escrow before work begins, assuring freelancers of guaranteed payment.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h4 class="step-title">Verified Release</h4>
+        <p class="step-desc">Upon milestone submission and client verification, escrow funds are instantly released to the talent account.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURED OPEN PROJECTS ══════════════════════════════════ -->
+<section style="padding: 70px 0; background: var(--bg-surface);" id="browse-projects">
+  <div class="pub-container">
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="folder-kanban" class="fh-icon-xs"></i> Marketplace Catalog</span>
+      <h2 class="section-title">Recent Project Briefs</h2>
+      <p class="section-subtitle">Explore live marketplace listings posted by verified clients.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:24px; margin-bottom:40px;">
       {% for project in open_projects|slice:":6" %}
-        <div class="fh-card fh-card-interactive" style="display:flex; flex-direction:column; justify-content:space-between;">
+        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
           <div>
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-              <span class="fh-badge fh-badge-primary">{{ project.get_category_display|default:project.category }}</span>
-              <span class="fh-badge fh-badge-neutral">{{ project.get_experience_level_display|default:"Intermediate" }}</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <span class="badge badge-primary">{{ project.get_category_display|default:project.category }}</span>
+              <span class="badge badge-plum">{{ project.get_budget_type_display|default:"Fixed" }}</span>
             </div>
 
-            <h4 style="font-size:1.15rem; margin-bottom:8px;">
+            <h4 style="font-size:1.15rem; margin-bottom:8px; font-weight:700;">
               <a href="{% url 'freelancer:project_detail' project.id %}" style="color:var(--text-primary);">{{ project.title }}</a>
             </h4>
 
             <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:16px;">
-              {{ project.description|truncatewords:24 }}
+              {{ project.description|truncatewords:20 }}
             </p>
 
             {% if project.skills_list %}
               <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;">
-                {% for skill in project.skills_list|slice:":4" %}
-                  <span style="font-size:0.72rem; padding:2px 8px; border-radius:var(--r-full); background:var(--border-subtle); color:var(--text-muted);">{{ skill }}</span>
+                {% for skill in project.skills_list|slice:":3" %}
+                  <span class="badge" style="background:var(--bg-elevated); color:var(--text-secondary);">{{ skill }}</span>
                 {% endfor %}
               </div>
             {% endif %}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid var(--border-subtle);">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid var(--border-light);">
             <div>
-              <div style="font-family:var(--font-heading); font-size:1.25rem; font-weight:800; color:var(--text-primary);">
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Budget</span>
+              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.2rem; color:var(--pink-accent);">
                 {% if project.budget %}${{ project.budget|floatformat:0 }}{% else %}Negotiable{% endif %}
               </div>
-              <div style="font-size:0.72rem; color:var(--text-muted);">{{ project.get_budget_type_display|default:"Fixed" }}</div>
             </div>
 
-            <a href="{% url 'freelancer:project_apply' project.id %}" class="btn-fh btn-fh-freelancer btn-fh-sm">
-              <span>Apply Now</span>
-              <i data-lucide="arrow-right"></i>
+            <a href="{% url 'freelancer:project_apply' project.id %}" class="btn btn-primary btn-sm">
+              <span>Apply Brief</span>
+              <i data-lucide="arrow-right" class="fh-icon-xs"></i>
             </a>
           </div>
         </div>
       {% empty %}
-        <div style="grid-column:1/-1; text-align:center; padding:40px;">
-          <div class="fh-empty-state">
-            <div class="fh-empty-icon"><i data-lucide="folder-kanban"></i></div>
-            <div class="fh-empty-title">Projects are Updating</div>
-            <div class="fh-empty-desc">New opportunities are published daily. Check back shortly or create an account to get notified.</div>
-            <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-primary">Post the First Project</a>
-          </div>
+        <div class="card" style="grid-column: 1/-1; text-align:center; padding:48px;">
+          <i data-lucide="folder-kanban" class="fh-icon-lg" style="color:var(--pink-accent); margin-bottom:16px;"></i>
+          <h4 style="font-weight:700; margin-bottom:8px;">New Projects Publishing Daily</h4>
+          <p style="color:var(--text-muted); font-size:0.9rem; max-width:440px; margin:0 auto 20px;">
+            Create an account to be alerted the moment verified clients post opportunities in your domain.
+          </p>
+          <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum">Post First Project</a>
         </div>
       {% endfor %}
     </div>
 
-    <div style="text-align:center; margin-top:40px;">
-      <a href="{% url 'freelancer:find_projects' %}" class="btn-fh btn-fh-secondary btn-fh-lg">
-        <i data-lucide="search"></i>
-        <span>Browse All Projects</span>
+    <div style="text-align:center;">
+      <a href="{% url 'freelancer:find_projects' %}" class="btn btn-secondary">
+        <i data-lucide="search" class="fh-icon-xs"></i>
+        <span>Explore Complete Catalog</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ══ VERIFIED TALENT SHOWCASE ════════════════════════════════ -->
-<section class="hub-section" id="find-freelancers">
+<!-- ══ BOTTOM CTA BANNER ═══════════════════════════════════════ -->
+<section style="padding:80px 0;">
   <div class="pub-container">
-    <div class="hub-section-header">
-      <span class="hub-section-tag">ELITE SPECIALISTS</span>
-      <h2 class="hub-section-title">Top Rated &amp; Verified Freelancers</h2>
-      <p class="hub-section-desc">Hire pre-screened professionals with proven track records of quality execution.</p>
-    </div>
+    <div class="card" style="background: linear-gradient(135deg, rgba(247,198,217,0.3) 0%, rgba(107,49,82,0.18) 100%); border-color: rgba(217,108,157,0.35); text-align:center; padding:60px 32px;">
+      <h2 style="font-size:2.5rem; font-weight:800; margin-bottom:14px; letter-spacing:-0.02em;">Ready to Transform Your Project Execution?</h2>
+      <p style="font-size:1.1rem; color:var(--text-secondary); max-width:620px; margin:0 auto 32px; line-height:1.6;">
+        Join FreelanceHub today. Benefit from verified domain specialists, escrow-guaranteed milestones, and deep analytics.
+      </p>
 
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:24px;">
-      {% for fl in freelancers|slice:":6" %}
-        <div class="fh-card fh-card-interactive" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:28px 24px;">
-          <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, var(--role-fl-primary), #feb300); color:#ffffff; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:1.5rem; font-weight:800; margin-bottom:14px; box-shadow:0 4px 14px var(--role-fl-glow);">
-            {{ fl.full_name|slice:":1"|upper|default:"F" }}
-          </div>
-
-          <h4 style="font-size:1.15rem; margin-bottom:4px;">{{ fl.full_name }}</h4>
-          <div style="font-size:0.82rem; color:var(--brand-primary); font-weight:600; margin-bottom:12px;">{{ fl.professional_title|default:"Independent Specialist" }}</div>
-
-          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
-            {{ fl.bio|default:"Dedicated specialist delivering high-impact projects with verified quality."|truncatewords:16 }}
-          </p>
-
-          {% if fl.skills_list %}
-            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-bottom:20px;">
-              {% for sk in fl.skills_list|slice:":3" %}
-                <span class="fl-skill-chip">{{ sk }}</span>
-              {% endfor %}
-            </div>
-          {% endif %}
-
-          <div style="width:100%; padding-top:14px; border-top:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between;">
-            <div style="text-align:left;">
-              <span style="font-size:0.72rem; color:var(--text-muted);">Rate</span>
-              <div style="font-weight:700; color:var(--text-primary);">{% if fl.hourly_rate %}${{ fl.hourly_rate|floatformat:0 }}/hr{% else %}Contact{% endif %}</div>
-            </div>
-
-            <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-client btn-fh-sm">
-              <i data-lucide="user-check"></i>
-              <span>Hire Talent</span>
-            </a>
-          </div>
-        </div>
-      {% empty %}
-        <div style="grid-column:1/-1; text-align:center; padding:30px;">
-          <div class="fh-empty-state">
-            <div class="fh-empty-icon"><i data-lucide="users"></i></div>
-            <div class="fh-empty-title">Talent Pool Ready</div>
-            <div class="fh-empty-desc">Join our growing roster of verified engineers, designers, and marketers.</div>
-            <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-freelancer">Join as a Freelancer</a>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- ══ TRUST & SECURITY ════════════════════════════════════════ -->
-<section class="hub-section" style="background:var(--border-subtle);">
-  <div class="pub-container">
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:28px;">
-      <div style="display:flex; gap:16px; align-items:flex-start;">
-        <div style="width:44px; height:44px; border-radius:var(--r-md); background:rgba(16,185,129,0.12); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          <i data-lucide="shield-check" style="width:22px; height:22px;"></i>
-        </div>
-        <div>
-          <h4 style="font-size:1.05rem; margin-bottom:4px;">100% Escrow Protection</h4>
-          <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;">Payments are locked in secure escrow and disbursed only when project milestones are verified.</p>
-        </div>
-      </div>
-
-      <div style="display:flex; gap:16px; align-items:flex-start;">
-        <div style="width:44px; height:44px; border-radius:var(--r-md); background:rgba(125,60,255,0.12); color:var(--brand-primary); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          <i data-lucide="user-check" style="width:22px; height:22px;"></i>
-        </div>
-        <div>
-          <h4 style="font-size:1.05rem; margin-bottom:4px;">Multi-Stage KYC Verification</h4>
-          <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;">Both clients and freelancers complete verification steps to ensure platform integrity and authenticity.</p>
-        </div>
-      </div>
-
-      <div style="display:flex; gap:16px; align-items:flex-start;">
-        <div style="width:44px; height:44px; border-radius:var(--r-md); background:rgba(245,158,11,0.12); color:var(--warning); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          <i data-lucide="scale" style="width:22px; height:22px;"></i>
-        </div>
-        <div>
-          <h4 style="font-size:1.05rem; margin-bottom:4px;">Fair Dispute Arbitration</h4>
-          <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;">Dedicated admin dispute mediation ensures fair resolutions for both parties if expectations diverge.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ CALL TO ACTION BANNER ═══════════════════════════════════ -->
-<section style="padding:80px 0; position:relative; overflow:hidden;">
-  <div class="pub-container">
-    <div style="background:linear-gradient(135deg, rgba(125,60,255,0.2) 0%, rgba(255,94,108,0.2) 100%); border:1px solid var(--border-default); border-radius:var(--r-xl); padding:60px 48px; text-align:center; backdrop-filter:blur(24px);">
-      <h2 style="font-size:clamp(2rem, 3.5vw, 2.8rem); font-weight:900; margin-bottom:14px;">Ready to Elevate Your Projects?</h2>
-      <p style="font-size:1.1rem; color:var(--text-secondary); max-width:600px; margin:0 auto 32px;">Join FreelanceHub today. Whether hiring or freelancing, experience the difference of a verified, professional marketplace.</p>
       <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
-        <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-client btn-fh-lg">Post a Project</a>
-        <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-freelancer btn-fh-lg">Find Freelance Work</a>
+        <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum btn-lg">Hire Top Talent</a>
+        <a href="{% url 'freelancer:register' %}" class="btn btn-primary btn-lg">Apply as Freelancer</a>
       </div>
     </div>
   </div>

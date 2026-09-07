@@ -7,14 +7,14 @@
 <style>
   /* ── Analytics Workspace Subsystem ── */
   .analytics-header {
-    background: linear-gradient(135deg, rgba(7, 17, 29, 0.95) 0%, rgba(20, 32, 46, 0.92) 100%);
-    border: 1px solid rgba(219, 153, 65, 0.25);
-    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(107, 49, 82, 0.3) 0%, rgba(217, 108, 157, 0.18) 100%);
+    border: 1px solid rgba(217, 108, 157, 0.35);
+    border-radius: var(--radius-md);
     padding: 24px 28px;
     margin-bottom: 24px;
     position: relative;
     overflow: hidden;
-    color: #FFFFFF;
+    color: var(--text-primary);
   }
   .analytics-header::after {
     content: '';
@@ -23,7 +23,7 @@
     top: -40px;
     width: 220px;
     height: 220px;
-    background: radial-gradient(circle, rgba(219, 153, 65, 0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(217, 108, 157, 0.25) 0%, transparent 70%);
     pointer-events: none;
   }
   .analytics-nav-tabs {
@@ -38,17 +38,17 @@
     border: none;
     border-bottom: 3px solid transparent;
     padding: 10px 16px;
-    transition: var(--transition-fast);
+    transition: var(--tr-fast);
     border-radius: 6px 6px 0 0;
   }
   .analytics-nav-tabs .nav-link:hover {
-    color: var(--primary);
-    background: rgba(219, 153, 65, 0.08);
+    color: var(--pink-accent);
+    background: rgba(217, 108, 157, 0.08);
   }
   .analytics-nav-tabs .nav-link.active {
-    color: var(--primary);
+    color: var(--pink-accent);
     background: transparent;
-    border-bottom-color: var(--primary);
+    border-bottom-color: var(--pink-accent);
     font-weight: 700;
   }
   .quality-score-ring {
