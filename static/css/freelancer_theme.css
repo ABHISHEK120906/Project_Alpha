@@ -1,447 +1,386 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   FREELANCEHUB — FREELANCER PLATFORM LAYOUT & COMPONENTS
-   Unified with FreelanceHub Design System v3.0 (Gold Accent)
-   All color tokens inherit from custom.css
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* ── 1. BASE ────────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --sidebar-w:  260px;
-  --topbar-h:   64px;
-  --r-sm:       8px;
-  --r-md:       12px;
-  --r-lg:       18px;
-  --r-full:     9999px;
-  --ease-fast:  160ms cubic-bezier(0.16,1,0.3,1);
-  --ease-smooth:240ms cubic-bezier(0.16,1,0.3,1);
-
-  /* Freelancer Role Palette: #ff5e6c (Coral), #fff5d7 (Cream), #feb300 (Amber/Gold), #ffaaab (Soft Coral) */
-  --fl-coral:             #FF5E6C;
-  --fl-coral-dark:        #E84553;
-  --fl-coral-soft:        rgba(255,94,108,0.15);
-  --fl-coral-glow:        rgba(255,94,108,0.35);
-  --fl-coral-border:      rgba(255,94,108,0.28);
-
-  --fl-cream:             #FFF5D7;
-  --fl-yellow:            #FEB300;
-  --fl-yellow-dark:       #DE9800;
-  --fl-yellow-soft:       rgba(254,179,0,0.15);
-  --fl-yellow-glow:       rgba(254,179,0,0.35);
-  --fl-yellow-border:     rgba(254,179,0,0.28);
-  --fl-soft-coral:        #FFAAAB;
-
-  --fl-bg-base:           var(--bg-canvas, transparent);
-  --fl-bg-surface:        rgba(16, 22, 34, 0.74);
-  --fl-bg-card:           rgba(20, 26, 38, 0.78);
-  --fl-bg-card-hover:     rgba(28, 36, 52, 0.86);
-  --fl-bg-elevated:       rgba(26, 34, 48, 0.84);
-  --fl-bg-input:          rgba(14, 19, 28, 0.82);
-
-  --fl-text-primary:      #F8FAFC;
-  --fl-text-secondary:    #CBD5E1;
-  --fl-text-muted:        #94A3B8;
-
-  --fl-border:            rgba(255,255,255,0.10);
-  --fl-border-strong:     rgba(255,94,108,0.35);
-
-  --fl-status-verified:   #4CAF7A;
-  --fl-status-verified-soft: rgba(76,175,122,0.14);
-}
-
-[data-theme="light"] {
-  --fl-coral:             #E84553;
-  --fl-coral-dark:        #C92E3C;
-  --fl-coral-soft:        rgba(232,69,83,0.12);
-  --fl-coral-glow:        rgba(232,69,83,0.25);
-  --fl-coral-border:      rgba(232,69,83,0.22);
-
-  --fl-cream:             #FFF5D7;
-  --fl-yellow:            #DE9800;
-  --fl-yellow-dark:       #B87D00;
-  --fl-yellow-soft:       rgba(222,152,0,0.14);
-  --fl-yellow-glow:       rgba(222,152,0,0.25);
-  --fl-yellow-border:     rgba(222,152,0,0.22);
-  --fl-soft-coral:        #F08B8C;
-
-  --fl-bg-base:           var(--bg-canvas, transparent);
-  --fl-bg-surface:        rgba(255, 255, 255, 0.82);
-  --fl-bg-card:           rgba(255, 255, 255, 0.86);
-  --fl-bg-card-hover:     rgba(255, 255, 255, 0.94);
-  --fl-bg-elevated:       rgba(250, 248, 244, 0.90);
-  --fl-bg-input:          rgba(255, 255, 255, 0.92);
-  --fl-text-primary:      #0F172A;
-  --fl-text-secondary:    #334155;
-  --fl-text-muted:        #64748B;
-  --fl-border:            rgba(0,0,0,0.08);
-  --fl-border-strong:     rgba(232,69,83,0.30);
-}
+/* ==========================================================================
+   FREELANCEHUB FREELANCER WORKSPACE THEME
+   Accents: #ff5e6c (Coral), #feb300 (Amber), #fff5d7 (Cream), #ffaaab (Soft Blush)
+   ========================================================================== */
 
 body.freelancer-portal {
-  font-family: 'Inter', system-ui, sans-serif;
-  background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center fixed / cover !important;
-  color: var(--text-primary);
-  font-size: 14.5px;
+  --brand-primary: #ff5e6c;
+  --brand-primary-hover: #f04e5d;
+  --sidebar-active-bg: rgba(255, 94, 108, 0.14);
+  --border-focused: #ff5e6c;
 }
 
-[data-theme="light"] body.freelancer-portal {
-  background: #F5F1E8 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center fixed / cover !important;
-  color: var(--text-primary);
-}
-
-/* ── 2. LAYOUT ──────────────────────────────────────────────────────────── */
+/* ── FREELANCER APP LAYOUT ───────────────────────────────────────────────── */
 .fl-app-layout {
   display: flex;
   min-height: 100vh;
-  background: transparent !important;
+  position: relative;
 }
 
-
-/* ── 3. SIDEBAR ─────────────────────────────────────────────────────────── */
+/* Freelancer Sidebar */
 .fl-sidebar {
-  width: var(--sidebar-w);
-  position: fixed; top: 0; left: 0; bottom: 0;
-  background: var(--sidebar-bg, #0B0D12);
-  border-right: 1px solid var(--sidebar-border, rgba(212,168,83,0.1));
-  z-index: 1040;
-  display: flex; flex-direction: column;
-  overflow-y: auto; overflow-x: hidden;
-  transition: transform var(--ease-smooth);
-}
-
-.fl-sidebar-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 16px 16px;
-  border-bottom: 1px solid var(--sidebar-border, rgba(212,168,83,0.1));
-  gap: 10px; flex-shrink: 0;
-}
-
-.fl-brand-link {
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none; flex: 1; min-width: 0;
-}
-
-.fl-brand-icon {
-  width: 36px; height: 36px; border-radius: var(--r-sm);
-  background: linear-gradient(135deg, var(--fl-coral) 0%, var(--fl-coral-dark) 100%);
-  display: flex; align-items: center; justify-content: center;
-  color: #FFFFFF; flex-shrink: 0;
-  box-shadow: 0 4px 14px var(--fl-coral-glow);
-}
-
-.fl-brand-icon svg, .fl-brand-icon i { width: 18px; height: 18px; font-size: 16px; }
-
-.fl-brand-link span {
-  font-size: 16px; font-weight: 800; color: var(--text-primary);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  letter-spacing: -0.3px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-.fl-role-badge {
-  display: inline-flex; align-items: center;
-  padding: 2px 8px; border-radius: var(--r-full);
-  background: var(--fl-cream);
-  border: 1px solid rgba(255,94,108,0.28);
-  color: var(--fl-coral);
-  font-size: 9.5px; font-weight: 800;
-  letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0;
+  width: 260px;
+  background: var(--sidebar-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  transition: transform var(--t-base);
 }
 
 .fl-sidebar-user {
-  display: flex; align-items: center; gap: 10px;
-  padding: 14px 16px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   border-bottom: 1px solid var(--sidebar-border);
+}
+.fl-user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-full);
+  background: linear-gradient(135deg, #ff5e6c 0%, #feb300 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px var(--role-fl-glow);
   flex-shrink: 0;
 }
-
-.fl-user-avatar {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--fl-coral) 0%, var(--fl-coral-dark) 100%);
-  color: #FFFFFF; font-size: 14px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px solid var(--fl-coral-border); flex-shrink: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-.fl-user-details { flex: 1; min-width: 0; }
-
 .fl-user-name {
-  font-size: 13px; font-weight: 700; color: var(--text-primary);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
 }
-
 .fl-user-badge-row {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 11.5px; color: var(--sidebar-text); font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.76rem;
+  color: var(--role-fl-primary);
+  font-weight: 600;
 }
+.fl-user-badge-row svg { width: 13px; height: 13px; }
 
-.fl-user-badge-row svg { width: 13px; height: 13px; color: var(--fl-yellow); }
-
-.fl-sidebar-nav { padding: 8px 10px; flex: 1; }
+.fl-sidebar-nav {
+  padding: 16px 12px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 .fl-nav-group-title {
-  font-size: 9.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1.3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
-  padding: 14px 10px 5px; margin: 0;
+  padding: 14px 10px 6px;
 }
 
 .fl-nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px; border-radius: var(--r-md);
-  color: var(--sidebar-text);
-  font-size: 13px; font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  color: var(--sidebar-link);
+  font-size: 0.9rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: all var(--ease-fast); margin-bottom: 2px;
+  transition: all var(--t-fast);
+  position: relative;
+}
+.fl-nav-item svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  transition: color var(--t-fast);
+}
+.fl-nav-item:hover {
+  background: var(--border-subtle);
+  color: var(--sidebar-link-hover);
+}
+.fl-nav-item:hover svg {
+  color: #ff5e6c;
 }
 
-.fl-nav-item:hover { background: var(--fl-coral-soft); color: var(--fl-coral); }
 .fl-nav-item.active {
-  background: var(--fl-coral-soft); color: var(--fl-coral);
-  border-left: 3px solid var(--fl-coral);
-  padding-left: 9px; font-weight: 600;
+  background: rgba(255, 94, 108, 0.15);
+  color: #ffffff;
+  font-weight: 700;
 }
-
-.fl-nav-item svg, .fl-nav-item i { width: 17px; height: 17px; font-size: 15px; flex-shrink: 0; }
+[data-theme="light"] .fl-nav-item.active {
+  color: #ff5e6c;
+  background: rgba(255, 94, 108, 0.1);
+}
+.fl-nav-item.active svg {
+  color: #ff5e6c;
+}
+.fl-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 4px;
+  border-radius: 0 var(--r-xs) var(--r-xs) 0;
+  background: #ff5e6c;
+}
 
 .fl-nav-badge {
   margin-left: auto;
-  background: var(--fl-coral-soft); color: var(--fl-coral);
-  border: 1px solid var(--fl-coral-border);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
   border-radius: var(--r-full);
-  font-size: 10.5px; font-weight: 700;
-  padding: 1px 7px; flex-shrink: 0;
+  background: rgba(255, 94, 108, 0.2);
+  color: #ff8591;
 }
 
-.fl-sidebar-footer {
-  padding: 12px 10px;
-  border-top: 1px solid var(--sidebar-border, rgba(255,255,255,0.08));
-  flex-shrink: 0;
+.fl-main {
+  flex: 1;
+  margin-left: 260px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ── 4. MAIN WRAPPER ────────────────────────────────────────────────────── */
-.fl-main-wrapper {
-  margin-left: var(--sidebar-w);
-  flex: 1; display: flex; flex-direction: column; min-height: 100vh;
-}
-
-/* ── 5. TOPBAR ──────────────────────────────────────────────────────────── */
 .fl-topbar {
-  height: var(--topbar-h);
-  background: var(--topbar-bg, #111419);
-  border-bottom: 1px solid var(--topbar-border, rgba(212,168,83,0.1));
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 24px; gap: 16px;
-  position: sticky; top: 0; z-index: 1030;
-  backdrop-filter: blur(10px);
+  height: 68px;
+  background: var(--navbar-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--navbar-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
 }
 
-.fl-topbar-left h1 {
-  font-size: 18px; font-weight: 700;
-  color: var(--text-primary, #F0EDE8);
-  font-family: 'Plus Jakarta Sans', sans-serif; margin: 0;
+.fl-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-
-.fl-topbar-left p { font-size: 12.5px; color: var(--text-muted, #5C5650); margin: 2px 0 0; }
-
-.fl-topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-
-/* ── 6. CONTENT BODY ────────────────────────────────────────────────────── */
-.fl-content-body {
-  padding: 26px; flex: 1; position: relative; z-index: 1;
-}
-
-/* ── 7. FREELANCER CARDS ────────────────────────────────────────────────── */
-.fl-card {
-  background: var(--bg-card, #1A1E27);
-  border: 1px solid var(--border-color, rgba(212,168,83,0.15));
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-card, 0 2px 12px rgba(0,0,0,0.4));
-  overflow: hidden;
-  padding: 20px;
-  margin-bottom: 20px;
-  transition: all var(--ease-smooth);
-}
-
-.fl-card:hover { box-shadow: var(--shadow-card-hover); border-color: rgba(212,168,83,0.25); }
-
-.fl-card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--border-color, rgba(212,168,83,0.1));
-  gap: 10px; flex-wrap: wrap;
-}
-
-.fl-card-title {
-  font-size: 14.5px; font-weight: 700;
-  color: var(--text-primary, #F0EDE8);
-  font-family: 'Plus Jakarta Sans', sans-serif; margin: 0;
-}
-
-/* ── 8. KPI CARDS ───────────────────────────────────────────────────────── */
-.fl-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px; margin-bottom: 24px;
-}
-
-.fl-kpi-card {
-  background: var(--bg-card, #1A1E27);
-  border: 1px solid var(--border-color, rgba(212,168,83,0.15));
-  border-radius: var(--r-lg);
-  padding: 20px;
-  display: flex; align-items: center; gap: 14px;
-  transition: all var(--ease-smooth);
-  box-shadow: var(--shadow-card, 0 2px 12px rgba(0,0,0,0.4));
-}
-
-.fl-kpi-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-1px); border-color: var(--hub-gold-border); }
-
-.fl-kpi-icon {
-  width: 46px; height: 46px; border-radius: var(--r-md);
-  background: var(--fl-coral-soft);
-  border: 1px solid var(--fl-coral-border);
-  color: var(--fl-coral);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-
-.fl-kpi-icon.coral {
-  background: var(--fl-coral-soft);
-  color: var(--fl-coral);
-  border: 1px solid var(--fl-coral-border);
-}
-
-.fl-kpi-icon.yellow {
-  background: var(--fl-yellow-soft);
-  color: var(--fl-yellow);
-  border: 1px solid var(--fl-yellow-border);
-}
-
-.fl-kpi-icon.green {
-  background: rgba(76,175,122,0.14);
-  color: #4CAF7A;
-  border: 1px solid rgba(76,175,122,0.28);
-}
-
-.fl-kpi-icon.pink {
-  background: rgba(255,170,171,0.16);
-  color: #FF5E6C;
-  border: 1px solid rgba(255,170,171,0.28);
-}
-
-.fl-kpi-icon svg, .fl-kpi-icon i { width: 20px; height: 20px; }
-
-.fl-kpi-val {
-  font-size: 24px; font-weight: 800;
-  color: var(--text-primary, #F0EDE8);
-  font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1;
-}
-
-.fl-kpi-label { font-size: 12px; font-weight: 600; color: var(--text-secondary, #A8A099); margin-top: 3px; }
-.fl-kpi-sub   { font-size: 11px; color: var(--text-muted, #5C5650); margin-top: 2px; }
-
-/* ── 9. FORMS & INPUTS ──────────────────────────────────────────────────── */
-.fl-label {
-  display: block; margin-bottom: 6px;
-  font-size: 13px; font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.fl-input, .fl-select, .fl-textarea {
-  width: 100%; padding: 10px 14px;
-  background: var(--bg-input);
-  border: 1px solid var(--border-input);
-  border-radius: var(--r-md);
+.fl-topbar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
   color: var(--text-primary);
-  font-size: 14px;
-  font-family: inherit;
-  outline: none;
-  transition: all var(--ease-fast);
+  margin: 0;
 }
 
-.fl-input:focus, .fl-select:focus, .fl-textarea:focus {
-  border-color: var(--border-input-focus);
-  box-shadow: 0 0 0 3px var(--fl-coral-soft);
+.fl-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-/* ── 10. BUTTONS ────────────────────────────────────────────────────────── */
-.btn-fl-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 18px;
-  background: linear-gradient(135deg, var(--fl-coral) 0%, var(--fl-coral-dark) 100%);
-  color: #FFFFFF !important; border: none; border-radius: var(--r-md);
-  font-size: 13px; font-weight: 700; cursor: pointer;
-  text-decoration: none; white-space: nowrap;
-  transition: all var(--ease-fast);
-  box-shadow: 0 4px 14px var(--fl-coral-glow);
+.fl-content-body {
+  padding: 32px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  flex: 1;
 }
 
-.btn-fl-primary:hover { filter: brightness(1.08); transform: translateY(-1px); color: #FFFFFF !important; }
-
-.btn-fl-secondary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 16px;
-  background: var(--fl-coral-soft);
-  color: var(--fl-coral) !important;
-  border: 1px solid var(--fl-coral-border);
-  border-radius: var(--r-md);
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  text-decoration: none;
-  transition: all var(--ease-fast);
-}
-
-.btn-fl-secondary:hover { border-color: var(--fl-coral); color: var(--fl-coral) !important; background: rgba(255,94,108,0.22); transform: translateY(-1px); }
-
-/* ── 11. VERIFICATION-SPECIFIC STYLES ───────────────────────────────────── */
-.fl-verify-step {
-  background: var(--bg-card, #1A1E27);
-  border: 1px solid var(--border-color, rgba(212,168,83,0.15));
+/* ── MARKETPLACE PROJECT BROWSING & SEARCH ───────────────────────────────── */
+.fl-search-filters-bar {
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-default);
   border-radius: var(--r-lg);
-  padding: 24px;
-  transition: all var(--ease-smooth);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
 }
 
-.fl-verify-step.completed { border-color: rgba(76,175,122,0.3); background: rgba(76,175,122,0.04); }
-.fl-verify-step.pending   { border-color: rgba(232,168,58,0.3); background: rgba(232,168,58,0.04); }
-.fl-verify-step.rejected  { border-color: rgba(224,92,92,0.3);  background: rgba(224,92,92,0.04); }
+.fl-search-input-wrap {
+  flex: 1;
+  min-width: 240px;
+  position: relative;
+}
+.fl-search-input-wrap svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  width: 18px;
+  height: 18px;
+}
+.fl-search-input-wrap input {
+  padding-left: 42px;
+}
 
-.fl-verify-badge-verified { color: #4CAF7A; background: rgba(76,175,122,0.14); border: 1px solid rgba(76,175,122,0.25); }
-.fl-verify-badge-pending  { color: #E8A83A; background: rgba(232,168,58,0.14); border: 1px solid rgba(232,168,58,0.25); }
-.fl-verify-badge-required { color: #E05C5C; background: rgba(224,92,92,0.14);  border: 1px solid rgba(224,92,92,0.25); }
-
-/* ── 12. PROJECT FIND CARDS ─────────────────────────────────────────────── */
+/* Project Card in Marketplace */
 .fl-project-card {
-  background: var(--bg-card, #1A1E27);
-  border: 1px solid var(--border-color, rgba(212,168,83,0.15));
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-lg);
+  padding: 26px;
+  margin-bottom: 18px;
+  transition: transform var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+.fl-project-card:hover {
+  transform: translateY(-2px);
+  border-color: #ff5e6c;
+  box-shadow: var(--shadow-lg);
+}
+
+.fl-project-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.fl-project-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  transition: color var(--t-fast);
+}
+.fl-project-title:hover {
+  color: #ff5e6c;
+}
+.fl-project-budget {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.fl-project-budget-type {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.fl-skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.fl-skill-chip {
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  background: var(--border-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+/* ── KYC VERIFICATION CENTER ─────────────────────────────────────────────── */
+.verification-status-banner {
+  padding: 24px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, rgba(255, 94, 108, 0.12) 0%, rgba(254, 179, 0, 0.12) 100%);
+  border: 1px solid rgba(255, 94, 108, 0.3);
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.verification-step-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.verification-step-card {
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-default);
   border-radius: var(--r-lg);
   padding: 22px;
-  transition: all var(--ease-smooth);
-  cursor: pointer;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  transition: transform var(--t-fast);
+}
+.verification-step-card:hover {
+  transform: translateY(-2px);
+}
+.verification-step-card.verified {
+  border-color: var(--success-border);
+  background: rgba(16, 185, 129, 0.05);
 }
 
-.fl-project-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); border-color: rgba(212,168,83,0.28); }
+.verification-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--border-subtle);
+  color: #ff5e6c;
+  flex-shrink: 0;
+}
+.verification-step-card.verified .verification-icon-box {
+  background: var(--success-bg);
+  color: var(--success);
+}
 
-.fl-project-card-title { font-size: 15px; font-weight: 700; color: var(--text-primary, #F0EDE8); margin-bottom: 8px; }
-.fl-project-card-desc  { font-size: 13px; color: var(--text-muted, #5C5650); line-height: 1.6; margin-bottom: 14px; }
+/* ── BID CALCULATOR WIDGET ───────────────────────────────────────────────── */
+.bid-calculator-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.bid-calc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border-subtle);
+  font-size: 0.9rem;
+}
+.bid-calc-row.total {
+  border-bottom: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-top: 12px;
+}
 
-/* ── 13. RESPONSIVE ─────────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .fl-sidebar {
-    transform: translateX(-100%); z-index: 1041;
-  }
+@media (max-width: 991px) {
+  .fl-sidebar { transform: translateX(-100%); }
   .fl-sidebar.open { transform: translateX(0); }
-  .fl-main-wrapper { margin-left: 0; }
-  .fl-content-body { padding: 16px; }
-  .fl-topbar { padding: 0 14px; }
-  .fl-kpi-grid { grid-template-columns: repeat(2,1fr); }
-}
-
-@media (max-width: 480px) {
-  .fl-kpi-grid { grid-template-columns: 1fr; }
-  .fl-topbar-left h1 { font-size: 15px; }
+  .fl-main { margin-left: 0; }
+  .fl-content-body { padding: 20px 16px; }
+  .verification-step-grid { grid-template-columns: 1fr; }
 }

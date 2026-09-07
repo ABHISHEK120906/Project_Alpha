@@ -1,124 +1,119 @@
 {% extends "marketplace/base_client.html" %}
+{% load static %}
 
-{% block title %}My Profile{% endblock %}
-{% block page_title %}My Profile{% endblock %}
-{% block page_subtitle %}<div class="page-subtitle">Your client account information</div>{% endblock %}
+{% block title %}Company Profile — Client Workspace{% endblock %}
+{% block page_title %}Client Profile{% endblock %}
+{% block page_subtitle %}<p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Your verified business credentials, company details, and project history.</p>{% endblock %}
 {% block nav_profile %}active{% endblock %}
 
-{% block topbar_actions %}
-  <a href="{% url 'marketplace:client_profile_edit' %}" class="btn btn-primary btn-sm">
-    <i data-lucide="edit-3" class="fh-icon-sm"></i> Edit Profile
-  </a>
-{% endblock %}
-
 {% block content %}
-<div style="display:grid;grid-template-columns:320px 1fr;gap:24px;">
+<div style="display:grid; grid-template-columns:320px 1fr; gap:24px;">
 
-  <!-- Profile Card -->
-  <div style="display:flex;flex-direction:column;gap:20px;">
-    <div class="card" style="text-align:center;">
+  <!-- Left: Profile Summary Card -->
+  <div style="display:flex; flex-direction:column; gap:20px;">
+    <div class="fh-card" style="text-align:center; padding:32px 20px;">
       <div style="margin-bottom:16px;">
         {% if client_profile.avatar %}
-          <img src="{{ client_profile.avatar.url }}" alt="Avatar"
-               style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);" />
+          <img src="{{ client_profile.avatar.url }}" alt="Avatar" style="width:96px; height:96px; border-radius:50%; object-fit:cover; border:3px solid #7d3cff; margin:0 auto;" />
         {% else %}
-          <div style="width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:800;margin:0 auto;border:3px solid var(--accent);">
-            {{ client_profile.full_name|first|upper }}
+          <div style="width:96px; height:96px; border-radius:50%; background:linear-gradient(135deg, #7d3cff, #f2d53c); color:#ffffff; display:flex; align-items:center; justify-content:center; font-size:2.4rem; font-weight:800; margin:0 auto; border:3px solid #7d3cff;">
+            {{ client_profile.full_name|slice:":1"|upper }}
           </div>
         {% endif %}
       </div>
 
-      <div style="font-size:1.2rem;font-weight:800;margin-bottom:4px;font-family:'Plus Jakarta Sans',sans-serif;">
-        {{ client_profile.full_name }}
-      </div>
+      <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:4px;">{{ client_profile.full_name }}</h3>
       {% if client_profile.company_name %}
-      <div style="font-size:0.875rem;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <i data-lucide="building" class="fh-icon-xs"></i> {{ client_profile.company_name }}
-      </div>
+        <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <i data-lucide="building" style="width:14px; height:14px;"></i> {{ client_profile.company_name }}
+        </div>
       {% endif %}
-      <span class="badge badge-in_progress" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;">
-        <i data-lucide="shield-check" class="fh-icon-xs"></i> Client Account
+
+      <span class="fh-badge fh-badge-primary" style="margin-bottom:18px;">
+        <i data-lucide="shield-check"></i>
+        <span>Verified Client Account</span>
       </span>
 
-      {% if client_profile.location %}
-      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <i data-lucide="map-pin" class="fh-icon-xs"></i> {{ client_profile.location }}
-      </div>
-      {% endif %}
-
-      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <i data-lucide="mail" class="fh-icon-xs"></i> {{ user.email }}
-      </div>
-
-      {% if client_profile.phone %}
-      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <i data-lucide="phone" class="fh-icon-xs"></i> {{ client_profile.phone }}
-      </div>
-      {% endif %}
-
-      <div style="font-size:0.75rem;color:var(--text-muted);">
-        Member since {{ client_profile.created_at|date:"d M Y" }}
-      </div>
-    </div>
-
-    <!-- Quick Stats -->
-    <div class="card">
-      <div class="card-title" style="margin-bottom:16px;">Project Stats</div>
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <div style="display:flex;justify-content:space-between;">
-          <span style="color:var(--text-muted);font-size:0.85rem;">Total Projects</span>
-          <span style="font-weight:700;">{{ client_profile.projects.count }}</span>
+      <div style="display:flex; flex-direction:column; gap:8px; font-size:0.84rem; color:var(--text-secondary); text-align:left; padding-top:16px; border-top:1px solid var(--border-subtle);">
+        {% if client_profile.location %}
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i data-lucide="map-pin" style="width:14px; height:14px; color:#7d3cff;"></i>
+            <span>{{ client_profile.location }}</span>
+          </div>
+        {% endif %}
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i data-lucide="mail" style="width:14px; height:14px; color:#7d3cff;"></i>
+          <span>{{ user.email }}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;">
-          <span style="color:var(--text-muted);font-size:0.85rem;">Open</span>
-          <span style="font-weight:700;color:var(--green);">{{ client_profile.projects.filter.count }}</span>
-        </div>
+        {% if client_profile.phone %}
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i data-lucide="phone" style="width:14px; height:14px; color:#7d3cff;"></i>
+            <span>{{ client_profile.phone }}</span>
+          </div>
+        {% endif %}
       </div>
-    </div>
-  </div>
 
-  <!-- Details -->
-  <div style="display:flex;flex-direction:column;gap:20px;">
-    {% if client_profile.bio %}
-    <div class="card">
-      <div class="card-title" style="margin-bottom:12px;">About</div>
-      <p style="color:var(--text-secondary);line-height:1.7;">{{ client_profile.bio }}</p>
-    </div>
-    {% endif %}
-
-    {% if client_profile.company_description %}
-    <div class="card">
-      <div class="card-title" style="margin-bottom:12px;">Company / Organisation</div>
-      <div style="font-size:1rem;font-weight:600;margin-bottom:8px;">{{ client_profile.company_name }}</div>
-      <p style="color:var(--text-secondary);line-height:1.7;">{{ client_profile.company_description }}</p>
-    </div>
-    {% endif %}
-
-    <!-- Security notice -->
-    <div class="card" style="border-color:rgba(244,63,94,0.15);">
-      <div class="card-title" style="margin-bottom:12px;color:var(--red);display:flex;align-items:center;gap:6px;">
-        <i data-lucide="shield-alert" class="fh-icon-sm"></i> Security
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;font-size:0.875rem;color:var(--text-secondary);">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <i data-lucide="check-circle-2" class="fh-icon-sm" style="color:var(--green);"></i>
-          Password is securely hashed — never visible to anyone
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <i data-lucide="check-circle-2" class="fh-icon-sm" style="color:var(--green);"></i>
-          Session protected with CSRF & secure cookies
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <i data-lucide="check-circle-2" class="fh-icon-sm" style="color:var(--green);"></i>
-          Your data is isolated — other clients cannot access your projects
-        </div>
-      </div>
-      <div style="margin-top:14px;">
-        <a href="{% url 'core:profile_change_password' %}" class="btn btn-secondary btn-sm">
-          <i data-lucide="key" class="fh-icon-sm"></i> Change Password
+      <div style="margin-top:20px;">
+        <a href="{% url 'marketplace:client_profile_edit' %}" class="btn-fh btn-fh-client btn-fh-sm" style="width:100%; justify-content:center;">
+          <i data-lucide="edit"></i>
+          <span>Edit Profile</span>
         </a>
       </div>
     </div>
   </div>
+
+  <!-- Right: Company Bio & Projects Stream -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+
+    <!-- About Card -->
+    <div class="fh-card">
+      <h3 class="fh-card-title" style="margin-bottom:14px;"><i data-lucide="info"></i> About the Company</h3>
+      {% if client_profile.bio %}
+        <p style="color:var(--text-secondary); line-height:1.75; font-size:0.92rem; white-space:pre-line;">{{ client_profile.bio }}</p>
+      {% else %}
+        <p style="color:var(--text-muted); font-size:0.88rem; font-style:italic;">No bio provided yet. Add a short bio to introduce your organization to talent.</p>
+      {% endif %}
+
+      {% if client_profile.company_description %}
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border-subtle);">
+          <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">Organization Overview</div>
+          <p style="color:var(--text-secondary); line-height:1.75; font-size:0.92rem;">{{ client_profile.company_description }}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Active Posted Projects List -->
+    <div class="fh-card">
+      <div class="fh-card-header">
+        <h3 class="fh-card-title"><i data-lucide="folder-kanban"></i> Project History</h3>
+        <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-client btn-fh-sm">
+          <i data-lucide="plus"></i>
+          <span>New Project</span>
+        </a>
+      </div>
+
+      {% if projects %}
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          {% for p in projects %}
+            <div style="background:var(--bg-surface-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-md); padding:16px 18px; display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <a href="{% url 'marketplace:project_detail' pk=p.pk %}" style="font-weight:700; color:var(--text-primary); text-decoration:none;">{{ p.title }}</a>
+                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
+                  Posted {{ p.created_at|date:"M d, Y" }} • ${{ p.budget|floatformat:0|default:"TBD" }}
+                </div>
+              </div>
+              <span class="fh-badge {% if p.status == 'open' %}fh-badge-primary{% elif p.status == 'completed' %}fh-badge-success{% else %}fh-badge-warning{% endif %}">
+                {{ p.get_status_display }}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="font-size:0.88rem; color:var(--text-muted); margin:0;">No projects have been posted yet.</p>
+      {% endif %}
+    </div>
+
+  </div>
+
 </div>
 {% endblock %}

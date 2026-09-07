@@ -1,139 +1,107 @@
 {% extends "marketplace/base_client.html" %}
 {% load static %}
 
-{% block title %}Applications for {{ project.title }} — Client Workspace{% endblock %}
-{% block page_title %}Candidate Applications{% endblock %}
-{% block page_subtitle %}<p>Review proposals, check verified qualifications, and select the freelancer for <strong>{{ project.title }}</strong></p>{% endblock %}
+{% block title %}Proposals for {{ project.title }} — Client Workspace{% endblock %}
+{% block page_title %}Candidate Proposals{% endblock %}
+{% block page_subtitle %}<p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Review candidate proposals, evaluate bid prices, and assign the best specialist for <strong>{{ project.title }}</strong>.</p>{% endblock %}
 {% block nav_projects %}active{% endblock %}
 
 {% block content %}
-
-<!-- ══ PROJECT CONTEXT BANNER ═══════════════════════════════ -->
-<div class="client-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+<!-- Context Banner -->
+<div class="fh-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
   <div>
-    <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 4px;">
-      {{ project.title }}
-    </div>
-    <div style="font-size: 13px; color: var(--client-text-muted); display: flex; gap: 14px; flex-wrap: wrap;">
-      <span><i data-lucide="wallet" style="color:var(--client-yellow); width:14px; height:14px;"></i> Budget: <strong>₹{{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
-      <span><i data-lucide="users" style="color:var(--client-purple); width:14px; height:14px;"></i> <strong>{{ applications.count }}</strong> application{{ applications.count|pluralize }}</span>
-      <span class="client-badge client-badge-{{ project.status }}">{{ project.get_status_display }}</span>
+    <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:4px;">{{ project.title }}</h3>
+    <div style="font-size:0.82rem; color:var(--text-muted); display:flex; gap:16px; flex-wrap:wrap;">
+      <span><i data-lucide="wallet" style="width:14px; height:14px; vertical-align:middle; color:#7d3cff;"></i> Budget: <strong>${{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
+      <span><i data-lucide="users" style="width:14px; height:14px; vertical-align:middle;"></i> <strong>{{ applications.count }}</strong> proposal{{ applications.count|pluralize }}</span>
+      <span class="fh-badge {% if project.status == 'open' %}fh-badge-primary{% elif project.status == 'in_progress' %}fh-badge-warning{% elif project.status == 'completed' %}fh-badge-success{% else %}fh-badge-neutral{% endif %}">
+        {{ project.get_status_display }}
+      </span>
     </div>
   </div>
 
-  <div style="display: flex; gap: 10px;">
-    <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn-client-secondary" style="padding: 8px 14px; font-size: 13px;">
+  <div style="display:flex; gap:10px;">
+    <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn-fh btn-fh-secondary btn-fh-sm">
       <i data-lucide="eye"></i>
-      <span>Project Details</span>
+      <span>Project Specs</span>
     </a>
-    <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-client-primary" style="padding: 8px 14px; font-size: 13px;">
+    <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-fh btn-fh-client btn-fh-sm">
       <i data-lucide="play"></i>
-      <span>Open Workspace</span>
+      <span>Workspace</span>
     </a>
   </div>
 </div>
 
-<!-- ══ FILTER PILLS ═════════════════════════════════════════ -->
-<div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
-  <a href="?status=" class="btn-client-{% if not status_filter %}primary{% else %}secondary{% endif %}" style="padding: 6px 14px; font-size: 12.5px;">
-    All Applications ({{ applications.count }})
-  </a>
-  {% for value, label in status_choices %}
-    <a href="?status={{ value }}" class="btn-client-{% if status_filter == value %}primary{% else %}secondary{% endif %}" style="padding: 6px 14px; font-size: 12.5px;">
-      {{ label }}
-    </a>
-  {% endfor %}
-</div>
-
-<!-- ══ APPLICATION CARDS ════════════════════════════════════ -->
+<!-- Candidate Proposals Grid -->
 {% if applications %}
-  <div style="display: flex; flex-direction: column; gap: 16px;">
+  <div style="display:flex; flex-direction:column; gap:18px;">
     {% for app in applications %}
-      <div class="client-card" style="margin-bottom: 0;">
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-          
+      <div class="fh-card" style="margin-bottom:0;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+
           <!-- Freelancer Profile & Proposal Excerpt -->
-          <div style="display: flex; gap: 16px; flex: 1; min-width: 280px;">
-            <div class="client-user-avatar" style="width: 48px; height: 48px; font-size: 18px; background: linear-gradient(135deg, var(--client-purple), #9333ea);">
+          <div style="display:flex; gap:16px; flex:1; min-width:280px;">
+            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--role-fl-primary), #feb300); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.15rem; flex-shrink:0;">
               {{ app.freelancer.username|slice:":1"|upper|default:"F" }}
             </div>
-            
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
-                <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800;">
-                  {{ app.freelancer.get_full_name|default:app.freelancer.username }}
-                </span>
-                
-                <!-- Verification Pill -->
-                {% if app.verification_summary.is_verified or app.freelancer_profile_obj.is_verified %}
-                  <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(34, 211, 160, 0.14); color: #22d3a0; padding: 2px 8px; border-radius: var(--r-sm); font-size: 11px; font-weight: 800;">
-                    <i data-lucide="shield-check" style="width:13px; height:13px;"></i> Verified Freelancer
-                  </span>
-                  <button type="button" class="btn-client-secondary" style="padding: 2px 8px; font-size: 11px; height: auto;">
-                    View Verification
-                  </button>
-                {% else %}
-                  <span style="display: inline-flex; align-items: center; gap: 4px; background: rgba(242, 213, 60, 0.14); color: var(--client-yellow); padding: 2px 8px; border-radius: var(--r-sm); font-size: 11px; font-weight: 800;">
-                    <i data-lucide="clock" style="width:13px; height:13px;"></i> Verification Incomplete
-                  </span>
-                {% endif %}
 
-                <span class="client-badge client-badge-{{ app.status }}">
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+                <h4 style="font-size:1.05rem; font-weight:700; margin:0;">
+                  {{ app.freelancer.get_full_name|default:app.freelancer.username }}
+                </h4>
+                <span class="fh-badge {% if app.status == 'accepted' %}fh-badge-success{% elif app.status == 'rejected' %}fh-badge-danger{% elif app.status == 'pending' %}fh-badge-warning{% else %}fh-badge-neutral{% endif %}">
                   {{ app.get_status_display }}
                 </span>
               </div>
 
-              <div style="font-size: 13px; color: var(--client-text-secondary); margin-bottom: 8px;">
-                {{ app.freelancer_profile_obj.professional_title|default:"Freelance Specialist" }}
-                &bull; Applied on {{ app.created_at|date:"d M Y" }}
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
+                Submitted on {{ app.created_at|date:"M d, Y" }}
               </div>
 
-              <!-- Proposal Excerpt -->
-              <div style="background: var(--client-bg-surface); border: 1px solid var(--client-border-subtle); border-radius: var(--r-md); padding: 14px 16px; font-size: 13.5px; line-height: 1.55; color: var(--client-text-primary); margin-bottom: 14px;">
-                {{ app.proposal|default:app.cover_letter|linebreaksbr }}
+              <div class="proposal-cover-text">
+                {{ app.proposal|linebreaksbr }}
               </div>
-
-              {% if app.proposed_price or app.estimated_duration or app.estimated_days %}
-                <div style="display: flex; gap: 16px; font-size: 13px; color: var(--client-text-muted);">
-                  {% if app.proposed_price %}
-                    <span><i data-lucide="wallet" style="color:var(--client-yellow); width:14px; height:14px;"></i> Proposed Bid: <strong style="color:var(--client-text-primary);">₹{{ app.proposed_price|floatformat:0 }}</strong></span>
-                  {% endif %}
-                  {% if app.estimated_duration %}
-                    <span><i data-lucide="clock" style="width:14px; height:14px;"></i> Delivery Time: <strong style="color:var(--client-text-primary);">{{ app.estimated_duration }}</strong></span>
-                  {% elif app.estimated_days %}
-                    <span><i data-lucide="clock" style="width:14px; height:14px;"></i> Delivery Time: <strong style="color:var(--client-text-primary);">{{ app.estimated_days }} days</strong></span>
-                  {% endif %}
-                </div>
-              {% endif %}
             </div>
           </div>
 
-          <!-- Actions -->
-          <div style="display: flex; flex-direction: column; gap: 8px; min-width: 140px;">
-            {% if app.status == 'pending' and project.status == 'open' %}
-              <form method="post" action="{% url 'marketplace:application_accept' app_pk=app.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-client-primary" style="width: 100%; justify-content: center; padding: 8px 14px; font-size: 12.5px;">
-                  <i data-lucide="check-circle-2"></i>
-                  <span>Accept Proposal</span>
-                </button>
-              </form>
+          <!-- Proposal Terms & Action Buttons -->
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:14px; min-width:200px;">
+            <div style="text-align:right;">
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Proposed Price</div>
+              <div style="font-family:var(--font-heading); font-size:1.35rem; font-weight:800; color:var(--text-primary);">
+                ${{ app.proposed_price|floatformat:0|default:project.budget }}
+              </div>
+              {% if app.estimated_duration %}
+                <div style="font-size:0.75rem; color:var(--text-muted);">Est. Duration: <strong>{{ app.estimated_duration }}</strong></div>
+              {% endif %}
+            </div>
 
-              <form method="post" action="{% url 'marketplace:application_reject' app_pk=app.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-client-secondary" style="width: 100%; justify-content: center; padding: 8px 14px; font-size: 12.5px; color: var(--client-red); border-color: rgba(200, 14, 19, 0.3);">
-                  <i data-lucide="x-circle"></i>
-                  <span>Decline</span>
-                </button>
-              </form>
-            {% elif app.status == 'accepted' %}
-              <div style="text-align: center; padding: 6px 12px; background: rgba(34, 211, 160, 0.14); color: #22d3a0; font-size: 12px; font-weight: 800; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; gap: 6px;">
-                <i data-lucide="check-circle-2" style="width:13px;height:13px;"></i> Accepted &amp; Assigned
-              </div>
-            {% elif app.status == 'rejected' %}
-              <div style="text-align: center; padding: 6px 12px; background: rgba(200, 14, 19, 0.14); color: var(--client-red); font-size: 12px; font-weight: 800; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; gap: 6px;">
-                <i data-lucide="x-circle" style="width:13px;height:13px;"></i> Declined
-              </div>
+            {% if project.status == 'open' or project.status == 'applications_received' %}
+              {% if app.status == 'pending' %}
+                <div style="display:flex; gap:8px;">
+                  <form method="post" action="{% url 'marketplace:application_accept' app_pk=app.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-fh btn-fh-primary btn-fh-sm">
+                      <i data-lucide="check"></i>
+                      <span>Hire &amp; Assign</span>
+                    </button>
+                  </form>
+
+                  <form method="post" action="{% url 'marketplace:application_reject' app_pk=app.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-fh btn-fh-danger btn-fh-sm">
+                      <i data-lucide="x"></i>
+                      <span>Decline</span>
+                    </button>
+                  </form>
+                </div>
+              {% endif %}
+            {% elif project.assigned_freelancer == app.freelancer %}
+              <span class="fh-badge fh-badge-success" style="font-size:0.8rem; padding:6px 14px;">
+                <i data-lucide="check-circle-2"></i>
+                <span>Hired Specialist</span>
+              </span>
             {% endif %}
           </div>
 
@@ -142,15 +110,13 @@
     {% endfor %}
   </div>
 {% else %}
-  <div class="client-card" style="text-align: center; padding: 60px 24px;">
-    <div style="width: 64px; height: 64px; border-radius: var(--r-lg); background: rgba(125, 60, 255, 0.12); color: var(--client-purple); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
-      <i data-lucide="clipboard-check" style="width: 32px; height: 32px;"></i>
+  <div class="fh-card">
+    <div class="fh-empty-state">
+      <div class="fh-empty-icon"><i data-lucide="clipboard-list"></i></div>
+      <div class="fh-empty-title">No proposals received yet</div>
+      <div class="fh-empty-desc">Your project is active on the marketplace. Verified specialists will submit proposals shortly.</div>
+      <a href="{% url 'marketplace:project_list' %}" class="btn-fh btn-fh-secondary">Back to My Projects</a>
     </div>
-    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">No applications received yet</h3>
-    <p style="font-size: 14px; color: var(--client-text-muted); max-width: 420px; margin: 0 auto 20px auto;">
-      Freelancers are browsing active marketplace requirements. Proposals will appear here as candidates submit applications.
-    </p>
   </div>
 {% endif %}
-
 {% endblock %}

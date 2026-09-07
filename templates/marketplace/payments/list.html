@@ -1,115 +1,131 @@
 {% extends "marketplace/base_client.html" %}
+{% load static %}
 
-{% block title %}Payments — FreelanceHub{% endblock %}
-{% block page_title %}Payments{% endblock %}
-{% block page_subtitle %}<div class="page-subtitle">Track project budgets, payments made, and pending balances</div>{% endblock %}
+{% block title %}Payments &amp; Escrow — Client Workspace{% endblock %}
+{% block page_title %}Payments &amp; Escrow Records{% endblock %}
+{% block page_subtitle %}<p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Track project budgets, released milestone payments, and pending escrow balances.</p>{% endblock %}
 {% block nav_payments %}active{% endblock %}
 
 {% block content %}
-<!-- Payment Metric Cards -->
-<div class="stat-grid">
-  <div class="stat-card" style="--stat-color:var(--accent); --stat-bg:var(--accent-soft);">
-    <div class="stat-icon"><i class="bi bi-wallet2"></i></div>
-    <div class="stat-value">₹{{ total_budget|floatformat:0 }}</div>
-    <div class="stat-label">Total Contracted Budget</div>
+<!-- KPI Stat Grid -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:28px;">
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Contracted Budget</span>
+      <div class="fh-stat-icon" style="background:rgba(125,60,255,0.12); color:#7d3cff;">
+        <i data-lucide="wallet"></i>
+      </div>
+    </div>
+    <div class="fh-stat-value">${{ total_budget|floatformat:0 }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Total project commitments</div>
   </div>
 
-  <div class="stat-card" style="--stat-color:var(--green); --stat-bg:var(--green-soft);">
-    <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
-    <div class="stat-value">₹{{ total_paid|floatformat:0 }}</div>
-    <div class="stat-label">Total Amount Paid</div>
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Disbursed Funds</span>
+      <div class="fh-stat-icon" style="background:rgba(16,185,129,0.12); color:var(--success);">
+        <i data-lucide="check-circle-2"></i>
+      </div>
+    </div>
+    <div class="fh-stat-value">${{ total_paid|floatformat:0 }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Released to specialists</div>
   </div>
 
-  <div class="stat-card" style="--stat-color:var(--yellow); --stat-bg:var(--yellow-soft);">
-    <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
-    <div class="stat-value">₹{{ total_pending|floatformat:0 }}</div>
-    <div class="stat-label">Total Pending Balance</div>
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Pending Escrow</span>
+      <div class="fh-stat-icon" style="background:rgba(242,213,60,0.12); color:#d4b300;">
+        <i data-lucide="hourglass"></i>
+      </div>
+    </div>
+    <div class="fh-stat-value">${{ total_pending|floatformat:0 }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Secured milestone escrow</div>
   </div>
 
-  <div class="stat-card" style="--stat-color:var(--blue); --stat-bg:var(--blue-soft);">
-    <div class="stat-icon"><i class="bi bi-pie-chart"></i></div>
-    <div class="stat-value">{{ payment_records.count }}</div>
-    <div class="stat-label">Project Invoices / Records</div>
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Payment Ledgers</span>
+      <div class="fh-stat-icon" style="background:var(--border-subtle); color:var(--text-primary);">
+        <i data-lucide="file-text"></i>
+      </div>
+    </div>
+    <div class="fh-stat-value">{{ payment_records.count }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Active payment records</div>
   </div>
 </div>
 
 <!-- Payments Breakdown Table -->
-<div class="card">
-  <div class="card-header">
+<div class="fh-card">
+  <div class="fh-card-header">
     <div>
-      <div class="card-title">Project Payment Records</div>
-      <div class="card-subtitle">Detailed payment breakdown per marketplace project</div>
+      <h3 class="fh-card-title"><i data-lucide="credit-card"></i> Project Escrow Ledgers</h3>
+      <div class="fh-card-subtitle">Detailed financial transactions per marketplace project</div>
     </div>
   </div>
 
   {% if payment_records %}
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Project</th>
-          <th>Budget</th>
-          <th>Amount Paid</th>
-          <th>Pending</th>
-          <th>Status</th>
-          <th>Assigned Freelancer</th>
-          <th>Created</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for rec in payment_records %}
-        <tr>
-          <td>
-            <a href="{% url 'marketplace:project_detail' pk=rec.project.pk %}" style="font-weight:600; color:var(--text-primary);">
-              {{ rec.project.title }}
-            </a>
-          </td>
-          <td style="font-weight:600;">₹{{ rec.total_budget|floatformat:0 }}</td>
-          <td style="color:var(--green); font-weight:600;">₹{{ rec.amount_paid|floatformat:0 }}</td>
-          <td style="color:var(--yellow); font-weight:600;">₹{{ rec.amount_pending|floatformat:0 }}</td>
-          <td>
-            <span class="badge badge-{{ rec.status }}">{{ rec.get_status_display }}</span>
-          </td>
-          <td>
-            {% if rec.project.assigned_freelancer %}
-              <span style="font-size:0.85rem; color:var(--text-secondary);">
-                <i class="bi bi-person"></i> {{ rec.project.assigned_freelancer.get_full_name|default:rec.project.assigned_freelancer.username }}
-              </span>
-            {% else %}
-              <span style="font-size:0.8rem; color:var(--text-muted);">Unassigned</span>
-            {% endif %}
-          </td>
-          <td style="font-size:0.8rem; color:var(--text-muted);">
-            {{ rec.created_at|date:"d M Y" }}
-          </td>
-          <td>
-            {% if rec.project.assigned_freelancer %}
-            <a href="{% url 'marketplace:project_workspace' pk=rec.project.pk %}" class="btn btn-secondary btn-sm">
-              <i class="bi bi-briefcase"></i> Workspace
-            </a>
-            {% else %}
-            <a href="{% url 'marketplace:project_detail' pk=rec.project.pk %}" class="btn btn-secondary btn-sm">
-              <i class="bi bi-eye"></i> View
-            </a>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <div class="empty-state py-5 text-center">
-    <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;border-radius:14px;background:var(--hub-gold-soft);border:1px solid var(--hub-gold-border);color:var(--hub-gold);display:inline-flex;align-items:center;justify-content:center;">
-      <i data-lucide="credit-card" style="width:26px;height:26px;"></i>
+    <div class="fh-table-wrapper">
+      <table class="fh-table">
+        <thead>
+          <tr>
+            <th>Project Title</th>
+            <th>Total Budget</th>
+            <th>Released</th>
+            <th>In Escrow</th>
+            <th>Status</th>
+            <th>Assigned Contractor</th>
+            <th>Last Updated</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in payment_records %}
+            <tr>
+              <td class="primary-text">
+                <a href="{% url 'marketplace:project_detail' pk=record.project.pk %}" style="color:var(--text-primary);">
+                  {{ record.project.title }}
+                </a>
+              </td>
+              <td>${{ record.total_budget|floatformat:0 }}</td>
+              <td style="color:var(--success); font-weight:700;">${{ record.amount_paid|floatformat:0 }}</td>
+              <td style="color:#d4b300; font-weight:700;">
+                {% if record.total_budget > record.amount_paid %}
+                  ${{ record.total_budget|floatformat:0 }}
+                {% else %}
+                  $0
+                {% endif %}
+              </td>
+              <td>
+                <span class="fh-badge {% if record.status == 'paid' %}fh-badge-success{% elif record.status == 'partially_paid' %}fh-badge-warning{% else %}fh-badge-neutral{% endif %}">
+                  {{ record.get_status_display }}
+                </span>
+              </td>
+              <td>
+                {% if record.project.assigned_freelancer %}
+                  <span style="font-weight:600; color:var(--text-primary);">{{ record.project.assigned_freelancer.get_full_name|default:record.project.assigned_freelancer.username }}</span>
+                {% else %}
+                  <span style="color:var(--text-muted);">Unassigned</span>
+                {% endif %}
+              </td>
+              <td>{{ record.updated_at|date:"M d, Y" }}</td>
+              <td>
+                <a href="{% url 'marketplace:project_workspace' pk=record.project.pk %}" class="btn-fh btn-fh-secondary btn-fh-sm">
+                  <i data-lucide="play"></i>
+                  <span>Workspace</span>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <div class="empty-title" style="font-weight:700;font-size:16px;color:var(--text-primary);margin-bottom:6px;">No payment records yet</div>
-    <div class="empty-desc" style="font-size:13px;color:var(--text-muted);max-width:400px;margin:0 auto 16px;">Payment records are automatically initialized whenever you post a new project with a budget.</div>
-    <a href="{% url 'marketplace:project_post' %}" class="btn-hub-primary">
-      <i data-lucide="plus"></i> <span>Post a Project</span>
-    </a>
-  </div>
+  {% else %}
+    <div class="fh-empty-state">
+      <div class="fh-empty-icon"><i data-lucide="wallet"></i></div>
+      <div class="fh-empty-title">No payment records yet</div>
+      <div class="fh-empty-desc">Payment records are created automatically when you assign contractors to projects.</div>
+      <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-client">Post a Project</a>
+    </div>
   {% endif %}
 </div>
 {% endblock %}

@@ -21,43 +21,45 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
-  <!-- Fonts -->
+  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
 
-  <!-- FreelanceHub Unified Design System -->
+  <!-- Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" href="{% static 'css/client_theme.css' %}">
 
   {% block extra_head %}{% endblock %}
 </head>
 <body class="client-workspace">
+
 <!-- Full-Viewport Fixed Background Canvas & Ambient Overlay -->
 <div class="fh-fixed-bg-canvas" aria-hidden="true"></div>
 <div class="fh-fixed-bg-overlay" aria-hidden="true"></div>
+
 <div class="client-app-layout">
 
   <!-- ══ CLIENT SIDEBAR ═══════════════════════════════════════ -->
   <aside class="client-sidebar" id="clientSidebar">
 
     <!-- Brand Header -->
-    <div class="client-sidebar-header" style="padding: 16px 18px; border-bottom: 1px solid var(--sidebar-border); margin-bottom: 8px;">
+    <div class="client-sidebar-header" style="padding: 20px 18px; border-bottom: 1px solid var(--sidebar-border);">
       {% url 'marketplace:client_dashboard' as client_dash_url %}
       {% include 'components/brand_logo.html' with variant='sidebar' href=client_dash_url role='Client' %}
     </div>
 
-    <!-- User Profile -->
+    <!-- User Profile Chip -->
     <div class="client-sidebar-user">
       <div class="client-user-avatar">
         {{ client_profile.display_name|slice:":1"|upper|default:"C" }}
       </div>
-      <div class="client-user-details" style="min-width:0;">
-        <div class="client-user-name">{{ client_profile.display_name|default:"Client User" }}</div>
-        <div class="client-user-company">{{ client_profile.company_name|default:"Workspace Active" }}</div>
+      <div style="min-width:0; flex:1;">
+        <div class="client-user-name" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">{{ client_profile.display_name|default:"Client User" }}</div>
+        <div class="client-user-company">{{ client_profile.company_name|default:"Client Workspace" }}</div>
       </div>
     </div>
 
@@ -84,15 +86,15 @@
 
       <a href="{% url 'marketplace:project_list' %}" class="client-nav-item {% block nav_applications %}{% endblock %}">
         <i data-lucide="clipboard-check"></i>
-        <span>Applications</span>
+        <span>Proposals</span>
       </a>
 
       <a href="{% url 'core:home' %}#find-freelancers" class="client-nav-item">
         <i data-lucide="users"></i>
-        <span>Freelancers</span>
+        <span>Find Talent</span>
       </a>
 
-      <p class="client-nav-group-title">COMMUNICATION & BILLING</p>
+      <p class="client-nav-group-title">COMMUNICATION &amp; FINANCE</p>
 
       <a href="{% url 'core:chat_home' %}" class="client-nav-item {% block nav_chat %}{% endblock %}">
         <i data-lucide="message-square"></i>
@@ -101,33 +103,33 @@
 
       <a href="{% url 'marketplace:client_payments' %}" class="client-nav-item {% block nav_payments %}{% endblock %}">
         <i data-lucide="credit-card"></i>
-        <span>Payments</span>
+        <span>Payments &amp; Escrow</span>
       </a>
 
-      <a href="{% url 'core:notifications_list' %}" class="client-nav-item {% block nav_notifications %}{% endblock %}">
-        <i data-lucide="bell"></i>
-        <span>Notifications</span>
+      <a href="{% url 'marketplace:client_support_list' %}" class="client-nav-item {% block nav_support %}{% endblock %}">
+        <i data-lucide="life-buoy"></i>
+        <span>Support &amp; Reports</span>
       </a>
 
-      <p class="client-nav-group-title">ACCOUNT</p>
+      <p class="client-nav-group-title">SETTINGS</p>
 
       <a href="{% url 'marketplace:client_profile_view' %}" class="client-nav-item {% block nav_profile %}{% endblock %}">
-        <i data-lucide="user-circle"></i>
-        <span>Profile</span>
+        <i data-lucide="user"></i>
+        <span>Company Profile</span>
       </a>
 
-      <a href="{% url 'core:settings' %}" class="client-nav-item {% block nav_settings %}{% endblock %}">
+      <a href="{% url 'marketplace:client_profile_edit' %}" class="client-nav-item {% block nav_settings %}{% endblock %}">
         <i data-lucide="settings"></i>
         <span>Settings</span>
       </a>
 
     </nav>
 
-    <!-- Sidebar Footer -->
-    <div class="client-sidebar-footer">
-      <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
+    <!-- Sidebar Bottom / Sign Out -->
+    <div style="padding: 14px 16px; border-top: 1px solid var(--sidebar-border);">
+      <form method="post" action="{% url 'core:logout' %}">
         {% csrf_token %}
-        <button type="submit" class="client-nav-item" style="width:100%;background:none;border:none;cursor:pointer;color:var(--sidebar-text);">
+        <button type="submit" class="client-nav-item" style="width:100%; background:none; border:none; cursor:pointer; color:var(--text-muted);">
           <i data-lucide="log-out"></i>
           <span>Sign Out</span>
         </button>
@@ -137,54 +139,50 @@
   </aside>
 
   <!-- ══ MAIN WRAPPER ══════════════════════════════════════════ -->
-  <div class="client-main-wrapper">
+  <div class="client-main">
 
     <!-- Topbar -->
     <header class="client-topbar">
-      <div style="display:flex;align-items:center;gap:14px;">
-        <button class="hub-mobile-toggle" id="clientSidebarToggle" aria-label="Toggle sidebar" style="display:none;">
+      <div class="client-topbar-left">
+        <button class="hub-mobile-menu-btn" id="clientSidebarToggle" aria-label="Toggle sidebar">
           <i data-lucide="menu"></i>
         </button>
-        <div class="client-topbar-left">
-          <h1>{% block page_title %}Client Workspace{% endblock %}</h1>
-          {% block page_subtitle %}<p>Manage your projects and freelancer collaborations.</p>{% endblock %}
+        <div>
+          <h1 class="client-topbar-title">{% block page_title %}Client Workspace{% endblock %}</h1>
+          {% block page_subtitle %}<p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Manage your projects, proposals, and deliverables.</p>{% endblock %}
         </div>
       </div>
 
-      <div class="client-topbar-actions">
-        <!-- Post Project CTA -->
-        <a href="{% url 'marketplace:project_post' %}" class="btn-client-primary" style="padding:8px 16px;font-size:13px;">
+      <div class="client-topbar-right">
+        <!-- Post Project Button -->
+        <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-client btn-fh-sm">
           <i data-lucide="plus"></i>
           <span>Post Project</span>
         </a>
 
         <!-- Theme Toggle -->
-        <button type="button" class="hub-theme-toggle" id="clientThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+        <button type="button" class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle theme">
           <span class="icon-sun"><i data-lucide="sun"></i></span>
           <span class="icon-moon"><i data-lucide="moon"></i></span>
-          <span class="theme-toggle-thumb"></span>
         </button>
 
-        <!-- Avatar -->
+        <!-- User Avatar Link -->
         <a href="{% url 'marketplace:client_profile_view' %}" style="text-decoration:none;">
-          <div class="client-user-avatar" style="width:36px;height:36px;font-size:13px;flex-shrink:0;">
+          <div class="client-user-avatar" style="width:38px; height:38px; font-size:0.95rem;">
             {{ client_profile.display_name|slice:":1"|upper|default:"C" }}
           </div>
         </a>
       </div>
     </header>
 
-    <!-- Messages -->
-    <div id="clientMsgContainer"></div>
-
     <!-- Content Body -->
     <main class="client-content-body">
       {% if messages %}
-        <div style="margin-bottom:18px;display:flex;flex-direction:column;gap:8px;">
+        <div style="margin-bottom:20px;">
           {% for message in messages %}
-            <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
-              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}" style="width:17px;height:17px;flex-shrink:0;"></i>
-              <span>{{ message }}</span>
+            <div class="fh-alert {% if message.tags == 'success' %}fh-alert-success{% elif message.tags == 'error' or message.tags == 'danger' %}fh-alert-danger{% elif message.tags == 'warning' %}fh-alert-warning{% else %}fh-alert-info{% endif %}">
+              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}"></i>
+              <div>{{ message }}</div>
             </div>
           {% endfor %}
         </div>
@@ -196,48 +194,7 @@
   </div>
 </div>
 
-<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
-<script>
-  // ── Icon Init ──
-  function refreshIcons() {
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-  }
-  document.addEventListener('DOMContentLoaded', refreshIcons);
-  refreshIcons();
-
-  // ── Unified Theme ──
-  const THEME_KEY = 'freelancehub_theme';
-
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
-    localStorage.setItem('theme', theme);
-    refreshIcons();
-  }
-
-  applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
-
-  const themeBtn = document.getElementById('clientThemeToggle');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-    });
-  }
-
-  // ── Mobile Sidebar ──
-  const sidebarToggle = document.getElementById('clientSidebarToggle');
-  const sidebar = document.getElementById('clientSidebar');
-  if (sidebarToggle && sidebar) {
-    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
-    // Show toggle on mobile
-    if (window.innerWidth <= 768) sidebarToggle.style.display = 'flex';
-  }
-
-  window.addEventListener('resize', () => {
-    if (sidebarToggle) sidebarToggle.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
-  });
-</script>
-
+<script src="{% static 'js/main.js' %}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

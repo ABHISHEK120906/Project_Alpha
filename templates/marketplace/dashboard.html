@@ -1,114 +1,113 @@
 {% extends "marketplace/base_client.html" %}
 {% load static %}
 
-{% block title %}Dashboard — Client Workspace{% endblock %}
+{% block title %}Client Dashboard — FreelanceHub{% endblock %}
 {% block meta_description %}Manage your projects, review incoming applications, and track freelancer collaborations.{% endblock %}
 {% block page_title %}Client Dashboard{% endblock %}
-{% block page_subtitle %}<p>Manage your projects and freelancer collaborations.</p>{% endblock %}
+{% block page_subtitle %}<p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Real-time overview of active projects, proposals, and deliverables.</p>{% endblock %}
 {% block nav_dashboard %}active{% endblock %}
 
 {% block content %}
+<!-- ══ ROW 1: STAT KPI CARDS ══════════════════════════════════ -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:28px;">
 
-<!-- ══ ROW 1: STAT CARDS (KPIs) ══════════════════════════════ -->
-<div class="client-kpi-grid">
-
-  <!-- 1. Active Projects -->
-  <div class="client-kpi-card">
-    <div class="client-kpi-icon purple">
-      <i data-lucide="folder-kanban"></i>
+  <!-- Active Projects -->
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Active Projects</span>
+      <div class="fh-stat-icon" style="background:rgba(125,60,255,0.12); color:#7d3cff;">
+        <i data-lucide="folder-kanban"></i>
+      </div>
     </div>
-    <div>
-      <div class="client-kpi-val">{{ active_projects|default:"0" }}</div>
-      <div class="client-kpi-label">Active Projects</div>
-      <div class="client-kpi-sub">Currently in delivery</div>
-    </div>
+    <div class="fh-stat-value">{{ active_projects|default:"0" }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Currently in active delivery</div>
   </div>
 
-  <!-- 2. Pending Applications -->
-  <div class="client-kpi-card">
-    <div class="client-kpi-icon yellow">
-      <i data-lucide="clipboard-check"></i>
+  <!-- Pending Applications -->
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Pending Proposals</span>
+      <div class="fh-stat-icon" style="background:rgba(242,213,60,0.12); color:#d4b300;">
+        <i data-lucide="clipboard-check"></i>
+      </div>
     </div>
-    <div>
-      <div class="client-kpi-val">{{ pending_applications|default:"0" }}</div>
-      <div class="client-kpi-label">Pending Applications</div>
-      <div class="client-kpi-sub">Awaiting your review</div>
-    </div>
+    <div class="fh-stat-value">{{ pending_applications|default:"0" }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Awaiting your candidate review</div>
   </div>
 
-  <!-- 3. Completed Projects -->
-  <div class="client-kpi-card">
-    <div class="client-kpi-icon green">
-      <i data-lucide="check-circle-2"></i>
+  <!-- Completed Projects -->
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Completed</span>
+      <div class="fh-stat-icon" style="background:rgba(16,185,129,0.12); color:var(--success);">
+        <i data-lucide="check-circle-2"></i>
+      </div>
     </div>
-    <div>
-      <div class="client-kpi-val">{{ completed_projects|default:"0" }}</div>
-      <div class="client-kpi-label">Completed Projects</div>
-      <div class="client-kpi-sub">Successfully closed</div>
-    </div>
+    <div class="fh-stat-value">{{ completed_projects|default:"0" }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Successfully delivered milestones</div>
   </div>
 
-  <!-- 4. Total Spending -->
-  <div class="client-kpi-card">
-    <div class="client-kpi-icon red">
-      <i data-lucide="credit-card"></i>
+  <!-- Total Allocated Budget -->
+  <div class="fh-card fh-stat-card">
+    <div class="fh-stat-header">
+      <span class="fh-stat-label">Total Spend</span>
+      <div class="fh-stat-icon" style="background:rgba(200,14,19,0.1); color:#c80e13;">
+        <i data-lucide="credit-card"></i>
+      </div>
     </div>
-    <div>
-      <div class="client-kpi-val">₹{{ total_budget|floatformat:0|default:"0" }}</div>
-      <div class="client-kpi-label">Total Spending</div>
-      <div class="client-kpi-sub">Allocated milestone budget</div>
-    </div>
+    <div class="fh-stat-value">${{ total_budget|floatformat:0|default:"0" }}</div>
+    <div style="font-size:0.78rem; color:var(--text-muted);">Allocated contract budget</div>
   </div>
 
 </div>
 
-<!-- ══ ROW 2: MAIN DASHBOARD SECTIONS ════════════════════════ -->
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+<!-- ══ ROW 2: MAIN DASHBOARD GRID ══════════════════════════════ -->
+<div style="display:grid; grid-template-columns:2fr 1fr; gap:24px;">
 
-  <!-- Left Column: Active Projects & Applications -->
-  <div style="display: flex; flex-direction: column; gap: 24px;">
-    
-    <!-- Active Projects List -->
-    <div class="client-card">
-      <div class="client-card-header">
+  <!-- Left: Active Projects & Applications -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+
+    <!-- Active Projects Panel -->
+    <div class="fh-card">
+      <div class="fh-card-header">
         <div>
-          <h2 class="client-card-title">Active Projects</h2>
-          <div class="client-card-desc">Overview of your posted requirements and active workspaces</div>
+          <h3 class="fh-card-title"><i data-lucide="folder-kanban"></i> Active Projects</h3>
+          <div class="fh-card-subtitle">Overview of your posted requirements and active workspaces</div>
         </div>
-        <a href="{% url 'marketplace:project_list' %}" class="btn-client-secondary" style="padding: 6px 14px; font-size: 12px;">
+        <a href="{% url 'marketplace:project_list' %}" class="btn-fh btn-fh-secondary btn-fh-sm">
           <span>View All</span>
           <i data-lucide="arrow-right"></i>
         </a>
       </div>
 
       {% if recent_projects %}
-        <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
           {% for project in recent_projects %}
-            <div style="background: var(--client-bg-surface); border: 1px solid var(--client-border); border-radius: var(--r-md); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; transition: transform var(--ease-fast), border-color var(--ease-fast);">
-              <div style="flex: 1; min-width: 260px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                  <a href="{% url 'marketplace:project_detail' pk=project.pk %}" style="font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; font-weight:700; color:var(--client-text-primary); text-decoration:none;">
+            <div style="background:var(--bg-surface-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-md); padding:18px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+              <div style="flex:1; min-width:240px;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                  <a href="{% url 'marketplace:project_detail' pk=project.pk %}" style="font-family:var(--font-heading); font-size:1.02rem; font-weight:700; color:var(--text-primary);">
                     {{ project.title }}
                   </a>
-                  <span class="client-badge client-badge-{{ project.status }}">
+                  <span class="fh-badge {% if project.status == 'open' %}fh-badge-primary{% elif project.status == 'in_progress' %}fh-badge-warning{% elif project.status == 'completed' %}fh-badge-success{% else %}fh-badge-neutral{% endif %}">
                     {{ project.get_status_display }}
                   </span>
                 </div>
-                <div style="display: flex; gap: 16px; font-size: 12px; color: var(--client-text-muted); flex-wrap: wrap;">
-                  <span><i data-lucide="wallet" style="color:var(--client-yellow); width:14px; height:14px;"></i> Budget: <strong>₹{{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
-                  <span><i data-lucide="users" style="color:var(--client-purple); width:14px; height:14px;"></i> <strong>{{ project.app_count|default:"0" }}</strong> application{{ project.app_count|pluralize }}</span>
+                <div style="display:flex; gap:16px; font-size:0.8rem; color:var(--text-muted); flex-wrap:wrap;">
+                  <span><i data-lucide="wallet" style="width:14px; height:14px; vertical-align:middle;"></i> Budget: <strong>${{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
+                  <span><i data-lucide="users" style="width:14px; height:14px; vertical-align:middle;"></i> <strong>{{ project.app_count|default:"0" }}</strong> proposal{{ project.app_count|pluralize }}</span>
                   {% if project.deadline %}
-                    <span><i data-lucide="calendar" style="width:14px; height:14px;"></i> Due: {{ project.deadline|date:"d M Y" }}</span>
+                    <span><i data-lucide="calendar" style="width:14px; height:14px; vertical-align:middle;"></i> Due: {{ project.deadline|date:"M d, Y" }}</span>
                   {% endif %}
                 </div>
               </div>
 
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn-client-secondary" style="padding: 7px 13px; font-size: 12.5px;">
+              <div style="display:flex; gap:8px; align-items:center;">
+                <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn-fh btn-fh-secondary btn-fh-sm">
                   <i data-lucide="clipboard-check"></i>
-                  <span>Applications ({{ project.app_count|default:"0" }})</span>
+                  <span>Proposals ({{ project.app_count|default:"0" }})</span>
                 </a>
-                <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-client-primary" style="padding: 7px 13px; font-size: 12.5px;">
+                <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-fh btn-fh-client btn-fh-sm">
                   <i data-lucide="play"></i>
                   <span>Workspace</span>
                 </a>
@@ -117,16 +116,11 @@
           {% endfor %}
         </div>
       {% else %}
-        <!-- Empty State with FolderOpen icon and CTA -->
-        <div style="text-align: center; padding: 48px 20px; background: var(--client-bg-surface); border: 1px dashed var(--client-border); border-radius: var(--r-md);">
-          <div style="width: 56px; height: 56px; border-radius: var(--r-lg); background: rgba(125, 60, 255, 0.12); color: var(--client-purple); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 26px;">
-            <i data-lucide="folder-open"></i>
-          </div>
-          <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">No projects created yet</h4>
-          <p style="font-size: 13.5px; color: var(--client-text-muted); max-width: 380px; margin: 0 auto 20px auto;">
-            Post your first requirement to connect with verified freelancers and receive proposals.
-          </p>
-          <a href="{% url 'marketplace:project_post' %}" class="btn-client-primary">
+        <div class="fh-empty-state" style="padding:36px 16px;">
+          <div class="fh-empty-icon"><i data-lucide="folder-open"></i></div>
+          <div class="fh-empty-title">No projects posted yet</div>
+          <div class="fh-empty-desc">Create your first project requirement to connect with verified specialists.</div>
+          <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-client">
             <i data-lucide="plus-circle"></i>
             <span>Post a Project</span>
           </a>
@@ -134,108 +128,100 @@
       {% endif %}
     </div>
 
-    <!-- Recent Applications -->
-    <div class="client-card">
-      <div class="client-card-header">
+    <!-- Recent Candidate Proposals -->
+    <div class="fh-card">
+      <div class="fh-card-header">
         <div>
-          <h2 class="client-card-title">Recent Candidate Applications</h2>
-          <div class="client-card-desc">Review incoming proposals from verified talent</div>
+          <h3 class="fh-card-title"><i data-lucide="clipboard-list"></i> Recent Proposals Received</h3>
+          <div class="fh-card-subtitle">Candidate bids awaiting your review and assignment</div>
         </div>
       </div>
 
       {% if recent_applications %}
-        <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
           {% for app in recent_applications %}
-            <div style="background: var(--client-bg-surface); border: 1px solid var(--client-border); border-radius: var(--r-md); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div class="client-user-avatar" style="width: 36px; height: 36px; font-size: 14px; background: linear-gradient(135deg, var(--client-purple), var(--client-yellow));">
-                  {{ app.freelancer.full_name|slice:":1"|upper|default:"F" }}
+            <div style="background:var(--bg-surface-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-md); padding:16px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+              <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, var(--role-fl-primary), #feb300); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:700;">
+                  {{ app.freelancer.get_full_name|default:app.freelancer.username|slice:":1"|upper }}
                 </div>
                 <div>
-                  <div style="font-size: 14px; font-weight: 700;">{{ app.freelancer.full_name }}</div>
-                  <div style="font-size: 12px; color: var(--client-text-muted);">Applied for: <strong>{{ app.project.title }}</strong></div>
+                  <div style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">
+                    {{ app.freelancer.get_full_name|default:app.freelancer.username }}
+                  </div>
+                  <div style="font-size:0.78rem; color:var(--text-muted);">
+                    Applied for: <strong>{{ app.project.title }}</strong>
+                  </div>
                 </div>
               </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="client-badge client-badge-{{ app.status }}">{{ app.get_status_display }}</span>
-                <a href="{% url 'marketplace:project_applications' pk=app.project.pk %}" class="btn-client-secondary" style="padding: 6px 12px; font-size: 12px;">
-                  <i data-lucide="eye"></i> Review
+
+              <div style="display:flex; align-items:center; gap:16px;">
+                <div style="text-align:right;">
+                  <div style="font-weight:700; color:var(--text-primary);">${{ app.proposed_price|floatformat:0|default:app.project.budget }}</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted);">Bid Amount</div>
+                </div>
+                <a href="{% url 'marketplace:project_applications' pk=app.project.pk %}" class="btn-fh btn-fh-secondary btn-fh-sm">
+                  <span>Review</span>
+                  <i data-lucide="arrow-right"></i>
                 </a>
               </div>
             </div>
           {% endfor %}
         </div>
       {% else %}
-        <div style="text-align: center; padding: 32px 16px; color: var(--client-text-muted); font-size: 13.5px;">
-          <i data-lucide="clipboard-check" style="width: 32px; height: 32px; margin-bottom: 8px; opacity: 0.5;"></i>
-          <div>No pending applications at this moment.</div>
+        <div class="fh-empty-state" style="padding:28px 16px;">
+          <div class="fh-empty-icon" style="width:48px; height:48px;"><i data-lucide="inbox"></i></div>
+          <div class="fh-empty-title" style="font-size:1.05rem;">No new proposals</div>
+          <div class="fh-empty-desc" style="font-size:0.82rem;">Proposals from candidates will appear here as soon as they apply to your open projects.</div>
         </div>
       {% endif %}
     </div>
 
   </div>
 
-  <!-- Right Column: Quick Actions & Project Activity -->
-  <div style="display: flex; flex-direction: column; gap: 24px;">
-    
-    <!-- Quick Actions Panel -->
-    <div class="client-card">
-      <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="zap" style="color: var(--client-yellow);"></i>
-        <span>Quick Actions</span>
-      </h3>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <a href="{% url 'marketplace:project_post' %}" class="btn-client-primary" style="justify-content: center; width: 100%;">
+  <!-- Right: Quick Actions & Spend Overview -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+
+    <!-- Quick Actions Card -->
+    <div class="fh-card">
+      <h3 class="fh-card-title" style="margin-bottom:14px;"><i data-lucide="zap"></i> Quick Actions</h3>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-client" style="justify-content:flex-start;">
           <i data-lucide="plus-circle"></i>
-          <span>Post Project</span>
+          <span>Post New Project</span>
         </a>
-        <a href="{% url 'marketplace:project_list' %}" class="btn-client-secondary" style="justify-content: center; width: 100%;">
-          <i data-lucide="folder-kanban"></i>
-          <span>Manage Projects</span>
+        <a href="{% url 'core:home' %}#find-freelancers" class="btn-fh btn-fh-secondary" style="justify-content:flex-start;">
+          <i data-lucide="search"></i>
+          <span>Browse Talent Pool</span>
         </a>
-        <a href="{% url 'core:home' %}#find-freelancers" class="btn-client-secondary" style="justify-content: center; width: 100%;">
-          <i data-lucide="users"></i>
-          <span>Browse Talent</span>
+        <a href="{% url 'marketplace:client_payments' %}" class="btn-fh btn-fh-secondary" style="justify-content:flex-start;">
+          <i data-lucide="credit-card"></i>
+          <span>Escrow &amp; Invoices</span>
+        </a>
+        <a href="{% url 'marketplace:client_support_create' %}" class="btn-fh btn-fh-ghost" style="justify-content:flex-start;">
+          <i data-lucide="life-buoy"></i>
+          <span>Contact Support Desk</span>
         </a>
       </div>
     </div>
 
-    <!-- Project Activity Stream -->
-    <div class="client-card">
-      <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="activity" style="color: var(--client-purple);"></i>
-        <span>Project Activity</span>
-      </h3>
-      
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: flex; gap: 12px; font-size: 13px;">
-          <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--client-purple); margin-top: 6px; flex-shrink: 0;"></div>
-          <div>
-            <div style="font-weight: 600; color: var(--client-text-primary);">Workspace initialized</div>
-            <div style="font-size: 11.5px; color: var(--client-text-muted);">Real-time tracking active</div>
-          </div>
+    <!-- Escrow Protection Badge Card -->
+    <div class="fh-card" style="background:linear-gradient(135deg, rgba(125,60,255,0.08) 0%, rgba(16,185,129,0.08) 100%); border-color:rgba(125,60,255,0.2);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+        <div style="width:36px; height:36px; border-radius:var(--r-md); background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <i data-lucide="shield-check" style="width:20px; height:20px;"></i>
         </div>
-
-        <div style="display: flex; gap: 12px; font-size: 13px;">
-          <div style="width: 8px; height: 8px; border-radius: 50%; background: #22d3a0; margin-top: 6px; flex-shrink: 0;"></div>
-          <div>
-            <div style="font-weight: 600; color: var(--client-text-primary);">Escrow Security Online</div>
-            <div style="font-size: 11.5px; color: var(--client-text-muted);">Milestones protected</div>
-          </div>
-        </div>
-
-        <div style="display: flex; gap: 12px; font-size: 13px;">
-          <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--client-yellow); margin-top: 6px; flex-shrink: 0;"></div>
-          <div>
-            <div style="font-weight: 600; color: var(--client-text-primary);">Platform Support Active</div>
-            <div style="font-size: 11.5px; color: var(--client-text-muted);">Admin arbitration ready</div>
-          </div>
+        <div>
+          <h4 style="font-size:0.95rem; margin:0;">100% Escrow Protection</h4>
+          <div style="font-size:0.76rem; color:var(--text-muted);">Milestone Safety Policy</div>
         </div>
       </div>
+      <p style="font-size:0.84rem; color:var(--text-secondary); line-height:1.5; margin:0;">
+        Your payments are held securely in escrow until milestones are delivered and verified by you.
+      </p>
     </div>
 
   </div>
 
 </div>
-
 {% endblock %}

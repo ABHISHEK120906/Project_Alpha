@@ -1,138 +1,83 @@
 {% extends 'auth_base.html' %}
-{% block title %}Platform Admin Access — FreelanceHub{% endblock %}
-{% block meta_description %}Authorized platform administrator access for FreelanceHub.{% endblock %}
+{% load static %}
+
+{% block title %}Admin Access — FreelanceHub{% endblock %}
+{% block meta_description %}Authorized platform administrator access for FreelanceHub governance.{% endblock %}
 
 {% block content %}
-
-<!-- Admin Security Badge -->
-<div style="background:var(--hub-gold-soft); border:1px solid var(--hub-gold-border); border-radius:var(--r-md); padding:14px 16px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
-  <div style="width:40px; height:40px; border-radius:var(--r-sm); background:linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%); color:#0D0F14; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 14px var(--hub-gold-glow);">
-    <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
+<!-- Admin Security Pill -->
+<div style="background:rgba(155, 196, 0, 0.12); border:1px solid rgba(155, 196, 0, 0.3); border-radius:var(--r-md); padding:14px 16px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+  <div style="width:40px; height:40px; border-radius:var(--r-sm); background:var(--role-admin-lime); color:#080c14; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800;">
+    <i data-lucide="shield-check" style="width:20px; height:20px;"></i>
   </div>
   <div>
-    <div style="font-size:13.5px; font-weight:800; color:var(--hub-gold); letter-spacing:0.5px; font-family:'Plus Jakarta Sans',sans-serif;">Platform Administration</div>
-    <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">Restricted access — authorized personnel only.</div>
+    <div style="font-size:0.88rem; font-weight:800; color:var(--role-admin-lime); letter-spacing:0.04em; text-transform:uppercase;">Admin Security Gate</div>
+    <div style="font-size:0.78rem; color:var(--text-muted); margin-top:1px;">Restricted zone — Authorized platform administrators only.</div>
   </div>
 </div>
 
-<div class="auth-card-header" style="text-align:center; margin-bottom:20px;">
-  <h1 style="font-size:22px; font-weight:800; color:var(--text-primary); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Administrator Login</h1>
-  <p style="font-size:13.5px; color:var(--text-muted);">Sign in to the FreelanceHub governance &amp; moderation console</p>
+<div style="text-align:center; margin-bottom:20px;">
+  <h2 style="font-size:1.6rem; font-weight:800; margin-bottom:6px;">Governance Sign In</h2>
+  <p style="font-size:0.88rem; color:var(--text-muted); margin:0;">Platform administration &amp; moderation portal</p>
 </div>
 
 {% if messages %}
   {% for message in messages %}
-  <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
-    <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
-    <span>{{ message }}</span>
-  </div>
+    <div class="fh-alert {% if message.tags == 'success' %}fh-alert-success{% elif message.tags == 'error' or message.tags == 'danger' %}fh-alert-danger{% elif message.tags == 'warning' %}fh-alert-warning{% else %}fh-alert-info{% endif %}">
+      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}"></i>
+      <div>{{ message }}</div>
+    </div>
   {% endfor %}
 {% endif %}
 
 {% if form.non_field_errors %}
   {% for error in form.non_field_errors %}
-    <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
-      <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
-      <span>{{ error }}</span>
+    <div class="fh-alert fh-alert-danger">
+      <i data-lucide="alert-circle"></i>
+      <div>{{ error }}</div>
     </div>
   {% endfor %}
 {% endif %}
 
-<form method="post" action="{% url 'core:admin_login' %}" id="adminLoginForm" novalidate style="width:100%; box-sizing:border-box;">
+<form method="post" action="{% url 'core:admin_login' %}" id="adminLoginForm" novalidate>
   {% csrf_token %}
 
   <!-- Admin Username -->
-  <div class="form-group" style="margin-bottom:18px;">
-    <label for="id_admin_username" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Admin Username</label>
-    <div style="position:relative; width:100%; box-sizing:border-box;">
-      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--hub-gold);pointer-events:none;">
-        <i data-lucide="shield" style="width:16px;height:16px;"></i>
-      </span>
-      <input
-        type="text"
-        name="username"
-        id="id_admin_username"
-        class="form-control"
-        style="width:100%; box-sizing:border-box; padding:12px 14px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
-        placeholder="Enter admin username"
-        required
-        autocomplete="username"
-        autofocus
-        value="{{ request.POST.username|default:'' }}"
-      >
+  <div class="fh-form-group">
+    <label for="id_admin_username" class="fh-label">Admin Username</label>
+    <div style="position:relative;">
+      <input type="text" name="username" id="id_admin_username" class="fh-input" placeholder="Enter admin username" required autofocus autocomplete="username" value="{{ request.POST.username|default:'' }}">
     </div>
     {% if form.username.errors %}
-      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.username.errors.0 }}</div>
+      <div class="fh-form-error">{{ form.username.errors.0 }}</div>
     {% endif %}
   </div>
 
   <!-- Admin Password -->
-  <div class="form-group" style="margin-bottom:22px;">
-    <label for="id_admin_password" style="display:block; margin-bottom:7px; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-secondary);">Password</label>
-    <div style="position:relative; width:100%; box-sizing:border-box;">
-      <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--hub-gold);pointer-events:none;">
-        <i data-lucide="lock" style="width:16px;height:16px;"></i>
-      </span>
-      <input
-        type="password"
-        name="password"
-        id="id_admin_password"
-        class="form-control"
-        style="width:100%; box-sizing:border-box; padding:12px 44px 12px 42px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:14px; outline:none;"
-        placeholder="Enter admin password"
-        required
-        autocomplete="current-password"
-      >
-      <button type="button" id="toggleAdminPwd" aria-label="Toggle password visibility"
-              style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;display:flex;align-items:center;">
-        <i data-lucide="eye" id="adminPwdIcon" style="width:16px;height:16px;"></i>
-      </button>
+  <div class="fh-form-group">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+      <label for="id_admin_password" class="fh-label" style="margin:0;">Password</label>
+      <a href="{% url 'core:password_reset' %}" style="font-size:0.78rem; font-weight:600;">Forgot credentials?</a>
+    </div>
+    <div style="position:relative;">
+      <input type="password" name="password" id="id_admin_password" class="fh-input" placeholder="Enter admin password" required autocomplete="current-password">
     </div>
     {% if form.password.errors %}
-      <div class="form-error" style="color:var(--danger-text); font-size:12px; margin-top:5px;">{{ form.password.errors.0 }}</div>
+      <div class="fh-form-error">{{ form.password.errors.0 }}</div>
     {% endif %}
   </div>
 
-  <button type="submit" class="btn-hub-primary" id="adminLoginSubmitBtn" style="width:100%; box-sizing:border-box; padding:13px; justify-content:center;">
-    <i data-lucide="shield-check" style="width:17px;height:17px;"></i>
-    <span>Authenticate as Administrator</span>
+  <!-- Submit -->
+  <button type="submit" class="btn-fh btn-fh-admin btn-fh-lg" style="width:100%; margin-top:10px;">
+    <i data-lucide="shield-check"></i>
+    <span>Authenticate Administrator</span>
   </button>
 </form>
 
-<div class="hub-divider-label" style="margin:22px 0;">
-  <span>Standard Access</span>
-</div>
-
-<div style="text-align:center; width:100%; box-sizing:border-box;">
-  <a href="{% url 'core:login' %}" class="btn-hub-secondary" style="width:100%; box-sizing:border-box; justify-content:center;">
-    <i data-lucide="arrow-left" style="width:15px;height:15px;"></i>
-    <span>Back to Member Login</span>
+<div style="margin-top:24px; text-align:center;">
+  <a href="{% url 'core:login' %}" style="font-size:0.85rem; color:var(--text-muted); display:inline-flex; align-items:center; gap:6px;">
+    <i data-lucide="arrow-left" style="width:14px; height:14px;"></i>
+    <span>Return to Standard User Login</span>
   </a>
 </div>
-
-<script>
-(function() {
-  const btn = document.getElementById('toggleAdminPwd');
-  const input = document.getElementById('id_admin_password');
-  const icon = document.getElementById('adminPwdIcon');
-  if (btn && input && icon) {
-    btn.addEventListener('click', function() {
-      const visible = input.type === 'text';
-      input.type = visible ? 'password' : 'text';
-      icon.setAttribute('data-lucide', visible ? 'eye' : 'eye-off');
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    });
-  }
-
-  const form = document.getElementById('adminLoginForm');
-  const submitBtn = document.getElementById('adminLoginSubmitBtn');
-  if (form && submitBtn) {
-    form.addEventListener('submit', function() {
-      submitBtn.innerHTML = '<span>Verifying credentials…</span>';
-      submitBtn.style.pointerEvents = 'none';
-      submitBtn.style.opacity = '0.8';
-    });
-  }
-})();
-</script>
 {% endblock %}

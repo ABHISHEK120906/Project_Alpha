@@ -21,418 +21,245 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
-  <!-- Fonts: Inter, Plus Jakarta Sans, and Playfair Display for Editorial Heading -->
+  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700;1,800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
 
-  <!-- FreelanceHub Unified Design System -->
+  <!-- Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-  <link rel="stylesheet" href="{% static 'css/public_landing.css' %}">
 
   <style>
     .auth-split-wrapper {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.1fr 0.9fr;
       position: relative;
-      background: #080D14 url('/static/images/abstract_paper_cut_bg.jpg') no-repeat center center / cover;
-      background-attachment: fixed;
-      overflow-x: hidden;
     }
 
-    .auth-split-overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(180deg, rgba(8, 12, 20, 0.40) 0%, rgba(8, 12, 20, 0.15) 40%, rgba(8, 12, 20, 0.48) 100%),
-        radial-gradient(ellipse at 70% 35%, rgba(8, 12, 20, 0.10) 0%, rgba(8, 12, 20, 0.45) 100%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    [data-theme="light"] .auth-split-overlay {
-      background:
-        linear-gradient(180deg, rgba(248, 245, 240, 0.55) 0%, rgba(248, 245, 240, 0.30) 40%, rgba(248, 245, 240, 0.65) 100%),
-        radial-gradient(ellipse at 70% 35%, rgba(248, 245, 240, 0.20) 0%, rgba(248, 245, 240, 0.55) 100%);
-    }
-
-    .auth-left-brand-pane {
-      position: relative;
-      z-index: 2;
-      padding: 48px 64px;
+    .auth-left-pane {
+      padding: 56px 64px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 100vh;
+      position: relative;
+      z-index: 2;
     }
 
-    .auth-brand-badge-row {
-      display: flex;
+    .auth-eyebrow {
+      display: inline-flex;
       align-items: center;
-      gap: 14px;
-      text-decoration: none;
-    }
-
-    .auth-brand-squircle {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--hub-gold) 0%, var(--hub-gold-dark) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #0D0F14;
-      box-shadow: 0 8px 24px var(--hub-gold-glow);
-      flex-shrink: 0;
-    }
-
-    .auth-brand-name-text {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.5px;
-      line-height: 1.1;
-    }
-
-    .auth-brand-tagline {
-      font-size: 10.5px;
-      font-weight: 800;
-      color: var(--hub-gold);
-      letter-spacing: 2px;
+      gap: 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
       text-transform: uppercase;
-      margin-top: 3px;
-    }
-
-    .auth-left-main-content {
-      margin: 40px 0;
-      max-width: 600px;
-    }
-
-    .auth-eyebrow-line {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 2.2px;
-      color: var(--hub-gold);
+      letter-spacing: 0.08em;
+      color: var(--brand-primary);
       margin-bottom: 20px;
     }
 
-    .auth-eyebrow-line::before {
-      content: '';
-      width: 24px;
-      height: 2px;
-      background: var(--hub-gold);
+    .auth-hero-title {
+      font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
     }
 
-    .auth-editorial-title {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(38px, 4.2vw, 56px);
-      font-weight: 700;
-      line-height: 1.12;
-      color: var(--text-primary);
-      margin-bottom: 22px;
-      letter-spacing: -0.5px;
-    }
-
-    .auth-editorial-title em {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-style: italic;
-      color: var(--hub-gold);
-      font-weight: 600;
-    }
-
-    .auth-editorial-desc {
-      font-size: 15.5px;
+    .auth-hero-desc {
+      font-size: 1.05rem;
       color: var(--text-secondary);
-      line-height: 1.75;
-      margin-bottom: 36px;
+      line-height: 1.7;
       max-width: 520px;
+      margin-bottom: 36px;
     }
 
-    .auth-metrics-row {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      padding-bottom: 36px;
-      border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: 32px;
-    }
-
-    .auth-metric-item {
+    .auth-pills-stack {
       display: flex;
       flex-direction: column;
-    }
-
-    .auth-metric-val {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--hub-gold);
-      line-height: 1.1;
-    }
-
-    .auth-metric-label {
-      font-size: 10.5px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .auth-pill-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .auth-pill-card {
-      display: flex;
-      align-items: center;
       gap: 14px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
-      border-radius: 14px;
-      padding: 14px 18px;
-      color: var(--text-primary);
-      font-size: 13.5px;
-      font-weight: 600;
-      transition: all 0.2s ease;
       max-width: 480px;
     }
 
-    .auth-pill-card:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--hub-gold-border);
-      transform: translateX(4px);
-    }
-
-    .auth-pill-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: var(--hub-gold-soft);
-      border: 1px solid var(--hub-gold-border);
-      color: var(--hub-gold);
+    .auth-feature-pill {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--bg-glass-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-md);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      backdrop-filter: blur(12px);
+    }
+    .auth-feature-pill svg {
+      width: 20px;
+      height: 20px;
+      color: var(--brand-primary);
       flex-shrink: 0;
     }
 
-    .auth-right-form-pane {
-      position: relative;
-      z-index: 2;
+    .auth-right-pane {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 48px 36px;
-      width: 100%;
-      box-sizing: border-box;
+      padding: 48px 32px;
+      position: relative;
+      z-index: 2;
     }
 
-    .auth-top-theme-pill {
+    .auth-top-bar {
       position: absolute;
       top: 32px;
-      right: 48px;
+      right: 36px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       z-index: 10;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
-      border-radius: 9999px;
-      padding: 4px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .auth-theme-icon-btn {
-      background: none;
-      border: none;
-      color: var(--hub-gold);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 4px;
-      border-radius: 50%;
-      transition: transform 0.2s ease;
-    }
-
-    .auth-theme-icon-btn:hover {
-      transform: scale(1.1);
-    }
-
-    /* Glass Frosted Auth Card */
-    .auth-glass-container {
+    .auth-card-container {
       width: 100%;
-      max-width: 440px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-lg), 0 0 40px var(--hub-gold-soft);
+      max-width: 460px;
+      background: var(--bg-glass-card);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
-      border-radius: 24px;
-      padding: 36px 32px;
-      box-sizing: border-box;
-      animation: authCardEntrance 0.4s cubic-bezier(0.16,1,0.3,1) both;
+      border: 1px solid var(--border-default);
+      border-radius: var(--r-xl);
+      padding: 40px 36px;
+      box-shadow: var(--shadow-xl);
     }
 
-    @keyframes authCardEntrance {
-      from { opacity: 0; transform: translateY(16px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    /* Auth Role Switcher Tabs */
+    .auth-role-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--border-subtle);
+      border-radius: var(--r-md);
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+    .auth-role-tab {
+      padding: 8px 10px;
+      border-radius: var(--r-sm);
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all var(--t-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .auth-role-tab:hover {
+      color: var(--text-primary);
+    }
+    .auth-role-tab.active {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
     }
 
-    /* Responsive */
-    @media (max-width: 1024px) {
+    @media (max-width: 991px) {
       .auth-split-wrapper {
         grid-template-columns: 1fr;
       }
-      .auth-left-brand-pane {
-        padding: 40px 24px 20px;
-        min-height: auto;
+      .auth-left-pane {
+        display: none;
       }
-      .auth-right-form-pane {
-        padding: 24px 16px;
-      }
-      .auth-top-theme-pill {
-        top: 20px;
-        right: 20px;
+      .auth-right-pane {
+        padding: 80px 20px 40px;
       }
     }
   </style>
 
   {% block extra_head %}{% endblock %}
 </head>
-<body style="color:var(--text-primary); margin:0; font-family:'Inter',sans-serif; min-height:100vh;">
-  <!-- Full-Viewport Fixed Background Canvas & Ambient Overlay -->
+<body>
+
+  <!-- Full-Viewport Fixed Background Canvas & Overlay -->
   <div class="fh-fixed-bg-canvas" aria-hidden="true"></div>
   <div class="fh-fixed-bg-overlay" aria-hidden="true"></div>
 
-  <div class="auth-split-wrapper" style="background:transparent;">
-    <!-- Vignette overlay -->
-    <div class="auth-split-overlay" aria-hidden="true"></div>
+  <div class="auth-split-wrapper">
 
-    <!-- Top Theme Toggle Pill -->
-    <div class="auth-top-theme-pill">
-      <button type="button" class="hub-theme-toggle" id="authThemeToggleBtn" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
-        <span class="icon-sun"><i data-lucide="sun"></i></span>
-        <span class="icon-moon"><i data-lucide="moon"></i></span>
-        <span class="theme-toggle-thumb"></span>
-      </button>
-      <a href="{% url 'core:home' %}" style="font-size:12px; color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:4px; font-weight:600;">
-        <i data-lucide="home" style="width:13px;height:13px;"></i>
-        <span>Hub</span>
-      </a>
-    </div>
+    <!-- Left Brand Narrative Pane -->
+    <div class="auth-left-pane">
+      <div>
+        {% url 'core:home' as home_url %}
+        {% include 'components/brand_logo.html' with variant='auth' href=home_url %}
+      </div>
 
-    <!-- Left Brand Pane (Matches reference image) -->
-    <div class="auth-left-brand-pane">
+      <div>
+        <div class="auth-eyebrow">
+          <i data-lucide="shield-check"></i>
+          <span>ENTERPRISE FREELANCING PLATFORM</span>
+        </div>
 
-      <!-- Brand Header -->
-      {% url 'core:home' as home_url %}
-      {% include 'components/brand_logo.html' with variant='auth' href=home_url subtitle='Where Great Projects Meet Great Talent' %}
+        <h1 class="auth-hero-title">
+          Where Great Projects<br>Meet Great Talent.
+        </h1>
 
-      <!-- Center Editorial Showcase -->
-      <div class="auth-left-main-content">
-        <div class="auth-eyebrow-line">PREMIUM FREELANCING MARKETPLACE</div>
-
-        <h2 class="auth-editorial-title">
-          Where Great <em>Projects</em><br>Meet Great Talent.
-        </h2>
-
-        <p class="auth-editorial-desc">
-          Connect with vetted clients and verified freelancers. Streamline requirements, track milestones, escrow payments, and collaborate seamlessly in one unified platform.
+        <p class="auth-hero-desc">
+          Join thousands of verified businesses and independent specialists collaborating with milestone tracking, verified escrow payments, and AI intelligence.
         </p>
 
-        <!-- Metric strip -->
-        <div class="auth-metrics-row">
-          <div class="auth-metric-item">
-            <div class="auth-metric-val">6+</div>
-            <div class="auth-metric-label">POWER MODULES</div>
+        <div class="auth-pills-stack">
+          <div class="auth-feature-pill">
+            <i data-lucide="briefcase"></i>
+            <span>Hire verified developers, designers &amp; specialists in hours</span>
           </div>
-          <div class="auth-metric-item">
-            <div class="auth-metric-val">100%</div>
-            <div class="auth-metric-label">FREE TO USE</div>
+          <div class="auth-feature-pill">
+            <i data-lucide="shield"></i>
+            <span>100% Escrow protected milestones and payment guarantees</span>
           </div>
-          <div class="auth-metric-item">
-            <div class="auth-metric-val">∞</div>
-            <div class="auth-metric-label">CLIENTS &amp; PROJECTS</div>
-          </div>
-        </div>
-
-        <!-- 3 Feature Glass Pills -->
-        <div class="auth-pill-cards">
-          <div class="auth-pill-card">
-            <div class="auth-pill-icon"><i data-lucide="zap" style="width:16px;height:16px;"></i></div>
-            <span>One dashboard. Every client, project &amp; invoice.</span>
-          </div>
-          <div class="auth-pill-card">
-            <div class="auth-pill-icon"><i data-lucide="trending-up" style="width:16px;height:16px;"></i></div>
-            <span>Real-time earnings reports &amp; PDF exports.</span>
-          </div>
-          <div class="auth-pill-card">
-            <div class="auth-pill-icon"><i data-lucide="shield-check" style="width:16px;height:16px;"></i></div>
-            <span>Your data stays yours. Private &amp; secure.</span>
+          <div class="auth-feature-pill">
+            <i data-lucide="bar-chart-2"></i>
+            <span>Real-time earnings tracking, forecasting, and automated invoicing</span>
           </div>
         </div>
       </div>
 
-      <!-- Footer Micro Copy -->
-      <div style="font-size:12px; color:rgba(240,237,232,0.4); display:flex; align-items:center; gap:8px;">
-        <span>&copy; 2026 FreelanceHub</span>
-        <span>&bull;</span>
-        <span>Verified Escrow &amp; Contract Security</span>
+      <div style="font-size:0.8rem; color:var(--text-muted); display:flex; gap:16px;">
+        <span>&copy; {% now "Y" %} FreelanceHub</span>
+        <span>•</span>
+        <span>Privacy &amp; Escrow Guaranteed</span>
       </div>
-
     </div>
 
-    <!-- Right Pane: Frosted Glass Form Card -->
-    <div class="auth-right-form-pane">
-      <div class="auth-glass-container">
+    <!-- Right Form Container Pane -->
+    <div class="auth-right-pane">
+      <!-- Top controls -->
+      <div class="auth-top-bar">
+        <a href="{% url 'core:home' %}" class="btn-fh btn-fh-ghost btn-fh-sm">
+          <i data-lucide="arrow-left"></i>
+          <span>Home</span>
+        </a>
+
+        <button type="button" class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle theme">
+          <span class="icon-sun"><i data-lucide="sun"></i></span>
+          <span class="icon-moon"><i data-lucide="moon"></i></span>
+        </button>
+      </div>
+
+      <!-- Auth Form Card -->
+      <div class="auth-card-container">
         {% block content %}{% endblock %}
       </div>
     </div>
 
   </div>
 
-  <!-- Scripts -->
-  <script>
-    function refreshIcons() {
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-    document.addEventListener('DOMContentLoaded', refreshIcons);
-    refreshIcons();
-
-    // ── Unified Theme Toggle ──
-    const THEME_KEY = 'freelancehub_theme';
-
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem(THEME_KEY, theme);
-      localStorage.setItem('theme', theme);
-      refreshIcons();
-    }
-
-    applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
-
-    const authBtn = document.getElementById('authThemeToggleBtn');
-    if (authBtn) {
-      authBtn.addEventListener('click', () => {
-        applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-      });
-    }
-  </script>
-
+  <script src="{% static 'js/main.js' %}"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

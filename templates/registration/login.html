@@ -1,494 +1,160 @@
 {% extends 'auth_base.html' %}
+{% load static %}
+
 {% block title %}Sign In — FreelanceHub{% endblock %}
 {% block meta_description %}Sign in to your FreelanceHub account to access your Client workspace, Freelancer portal, or Platform Admin console.{% endblock %}
 
-{% block extra_head %}
-<style>
-  /* ── 3-Way Role Toggle Tabs ── */
-  .role-tab-rail {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 4px;
-    padding: 4px;
-    border-radius: 12px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    margin-bottom: 24px;
-    position: relative;
-    box-sizing: border-box;
-  }
-  .role-tab-btn {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 8px;
-    border-radius: 9px;
-    border: 1.5px solid transparent;
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .role-tab-btn:hover:not(.tab-active) {
-    color: var(--text-primary);
-  }
-  .role-tab-btn:active { transform: scale(0.97); }
-
-  /* Pill indicator (sliding 3-segment) */
-  .role-tab-pill {
-    position: absolute;
-    top: 4px; bottom: 4px;
-    left: 4px;
-    width: calc((100% - 8px) / 3);
-    background: rgba(125,60,255,0.14);
-    border: 1.5px solid #7D3CFF;
-    border-radius: 9px;
-    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s, border-color 0.25s;
-    pointer-events: none;
-    z-index: 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  }
-
-  /* Specific Role Active Styles */
-  .tab-client.tab-active { color: #7D3CFF; }
-  .tab-freelancer.tab-active { color: #FF5E6C; }
-  .tab-admin.tab-active { color: #9BC400; }
-
-  /* ── Input focus state ── */
-  .fh-input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px 14px 12px 42px;
-    background: var(--bg-input);
-    border: 1.5px solid var(--border-input);
-    border-radius: 10px;
-    color: var(--text-primary);
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-  }
-  .fh-input:focus {
-    border-color: var(--login-accent, #7D3CFF);
-    box-shadow: 0 0 0 3px var(--login-glow, rgba(125,60,255,0.20));
-    background: var(--bg-card);
-  }
-  .fh-input.has-right { padding-right: 46px; }
-  .fh-input.is-error { border-color: #e05555; box-shadow: 0 0 0 3px rgba(224,85,85,0.10); }
-
-  .fh-label {
-    display: block;
-    margin-bottom: 7px;
-    font-size: 11.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.9px;
-    color: var(--text-secondary);
-    transition: color 0.18s;
-  }
-  .fh-group:focus-within .fh-label { color: var(--login-accent, #7D3CFF); }
-
-  .fh-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--login-accent, #7D3CFF);
-    pointer-events: none;
-    z-index: 1;
-    transition: color 0.2s;
-  }
-
-  /* ── Password toggle ── */
-  .pwd-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    transition: color 0.18s, background 0.18s, transform 0.15s;
-    line-height: 0;
-  }
-  .pwd-toggle:hover { color: var(--login-accent, #7D3CFF); background: rgba(255,255,255,0.06); }
-  .pwd-toggle:active { transform: translateY(-50%) scale(0.88); }
-
-  /* ── Submit button ── */
-  .login-btn {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 13px 20px;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(135deg, #7D3CFF 0%, #6428D6 100%);
-    color: #FFFFFF;
-    font-size: 14.5px;
-    font-weight: 800;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: 0 4px 20px rgba(125,60,255,0.35);
-    transition: box-shadow 0.2s, transform 0.18s, opacity 0.18s, background 0.25s;
-  }
-  .login-btn:hover:not(:disabled) {
-    box-shadow: 0 6px 28px rgba(125,60,255,0.45);
-    transform: translateY(-1px);
-    color: #FFFFFF;
-  }
-  .login-btn:active:not(:disabled) { transform: scale(0.98); }
-  .login-btn:disabled { opacity: 0.65; cursor: not-allowed; }
-
-  /* Spinner */
-  .btn-spinner {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #FFFFFF;
-    border-radius: 50%;
-    animation: fh-spin 0.7s linear infinite;
-  }
-  @keyframes fh-spin { to { transform: rotate(360deg); } }
-
-  /* ── Field error ── */
-  .fh-error {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #e05555;
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 5px;
-  }
-
-  /* ── Alert slide-in ── */
-  .fh-alert {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 11px 14px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 14px;
-    line-height: 1.5;
-    animation: alertIn 0.25s ease both;
-  }
-  @keyframes alertIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
-  .fh-alert-success { background: rgba(52,199,89,.12); border:1px solid rgba(52,199,89,.25); color:#34c759; }
-  .fh-alert-danger  { background: rgba(224,85,85,.12);  border:1px solid rgba(224,85,85,.25);  color:#e05555; }
-  .fh-alert-warning { background: rgba(255,193,7,.12);  border:1px solid rgba(255,193,7,.25);  color:#ffc107; }
-  .fh-alert-info    { background: rgba(125,60,255,.12); border:1px solid rgba(125,60,255,.25); color:#7D3CFF; }
-
-  /* ── CTA Buttons ── */
-  .cta-register-btn {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 11px 16px;
-    border-radius: 10px;
-    font-size: 13.5px;
-    font-weight: 700;
-    text-decoration: none;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    box-sizing: border-box;
-    border: 1.5px solid transparent;
-    transition: all 0.2s ease;
-  }
-  .cta-register-btn .arrow { margin-left: auto; opacity: 0.55; transition: transform 0.2s, opacity 0.2s; }
-  .cta-register-btn:hover .arrow { transform: translateX(3px); opacity: 0.9; }
-  .cta-purple { border-color: rgba(125,60,255,0.3); background: rgba(125,60,255,0.12); color: #7D3CFF; }
-  .cta-purple:hover { background: rgba(125,60,255,.20); border-color: #7D3CFF; transform: translateY(-1px); color: #7D3CFF; }
-  .cta-coral { border-color: rgba(255,94,108,0.3); background: rgba(255,94,108,0.12); color: #FF5E6C; }
-  .cta-coral:hover { background: rgba(255,94,108,.20); border-color: #FF5E6C; transform: translateY(-1px); color: #FF5E6C; }
-  .cta-ghost { border-color: var(--border-color); background: transparent; color: var(--text-secondary); }
-  .cta-ghost:hover { background: var(--bg-input); border-color: var(--border-input); color: var(--text-primary); transform: translateY(-1px); }
-
-  /* ── Divider ── */
-  .fh-divider { display:flex; align-items:center; gap:12px; margin:20px 0; }
-  .fh-divider-line { flex:1; height:1px; background:var(--border-subtle); }
-  .fh-divider-text { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:1.1px; color:var(--text-muted); white-space:nowrap; }
-
-  /* ── Forgot link ── */
-  .forgot-link {
-    font-size: 12px; color: var(--login-accent, #7D3CFF); font-weight: 600;
-    text-decoration: none; padding: 2px 5px; border-radius: 4px;
-    transition: background 0.18s, color 0.2s;
-  }
-  .forgot-link:hover { background: rgba(255,255,255,0.06); }
-</style>
-{% endblock %}
-
 {% block content %}
-
-<!-- ── Header ── -->
-<div style="text-align:center; margin-bottom:20px;">
-  <h1 style="font-size:23px; font-weight:800; color:var(--text-primary); margin:0 0 5px; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.4px;">
-    Welcome Back
-  </h1>
-  <p style="font-size:13px; color:var(--text-muted); margin:0;">
-    Sign in to your
-    <strong id="roleText" style="color:#7D3CFF; transition:all 0.2s ease;">Client Workspace</strong>
+<div style="text-align:center; margin-bottom:24px;">
+  <h2 style="font-size:1.6rem; font-weight:800; margin-bottom:6px;">Welcome Back</h2>
+  <p style="font-size:0.9rem; color:var(--text-muted); margin:0;">
+    Accessing <strong id="roleHeaderLabel" style="color:var(--brand-primary);">Client Workspace</strong>
   </p>
 </div>
 
-<!-- ── 3-Way Role Tab Toggle ── -->
-<div class="role-tab-rail" role="tablist" aria-label="Login role selection">
-  <div class="role-tab-pill" id="rolePill"></div>
-  <button type="button" id="tabClientBtn" class="role-tab-btn tab-client tab-active"
-    role="tab" aria-selected="true" onclick="switchRole('client')">
-    <i data-lucide="briefcase" style="width:15px;height:15px;"></i>
+<!-- 3-Way Role Switcher -->
+<div class="auth-role-tabs" id="authRoleTabs">
+  <button type="button" class="auth-role-tab active" data-role="client" onclick="setLoginRole('client')">
+    <i data-lucide="briefcase"></i>
     <span>Client</span>
   </button>
-  <button type="button" id="tabFreelancerBtn" class="role-tab-btn tab-freelancer"
-    role="tab" aria-selected="false" onclick="switchRole('freelancer')">
-    <i data-lucide="compass" style="width:15px;height:15px;"></i>
+  <button type="button" class="auth-role-tab" data-role="freelancer" onclick="setLoginRole('freelancer')">
+    <i data-lucide="compass"></i>
     <span>Freelancer</span>
   </button>
-  <button type="button" id="tabAdminBtn" class="role-tab-btn tab-admin"
-    role="tab" aria-selected="false" onclick="switchRole('admin')">
-    <i data-lucide="shield" style="width:15px;height:15px;"></i>
+  <button type="button" class="auth-role-tab" data-role="admin" onclick="setLoginRole('admin')">
+    <i data-lucide="shield"></i>
     <span>Admin</span>
   </button>
 </div>
 
-<!-- ── Messages ── -->
+<!-- Form Messages -->
 {% if messages %}
   {% for message in messages %}
-    <div class="fh-alert fh-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
-      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:15px;height:15px;flex-shrink:0;margin-top:1px;"></i>
-      <span>{{ message }}</span>
-    </div>
-  {% endfor %}
-{% endif %}
-{% if form.non_field_errors %}
-  {% for error in form.non_field_errors %}
-    <div class="fh-alert fh-alert-danger">
-      <i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0;margin-top:1px;"></i>
-      <span>{{ error }}</span>
+    <div class="fh-alert {% if message.tags == 'success' %}fh-alert-success{% elif message.tags == 'error' or message.tags == 'danger' %}fh-alert-danger{% elif message.tags == 'warning' %}fh-alert-warning{% else %}fh-alert-info{% endif %}">
+      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}"></i>
+      <div>{{ message }}</div>
     </div>
   {% endfor %}
 {% endif %}
 
-<!-- ── Login Form ── -->
-<form method="post" action="{% url 'core:login' %}" id="userLoginForm" novalidate style="width:100%;box-sizing:border-box;">
+{% if form.non_field_errors %}
+  {% for error in form.non_field_errors %}
+    <div class="fh-alert fh-alert-danger">
+      <i data-lucide="alert-circle"></i>
+      <div>{{ error }}</div>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Login Form -->
+<form method="post" action="{% url 'core:login' %}" id="loginForm" novalidate>
   {% csrf_token %}
   <input type="hidden" name="login_type" id="loginTypeInput" value="client">
 
   <!-- Username -->
-  <div class="fh-group" style="margin-bottom:16px;">
+  <div class="fh-form-group">
     <label for="id_username" class="fh-label">Username</label>
-    <div style="position:relative; width:100%; box-sizing:border-box;">
-      <span class="fh-icon"><i data-lucide="user" style="width:16px;height:16px;"></i></span>
-      <input type="text" name="username" id="id_username"
-        class="fh-input{% if form.username.errors %} is-error{% endif %}"
-        placeholder="Enter your username"
-        required autocomplete="username" autofocus
-        value="{{ request.POST.username|default:'' }}">
+    <div style="position:relative;">
+      <input type="text" name="username" id="id_username" class="fh-input" placeholder="Enter your username" required autofocus autocomplete="username" value="{{ request.POST.username|default:'' }}">
     </div>
     {% if form.username.errors %}
-      <div class="fh-error">
-        <i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i>
-        <span>{{ form.username.errors.0 }}</span>
-      </div>
+      <div class="fh-form-error">{{ form.username.errors.0 }}</div>
     {% endif %}
   </div>
 
   <!-- Password -->
-  <div class="fh-group" style="margin-bottom:20px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+  <div class="fh-form-group">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
       <label for="id_password" class="fh-label" style="margin:0;">Password</label>
-      <a href="{% url 'core:password_reset' %}" class="forgot-link">Forgot password?</a>
+      <a href="{% url 'core:password_reset' %}" style="font-size:0.78rem; font-weight:600;">Forgot password?</a>
     </div>
-    <div style="position:relative; width:100%; box-sizing:border-box;">
-      <span class="fh-icon"><i data-lucide="lock" style="width:16px;height:16px;"></i></span>
-      <input type="password" name="password" id="id_password"
-        class="fh-input has-right{% if form.password.errors %} is-error{% endif %}"
-        placeholder="Enter your password"
-        required autocomplete="current-password">
-      <!-- Toggle visibility -->
-      <button type="button" id="togglePwd" class="pwd-toggle" aria-label="Toggle password visibility" title="Show / hide password">
-        <i data-lucide="eye" id="pwdIcon" style="width:16px;height:16px;"></i>
+    <div style="position:relative;">
+      <input type="password" name="password" id="id_password" class="fh-input" placeholder="Enter your password" required autocomplete="current-password">
+      <button type="button" id="togglePasswordBtn" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer;" aria-label="Toggle password">
+        <i data-lucide="eye" id="togglePasswordIcon" style="width:18px; height:18px;"></i>
       </button>
     </div>
     {% if form.password.errors %}
-      <div class="fh-error">
-        <i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i>
-        <span>{{ form.password.errors.0 }}</span>
-      </div>
+      <div class="fh-form-error">{{ form.password.errors.0 }}</div>
     {% endif %}
   </div>
 
-  <!-- Submit -->
-  <button type="submit" id="loginSubmitBtn" class="login-btn">
-    <i data-lucide="log-in" style="width:17px;height:17px;"></i>
-    <span id="loginBtnText">Sign In to Client Workspace</span>
+  <!-- Submit Button -->
+  <button type="submit" id="submitBtn" class="btn-fh btn-fh-client btn-fh-lg" style="width:100%; margin-top:10px;">
+    <i data-lucide="log-in"></i>
+    <span id="submitBtnText">Sign In to Client Workspace</span>
   </button>
 </form>
 
-<!-- ── Divider ── -->
-<div class="fh-divider" id="registerDivider">
-  <div class="fh-divider-line"></div>
-  <span class="fh-divider-text">New to FreelanceHub?</span>
-  <div class="fh-divider-line"></div>
-</div>
-
-<!-- ── Register CTAs ── -->
-<div id="registerCtas" style="display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box;">
-  <a href="{% url 'marketplace:client_register' %}" class="cta-register-btn cta-purple" id="ctaClientBtn">
-    <i data-lucide="briefcase" style="width:15px;height:15px;"></i>
-    <span>Create Client Account</span>
-    <i data-lucide="arrow-right" class="arrow" style="width:14px;height:14px;"></i>
-  </a>
-  <a href="{% url 'core:register' %}" class="cta-register-btn cta-coral" id="ctaFreelancerBtn">
-    <i data-lucide="compass" style="width:15px;height:15px;"></i>
-    <span>Create Freelancer Account</span>
-    <i data-lucide="arrow-right" class="arrow" style="width:14px;height:14px;"></i>
-  </a>
-</div>
-
-<!-- ── Admin Notice (when Admin role active) ── -->
-<div id="adminNotice" style="display:none; text-align:center; padding:12px; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:10px; margin-top:8px;">
-  <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:12px; color:var(--text-secondary);">
-    <i data-lucide="shield-check" style="width:14px; height:14px; color:#9BC400;"></i>
-    <span>Elevated Staff &amp; Super Admin access is audited.</span>
+<!-- Sign Up Options -->
+<div id="signUpSection" style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border-subtle); text-align:center;">
+  <span style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:14px;">Don't have an account yet?</span>
+  <div style="display:flex; gap:10px;">
+    <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-outline btn-fh-sm" style="flex:1;">
+      <i data-lucide="briefcase"></i>
+      <span>Client Signup</span>
+    </a>
+    <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-outline btn-fh-sm" style="flex:1;">
+      <i data-lucide="search"></i>
+      <span>Freelancer Signup</span>
+    </a>
   </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
-(function () {
-  'use strict';
+  function setLoginRole(role) {
+    const input = document.getElementById('loginTypeInput');
+    const headerLabel = document.getElementById('roleHeaderLabel');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitBtnText = document.getElementById('submitBtnText');
+    const tabs = document.querySelectorAll('.auth-role-tab');
+    const signUpSec = document.getElementById('signUpSection');
 
-  const clientBtn      = document.getElementById('tabClientBtn');
-  const freelancerBtn  = document.getElementById('tabFreelancerBtn');
-  const adminBtn       = document.getElementById('tabAdminBtn');
-  const roleText       = document.getElementById('roleText');
-  const loginTypeInput = document.getElementById('loginTypeInput');
-  const rolePill       = document.getElementById('rolePill');
-  const submitBtn      = document.getElementById('loginSubmitBtn');
-  const submitText     = document.getElementById('loginBtnText');
-  const registerDivider= document.getElementById('registerDivider');
-  const registerCtas   = document.getElementById('registerCtas');
-  const adminNotice    = document.getElementById('adminNotice');
+    input.value = role;
 
-  function switchRole(role) {
-    // 0: client, 1: freelancer, 2: admin
-    let index = 0;
-    if (role === 'freelancer') index = 1;
-    if (role === 'admin') index = 2;
+    tabs.forEach(t => {
+      t.classList.toggle('active', t.getAttribute('data-role') === role);
+    });
 
-    // Slide pill
-    rolePill.style.transform = `translateX(${index * 100}%)`;
+    submitBtn.classList.remove('btn-fh-client', 'btn-fh-freelancer', 'btn-fh-admin');
 
-    // Reset active states
-    clientBtn.classList.toggle('tab-active', index === 0);
-    freelancerBtn.classList.toggle('tab-active', index === 1);
-    adminBtn.classList.toggle('tab-active', index === 2);
-
-    clientBtn.setAttribute('aria-selected', String(index === 0));
-    freelancerBtn.setAttribute('aria-selected', String(index === 1));
-    adminBtn.setAttribute('aria-selected', String(index === 2));
-
-    // Dynamic role branding colors
-    if (index === 0) {
-      document.documentElement.style.setProperty('--login-accent', '#7D3CFF');
-      document.documentElement.style.setProperty('--login-glow', 'rgba(125,60,255,0.25)');
-      rolePill.style.background = 'rgba(125,60,255,0.14)';
-      rolePill.style.borderColor = '#7D3CFF';
-      submitBtn.style.background = 'linear-gradient(135deg, #7D3CFF 0%, #6428D6 100%)';
-      submitBtn.style.boxShadow = '0 4px 20px rgba(125,60,255,0.35)';
-      submitText.textContent = 'Sign In to Client Workspace';
-      roleText.textContent = 'Client Workspace';
-      roleText.style.color = '#7D3CFF';
-      loginTypeInput.value = 'client';
-      registerDivider.style.display = 'flex';
-      registerCtas.style.display = 'flex';
-      adminNotice.style.display = 'none';
-    } else if (index === 1) {
-      document.documentElement.style.setProperty('--login-accent', '#FF5E6C');
-      document.documentElement.style.setProperty('--login-glow', 'rgba(255,94,108,0.25)');
-      rolePill.style.background = 'rgba(255,94,108,0.14)';
-      rolePill.style.borderColor = '#FF5E6C';
-      submitBtn.style.background = 'linear-gradient(135deg, #FF5E6C 0%, #E84553 100%)';
-      submitBtn.style.boxShadow = '0 4px 20px rgba(255,94,108,0.35)';
-      submitText.textContent = 'Sign In to Freelancer Portal';
-      roleText.textContent = 'Freelancer Portal';
-      roleText.style.color = '#FF5E6C';
-      loginTypeInput.value = 'freelancer';
-      registerDivider.style.display = 'flex';
-      registerCtas.style.display = 'flex';
-      adminNotice.style.display = 'none';
-    } else {
-      document.documentElement.style.setProperty('--login-accent', '#8076A3');
-      document.documentElement.style.setProperty('--login-glow', 'rgba(128,118,163,0.25)');
-      rolePill.style.background = 'rgba(128,118,163,0.18)';
-      rolePill.style.borderColor = '#9BC400';
-      submitBtn.style.background = 'linear-gradient(135deg, #8076A3 0%, #675E88 100%)';
-      submitBtn.style.boxShadow = '0 4px 20px rgba(128,118,163,0.35)';
-      submitText.textContent = 'Sign In to Admin Governance';
-      roleText.textContent = 'Platform Governance';
-      roleText.style.color = '#9BC400';
-      loginTypeInput.value = 'admin';
-      registerDivider.style.display = 'none';
-      registerCtas.style.display = 'none';
-      adminNotice.style.display = 'block';
+    if (role === 'client') {
+      headerLabel.textContent = 'Client Workspace';
+      headerLabel.style.color = '#7d3cff';
+      submitBtn.classList.add('btn-fh-client');
+      submitBtnText.textContent = 'Sign In to Client Workspace';
+      if (signUpSec) signUpSec.style.display = 'block';
+    } else if (role === 'freelancer') {
+      headerLabel.textContent = 'Freelancer Portal';
+      headerLabel.style.color = '#ff5e6c';
+      submitBtn.classList.add('btn-fh-freelancer');
+      submitBtnText.textContent = 'Sign In to Freelancer Portal';
+      if (signUpSec) signUpSec.style.display = 'block';
+    } else if (role === 'admin') {
+      headerLabel.textContent = 'Admin Governance Console';
+      headerLabel.style.color = 'var(--role-admin-lime)';
+      submitBtn.classList.add('btn-fh-admin');
+      submitBtnText.textContent = 'Sign In to Admin Console';
+      if (signUpSec) signUpSec.style.display = 'none';
     }
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (window.lucide) window.lucide.createIcons();
   }
 
-  window.switchRole = switchRole;
-
-  // Restore posted role if returning from error
-  var postedType = '{{ request.POST.login_type|default:login_type|default:"" }}';
-  if (postedType === 'freelancer') {
-    switchRole('freelancer');
-  } else if (postedType === 'admin') {
-    switchRole('admin');
-  } else {
-    switchRole('client');
-  }
-
-  /* ── Password toggle ── */
-  var toggleBtn = document.getElementById('togglePwd');
-  var pwdInput  = document.getElementById('id_password');
-  var pwdIcon   = document.getElementById('pwdIcon');
-
-  if (toggleBtn && pwdInput && pwdIcon) {
-    toggleBtn.addEventListener('click', function () {
-      var show = pwdInput.type === 'password';
-      pwdInput.type = show ? 'text' : 'password';
-      pwdIcon.setAttribute('data-lucide', show ? 'eye-off' : 'eye');
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-      pwdInput.focus();
+  // Password Visibility Toggle
+  const toggleBtn = document.getElementById('togglePasswordBtn');
+  const pwdInput = document.getElementById('id_password');
+  const pwdIcon = document.getElementById('togglePasswordIcon');
+  if (toggleBtn && pwdInput) {
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = pwdInput.getAttribute('type') === 'password';
+      pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+      pwdIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+      if (window.lucide) window.lucide.createIcons();
     });
   }
-
-  /* ── Submit loading state ── */
-  var form = document.getElementById('userLoginForm');
-  if (form && submitBtn) {
-    form.addEventListener('submit', function () {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<div class="btn-spinner"></div><span>Authenticating\u2026</span>';
-    });
-  }
-
-  if (typeof lucide !== 'undefined') lucide.createIcons();
-}());
 </script>
 {% endblock %}

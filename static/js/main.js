@@ -1,444 +1,146 @@
 /**
- * Freelancer Project Tracker — Main JavaScript
- * Handles: Dark Mode, Toast Notifications, Sidebar Toggle, Table Sorting
+ * FreelanceHub Unified Frontend Core Controller
+ * Handles Theme Toggling (Dark/Light), Mobile Navigation, Lucide Icons, Toasts & Modals
  */
 
-/**
- * Helper function for internal backend API requests (/api/v1/*).
- * Enforces backend proxy rules:
- * - Directs all calls to internal /api/* endpoints
- * - Automatically injects CSRF headers and session credentials
- * - Validates responses and sanitizes errors
- */
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
+(function () {
+  'use strict';
 
-async function apiFetch(endpoint, options = {}) {
-  // Enforce internal API route only
-  if (!endpoint.startsWith('/api/')) {
-    throw new Error('Security Restriction: Frontend can only communicate with internal /api/ endpoints.');
-  }
-
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-    'X-CSRFToken': getCookie('csrftoken') || '',
-    'X-Requested-With': 'XMLHttpRequest'
-  };
-
-  const config = {
-    ...options,
-    headers: {
-      ...defaultHeaders,
-      ...options.headers
-    },
-    credentials: 'same-origin'
-  };
-
-  try {
-    const response = await fetch(endpoint, config);
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({ detail: 'API Error' }));
-      throw new Error(errData.detail || errData.error || `HTTP ${response.status}`);
-    }
-    return await response.json();
-  } catch (err) {
-    console.error('Proxy API Request Failed:', err.message);
-    if (window.showToast) {
-      window.showToast(err.message || 'Request failed', 'danger');
-    }
-    throw err;
-  }
-}
-
-window.apiFetch = apiFetch;
-
-document.addEventListener('DOMContentLoaded', function () {
-
-  // ============================================================
-  // THEME ENGINE (Light & Dark Mode)
-  // ============================================================
-  const htmlEl = document.documentElement;
+  // ── THEME MANAGER ──────────────────────────────────────────────────────────
+  const THEME_STORAGE_KEY = 'freelancehub_theme';
 
   function getPreferredTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
-
-    const legacyDark = localStorage.getItem('darkMode');
-    if (legacyDark === '1') return 'dark';
-    if (legacyDark === '0') return 'light';
-
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  function applyChartJsTheme(theme) {
-    const isDark = theme === 'dark';
-    const gridColor = isDark ? 'rgba(164, 240, 234, 0.15)' : 'rgba(18, 105, 98, 0.15)';
-    const textColor = isDark ? '#D2F7F4' : '#003333';
-    const mutedColor = isDark ? '#A4F0EA' : '#126962';
-
-    if (window.Chart && window.Chart.instances) {
-      Object.values(window.Chart.instances).forEach(chart => {
-        if (chart.options.scales) {
-          Object.values(chart.options.scales).forEach(scale => {
-            if (scale.grid) scale.grid.color = gridColor;
-            if (scale.ticks) scale.ticks.color = textColor;
-          });
-        }
-        if (chart.options.plugins && chart.options.plugins.legend) {
-          chart.options.plugins.legend.labels = {
-            ...(chart.options.plugins.legend.labels || {}),
-            color: textColor
-          };
-        }
-        chart.update();
-      });
-    }
-
-    if (window.dashboardCharts && Array.isArray(window.dashboardCharts)) {
-      window.dashboardCharts.forEach(chart => {
-        if (chart.options.scales) {
-          Object.values(chart.options.scales).forEach(scale => {
-            if (scale.grid) scale.grid.color = gridColor;
-            if (scale.ticks) scale.ticks.color = textColor;
-          });
-        }
-        if (chart.options.plugins && chart.options.plugins.legend) {
-          chart.options.plugins.legend.labels = { color: textColor };
-        }
-        chart.update();
-      });
-    }
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    // Broadcast event for charts and interactive components
+    window.dispatchEvent(new CustomEvent('freelancehub:themechange', { detail: { theme } }));
   }
 
-  function setTheme(theme, save = true) {
-    const isDark = theme === 'dark';
-    htmlEl.setAttribute('data-theme', theme);
+  function initTheme() {
+    const currentTheme = getPreferredTheme();
+    applyTheme(currentTheme);
 
-    if (save) {
-      localStorage.setItem('theme', theme);
-      localStorage.setItem('freelancehub_theme', theme);
-      localStorage.setItem('darkMode', isDark ? '1' : '0');
-    }
-
-    // Sync all toggle checkboxes on page
-    document.querySelectorAll('#themeToggle, #themeToggleSettings').forEach(cb => {
-      cb.checked = isDark;
-    });
-
-    // Update charts dynamically
-    applyChartJsTheme(theme);
-
-    // Dispatch event for any custom components
-    document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme, isDark } }));
-  }
-
-  // Initial Theme Setup
-  const currentTheme = getPreferredTheme();
-  setTheme(currentTheme, false);
-
-  // Bind Click Event to Theme Toggle Buttons
-  document.addEventListener('click', function(e) {
-    const btn = e.target.closest('#themeToggleBtn, #themeToggleAuthBtn, #adminThemeToggle, #clientThemeToggle, #flThemeToggle, #authThemeToggleBtn, #themeToggleSettingsBtn, .theme-toggle-btn, .hub-theme-toggle');
-    if (btn) {
+    document.addEventListener('click', function (e) {
+      const toggleBtn = e.target.closest('#themeToggleBtn, .hub-theme-toggle, [data-action="toggle-theme"]');
+      if (!toggleBtn) return;
       e.preventDefault();
-      const activeTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-      const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
-      setTheme(nextTheme, true);
-    }
-  });
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+  }
 
-  // Bind Change Event for traditional input switches
-  document.addEventListener('change', function(e) {
-    if (e.target.matches('#themeToggle, #themeToggleSettings')) {
-      const nextTheme = e.target.checked ? 'dark' : 'light';
-      setTheme(nextTheme, true);
+  // ── LUCIDE ICONS INITIALIZER ───────────────────────────────────────────────
+  function initIcons() {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
     }
-  });
+  }
 
-  // Listen to OS System Color Scheme changes
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      const savedTheme = localStorage.getItem('theme');
-      const savedLegacy = localStorage.getItem('darkMode');
-      if (!savedTheme && savedLegacy === null) {
-        setTheme(e.matches ? 'dark' : 'light', false);
+  // ── MOBILE NAVIGATION & SIDEBAR ───────────────────────────────────────────
+  function initMobileNav() {
+    // Public Landing Mobile Drawer
+    const drawerToggle = document.getElementById('mobileMenuToggle');
+    const drawer = document.getElementById('mobileDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+
+    function openDrawer() {
+      if (drawer) drawer.classList.add('active');
+      if (drawerOverlay) drawerOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      if (drawer) drawer.classList.remove('active');
+      if (drawerOverlay) drawerOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    if (drawerToggle) drawerToggle.addEventListener('click', openDrawer);
+    if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+    if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+    // Workspace Sidebars (Client, Freelancer, Admin)
+    document.addEventListener('click', function (e) {
+      const sidebarBtn = e.target.closest('.hub-mobile-menu-btn, #sidebarToggle, [data-toggle="sidebar"]');
+      if (!sidebarBtn) return;
+      e.preventDefault();
+
+      const sidebar = document.querySelector('.client-sidebar, .fl-sidebar, .admin-sidebar, .sidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('open');
+        let overlay = document.querySelector('.sidebar-overlay, .fh-sidebar-overlay');
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.className = 'sidebar-overlay';
+          document.body.appendChild(overlay);
+          overlay.addEventListener('click', function () {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+          });
+        }
+        overlay.classList.toggle('active', sidebar.classList.contains('open'));
       }
     });
   }
 
-  window.getCurrentTheme = function() {
-    return htmlEl.getAttribute('data-theme') || 'light';
+  // ── AUTO-DISMISSING ALERTS ─────────────────────────────────────────────────
+  function initAlerts() {
+    const alerts = document.querySelectorAll('.fh-alert, .alert-dismissible');
+    alerts.forEach(function (alert) {
+      setTimeout(function () {
+        alert.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        alert.style.opacity = '0';
+        alert.style.transform = 'translateY(-8px)';
+        setTimeout(function () {
+          if (alert.parentNode) alert.parentNode.removeChild(alert);
+        }, 400);
+      }, 5000);
+    });
+  }
+
+  // ── CSRF HELPER FOR AJAX ───────────────────────────────────────────────────
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  window.getCsrfToken = function () {
+    return getCookie('csrftoken');
   };
 
-  window.setTheme = setTheme;
+  // ── BOOTSTRAP INITIALIZATION ───────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function () {
+    initTheme();
+    initIcons();
+    initMobileNav();
+    initAlerts();
 
-  // ============================================================
-  // SIDEBAR TOGGLE (Mobile)
-  // ============================================================
-  const sidebarToggle = document.getElementById('sidebarToggle');
-  const sidebar = document.getElementById('mainSidebar');
-  const overlay = document.getElementById('sidebarOverlay');
-
-  function closeSidebar() {
-    sidebar && sidebar.classList.remove('open');
-    overlay && overlay.classList.remove('d-block');
-    document.body.style.overflow = '';
-  }
-
-  if (sidebarToggle && sidebar) {
-    sidebarToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-      const isOpen = sidebar.classList.contains('open');
-      if (overlay) overlay.classList.toggle('d-block', isOpen);
-      document.body.style.overflow = isOpen ? 'hidden' : '';
-    });
-  }
-
-  if (overlay) {
-    overlay.addEventListener('click', closeSidebar);
-  }
-
-  // ============================================================
-  // TOAST NOTIFICATIONS (from Django messages)
-  // ============================================================
-  function showToast(message, type = 'info', duration = 4000) {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-
-    const icons = {
-      success: 'fas fa-check-circle',
-      error:   'fas fa-times-circle',
-      danger:  'fas fa-times-circle',
-      warning: 'fas fa-exclamation-triangle',
-      info:    'fas fa-info-circle',
-    };
-
-    const colors = {
-      success: '#10b981',
-      error:   '#ef4444',
-      danger:  '#ef4444',
-      warning: '#f59e0b',
-      info:    '#3b82f6',
-    };
-
-    const toast = document.createElement('div');
-    const resolvedType = type === 'danger' ? 'error' : type;
-    toast.className = `custom-toast ${resolvedType}`;
-
-    // C-02: Build toast using safe DOM API instead of innerHTML to prevent XSS
-    const icon = document.createElement('i');
-    icon.className = icons[type] || icons.info;
-    icon.style.cssText = `color:${colors[type] || colors.info}; font-size:18px; flex-shrink:0;`;
-
-    const msgSpan = document.createElement('span');
-    msgSpan.style.cssText = 'flex:1; font-size:13.5px;';
-    // Use textContent — never innerHTML — to prevent XSS from message content
-    msgSpan.textContent = message;
-
-    const closeBtn = document.createElement('button');
-    closeBtn.type = 'button';
-    closeBtn.style.cssText = 'background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;font-size:16px;';
-    closeBtn.setAttribute('aria-label', 'Close notification');
-    closeBtn.textContent = '\u00D7'; // ×
-    closeBtn.addEventListener('click', () => toast.remove());
-
-    toast.appendChild(icon);
-    toast.appendChild(msgSpan);
-    toast.appendChild(closeBtn);
-    container.appendChild(toast);
-
-    setTimeout(() => {
-      toast.classList.add('hiding');
-      setTimeout(() => toast.remove(), 300);
-    }, duration);
-  }
-
-  // Trigger toasts for existing Django messages rendered in DOM
-  document.querySelectorAll('[data-toast]').forEach(el => {
-    showToast(el.dataset.toast, el.dataset.toastType || 'info');
-    el.remove();
-  });
-
-  // Make showToast globally available
-  window.showToast = showToast;
-
-  // ============================================================
-  // AUTO-DISMISS ALERTS
-  // ============================================================
-  setTimeout(() => {
-    document.querySelectorAll('.auto-dismiss').forEach(el => {
-      el.style.transition = 'opacity .5s';
-      el.style.opacity = '0';
-      setTimeout(() => el.remove(), 500);
-    });
-  }, 5000);
-
-  // ============================================================
-  // CONFIRM DELETE
-  // ============================================================
-  document.querySelectorAll('[data-confirm]').forEach(el => {
-    el.addEventListener('click', function (e) {
-      const msg = this.dataset.confirm || 'Are you sure you want to delete this? This action cannot be undone.';
-      if (!confirm(msg)) e.preventDefault();
-    });
-  });
-
-  // ============================================================
-  // PROGRESS BAR ANIMATIONS
-  // ============================================================
-  document.querySelectorAll('.progress-bar').forEach(bar => {
-    const val = bar.getAttribute('aria-valuenow') || 0;
-    // Reset to 0 first, then animate to actual value for visual effect
-    bar.style.width = '0%';
-    bar.style.transition = 'none';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        bar.style.transition = 'width 1s cubic-bezier(0.4, 0, 0.2, 1)';
-        bar.style.width = val + '%';
+    // Re-trigger icon rendering if dynamic content loaded
+    const observer = new MutationObserver(function (mutations) {
+      let hasNewNodes = false;
+      mutations.forEach(function (mutation) {
+        if (mutation.addedNodes.length > 0) hasNewNodes = true;
       });
+      if (hasNewNodes) initIcons();
     });
+    observer.observe(document.body, { childList: true, subtree: true });
   });
 
-  // ============================================================
-  // SEARCH INPUT DEBOUNCE
-  // ============================================================
-  const searchInputs = document.querySelectorAll('.live-search');
-  searchInputs.forEach(input => {
-    let timeout;
-    input.addEventListener('input', () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        input.closest('form').submit();
-      }, 400);
-    });
-  });
-
-  // ============================================================
-  // ANIMATE STAT NUMBERS
-  // ============================================================
-  function animateNumber(el) {
-    const target = parseFloat(el.dataset.target || el.textContent.replace(/[^0-9.]/g, ''));
-    if (isNaN(target)) return;
-    const isDecimal = String(target).includes('.');
-    const duration = 800;
-    const start = performance.now();
-    const prefix = el.dataset.prefix || '';
-    const suffix = el.dataset.suffix || '';
-
-    function update(now) {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const current = target * ease;
-      el.textContent = prefix + (isDecimal ? current.toFixed(2) : Math.round(current).toLocaleString()) + suffix;
-      if (progress < 1) requestAnimationFrame(update);
-    }
-    requestAnimationFrame(update);
-  }
-
-  window.animateNumber = animateNumber;
-
-  const numObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateNumber(entry.target);
-        numObserver.unobserve(entry.target);
-      }
-    });
-  });
-
-  document.querySelectorAll('.stat-number').forEach(el => numObserver.observe(el));
-
-  // ============================================================
-  // TABLE ROW CLICK NAVIGATION
-  // ============================================================
-  document.querySelectorAll('tr[data-href]').forEach(row => {
-    row.style.cursor = 'pointer';
-    row.addEventListener('click', function (e) {
-      if (!e.target.closest('a, button, input, select')) {
-        window.location.href = this.dataset.href;
-      }
-    });
-  });
-
-  // ============================================================
-  // FLOATING SPEED-DIAL (FAB) TOGGLE
-  // ============================================================
-  const fabWrapper = document.getElementById('fabWrapper');
-  const fabToggleBtn = document.getElementById('fabToggleBtn');
-
-  if (fabWrapper && fabToggleBtn) {
-    fabToggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      fabWrapper.classList.toggle('active');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (fabWrapper.classList.contains('active') && !fabWrapper.contains(e.target)) {
-        fabWrapper.classList.remove('active');
-      }
-    });
-  }
-
-  // ============================================================
-  // SCROLL-REVEAL — IntersectionObserver
-  // ============================================================
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
-
-  // Observe all .reveal-up elements and also trigger immediately for visible ones
-  document.querySelectorAll('.reveal-up').forEach(el => {
-    revealObserver.observe(el);
-  });
-
-  // ============================================================
-  // BUTTON RIPPLE EFFECT
-  // ============================================================
-  document.addEventListener('click', function(e) {
-    const btn = e.target.closest('.btn, .welcome-banner-btn, .fab-main-btn');
-    if (!btn) return;
-
-    const ripple = document.createElement('span');
-    ripple.className = 'ripple-circle';
-    const rect = btn.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    ripple.style.cssText = `
-      width: ${size}px;
-      height: ${size}px;
-      left: ${e.clientX - rect.left - size / 2}px;
-      top: ${e.clientY - rect.top - size / 2}px;
-    `;
-    btn.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 700);
-  });
-
-  // ============================================================
-  // ANIMATE PAGE CONTENT ON LOAD
-  // ============================================================
-  const pageContent = document.querySelector('.page-content');
-  if (pageContent) {
-    pageContent.style.animation = 'fadeInUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both';
-  }
-
-});
+})();

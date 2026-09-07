@@ -6,19 +6,19 @@
 <div class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}">
 {% endif %}
 
-  <!-- Master Emblem Mark (The FH Collaboration Mark) -->
+  <!-- Master Emblem Mark (The FH Collaboration Nexus) -->
   <div class="fh-logo-mark-wrap" aria-hidden="true">
     <svg class="fh-logo-symbol-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="fhLimeGrad_{{ variant|default:'d' }}_{{ role|default:'m' }}" x1="10%" y1="0%" x2="90%" y2="100%">
+        <linearGradient id="fhLimeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="10%" y1="0%" x2="90%" y2="100%">
           <stop offset="0%" stop-color="#C6F000" />
           <stop offset="100%" stop-color="#8DBF00" />
         </linearGradient>
-        <linearGradient id="fhPurpleGrad_{{ variant|default:'d' }}_{{ role|default:'m' }}" x1="10%" y1="0%" x2="90%" y2="100%">
+        <linearGradient id="fhPurpleGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="10%" y1="0%" x2="90%" y2="100%">
           <stop offset="0%" stop-color="#9960FF" />
           <stop offset="100%" stop-color="#551CC0" />
         </linearGradient>
-        <linearGradient id="fhPeachGrad_{{ variant|default:'d' }}_{{ role|default:'m' }}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="fhPeachGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#FFD4CA" />
           <stop offset="100%" stop-color="#F99B85" />
         </linearGradient>
@@ -41,7 +41,7 @@
                C 13 78 13 73 13 67
                L 13 28
                C 13 18 19 13 28 13 Z" 
-            fill="url(#fhLimeGrad_{{ variant|default:'d' }}_{{ role|default:'m' }})" />
+            fill="url(#fhLimeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
       <!-- Right Arch Figure (Royal Purple) -->
       <path d="M 46 87
@@ -52,10 +52,10 @@
                C 79 72 79 57 74 55
                C 69 53 62 57 61 69
                L 61 87 Z" 
-            fill="url(#fhPurpleGrad_{{ variant|default:'d' }}_{{ role|default:'m' }})" />
+            fill="url(#fhPurpleGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
       <!-- Talent Nexus Node (Soft Peach) -->
-      <circle cx="73" cy="22" r="11" fill="url(#fhPeachGrad_{{ variant|default:'d' }}_{{ role|default:'m' }})" />
+      <circle cx="73" cy="22" r="11" fill="url(#fhPeachGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
     </svg>
   </div>
 

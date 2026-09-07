@@ -21,45 +21,47 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
-  <!-- Fonts -->
+  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
 
-  <!-- FreelanceHub Unified Design System -->
+  <!-- Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" href="{% static 'css/freelancer_theme.css' %}">
 
   {% block extra_head %}{% endblock %}
 </head>
 <body class="freelancer-portal">
+
 <!-- Full-Viewport Fixed Background Canvas & Ambient Overlay -->
 <div class="fh-fixed-bg-canvas" aria-hidden="true"></div>
 <div class="fh-fixed-bg-overlay" aria-hidden="true"></div>
+
 <div class="fl-app-layout">
 
   <!-- ══ FREELANCER SIDEBAR ════════════════════════════════════ -->
   <aside class="fl-sidebar" id="flSidebar">
 
     <!-- Brand Header -->
-    <div class="fl-sidebar-header" style="padding: 16px 18px; border-bottom: 1px solid var(--sidebar-border); margin-bottom: 8px;">
+    <div class="fl-sidebar-header" style="padding: 20px 18px; border-bottom: 1px solid var(--sidebar-border);">
       {% url 'freelancer:dashboard' as fl_dash_url %}
       {% include 'components/brand_logo.html' with variant='sidebar' href=fl_dash_url role='Freelancer' %}
     </div>
 
-    <!-- User Profile -->
+    <!-- User Profile Chip -->
     <div class="fl-sidebar-user">
       <div class="fl-user-avatar">
         {{ freelancer_profile.full_name|slice:":1"|upper|default:"F" }}
       </div>
-      <div class="fl-user-details">
-        <div class="fl-user-name">{{ freelancer_profile.full_name|default:"Freelance Pro" }}</div>
+      <div style="min-width:0; flex:1;">
+        <div class="fl-user-name" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">{{ freelancer_profile.full_name|default:"Freelance Pro" }}</div>
         <div class="fl-user-badge-row">
           <i data-lucide="shield-check"></i>
-          <span>{{ freelancer_profile.professional_title|default:"Verified Specialist"|truncatechars:20 }}</span>
+          <span>{{ freelancer_profile.professional_title|default:"Verified Talent"|truncatechars:20 }}</span>
         </div>
       </div>
     </div>
@@ -76,13 +78,13 @@
 
       <a href="{% url 'freelancer:find_projects' %}" class="fl-nav-item {% block nav_find_projects %}{% endblock %}">
         <i data-lucide="search"></i>
-        <span>Browse Projects</span>
+        <span>Find Projects</span>
         {% if open_projects_count %}<span class="fl-nav-badge">{{ open_projects_count }}</span>{% endif %}
       </a>
 
       <a href="{% url 'freelancer:my_applications' %}" class="fl-nav-item {% block nav_applications %}{% endblock %}">
         <i data-lucide="clipboard-check"></i>
-        <span>My Applications</span>
+        <span>My Proposals</span>
       </a>
 
       <a href="{% url 'freelancer:my_projects' %}" class="fl-nav-item {% block nav_my_projects %}{% endblock %}">
@@ -90,55 +92,49 @@
         <span>Active Projects</span>
       </a>
 
-      <a href="{% url 'freelancer:my_projects' %}?status=completed" class="fl-nav-item {% block nav_completed_projects %}{% endblock %}">
-        <i data-lucide="check-circle-2"></i>
-        <span>Completed</span>
-      </a>
-
-      <p class="fl-nav-group-title">TRUST & REPUTATION</p>
+      <p class="fl-nav-group-title">TRUST &amp; REPUTATION</p>
 
       <a href="{% url 'freelancer:profile_view' %}" class="fl-nav-item {% block nav_profile %}{% endblock %}">
-        <i data-lucide="user-circle"></i>
-        <span>Profile</span>
+        <i data-lucide="user"></i>
+        <span>Public Profile</span>
       </a>
 
       <a href="{% url 'freelancer:verification_center' %}" class="fl-nav-item {% block nav_verification %}{% endblock %}">
         <i data-lucide="shield-check"></i>
-        <span>Verification</span>
-        {% if not is_verified %}
-          <span class="fl-nav-badge" style="background:rgba(224,92,92,0.14);color:#E05C5C;border-color:rgba(224,92,92,0.25);">!</span>
-        {% endif %}
+        <span>KYC Verification</span>
       </a>
 
-      <p class="fl-nav-group-title">EARNINGS & SUPPORT</p>
+      <p class="fl-nav-group-title">FINANCES &amp; SUPPORT</p>
+
+      <a href="{% url 'freelancer:payments' %}" class="fl-nav-item {% block nav_payments %}{% endblock %}">
+        <i data-lucide="credit-card"></i>
+        <span>Earnings &amp; Payouts</span>
+      </a>
 
       <a href="{% url 'core:chat_home' %}" class="fl-nav-item {% block nav_chat %}{% endblock %}">
         <i data-lucide="message-square"></i>
         <span>Messages</span>
       </a>
 
-      <a href="{% url 'freelancer:payments' %}" class="fl-nav-item {% block nav_payments %}{% endblock %}">
-        <i data-lucide="credit-card"></i>
-        <span>Payments</span>
+      <a href="{% url 'freelancer:support_list' %}" class="fl-nav-item {% block nav_support %}{% endblock %}">
+        <i data-lucide="life-buoy"></i>
+        <span>Support Desk</span>
       </a>
 
-      <a href="{% url 'core:notifications_list' %}" class="fl-nav-item {% block nav_notifications %}{% endblock %}">
-        <i data-lucide="bell"></i>
-        <span>Notifications</span>
-      </a>
+      <p class="fl-nav-group-title">SETTINGS</p>
 
-      <a href="{% url 'core:settings' %}" class="fl-nav-item {% block nav_settings %}{% endblock %}">
+      <a href="{% url 'freelancer:profile_edit' %}" class="fl-nav-item {% block nav_settings %}{% endblock %}">
         <i data-lucide="settings"></i>
-        <span>Settings</span>
+        <span>Profile Settings</span>
       </a>
 
     </nav>
 
-    <!-- Sidebar Footer -->
-    <div class="fl-sidebar-footer">
-      <form method="post" action="{% url 'core:logout' %}" style="margin:0;">
+    <!-- Sign Out -->
+    <div style="padding: 14px 16px; border-top: 1px solid var(--sidebar-border);">
+      <form method="post" action="{% url 'core:logout' %}">
         {% csrf_token %}
-        <button type="submit" class="fl-nav-item" style="width:100%;background:none;border:none;cursor:pointer;color:var(--sidebar-text);">
+        <button type="submit" class="fl-nav-item" style="width:100%; background:none; border:none; cursor:pointer; color:var(--text-muted);">
           <i data-lucide="log-out"></i>
           <span>Sign Out</span>
         </button>
@@ -148,37 +144,36 @@
   </aside>
 
   <!-- ══ MAIN WRAPPER ══════════════════════════════════════════ -->
-  <div class="fl-main-wrapper">
+  <div class="fl-main">
 
     <!-- Topbar -->
     <header class="fl-topbar">
-      <div style="display:flex;align-items:center;gap:14px;">
-        <button class="hub-mobile-toggle" id="flSidebarToggle" aria-label="Toggle sidebar" style="display:none;">
+      <div class="fl-topbar-left">
+        <button class="hub-mobile-menu-btn" id="flSidebarToggle" aria-label="Toggle sidebar">
           <i data-lucide="menu"></i>
         </button>
-        <div class="fl-topbar-left">
-          <h1>{% block page_title %}Freelancer Portal{% endblock %}</h1>
-          {% block page_subtitle %}<p>Discover open projects and track your deliverables.</p>{% endblock %}
+        <div>
+          <h1 class="fl-topbar-title">{% block page_title %}Freelancer Workspace{% endblock %}</h1>
+          {% block page_subtitle %}<p style="font-size:0.8rem; color:var(--text-muted); margin:0;">Explore opportunities, submit winning proposals, and deliver results.</p>{% endblock %}
         </div>
       </div>
 
-      <div class="fl-topbar-actions">
-        <!-- Browse CTA -->
-        <a href="{% url 'freelancer:find_projects' %}" class="btn-fl-primary" style="padding:8px 16px;font-size:13px;">
+      <div class="fl-topbar-right">
+        <!-- Find Projects Shortcut -->
+        <a href="{% url 'freelancer:find_projects' %}" class="btn-fh btn-fh-freelancer btn-fh-sm">
           <i data-lucide="search"></i>
-          <span>Browse</span>
+          <span>Find Projects</span>
         </a>
 
         <!-- Theme Toggle -->
-        <button type="button" class="hub-theme-toggle" id="flThemeToggle" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+        <button type="button" class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle theme">
           <span class="icon-sun"><i data-lucide="sun"></i></span>
           <span class="icon-moon"><i data-lucide="moon"></i></span>
-          <span class="theme-toggle-thumb"></span>
         </button>
 
-        <!-- Avatar -->
+        <!-- User Avatar Link -->
         <a href="{% url 'freelancer:profile_view' %}" style="text-decoration:none;">
-          <div class="fl-user-avatar" style="width:36px;height:36px;font-size:13px;flex-shrink:0;">
+          <div class="fl-user-avatar" style="width:38px; height:38px; font-size:0.95rem;">
             {{ freelancer_profile.full_name|slice:":1"|upper|default:"F" }}
           </div>
         </a>
@@ -188,11 +183,11 @@
     <!-- Content Body -->
     <main class="fl-content-body">
       {% if messages %}
-        <div style="margin-bottom:18px;display:flex;flex-direction:column;gap:8px;">
+        <div style="margin-bottom:20px;">
           {% for message in messages %}
-            <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
-              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}" style="width:17px;height:17px;flex-shrink:0;"></i>
-              <span>{{ message }}</span>
+            <div class="fh-alert {% if message.tags == 'success' %}fh-alert-success{% elif message.tags == 'error' or message.tags == 'danger' %}fh-alert-danger{% elif message.tags == 'warning' %}fh-alert-warning{% else %}fh-alert-info{% endif %}">
+              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}"></i>
+              <div>{{ message }}</div>
             </div>
           {% endfor %}
         </div>
@@ -204,46 +199,7 @@
   </div>
 </div>
 
-<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
-<script>
-  function refreshIcons() {
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-  }
-  document.addEventListener('DOMContentLoaded', refreshIcons);
-  refreshIcons();
-
-  // ── Unified Theme ──
-  const THEME_KEY = 'freelancehub_theme';
-
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
-    localStorage.setItem('theme', theme);
-    refreshIcons();
-  }
-
-  applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
-
-  const themeBtn = document.getElementById('flThemeToggle');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-    });
-  }
-
-  // ── Mobile Sidebar ──
-  const sidebarToggle = document.getElementById('flSidebarToggle');
-  const sidebar = document.getElementById('flSidebar');
-  if (sidebarToggle && sidebar) {
-    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
-    if (window.innerWidth <= 768) sidebarToggle.style.display = 'flex';
-  }
-
-  window.addEventListener('resize', () => {
-    if (sidebarToggle) sidebarToggle.style.display = window.innerWidth <= 768 ? 'flex' : 'none';
-  });
-</script>
-
+<script src="{% static 'js/main.js' %}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

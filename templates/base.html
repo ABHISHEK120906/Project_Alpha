@@ -2,12 +2,11 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <!-- FOUC prevention — read unified key -->
+  <!-- FOUC prevention -->
   <script>
     (function(){
       try {
-        var t = localStorage.getItem('freelancehub_theme')
-               || (localStorage.getItem('theme'));
+        var t = localStorage.getItem('freelancehub_theme');
         if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
         else document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       } catch(e) {}
@@ -17,29 +16,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FreelanceHub — Professional Freelancing Workspace. Manage projects, clients, tasks, and finances.">
-  <title>{% block title %}FreelanceHub{% endblock %}</title>
+  <title>{% block title %}Workspace Pro — FreelanceHub{% endblock %}</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
-  <!-- Fonts -->
+  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Lucide Icons (primary) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
 
-  <!-- Font Awesome 6 (compat for views using fa-* classes) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- Font Awesome 6 for legacy compatibility -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Chart.js 4 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <!-- FreelanceHub Unified Design System -->
+  <!-- Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
 
@@ -53,375 +52,212 @@
 <div class="fh-fixed-bg-overlay" aria-hidden="true"></div>
 
 {% if user.is_authenticated %}
-<!-- ══════════════════════════════════════════════════════════
-     AUTHENTICATED WORKSPACE LAYOUT
-     ══════════════════════════════════════════════════════════ -->
+<div class="hub-app-layout">
 
-<!-- Mobile overlay -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- Sidebar -->
-<aside class="sidebar" id="mainSidebar" role="navigation" aria-label="Workspace navigation">
+  <!-- ══ SIDEBAR ════════════════════════════════════════════════ -->
+  <aside class="hub-sidebar" id="mainSidebar" role="navigation" aria-label="Workspace navigation">
 
-  <!-- Brand -->
-  <div style="padding: 18px 18px 16px; border-bottom: 1px solid var(--sidebar-border); margin-bottom: 8px;">
-    {% url 'core:dashboard' as dash_url %}
-    {% include 'components/brand_logo.html' with variant='sidebar' href=dash_url role='Workspace Pro' %}
-  </div>
+    <!-- Brand -->
+    <div class="hub-sidebar-header">
+      {% url 'core:dashboard' as dash_url %}
+      {% include 'components/brand_logo.html' with variant='sidebar' href=dash_url role='Workspace Pro' %}
+    </div>
 
-  <!-- Navigation -->
-  <nav class="sidebar-nav" aria-label="Main navigation">
-
-    <p class="sidebar-section-label">Overview</p>
-
-    <a href="{% url 'core:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
-      <span>Executive Dashboard</span>
-    </a>
-
-    <p class="sidebar-section-label">Management</p>
-
-    <a href="{% url 'core:project_list' %}" class="sidebar-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="folder-kanban"></i></span>
-      <span>Projects</span>
-    </a>
-
-    <a href="{% url 'core:client_list' %}" class="sidebar-link {% if 'client' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="users"></i></span>
-      <span>Clients</span>
-    </a>
-
-    <a href="{% url 'core:payment_list' %}" class="sidebar-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="credit-card"></i></span>
-      <span>Payments</span>
-    </a>
-
-    <a href="{% url 'core:invoice_list' %}" class="sidebar-link {% if 'invoice' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="file-text"></i></span>
-      <span>Invoices</span>
-    </a>
-
-    <a href="{% url 'core:task_list' %}" class="sidebar-link {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="check-circle-2"></i></span>
-      <span>Tasks</span>
-    </a>
-
-    <a href="{% url 'core:income_expense_tracker' %}" class="sidebar-link {% if 'income' in request.resolver_match.url_name or 'finances' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="wallet"></i></span>
-      <span>Finances</span>
-    </a>
-
-    <a href="{% url 'core:calendar_view' %}" class="sidebar-link {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="calendar"></i></span>
-      <span>Calendar</span>
-    </a>
-
-    <a href="{% url 'core:file_manager' %}" class="sidebar-link {% if 'file' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="paperclip"></i></span>
-      <span>File Manager</span>
-    </a>
-
-    <p class="sidebar-section-label">Intelligence</p>
-
-    <a href="{% url 'core:analytics_workspace' %}" class="sidebar-link {% if 'analytics' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
-      <span>Data Analytics</span>
-    </a>
-
-    <a href="{% url 'core:data_science_workspace' %}" class="sidebar-link {% if 'data_science' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="cpu"></i></span>
-      <span>Data Science</span>
-    </a>
-
-    <a href="{% url 'core:chat_home' %}" class="sidebar-link {% if 'chat' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="bot"></i></span>
-      <span>TrackBot AI</span>
-    </a>
-
-    <p class="sidebar-section-label">Reporting</p>
-
-    <a href="{% url 'core:reports_dashboard' %}" class="sidebar-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="file-bar-chart-2"></i></span>
-      <span>Reports Hub</span>
-    </a>
-
-    <p class="sidebar-section-label">System</p>
-
-    <a href="{% url 'core:activity_list' %}" class="sidebar-link {% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="activity"></i></span>
-      <span>Activity Log</span>
-    </a>
-
-    <a href="{% url 'core:note_list' %}" class="sidebar-link {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="sticky-note"></i></span>
-      <span>Notes</span>
-    </a>
-
-    <a href="{% url 'core:profile_view' %}" class="sidebar-link {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="user-circle"></i></span>
-      <span>My Profile</span>
-    </a>
-
-    <a href="{% url 'core:settings' %}" class="sidebar-link {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
-      <span class="nav-icon"><i data-lucide="settings"></i></span>
-      <span>Settings</span>
-    </a>
-
-  </nav>
-
-  <!-- Sidebar Promo Card -->
-  <div class="sidebar-promo">
-    <div style="font-size:11px;font-weight:800;color:var(--hub-gold);margin-bottom:3px;">FreelanceHub Active</div>
-    <div style="font-size:11px;color:var(--text-muted);">Discover · Apply · Deliver · Earn</div>
-  </div>
-
-  <!-- Sidebar User Footer -->
-  <div class="sidebar-footer">
-    <a href="{% url 'core:profile_view' %}" class="sidebar-user" style="text-decoration:none;">
-      {% if user.profile and user.profile.profile_picture %}
-        <img src="{{ user.profile.profile_picture.url }}" class="sidebar-avatar" style="object-fit:cover;width:36px;height:36px;border-radius:50%;" alt="{{ user.username }}">
-      {% else %}
-        <div class="sidebar-avatar">{{ user.username|first|upper }}</div>
-      {% endif %}
-      <div>
-        <div style="font-size:13px;font-weight:700;color:var(--text-primary);">{{ user.get_full_name|default:user.username }}</div>
-        <div style="font-size:11.5px;color:var(--text-muted);">Workspace Pro</div>
+    <!-- User Profile Chip -->
+    <div class="hub-sidebar-user">
+      <div class="hub-user-avatar">
+        {{ user.username|slice:":1"|upper }}
       </div>
-    </a>
-    <form method="post" action="{% url 'core:logout' %}" style="margin:0;margin-top:6px;">
-      {% csrf_token %}
-      <button type="submit" class="sidebar-link" style="width:100%;background:none;border:none;cursor:pointer;color:var(--sidebar-text);justify-content:flex-start;">
-        <span class="nav-icon"><i data-lucide="log-out"></i></span>
-        <span>Log Out</span>
-      </button>
-    </form>
+      <div style="min-width:0; flex:1;">
+        <div class="hub-user-name">{{ user.get_full_name|default:user.username }}</div>
+        <div class="hub-user-role">Independent Pro</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="hub-sidebar-nav" aria-label="Main navigation">
+
+      <p class="hub-nav-section-title">OVERVIEW</p>
+
+      <a href="{% url 'core:dashboard' %}" class="hub-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Executive Dashboard</span>
+      </a>
+
+      <p class="hub-nav-section-title">PROJECT OPERATIONS</p>
+
+      <a href="{% url 'core:project_list' %}" class="hub-nav-item {% if 'project' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="folder-kanban"></i>
+        <span>Projects</span>
+      </a>
+
+      <a href="{% url 'core:client_list' %}" class="hub-nav-item {% if 'client' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="users"></i>
+        <span>Clients</span>
+      </a>
+
+      <a href="{% url 'core:task_list' %}" class="hub-nav-item {% if 'task' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="check-circle-2"></i>
+        <span>Tasks &amp; Milestones</span>
+      </a>
+
+      <a href="{% url 'core:calendar_view' %}" class="hub-nav-item {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="calendar"></i>
+        <span>Calendar</span>
+      </a>
+
+      <p class="hub-nav-section-title">BILLING &amp; FINANCE</p>
+
+      <a href="{% url 'core:payment_list' %}" class="hub-nav-item {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="credit-card"></i>
+        <span>Payments</span>
+      </a>
+
+      <a href="{% url 'core:invoice_list' %}" class="hub-nav-item {% if 'invoice' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="file-text"></i>
+        <span>Invoices</span>
+      </a>
+
+      <a href="{% url 'core:income_expense_tracker' %}" class="hub-nav-item {% if 'income' in request.resolver_match.url_name or 'finances' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="wallet"></i>
+        <span>Income &amp; Expenses</span>
+      </a>
+
+      <p class="hub-nav-section-title">INTELLIGENCE &amp; AI</p>
+
+      <a href="{% url 'core:analytics_workspace' %}" class="hub-nav-item {% if 'analytics' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="bar-chart-3"></i>
+        <span>Analytics Studio</span>
+      </a>
+
+      <a href="{% url 'core:data_science_workspace' %}" class="hub-nav-item {% if 'data_science' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="cpu"></i>
+        <span>Forecasting Engine</span>
+      </a>
+
+      <a href="{% url 'core:chat_home' %}" class="hub-nav-item {% if 'chat' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="bot"></i>
+        <span>TrackBot AI Assistant</span>
+      </a>
+
+      <p class="hub-nav-section-title">ASSETS &amp; REPORTS</p>
+
+      <a href="{% url 'core:reports_dashboard' %}" class="hub-nav-item {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="file-bar-chart-2"></i>
+        <span>Reports Hub</span>
+      </a>
+
+      <a href="{% url 'core:file_manager' %}" class="hub-nav-item {% if 'file' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="paperclip"></i>
+        <span>File Manager</span>
+      </a>
+
+      <a href="{% url 'core:note_list' %}" class="hub-nav-item {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="sticky-note"></i>
+        <span>Notes</span>
+      </a>
+
+      <a href="{% url 'core:activity_list' %}" class="hub-nav-item {% if 'activity' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="activity"></i>
+        <span>Activity Log</span>
+      </a>
+
+      <p class="hub-nav-section-title">SETTINGS</p>
+
+      <a href="{% url 'core:profile_view' %}" class="hub-nav-item {% if 'profile' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="user"></i>
+        <span>Profile</span>
+      </a>
+
+      <a href="{% url 'core:settings' %}" class="hub-nav-item {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
+        <i data-lucide="settings"></i>
+        <span>Settings</span>
+      </a>
+
+    </nav>
+
+    <!-- Sign Out -->
+    <div style="padding: 14px 16px; border-top: 1px solid var(--sidebar-border);">
+      <form method="post" action="{% url 'core:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="hub-nav-item" style="width:100%; background:none; border:none; cursor:pointer; color:var(--text-muted); padding:8px 10px;">
+          <i data-lucide="log-out"></i>
+          <span>Sign Out</span>
+        </button>
+      </form>
+    </div>
+
+  </aside>
+
+  <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+  <div class="hub-main-content">
+
+    <!-- Topbar -->
+    <header class="hub-topbar">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <button class="hub-mobile-menu-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+          <i data-lucide="menu"></i>
+        </button>
+        <div>
+          <h1 style="font-size:1.15rem; font-weight:700; margin:0;">{% block page_title %}Workspace Pro{% endblock %}</h1>
+          <div style="font-size:0.78rem; color:var(--text-muted);">
+            {% block page_subtitle %}Comprehensive freelance business management and intelligence{% endblock %}
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <!-- Theme Toggle -->
+        <button type="button" class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle theme">
+          <span class="icon-sun"><i data-lucide="sun"></i></span>
+          <span class="icon-moon"><i data-lucide="moon"></i></span>
+        </button>
+
+        <a href="{% url 'core:notifications_list' %}" class="btn-fh btn-fh-secondary btn-fh-sm" title="Notifications">
+          <i data-lucide="bell"></i>
+        </a>
+
+        <a href="{% url 'core:profile_view' %}" style="text-decoration:none;">
+          <div class="hub-user-avatar" style="width:38px; height:38px; font-size:0.95rem;">
+            {{ user.username|slice:":1"|upper }}
+          </div>
+        </a>
+      </div>
+    </header>
+
+    <!-- Page Content Container -->
+    <main class="hub-page-container">
+      {% if messages %}
+        <div style="margin-bottom:20px;">
+          {% for message in messages %}
+            <div class="fh-alert {% if message.tags == 'success' %}fh-alert-success{% elif message.tags == 'error' or message.tags == 'danger' %}fh-alert-danger{% elif message.tags == 'warning' %}fh-alert-warning{% else %}fh-alert-info{% endif %}">
+              <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% elif message.tags == 'error' or message.tags == 'danger' %}alert-circle{% elif message.tags == 'warning' %}alert-triangle{% else %}info{% endif %}"></i>
+              <div>{{ message }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </main>
+
   </div>
 
-</aside>
-
-<!-- Main Content -->
-<div class="main-content">
-
-  <!-- Topbar -->
-  <header class="topbar">
-    <div style="display:flex;align-items:center;gap:12px;">
-      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-        <i data-lucide="menu"></i>
-      </button>
-      <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
-    </div>
-
-    <!-- Search -->
-    <form action="{% url 'core:global_search' %}" method="get" class="topbar-search" style="margin:0;">
-      <span class="search-icon"><i data-lucide="search"></i></span>
-      <input type="text" name="q" placeholder="Search projects, clients, tasks..." value="{{ request.GET.q|default:'' }}" aria-label="Search">
-    </form>
-
-    <div class="topbar-actions">
-      <!-- Notifications -->
-      <a href="{% url 'core:notifications_list' %}" class="topbar-btn" title="Notifications" id="notifBellBtn" style="position:relative;">
-        <i data-lucide="bell"></i>
-        <span id="notifBadge" style="display:none;position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--danger);border:2px solid var(--bg-canvas);"></span>
-      </a>
-
-      <!-- Theme Toggle -->
-      <button type="button" class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
-        <span class="icon-sun"><i data-lucide="sun"></i></span>
-        <span class="icon-moon"><i data-lucide="moon"></i></span>
-        <span class="theme-toggle-thumb"></span>
-      </button>
-
-      <!-- Profile -->
-      <a href="{% url 'core:profile_view' %}" class="topbar-btn" title="Profile">
-        <i data-lucide="user-circle"></i>
-      </a>
-
-      <!-- Quick Create -->
-      <a href="{% url 'core:project_create' %}" class="topbar-btn" title="New Project">
-        <i data-lucide="plus"></i>
-      </a>
-    </div>
-  </header>
-
-  <!-- Page Content -->
-  <main class="page-content">
-    {% block content %}{% endblock %}
-  </main>
-
-  <!-- FAB -->
-  <div class="fab-wrapper" id="fabWrapper">
-    <div class="fab-menu" id="fabMenu">
-      <a href="{% url 'core:project_create' %}" class="fab-item" title="New Project">
-        <span class="fab-label">New Project</span>
-        <div class="fab-icon-btn"><i data-lucide="folder-plus"></i></div>
-      </a>
-      <a href="{% url 'core:client_create' %}" class="fab-item" title="New Client">
-        <span class="fab-label">New Client</span>
-        <div class="fab-icon-btn"><i data-lucide="user-plus"></i></div>
-      </a>
-      <a href="{% url 'core:payment_create' %}" class="fab-item" title="Log Payment">
-        <span class="fab-label">Log Payment</span>
-        <div class="fab-icon-btn"><i data-lucide="credit-card"></i></div>
-      </a>
-      <a href="{% url 'core:task_create' %}" class="fab-item" title="New Task">
-        <span class="fab-label">New Task</span>
-        <div class="fab-icon-btn"><i data-lucide="check-circle-2"></i></div>
-      </a>
-      <a href="{% url 'core:note_create' %}" class="fab-item" title="New Note">
-        <span class="fab-label">New Note</span>
-        <div class="fab-icon-btn"><i data-lucide="sticky-note"></i></div>
-      </a>
-    </div>
-    <button class="fab-main-btn" id="fabToggleBtn" aria-label="Quick Actions">
-      <i data-lucide="plus"></i>
-    </button>
-  </div>
-
-</div><!-- /.main-content -->
-
-<!-- TrackBot AI Chatbot FAB -->
-<a href="{% url 'core:chat_home' %}" class="chatbot-fab" id="chatbotFab" title="TrackBot AI" aria-label="Open AI Assistant">
-  <i data-lucide="bot"></i>
-  <span class="chatbot-fab-pulse"></span>
-</a>
-
+</div>
 {% else %}
-<!-- ══════════════════════════════════════════════════════════
-     UNAUTHENTICATED / AUTH PAGE LAYOUT
-     ══════════════════════════════════════════════════════════ -->
-{% block auth_content %}{% endblock %}
+<!-- Unauthenticated fallback wrapper -->
+<div style="padding-top:72px;">
+  {% block unauth_content %}{% block unauthenticated_content %}{% endblock %}{% endblock %}
+</div>
 {% endif %}
 
-<!-- Toast Container -->
-<div class="toast-container" id="toastContainer"></div>
-
-<!-- Message Bridges (for JS toast rendering) -->
-{% if messages %}
-  {% for message in messages %}
-    <div data-toast="{{ message }}" data-toast-type="{{ message.tags }}" style="display:none;"></div>
-  {% endfor %}
-{% endif %}
-
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
-<!-- App JS -->
+<!-- Bootstrap 5 Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
-<script src="{% static 'js/visualization_studio.js' %}"></script>
-
-<script>
-  // ── Icon Init ──
-  function refreshIcons() {
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-  }
-  document.addEventListener('DOMContentLoaded', refreshIcons);
-  refreshIcons();
-
-  // ── Unified Theme ──
-  const THEME_KEY = 'freelancehub_theme';
-
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
-    localStorage.setItem('theme', theme); // legacy compat
-    const sun  = document.getElementById('themeIconSun');
-    const moon = document.getElementById('themeIconMoon');
-    if (sun && moon) {
-      sun.style.display  = theme === 'light' ? 'none' : 'inline-block';
-      moon.style.display = theme === 'light' ? 'inline-block' : 'none';
-    }
-    refreshIcons();
-  }
-
-  applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
-
-  const themeBtn = document.getElementById('themeToggleBtn');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-    });
-  }
-
-  // ── Sidebar Toggle ──
-  const sidebarToggle = document.getElementById('sidebarToggle');
-  const mainSidebar = document.getElementById('mainSidebar');
-  const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-  if (sidebarToggle && mainSidebar) {
-    function toggleSidebar() { mainSidebar.classList.toggle('open'); sidebarOverlay && sidebarOverlay.classList.toggle('active'); }
-    sidebarToggle.addEventListener('click', toggleSidebar);
-    sidebarOverlay && sidebarOverlay.addEventListener('click', toggleSidebar);
-  }
-
-  // ── FAB Quick Actions ──
-  const fabToggle = document.getElementById('fabToggleBtn');
-  const fabMenu = document.getElementById('fabMenu');
-  if (fabToggle && fabMenu) {
-    fabToggle.addEventListener('click', () => {
-      fabMenu.classList.toggle('open');
-      fabToggle.classList.toggle('open');
-    });
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('#fabWrapper')) {
-        fabMenu.classList.remove('open');
-        fabToggle.classList.remove('open');
-      }
-    });
-  }
-
-  // ── Toast System ──
-  function showToast(msg, type) {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-    const toast = document.createElement('div');
-    const cls = type === 'success' ? 'toast-success' : type === 'error' || type === 'danger' ? 'toast-error' : type === 'warning' ? 'toast-warning' : 'toast-info';
-    toast.className = 'toast-notification ' + cls;
-    toast.innerHTML = `<span>${msg}</span>`;
-    container.appendChild(toast);
-    setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 350); }, 4000);
-  }
-
-  document.querySelectorAll('[data-toast]').forEach(el => {
-    const msg = el.getAttribute('data-toast');
-    const type = el.getAttribute('data-toast-type');
-    if (msg) showToast(msg, type);
-  });
-
-  // ── Notification Badge ──
-  function checkNotifications() {
-    fetch('/notifications/unread-count/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-      .then(r => r.json())
-      .then(data => {
-        const badge = document.getElementById('notifBadge');
-        if (badge) badge.style.display = data.count > 0 ? 'block' : 'none';
-      }).catch(() => {});
-  }
-
-  if (document.getElementById('notifBellBtn')) {
-    checkNotifications();
-    setInterval(checkNotifications, 60000);
-  }
-  // ── Scroll Reveal (IntersectionObserver) ──
-  (function() {
-    var revealEls = document.querySelectorAll('.reveal-up');
-    if (!revealEls.length) return;
-    if (!window.IntersectionObserver) {
-      revealEls.forEach(function(el) { el.classList.add('visible'); });
-      return;
-    }
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.06 });
-    revealEls.forEach(function(el) { observer.observe(el); });
-  })();
-</script>
-
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% block extra_js %}{% endblock %}
-
 </body>
 </html>

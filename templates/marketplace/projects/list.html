@@ -3,26 +3,25 @@
 
 {% block title %}My Projects — Client Workspace{% endblock %}
 {% block page_title %}My Projects Catalog{% endblock %}
-{% block page_subtitle %}<p>Manage all your posted marketplace projects, review submissions, and track workspace deliverables.</p>{% endblock %}
+{% block page_subtitle %}<p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Track and manage your posted project requirements, candidate proposals, and deliverables.</p>{% endblock %}
 {% block nav_projects %}active{% endblock %}
 
 {% block content %}
-
 <!-- ══ SEARCH & FILTER TOOLBAR ══════════════════════════════ -->
-<div class="client-card" style="margin-bottom: 24px;">
-  <form method="get" style="display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;">
-    
-    <div style="flex: 1; min-width: 220px;">
-      <label class="client-label">Search Requirements</label>
-      <div style="position: relative;">
-        <input type="text" name="q" value="{{ search_q|default:'' }}" class="client-input" placeholder="Search by title, skills, or description..." style="padding-left: 38px;" />
-        <i data-lucide="search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--client-text-muted);"></i>
+<div class="fh-card" style="margin-bottom:24px; padding:18px 20px;">
+  <form method="get" style="display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;">
+
+    <div style="flex:1; min-width:240px;">
+      <label class="fh-label">Search Requirements</label>
+      <div style="position:relative;">
+        <input type="text" name="q" value="{{ search_q|default:'' }}" class="fh-input" placeholder="Search by title, skills, or scope..." style="padding-left:38px;" />
+        <i data-lucide="search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-muted);"></i>
       </div>
     </div>
 
-    <div style="min-width: 200px;">
-      <label class="client-label">Lifecycle Status</label>
-      <select name="status" class="client-select">
+    <div style="min-width:200px;">
+      <label class="fh-label">Lifecycle Status</label>
+      <select name="status" class="fh-select">
         <option value="">All Statuses</option>
         {% for value, label in status_choices %}
           <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
@@ -30,122 +29,94 @@
       </select>
     </div>
 
-    <div style="display: flex; gap: 10px;">
-      <button type="submit" class="btn-client-primary" style="padding: 12px 20px;">
+    <div style="display:flex; gap:10px;">
+      <button type="submit" class="btn-fh btn-fh-client">
         <i data-lucide="sliders-horizontal"></i>
         <span>Filter</span>
       </button>
 
       {% if status_filter or search_q %}
-        <a href="{% url 'marketplace:project_list' %}" class="btn-client-secondary" style="padding: 12px 16px;">
+        <a href="{% url 'marketplace:project_list' %}" class="btn-fh btn-fh-secondary">
           <i data-lucide="x"></i>
           <span>Clear</span>
         </a>
       {% endif %}
+
+      <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-primary">
+        <i data-lucide="plus"></i>
+        <span>New Project</span>
+      </a>
     </div>
 
   </form>
 </div>
 
-<!-- ══ PROJECTS GRID / LIST ═════════════════════════════════ -->
+<!-- ══ PROJECTS GRID ═════════════════════════════════════════ -->
 {% if projects %}
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px;">
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(360px, 1fr)); gap:20px;">
     {% for project in projects %}
-      <div class="client-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; transition: transform var(--ease-fast), border-color var(--ease-fast);">
-        
+      <div class="fh-card fh-card-interactive" style="display:flex; flex-direction:column; justify-content:space-between; margin-bottom:0;">
         <div>
           <!-- Header -->
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
-            <a href="{% url 'marketplace:project_detail' pk=project.pk %}" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; color: var(--client-text-primary); text-decoration: none;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px;">
+            <a href="{% url 'marketplace:project_detail' pk=project.pk %}" style="font-family:var(--font-heading); font-size:1.05rem; font-weight:700; color:var(--text-primary); text-decoration:none;">
               {{ project.title }}
             </a>
-            <span class="client-badge client-badge-{{ project.status }}">
+            <span class="fh-badge {% if project.status == 'open' %}fh-badge-primary{% elif project.status == 'in_progress' %}fh-badge-warning{% elif project.status == 'completed' %}fh-badge-success{% else %}fh-badge-neutral{% endif %}">
               {{ project.get_status_display }}
             </span>
           </div>
 
-          <!-- Metadata -->
-          <div style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--client-text-muted); margin-bottom: 16px;">
-            {% if project.budget %}
-              <span><i data-lucide="wallet" style="color:var(--client-yellow); width:14px; height:14px;"></i> <strong>₹{{ project.budget|floatformat:0 }}</strong></span>
-            {% endif %}
-            <span><i data-lucide="users" style="color:var(--client-purple); width:14px; height:14px;"></i> <strong>{{ project.app_count|default:"0" }}</strong> application{{ project.app_count|pluralize }}</span>
+          <p style="font-size:0.86rem; color:var(--text-secondary); line-height:1.5; margin-bottom:16px;">
+            {{ project.description|truncatewords:20 }}
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:8px; font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Budget Allocation:</span>
+              <strong style="color:var(--text-primary);">${{ project.budget|floatformat:0|default:"TBD" }} ({{ project.get_budget_type_display|default:"Fixed" }})</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Candidate Proposals:</span>
+              <strong style="color:#7d3cff;">{{ project.app_count|default:"0" }} proposal{{ project.app_count|pluralize }}</strong>
+            </div>
             {% if project.deadline %}
-              <span><i data-lucide="calendar" style="width:14px; height:14px;"></i> Due: {{ project.deadline|date:"d M Y" }}</span>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Target Deadline:</span>
+                <span>{{ project.deadline|date:"M d, Y" }}</span>
+              </div>
             {% endif %}
-            <span><i data-lucide="tag" style="width:14px; height:14px;"></i> {{ project.get_category_display }}</span>
           </div>
-
-          <!-- Skills Chips -->
-          {% if project.skills_list %}
-            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
-              {% for skill in project.skills_list|slice:":4" %}
-                <span style="padding: 2px 8px; border-radius: var(--r-sm); background: var(--client-bg-surface); border: 1px solid var(--client-border); font-size: 11px; font-weight: 600;">{{ skill }}</span>
-              {% endfor %}
-            </div>
-          {% endif %}
-
-          {% if project.assigned_freelancer %}
-            <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #22d3a0; margin-bottom: 16px; padding: 6px 10px; background: rgba(34, 211, 160, 0.1); border-radius: var(--r-sm);">
-              <i data-lucide="user-check" style="width: 14px; height: 14px;"></i>
-              <span>Assigned: <strong>{{ project.assigned_freelancer.get_full_name|default:project.assigned_freelancer.username }}</strong></span>
-            </div>
-          {% endif %}
         </div>
 
-        <!-- Card Bottom Actions -->
-        <div style="display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--client-border-subtle);">
-          <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn-client-secondary" style="padding: 6px 12px; font-size: 12px;">
-            <i data-lucide="eye"></i>
-            <span>View</span>
-          </a>
-
-          {% if project.status not in 'completed closed' %}
-            <a href="{% url 'marketplace:project_edit' pk=project.pk %}" class="btn-client-secondary" style="padding: 6px 12px; font-size: 12px;">
-              <i data-lucide="pencil"></i>
-              <span>Edit</span>
-            </a>
-          {% endif %}
-
-          <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn-client-yellow" style="padding: 6px 12px; font-size: 12px;">
+        <!-- Footer Actions -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid var(--border-subtle); gap:8px;">
+          <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn-fh btn-fh-secondary btn-fh-sm" style="flex:1;">
             <i data-lucide="clipboard-check"></i>
-            <span>Proposals ({{ project.app_count|default:"0" }})</span>
+            <span>Proposals</span>
           </a>
-
-          {% if project.status in 'assigned in_progress' %}
-            <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-client-primary" style="padding: 6px 12px; font-size: 12px;">
-              <i data-lucide="play"></i>
-              <span>Workspace</span>
-            </a>
-          {% endif %}
+          <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-fh btn-fh-client btn-fh-sm" style="flex:1;">
+            <i data-lucide="play"></i>
+            <span>Workspace</span>
+          </a>
+          <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn-fh btn-fh-outline btn-fh-sm" title="Project Specs">
+            <i data-lucide="external-link"></i>
+          </a>
         </div>
-
       </div>
     {% endfor %}
   </div>
 {% else %}
-  <!-- Empty State -->
-  <div class="client-card" style="text-align: center; padding: 60px 24px;">
-    <div style="width: 64px; height: 64px; border-radius: var(--r-lg); background: rgba(125, 60, 255, 0.12); color: var(--client-purple); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
-      <i data-lucide="folder-open" style="width: 32px; height: 32px;"></i>
-    </div>
-    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">
-      {% if status_filter or search_q %}No matching projects found{% else %}No projects created yet{% endif %}
-    </h3>
-    <p style="font-size: 14px; color: var(--client-text-muted); max-width: 420px; margin: 0 auto 24px auto;">
-      {% if status_filter or search_q %}
-        Try adjusting or clearing your filters to see more results.
-      {% else %}
-        Post a project requirement to connect with verified freelance talent and start receiving proposals.
-      {% endif %}
-    </p>
-    {% if not status_filter and not search_q %}
-      <a href="{% url 'marketplace:project_post' %}" class="btn-client-primary">
+  <div class="fh-card">
+    <div class="fh-empty-state">
+      <div class="fh-empty-icon"><i data-lucide="folder-search"></i></div>
+      <div class="fh-empty-title">No projects match your filter</div>
+      <div class="fh-empty-desc">Try clearing your filters or create a new project requirement to begin.</div>
+      <a href="{% url 'marketplace:project_post' %}" class="btn-fh btn-fh-client">
         <i data-lucide="plus-circle"></i>
-        <span>Create Project</span>
+        <span>Post a Project</span>
       </a>
-    {% endif %}
+    </div>
   </div>
 {% endif %}
-
 {% endblock %}

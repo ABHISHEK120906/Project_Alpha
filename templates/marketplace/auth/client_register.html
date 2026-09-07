@@ -1,120 +1,103 @@
 {% extends 'auth_base.html' %}
-{% block title %}Register as Client — FreelanceHub{% endblock %}
-{% block meta_description %}Create your FreelanceHub Client account. Post project requirements, review verified freelancer proposals, and hire with confidence.{% endblock %}
+{% load static %}
+
+{% block title %}Client Registration — FreelanceHub{% endblock %}
+{% block meta_description %}Create your FreelanceHub Client account. Post project requirements, review verified proposals, and hire with confidence.{% endblock %}
 
 {% block content %}
-
-<!-- Header -->
-<div class="auth-card-header" style="text-align:center; margin-bottom:20px;">
-  <div class="auth-brand-badge" style="margin:0 auto 12px;">
-    <i data-lucide="briefcase"></i>
+<div style="text-align:center; margin-bottom:20px;">
+  <div style="width:48px; height:48px; border-radius:var(--r-md); background:rgba(125,60,255,0.15); color:#7d3cff; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">
+    <i data-lucide="briefcase" style="width:24px; height:24px;"></i>
   </div>
-  <h1 style="font-size:22px; font-weight:800; color:var(--text-primary); margin-bottom:6px; font-family:'Plus Jakarta Sans',sans-serif;">Register as Client</h1>
-  <p style="font-size:13.5px; color:var(--text-muted);">Post projects, hire verified talent, and manage milestone escrow</p>
+  <h2 style="font-size:1.55rem; font-weight:800; margin-bottom:4px;">Register as Client</h2>
+  <p style="font-size:0.86rem; color:var(--text-muted); margin:0;">Post projects and hire verified specialists worldwide</p>
 </div>
 
-<!-- Role Tabs with direct navigation -->
-<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 24px; background:var(--bg-input); padding:4px; border-radius:var(--r-md); border:1px solid var(--border-color); box-sizing:border-box;">
-  <a href="{% url 'marketplace:client_register' %}"
-     style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:var(--r-sm); border:1px solid #7D3CFF; background:rgba(125,60,255,0.15); color:#7D3CFF; font-size:13px; font-weight:700; text-decoration:none;">
-    <i data-lucide="briefcase" style="width:15px;height:15px;"></i> Client
+<!-- Switch between Client and Freelancer Signup -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:24px; background:var(--border-subtle); padding:4px; border-radius:var(--r-md);">
+  <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-client btn-fh-sm" style="text-decoration:none; justify-content:center;">
+    <i data-lucide="briefcase"></i> Client
   </a>
-  <a href="{% url 'core:register' %}"
-     style="display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:var(--r-sm); border:1px solid transparent; background:transparent; color:var(--text-muted); font-size:13px; font-weight:700; text-decoration:none;">
-    <i data-lucide="compass" style="width:15px;height:15px;"></i> Freelancer
+  <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-ghost btn-fh-sm" style="text-decoration:none; justify-content:center;">
+    <i data-lucide="compass"></i> Freelancer
   </a>
 </div>
 
 {% if messages %}
   {% for message in messages %}
-  <div class="hub-alert hub-alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' or message.tags == 'danger' %}danger{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}" style="margin-bottom:16px;">
-    <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}" style="width:16px;height:16px;flex-shrink:0;"></i>
-    <span>{{ message }}</span>
-  </div>
+    <div class="fh-alert {% if message.tags == 'success' %}fh-alert-success{% elif message.tags == 'error' or message.tags == 'danger' %}fh-alert-danger{% elif message.tags == 'warning' %}fh-alert-warning{% else %}fh-alert-info{% endif %}">
+      <i data-lucide="{% if message.tags == 'success' %}check-circle-2{% else %}alert-circle{% endif %}"></i>
+      <div>{{ message }}</div>
+    </div>
   {% endfor %}
 {% endif %}
 
 {% if form.non_field_errors %}
-  <div class="hub-alert hub-alert-danger" style="margin-bottom:16px;">
-    <i data-lucide="alert-circle" style="width:16px;height:16px;flex-shrink:0;"></i>
-    <span>{{ form.non_field_errors|first }}</span>
+  <div class="fh-alert fh-alert-danger">
+    <i data-lucide="alert-circle"></i>
+    <div>{{ form.non_field_errors|first }}</div>
   </div>
 {% endif %}
 
-<form method="post" action="{% url 'marketplace:client_register' %}" id="clientRegisterForm" novalidate style="width:100%; box-sizing:border-box;">
+<form method="post" action="{% url 'marketplace:client_register' %}" id="clientRegisterForm" novalidate>
   {% csrf_token %}
 
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:14px;">
-    <div class="form-group">
-      <label for="{{ form.full_name.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Full Name *</label>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.full_name.id_for_label }}" class="fh-label">Full Name *</label>
       {{ form.full_name }}
-      <style>#{{ form.full_name.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.full_name.id_for_label }}:focus { border-color:#7D3CFF; box-shadow:0 0 0 3px rgba(125,60,255,0.18); }</style>
-      {% if form.full_name.errors %}
-        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.full_name.errors|first }}</div>
-      {% endif %}
+      {% if form.full_name.errors %}<div class="fh-form-error">{{ form.full_name.errors|first }}</div>{% endif %}
     </div>
 
-    <div class="form-group">
-      <label for="{{ form.phone.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Phone Number</label>
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.phone.id_for_label }}" class="fh-label">Phone Number</label>
       {{ form.phone }}
-      <style>#{{ form.phone.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.phone.id_for_label }}:focus { border-color:#7D3CFF; box-shadow:0 0 0 3px rgba(125,60,255,0.18); }</style>
-      {% if form.phone.errors %}
-        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.phone.errors|first }}</div>
-      {% endif %}
+      {% if form.phone.errors %}<div class="fh-form-error">{{ form.phone.errors|first }}</div>{% endif %}
     </div>
   </div>
 
-  <div class="form-group" style="margin-bottom:14px;">
-    <label for="{{ form.email.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Email Address *</label>
-    {{ form.email }}
-    <style>#{{ form.email.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.email.id_for_label }}:focus { border-color:#7D3CFF; box-shadow:0 0 0 3px rgba(125,60,255,0.18); }</style>
-    {% if form.email.errors %}
-      <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.email.errors|first }}</div>
-    {% endif %}
-  </div>
-
-  <div class="form-group" style="margin-bottom:14px;">
-    <label for="{{ form.company_name.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Company / Organisation</label>
+  <div class="fh-form-group">
+    <label for="{{ form.company_name.id_for_label }}" class="fh-label">Company / Organization</label>
     {{ form.company_name }}
-    <style>#{{ form.company_name.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.company_name.id_for_label }}:focus { border-color:#7D3CFF; box-shadow:0 0 0 3px rgba(125,60,255,0.18); }</style>
-    {% if form.company_name.errors %}
-      <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.company_name.errors|first }}</div>
-    {% endif %}
+    {% if form.company_name.errors %}<div class="fh-form-error">{{ form.company_name.errors|first }}</div>{% endif %}
   </div>
 
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:18px;">
-    <div class="form-group">
-      <label for="{{ form.password1.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Password *</label>
-      {{ form.password1 }}
-      <style>#{{ form.password1.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.password1.id_for_label }}:focus { border-color:#7D3CFF; box-shadow:0 0 0 3px rgba(125,60,255,0.18); }</style>
-      {% if form.password1.errors %}
-        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.password1.errors|first }}</div>
-      {% endif %}
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.username.id_for_label }}" class="fh-label">Username *</label>
+      {{ form.username }}
+      {% if form.username.errors %}<div class="fh-form-error">{{ form.username.errors|first }}</div>{% endif %}
     </div>
 
-    <div class="form-group">
-      <label for="{{ form.password2.id_for_label }}" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:var(--text-secondary);">Confirm Password *</label>
-      {{ form.password2 }}
-      <style>#{{ form.password2.id_for_label }} { width:100%; box-sizing:border-box; padding:10px 12px; background:var(--bg-input); border:1px solid var(--border-input); border-radius:var(--r-md); color:var(--text-primary); font-size:13.5px; outline:none; } #{{ form.password2.id_for_label }}:focus { border-color:#7D3CFF; box-shadow:0 0 0 3px rgba(125,60,255,0.18); }</style>
-      {% if form.password2.errors %}
-        <div class="form-error" style="color:var(--danger-text); font-size:11.5px; margin-top:4px;">{{ form.password2.errors|first }}</div>
-      {% endif %}
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.email.id_for_label }}" class="fh-label">Business Email *</label>
+      {{ form.email }}
+      {% if form.email.errors %}<div class="fh-form-error">{{ form.email.errors|first }}</div>{% endif %}
     </div>
   </div>
 
-  <button type="submit" class="btn-hub-primary" id="clientRegisterSubmitBtn" style="width:100%; box-sizing:border-box; padding:13px; justify-content:center; background:linear-gradient(135deg, #7D3CFF 0%, #6428D6 100%); color:#FFF; border:none; box-shadow:0 4px 18px rgba(125,60,255,0.35);">
-    <i data-lucide="building" style="width:17px;height:17px;"></i>
-    <span>Create Client Account</span>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.password.id_for_label }}" class="fh-label">Password *</label>
+      {{ form.password }}
+      {% if form.password.errors %}<div class="fh-form-error">{{ form.password.errors|first }}</div>{% endif %}
+    </div>
+
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.confirm_password.id_for_label }}" class="fh-label">Confirm Password *</label>
+      {{ form.confirm_password }}
+      {% if form.confirm_password.errors %}<div class="fh-form-error">{{ form.confirm_password.errors|first }}</div>{% endif %}
+    </div>
+  </div>
+
+  <button type="submit" class="btn-fh btn-fh-client btn-fh-lg" style="width:100%;">
+    <i data-lucide="check-circle-2"></i>
+    <span>Create Client Workspace</span>
   </button>
 </form>
 
-<div class="hub-divider-label" style="margin:20px 0;">
-  <span>Already Registered?</span>
+<div style="margin-top:20px; text-align:center;">
+  <span style="font-size:0.85rem; color:var(--text-muted);">Already have an account?</span>
+  <a href="{% url 'core:login' %}" style="font-size:0.85rem; font-weight:700; margin-left:6px; color:#7d3cff;">Sign In</a>
 </div>
-
-<a href="{% url 'core:login' %}" class="btn-hub-secondary" style="width:100%; box-sizing:border-box; justify-content:center;">
-  <i data-lucide="log-in" style="width:15px;height:15px;"></i>
-  <span>Sign In to Existing Account</span>
-</a>
-
 {% endblock %}
