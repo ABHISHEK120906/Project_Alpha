@@ -2,289 +2,953 @@
 {% load static %}
 
 {% block title %}FreelanceHub — Where Great Projects Meet Great Talent{% endblock %}
-{% block meta_description %}FreelanceHub connects verified clients with world-class independent professionals with built-in analytics, escrow protection, and intelligent forecasting.{% endblock %}
+{% block meta_description %}FreelanceHub is the premier freelancing marketplace and analytics platform connecting verified clients and independent talent with escrow security and real-time business telemetry.{% endblock %}
 
 {% block content %}
-<!-- ══ HERO SECTION ════════════════════════════════════════════ -->
+<!-- ══ 1. HERO SECTION (TWO-COLUMN HIGH-IMPACT SAAS) ════════════ -->
 <section class="hub-hero" id="top">
   <div class="pub-container">
-    <div class="hero-pill-badge">
-      <i data-lucide="sparkles" class="fh-icon-xs"></i>
-      <span>Where Great Projects Meet Great Talent</span>
+    <div class="hero-grid">
+
+      <!-- Left Column: Copy & CTAs -->
+      <div>
+        <div class="hero-pill-badge">
+          <i data-lucide="sparkles"></i>
+          <span>Where Great Projects Meet Great Talent</span>
+        </div>
+
+        <h1 class="hero-title">
+          Where Great Projects<br>
+          <span class="gradient-text">Meet Great Talent.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          FreelanceHub connects verified clients with world-class independent specialists, empowering both sides with milestone escrow protection, automated payments, and institutional business analytics.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#role-selection" class="btn-fh btn-fh-primary btn-fh-lg">
+            <span>Get Started</span>
+            <i data-lucide="arrow-right"></i>
+          </a>
+
+          <a href="#browse-projects" class="btn-fh btn-fh-secondary btn-fh-lg">
+            <i data-lucide="search"></i>
+            <span>Explore Projects</span>
+          </a>
+        </div>
+
+        <div class="hero-trust-row">
+          <div class="hero-trust-item">
+            <i data-lucide="shield-check"></i>
+            <span>100% Milestone Escrow</span>
+          </div>
+          <div class="hero-trust-item">
+            <i data-lucide="check-circle-2"></i>
+            <span>Verified Talent Badging</span>
+          </div>
+          <div class="hero-trust-item">
+            <i data-lucide="activity"></i>
+            <span>Real-Time Telemetry</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive SaaS Analytics & Marketplace Dashboard Visual -->
+      <div>
+        <div class="hero-preview-dashboard">
+          
+          <!-- Window Header -->
+          <div class="dashboard-window-header">
+            <div class="window-dots">
+              <span class="window-dot red"></span>
+              <span class="window-dot yellow"></span>
+              <span class="window-dot green"></span>
+            </div>
+            <div class="window-title-badge">
+              <i data-lucide="bar-chart-3" style="width:14px; height:14px; color:var(--pink-accent);"></i>
+              <span>FreelanceHub Intelligence Hub</span>
+            </div>
+            <div class="window-live-tag">
+              <span class="window-live-beacon"></span>
+              <span>Live Telemetry</span>
+            </div>
+          </div>
+
+          <!-- KPI Metric Cards Grid -->
+          <div class="dash-kpi-grid">
+            <div class="dash-kpi-card">
+              <div class="dash-kpi-header">
+                <span class="dash-kpi-label">Active Projects</span>
+                <span class="dash-kpi-trend positive"><i data-lucide="trending-up" style="width:12px; height:12px;"></i> +14%</span>
+              </div>
+              <div class="dash-kpi-val">{{ open_projects|length|default:"24" }}</div>
+            </div>
+
+            <div class="dash-kpi-card">
+              <div class="dash-kpi-header">
+                <span class="dash-kpi-label">Project Success</span>
+                <span class="dash-kpi-trend positive"><i data-lucide="check" style="width:12px; height:12px;"></i> Verified</span>
+              </div>
+              <div class="dash-kpi-val">99.4%</div>
+            </div>
+
+            <div class="dash-kpi-card">
+              <div class="dash-kpi-header">
+                <span class="dash-kpi-label">Total Earnings</span>
+                <span class="dash-kpi-trend positive"><i data-lucide="trending-up" style="width:12px; height:12px;"></i> +18.2%</span>
+              </div>
+              <div class="dash-kpi-val">$94,820</div>
+            </div>
+
+            <div class="dash-kpi-card">
+              <div class="dash-kpi-header">
+                <span class="dash-kpi-label">Milestone Escrow</span>
+                <span class="dash-kpi-trend neutral"><i data-lucide="lock" style="width:12px; height:12px;"></i> Secured</span>
+              </div>
+              <div class="dash-kpi-val">$148,250</div>
+            </div>
+          </div>
+
+          <!-- SVG Analytical Performance Chart -->
+          <div class="dash-chart-box">
+            <div class="dash-chart-header">
+              <span class="dash-chart-title">Revenue & Delivery Velocity</span>
+              <div class="dash-chart-legend">
+                <span><span class="chart-legend-dot pink"></span>Realized Revenue</span>
+                <span><span class="chart-legend-dot plum"></span>Milestones Released</span>
+              </div>
+            </div>
+
+            <svg class="dash-svg-chart" viewBox="0 0 400 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="chartGradientPink" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#D96C9D" stop-opacity="0.38" />
+                  <stop offset="100%" stop-color="#D96C9D" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+
+              <!-- Grid Horizontal Guide Lines -->
+              <line x1="0" y1="20" x2="400" y2="20" stroke="var(--border-light)" stroke-dasharray="3 3" />
+              <line x1="0" y1="55" x2="400" y2="55" stroke="var(--border-light)" stroke-dasharray="3 3" />
+              <line x1="0" y1="90" x2="400" y2="90" stroke="var(--border-light)" stroke-dasharray="3 3" />
+
+              <!-- Area Fill Under Curve -->
+              <path d="M 10 85 C 60 78, 100 65, 140 50 C 180 35, 220 52, 260 38 C 300 24, 340 18, 390 12 L 390 100 L 10 100 Z" fill="url(#chartGradientPink)" />
+
+              <!-- Main Revenue Line Stroke (Baby Pink / Rose) -->
+              <path d="M 10 85 C 60 78, 100 65, 140 50 C 180 35, 220 52, 260 38 C 300 24, 340 18, 390 12" stroke="#D96C9D" stroke-width="2.6" stroke-linecap="round" />
+
+              <!-- Secondary Plum Delivery Curve -->
+              <path d="M 10 92 C 70 88, 120 80, 160 72 C 210 62, 250 68, 290 56 C 330 44, 360 35, 390 28" stroke="#6B3152" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" opacity="0.85" />
+
+              <!-- Interactive Milestone Data Points -->
+              <circle cx="140" cy="50" r="4.5" fill="#D96C9D" stroke="#FFFFFF" stroke-width="1.8" />
+              <circle cx="260" cy="38" r="4.5" fill="#D96C9D" stroke="#FFFFFF" stroke-width="1.8" />
+              <circle cx="390" cy="12" r="5" fill="#D96C9D" stroke="#FFFFFF" stroke-width="2" />
+            </svg>
+          </div>
+
+          <!-- Live Marketplace Activity Pill -->
+          <div class="dash-activity-pill">
+            <div class="dash-activity-left">
+              <div class="dash-activity-icon">
+                <i data-lucide="briefcase"></i>
+              </div>
+              <div class="dash-activity-info">
+                <div class="dash-activity-title">AI Data Analytics Pipeline Brief</div>
+                <div class="dash-activity-sub">Alex Chen • Senior Data Architect • $4,500.00</div>
+              </div>
+            </div>
+            <div class="dash-activity-badge">
+              <span>Escrow Active</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
-    <h1 class="hero-title">
-      Where Great Projects<br>
-      <span class="gradient-text">Meet Great Talent.</span>
-    </h1>
-
-    <p class="hero-subtitle">
-      The premier marketplace combining verified talent matchmaking, milestone escrow security, and institutional-grade business intelligence.
-    </p>
-
-    <div class="hero-cta-group">
-      <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum btn-lg">
-        <i data-lucide="briefcase" class="fh-icon-sm"></i>
-        <span>Hire as Client</span>
-      </a>
-
-      <a href="{% url 'freelancer:register' %}" class="btn btn-primary btn-lg">
-        <i data-lucide="sparkles" class="fh-icon-sm"></i>
-        <span>Join as Freelancer</span>
-      </a>
-
-      <a href="{% url 'core:login' %}" class="btn btn-secondary btn-lg">
-        <i data-lucide="log-in" class="fh-icon-sm"></i>
-        <span>Sign In</span>
-      </a>
-    </div>
-
-    <!-- ── LIVE ANALYTICAL COUNTERS BANNER ── -->
-    <div class="hub-live-metrics">
-      <div class="metric-item">
-        <div class="metric-val">{{ open_projects|length|default:"24" }}<span class="accent">+</span></div>
-        <div class="metric-label">Active Briefs</div>
+    <!-- ── LIVE COUNTERS RIBBON ── -->
+    <div class="hub-live-ribbon">
+      <div class="ribbon-item">
+        <div class="ribbon-val">{{ open_projects|length|default:"24" }}<span class="accent">+</span></div>
+        <div class="ribbon-label">Active Briefs</div>
       </div>
-      <div class="metric-item">
-        <div class="metric-val">{{ freelancers|length|default:"18" }}<span class="accent">+</span></div>
-        <div class="metric-label">Verified Specialists</div>
+      <div class="ribbon-item">
+        <div class="ribbon-val">{{ freelancers|length|default:"18" }}<span class="accent">+</span></div>
+        <div class="ribbon-label">Verified Specialists</div>
       </div>
-      <div class="metric-item">
-        <div class="metric-val">100<span class="accent">%</span></div>
-        <div class="metric-label">Escrow Protected</div>
+      <div class="ribbon-item">
+        <div class="ribbon-val">100<span class="accent">%</span></div>
+        <div class="ribbon-label">Escrow Protected</div>
       </div>
-      <div class="metric-item">
-        <div class="metric-val">99.4<span class="accent">%</span></div>
-        <div class="metric-label">On-Time Completion</div>
+      <div class="ribbon-item">
+        <div class="ribbon-val">99.4<span class="accent">%</span></div>
+        <div class="ribbon-label">On-Time Velocity</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ DUAL ROLE VALUE PROPOSITION ═════════════════════════════ -->
-<section class="hub-roles-section" id="role-selection">
+
+<!-- ══ 2. WHAT IS FREELANCEHUB (3 ARCHITECTURAL PILLARS) ══════ -->
+<section class="hub-section hub-section-alt" id="what-is-freelancehub">
   <div class="pub-container">
     <div class="section-header">
-      <span class="section-badge"><i data-lucide="users" class="fh-icon-xs"></i> Built For Both Sides</span>
-      <h2 class="section-title">Two Dedicated Workspaces</h2>
-      <p class="section-subtitle">Whether driving enterprise product milestones or scaling your independent freelancing practice.</p>
+      <span class="section-badge"><i data-lucide="layers"></i> Unified Platform Architecture</span>
+      <h2 class="section-title">The Smart Marketplace Engineered for Results</h2>
+      <p class="section-subtitle">Traditional freelance directories stop at matching. FreelanceHub unifies talent acquisition with milestone-governed escrow and enterprise business analytics in one seamless workflow.</p>
     </div>
 
-    <div class="roles-grid">
+    <div class="pillars-grid">
+      <!-- Pillar 1 -->
+      <div class="pillar-card">
+        <div class="pillar-icon-box">
+          <i data-lucide="users"></i>
+        </div>
+        <h3 class="pillar-title">Verified Talent Discovery</h3>
+        <p class="pillar-desc">Connect with vetted domain specialists. Our algorithmic matching evaluates verified portfolios, historical on-time delivery rates, and candidate skill competencies.</p>
+        <div class="pillar-tags">
+          <span class="pillar-tag">Portfolio Verification</span>
+          <span class="pillar-tag">Skill Badges</span>
+          <span class="pillar-tag">Direct Matching</span>
+        </div>
+      </div>
+
+      <!-- Pillar 2 -->
+      <div class="pillar-card">
+        <div class="pillar-icon-box">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <h3 class="pillar-title">Milestone Escrow Protection</h3>
+        <p class="pillar-desc">Eliminate payment risk on both sides. Project funds are locked securely in institutional escrow before work begins and released seamlessly upon verified deliverable approval.</p>
+        <div class="pillar-tags">
+          <span class="pillar-tag">Milestone Funding</span>
+          <span class="pillar-tag">Auto Invoicing</span>
+          <span class="pillar-tag">Dispute Mediation</span>
+        </div>
+      </div>
+
+      <!-- Pillar 3 -->
+      <div class="pillar-card">
+        <div class="pillar-icon-box">
+          <i data-lucide="bar-chart-3"></i>
+        </div>
+        <h3 class="pillar-title">Real-Time Business Telemetry</h3>
+        <p class="pillar-desc">Gain instant insight into project health, team velocity, cash flow, and risk forecasting. Make informed decisions with executive PDF exports and interactive financial ledgers.</p>
+        <div class="pillar-tags">
+          <span class="pillar-tag">Spend Tracking</span>
+          <span class="pillar-tag">Velocity Heuristics</span>
+          <span class="pillar-tag">Exportable BI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ 3. WHY FREELANCEHUB (THE COMPARISON MATRIX) ════════════ -->
+<section class="hub-section" id="why-freelancehub">
+  <div class="pub-container">
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="sparkles"></i> The FreelanceHub Advantage</span>
+      <h2 class="section-title">Why Leading Teams Choose FreelanceHub</h2>
+      <p class="section-subtitle">Experience a measurable difference over fragmented legacy freelancing boards.</p>
+    </div>
+
+    <div class="comparison-grid">
+      <!-- Traditional Boards -->
+      <div class="comp-card traditional">
+        <div class="comp-header">
+          <span class="comp-badge bad">Traditional Freelancing</span>
+        </div>
+        <h3 class="comp-title">Fragmented &amp; Risky</h3>
+        <ul class="comp-list">
+          <li class="comp-item cross">
+            <i data-lucide="x-circle"></i>
+            <span>Unverified candidate claims and unvetted profile credentials</span>
+          </li>
+          <li class="comp-item cross">
+            <i data-lucide="x-circle"></i>
+            <span>Opaque manual escrow disputes with weeks of frozen funds</span>
+          </li>
+          <li class="comp-item cross">
+            <i data-lucide="x-circle"></i>
+            <span>Zero business analytics, spend tracking, or delivery risk heuristics</span>
+          </li>
+          <li class="comp-item cross">
+            <i data-lucide="x-circle"></i>
+            <span>Manual invoicing and disjointed spreadsheets for accounting</span>
+          </li>
+          <li class="comp-item cross">
+            <i data-lucide="x-circle"></i>
+            <span>High surprise fees without transparent financial ledgers</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- FreelanceHub Platform -->
+      <div class="comp-card hub-winner">
+        <div class="comp-header">
+          <span class="comp-badge good">FreelanceHub Standard</span>
+        </div>
+        <h3 class="comp-title">Verified, Escrowed &amp; Analytical</h3>
+        <ul class="comp-list">
+          <li class="comp-item check">
+            <i data-lucide="check-circle-2"></i>
+            <span>Algorithmic vetting, identity validation, and verified skill badging</span>
+          </li>
+          <li class="comp-item check">
+            <i data-lucide="check-circle-2"></i>
+            <span>100% milestone escrow security with rapid built-in mediation shield</span>
+          </li>
+          <li class="comp-item check">
+            <i data-lucide="check-circle-2"></i>
+            <span>Native telemetry: real-time cash velocity, status distributions &amp; forecasting</span>
+          </li>
+          <li class="comp-item check">
+            <i data-lucide="check-circle-2"></i>
+            <span>Automated presentation-grade PDF, Excel, and CSV executive reports</span>
+          </li>
+          <li class="comp-item check">
+            <i data-lucide="check-circle-2"></i>
+            <span>Transparent pricing with role-tailored dashboards for clients &amp; talent</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ 4. HOW IT WORKS (4-STEP LINEAR PIPELINE) ═══════════════ -->
+<section class="hub-section hub-section-alt" id="how-it-works">
+  <div class="pub-container">
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="git-merge"></i> End-To-End Workflow</span>
+      <h2 class="section-title">How FreelanceHub Works</h2>
+      <p class="section-subtitle">A transparent, milestone-driven collaboration lifecycle designed for security and speed.</p>
+    </div>
+
+    <div class="workflow-pipeline">
+      <!-- Step 1 -->
+      <div class="pipeline-card">
+        <div class="pipeline-num-badge">1</div>
+        <h4 class="pipeline-title">Scope &amp; Publish</h4>
+        <p class="pipeline-desc">Clients define technical brief requirements, target milestones, budget brackets, and required domain skills.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="pipeline-card">
+        <div class="pipeline-num-badge">2</div>
+        <h4 class="pipeline-title">Match &amp; Align</h4>
+        <p class="pipeline-desc">Talent submits structured proposals. Clients review verified candidate credentials, ratings, and agreed delivery schedules.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="pipeline-card">
+        <div class="pipeline-num-badge">3</div>
+        <h4 class="pipeline-title">Escrow Funding</h4>
+        <p class="pipeline-desc">Milestone funds are locked securely in platform escrow before work kicks off, assuring talent of guaranteed disbursement.</p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="pipeline-card">
+        <div class="pipeline-num-badge">4</div>
+        <h4 class="pipeline-title">Verified Release</h4>
+        <p class="pipeline-desc">Upon deliverable inspection and client verification, escrow funds are instantly transferred to the specialist's account.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ 5. CLIENT + FREELANCER MARKETPLACE FLOW ═════════════════ -->
+<section class="hub-section" id="role-selection">
+  <div class="pub-container">
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="users"></i> Specialized Workspaces</span>
+      <h2 class="section-title">Tailored Portals for Clients &amp; Specialists</h2>
+      <p class="section-subtitle">Dedicated operational environments built to empower both business builders and independent creators.</p>
+    </div>
+
+    <div class="dual-roles-grid">
       <!-- Client Card -->
-      <div class="role-card">
+      <div class="role-box">
         <div>
           <div class="role-tag client">
-            <i data-lucide="briefcase" class="fh-icon-xs"></i> For Clients &amp; Companies
+            <i data-lucide="briefcase"></i> For Clients &amp; Companies
           </div>
-          <h3 class="role-title">Build High-Performing Teams On Demand</h3>
-          <p class="role-desc">Post technical project requirements, receive verified candidate proposals, and track milestone velocity with automated financial ledgers.</p>
+          <h3 class="role-box-title">Build High-Performing Teams On Demand</h3>
+          <p class="role-box-desc">Post technical project briefs, evaluate verified proposals, manage sprint velocity, and maintain automated financial ledgers.</p>
           
-          <ul class="role-features">
-            <li><i data-lucide="check-circle-2"></i> Multi-tier milestone escrow protection</li>
-            <li><i data-lucide="check-circle-2"></i> Verified identity &amp; skills badging</li>
-            <li><i data-lucide="check-circle-2"></i> Real-time spending analysis &amp; invoices</li>
-            <li><i data-lucide="check-circle-2"></i> Direct dispute mediation &amp; support</li>
+          <ul class="role-bullet-list">
+            <li><i data-lucide="check-circle-2"></i> Milestone-based escrow security with zero upfront disbursement risk</li>
+            <li><i data-lucide="check-circle-2"></i> Algorithmic candidate matching and verified domain badging</li>
+            <li><i data-lucide="check-circle-2"></i> Real-time spending analysis, budget controls &amp; invoice archive</li>
+            <li><i data-lucide="check-circle-2"></i> Dedicated mediation support and milestone audit trails</li>
           </ul>
         </div>
 
-        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-          <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum">Post a Project</a>
-          <a href="{% url 'core:login' %}" class="btn btn-secondary">Client Portal</a>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-client">
+            <i data-lucide="briefcase"></i> Post a Project
+          </a>
+          <a href="{% url 'core:login' %}" class="btn-fh btn-fh-secondary">
+            <span>Client Sign In</span>
+          </a>
         </div>
       </div>
 
       <!-- Freelancer Card -->
-      <div class="role-card">
+      <div class="role-box">
         <div>
           <div class="role-tag freelancer">
-            <i data-lucide="sparkles" class="fh-icon-xs"></i> For Elite Freelancers
+            <i data-lucide="sparkles"></i> For Elite Specialists
           </div>
-          <h3 class="role-title">Monetize Your Craft With Reliable Escrow</h3>
-          <p class="role-desc">Discover curated briefs matching your exact hourly rates and technical stack. Submit proposals and receive guaranteed disbursements.</p>
+          <h3 class="role-box-title">Monetize Your Craft With Guaranteed Escrow</h3>
+          <p class="role-box-desc">Discover curated briefs matching your exact hourly rates and technical stack. Submit proposals and receive guaranteed disbursements.</p>
           
-          <ul class="role-features">
-            <li><i data-lucide="check-circle-2"></i> Zero-scam guaranteed escrow payout</li>
-            <li><i data-lucide="check-circle-2"></i> Transparent candidate competition tracking</li>
-            <li><i data-lucide="check-circle-2"></i> Portfolio showcase &amp; verified reviews</li>
-            <li><i data-lucide="check-circle-2"></i> Earnings forecasting &amp; tax-ready exports</li>
+          <ul class="role-bullet-list">
+            <li><i data-lucide="check-circle-2"></i> 100% escrow-backed milestones with guaranteed payout on deliverable</li>
+            <li><i data-lucide="check-circle-2"></i> Transparent proposal competition tracking and portfolio showcase</li>
+            <li><i data-lucide="check-circle-2"></i> Verified client ratings, project reviews &amp; skill endorsements</li>
+            <li><i data-lucide="check-circle-2"></i> Cash velocity forecasting, tax-ready summaries &amp; instant withdrawals</li>
           </ul>
         </div>
 
-        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-          <a href="{% url 'freelancer:register' %}" class="btn btn-primary">Find Freelance Work</a>
-          <a href="{% url 'core:login' %}" class="btn btn-secondary">Freelancer Login</a>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-freelancer">
+            <i data-lucide="search"></i> Find Freelance Work
+          </a>
+          <a href="{% url 'core:login' %}" class="btn-fh btn-fh-secondary">
+            <span>Freelancer Sign In</span>
+          </a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ ANALYTICS PREVIEW SECTION ═══════════════════════════════ -->
-<section class="hub-analytics-preview" id="analytics-preview">
+
+<!-- ══ 6. KEY FEATURES ═════════════════════════════════════════ -->
+<section class="hub-section hub-section-alt" id="key-features">
   <div class="pub-container">
     <div class="section-header">
-      <span class="section-badge"><i data-lucide="bar-chart-3" class="fh-icon-xs"></i> Institutional Intelligence</span>
-      <h2 class="section-title">Built-In Analytical Business Platform</h2>
-      <p class="section-subtitle">Real-time financial telemetry, project status distributions, and forward-looking risk models.</p>
+      <span class="section-badge"><i data-lucide="layers"></i> Platform Capabilities</span>
+      <h2 class="section-title">Engineered for Transparency &amp; Scale</h2>
+      <p class="section-subtitle">Every tool necessary to recruit, collaborate, deliver, and analyze in a unified interface.</p>
     </div>
 
-    <div class="analytics-cards-grid">
-      <!-- 1. Revenue & Spend Telemetry -->
-      <div class="preview-card">
-        <div class="preview-card-icon">
-          <i data-lucide="trending-up" class="fh-icon-md"></i>
+    <div class="features-grid">
+      <!-- 1 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <i data-lucide="lock"></i>
         </div>
-        <h4 class="preview-card-title">Real-Time Revenue Telemetry</h4>
-        <p class="preview-card-text">
-          Track realized earnings, accounts receivable, and cash velocity through smooth, interactive charts supporting both Light and Dark mode.
-        </p>
+        <h4 class="feature-title">Multi-Tier Milestone Escrow</h4>
+        <p class="feature-desc">Funds are locked securely prior to sprint start and disbursed immediately upon client milestone approval.</p>
       </div>
 
-      <!-- 2. Project Health & Risk Scoring -->
-      <div class="preview-card">
-        <div class="preview-card-icon">
-          <i data-lucide="shield-alert" class="fh-icon-md"></i>
+      <!-- 2 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <i data-lucide="users"></i>
         </div>
-        <h4 class="preview-card-title">Health Score &amp; Risk Forecasting</h4>
-        <p class="preview-card-text">
-          Predict delivery bottlenecks before they happen. Our heuristics analyze milestone progress, review cycles, and deadline compliance.
-        </p>
+        <h4 class="feature-title">Verified Skill Badging</h4>
+        <p class="feature-desc">Candidate profiles undergo identity verification and technical assessment to assure genuine capability.</p>
       </div>
 
-      <!-- 3. Multi-Format Reporting Hub -->
-      <div class="preview-card">
-        <div class="preview-card-icon">
-          <i data-lucide="file-spreadsheet" class="fh-icon-md"></i>
+      <!-- 3 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <i data-lucide="trending-up"></i>
         </div>
-        <h4 class="preview-card-title">Executive Reports &amp; Exports</h4>
-        <p class="preview-card-text">
-          Export presentation-grade executive PDF summaries, multi-tab Excel financial workbooks, and raw CSV data streams on demand.
-        </p>
+        <h4 class="feature-title">Real-Time Project Telemetry</h4>
+        <p class="feature-desc">Track active velocity, milestone health indicators, and cash burn through interactive dashboards.</p>
+      </div>
+
+      <!-- 4 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <i data-lucide="file-text"></i>
+        </div>
+        <h4 class="feature-title">Automated Invoicing Engine</h4>
+        <p class="feature-desc">Generate tax-compliant, itemized invoices instantly upon milestone release with download capabilities.</p>
+      </div>
+
+      <!-- 5 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <i data-lucide="activity"></i>
+        </div>
+        <h4 class="feature-title">Predictive Risk Heuristics</h4>
+        <p class="feature-desc">Identify project delivery bottlenecks early through historical cycle-time analytics and deadline tracking.</p>
+      </div>
+
+      <!-- 6 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <h4 class="feature-title">Neutral Dispute Shield</h4>
+        <p class="feature-desc">Platform-mediated resolution protocols protect both parties in the rare event of deliverable contention.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ WORKFLOW PIPELINE ═══════════════════════════════════════ -->
-<section class="hub-workflow" id="how-it-works">
+
+<!-- ══ 7. ANALYTICS & FORECASTING ══════════════════════════════ -->
+<section class="hub-section" id="analytics-forecasting">
   <div class="pub-container">
     <div class="section-header">
-      <span class="section-badge"><i data-lucide="git-merge" class="fh-icon-xs"></i> End-To-End Architecture</span>
-      <h2 class="section-title">How FreelanceHub Works</h2>
-      <p class="section-subtitle">A linear, transparent collaboration lifecycle designed for security and speed.</p>
+      <span class="section-badge"><i data-lucide="bar-chart-3"></i> Institutional Intelligence</span>
+      <h2 class="section-title">Smart Analytics &amp; Forward-Looking Forecasting</h2>
+      <p class="section-subtitle">Real-time visibility into project delivery health, financial burn, and milestone completion trajectories.</p>
     </div>
 
-    <div class="workflow-steps">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <h4 class="step-title">Scope &amp; Publish</h4>
-        <p class="step-desc">Clients define technical deliverables, target milestones, budget brackets, and required domain skills.</p>
+    <div class="analytics-showcase-grid">
+      <!-- Left: Analytics Highlight Cards -->
+      <div class="analytics-cards-stack">
+        <div class="bi-metric-card">
+          <div class="bi-metric-icon">
+            <i data-lucide="activity"></i>
+          </div>
+          <div class="bi-metric-content">
+            <h4>Delivery Velocity Heuristics</h4>
+            <p>Monitors commit frequency, sprint progress, and deliverable review cycles to forecast completion dates accurately.</p>
+          </div>
+        </div>
+
+        <div class="bi-metric-card">
+          <div class="bi-metric-icon">
+            <i data-lucide="dollar-sign"></i>
+          </div>
+          <div class="bi-metric-content">
+            <h4>Cash Flow &amp; Earnings Forecasting</h4>
+            <p>Predict upcoming accounts receivable, pending escrow disbursements, and budget run-rates over 30-day horizons.</p>
+          </div>
+        </div>
+
+        <div class="bi-metric-card">
+          <div class="bi-metric-icon">
+            <i data-lucide="pie-chart"></i>
+          </div>
+          <div class="bi-metric-content">
+            <h4>Milestone Status Distributions</h4>
+            <p>Gain categorical breakdowns of project statuses, budget utilization by category, and talent performance ratings.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <h4 class="step-title">Review &amp; Align</h4>
-        <p class="step-desc">Freelancers submit structured proposals. Clients compare ratings, portfolios, and proposed delivery timelines.</p>
-      </div>
+      <!-- Right: Interactive Status Ring & Velocity Preview -->
+      <div>
+        <div class="analytics-interactive-board">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h4 style="font-size:1.1rem; font-weight:800;">Milestone Execution Distribution</h4>
+            <span class="window-live-tag"><span class="window-live-beacon"></span> Active Telemetry</span>
+          </div>
 
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <h4 class="step-title">Escrow Funding</h4>
-        <p class="step-desc">Funds are locked securely in platform escrow before work begins, assuring freelancers of guaranteed payment.</p>
-      </div>
+          <!-- SVG Donut Chart with Baby Pink & Plum Brand Palette -->
+          <div style="display:flex; justify-content:center; align-items:center; padding:10px 0;">
+            <svg width="180" height="180" viewBox="0 0 100 100" style="transform:rotate(-90deg);">
+              <!-- Background Ring -->
+              <circle cx="50" cy="50" r="38" fill="transparent" stroke="var(--border-light)" stroke-width="12" />
+              <!-- Completed Ring (Baby Pink Accent: 68%) -->
+              <circle cx="50" cy="50" r="38" fill="transparent" stroke="#D96C9D" stroke-width="12"
+                      stroke-dasharray="238.76" stroke-dashoffset="76.4" stroke-linecap="round" />
+              <!-- In Progress Ring (Deep Plum: 24%) -->
+              <circle cx="50" cy="50" r="38" fill="transparent" stroke="#6B3152" stroke-width="12"
+                      stroke-dasharray="238.76" stroke-dashoffset="181.4" stroke-linecap="round"
+                      style="transform:rotate(245deg); transform-origin:center;" />
+              <!-- In Review Ring (Blush Pink: 8%) -->
+              <circle cx="50" cy="50" r="38" fill="transparent" stroke="#F7C6D9" stroke-width="12"
+                      stroke-dasharray="238.76" stroke-dashoffset="219.6" stroke-linecap="round"
+                      style="transform:rotate(330deg); transform-origin:center;" />
+            </svg>
+          </div>
 
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <h4 class="step-title">Verified Release</h4>
-        <p class="step-desc">Upon milestone submission and client verification, escrow funds are instantly released to the talent account.</p>
+          <!-- Donut Legend -->
+          <div class="donut-legend-row">
+            <div class="donut-legend-item">
+              <div class="donut-legend-num" style="color:var(--pink-accent);">68%</div>
+              <div class="donut-legend-label">Completed</div>
+            </div>
+            <div class="donut-legend-item">
+              <div class="donut-legend-num" style="color:var(--plum-deep);">24%</div>
+              <div class="donut-legend-label">In Progress</div>
+            </div>
+            <div class="donut-legend-item">
+              <div class="donut-legend-num" style="color:var(--text-secondary);">8%</div>
+              <div class="donut-legend-label">Under Review</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ FEATURED OPEN PROJECTS ══════════════════════════════════ -->
-<section style="padding: 70px 0; background: var(--bg-surface);" id="browse-projects">
+
+<!-- ══ 8. PROJECT & PAYMENT MANAGEMENT ═════════════════════════ -->
+<section class="hub-section hub-section-alt" id="payment-management">
   <div class="pub-container">
     <div class="section-header">
-      <span class="section-badge"><i data-lucide="folder-kanban" class="fh-icon-xs"></i> Marketplace Catalog</span>
-      <h2 class="section-title">Recent Project Briefs</h2>
-      <p class="section-subtitle">Explore live marketplace listings posted by verified clients.</p>
+      <span class="section-badge"><i data-lucide="lock"></i> Financial Governance</span>
+      <h2 class="section-title">Milestone Escrow &amp; Payment Ledger</h2>
+      <p class="section-subtitle">Every project is broken down into verifiable milestones with transparent ledger accounting.</p>
     </div>
 
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:24px; margin-bottom:40px;">
-      {% for project in open_projects|slice:":6" %}
-        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+    <div class="milestone-ledger-box">
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--border-light);">
+        <div>
+          <div style="font-weight:800; font-size:1.1rem;">Contract Brief: Cloud Infrastructure &amp; BI Engine</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Contract #FH-8942 • Total Escrow: $5,400.00</div>
+        </div>
+        <span class="badge" style="background:rgba(217,108,157,0.15); color:var(--pink-accent); font-weight:700; padding:5px 12px; border-radius:9999px;">
+          Escrow Active
+        </span>
+      </div>
+
+      <!-- Milestone 1 -->
+      <div class="milestone-row">
+        <div class="milestone-info-left">
+          <div class="milestone-step-dot done"><i data-lucide="check" style="width:16px; height:16px;"></i></div>
           <div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <span class="badge badge-primary">{{ project.get_category_display|default:project.category }}</span>
-              <span class="badge badge-plum">{{ project.get_budget_type_display|default:"Fixed" }}</span>
+            <div class="milestone-title-text">Milestone 1: System Architecture &amp; Data Schemas</div>
+            <div class="milestone-sub-text">Completed on Sep 02 • Verified by Client • Automated Invoice #INV-101</div>
+          </div>
+        </div>
+        <div class="milestone-amount-badge">
+          <div class="milestone-amt">$1,200.00</div>
+          <span class="milestone-status-tag released">Disbursed</span>
+        </div>
+      </div>
+
+      <!-- Milestone 2 -->
+      <div class="milestone-row">
+        <div class="milestone-info-left">
+          <div class="milestone-step-dot active"><i data-lucide="clock" style="width:16px; height:16px;"></i></div>
+          <div>
+            <div class="milestone-title-text">Milestone 2: Analytics Dashboard &amp; API Integration</div>
+            <div class="milestone-sub-text">Submitted for Deliverable Review • Escrow Funds Locked Safely</div>
+          </div>
+        </div>
+        <div class="milestone-amount-badge">
+          <div class="milestone-amt">$2,400.00</div>
+          <span class="milestone-status-tag escrowed">In Escrow</span>
+        </div>
+      </div>
+
+      <!-- Milestone 3 -->
+      <div class="milestone-row">
+        <div class="milestone-info-left">
+          <div class="milestone-step-dot pending">3</div>
+          <div>
+            <div class="milestone-title-text">Milestone 3: Performance Hardening &amp; Production Handover</div>
+            <div class="milestone-sub-text">Scheduled Sprint • Awaiting Milestone 2 Release</div>
+          </div>
+        </div>
+        <div class="milestone-amount-badge">
+          <div class="milestone-amt">$1,800.00</div>
+          <span class="milestone-status-tag queued">Upcoming</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ 9. REPORTS & EXPORTS ════════════════════════════════════ -->
+<section class="hub-section" id="reports-exports">
+  <div class="pub-container">
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="file-spreadsheet"></i> Executive Reporting</span>
+      <h2 class="section-title">Presentation-Grade Reports &amp; Data Exports</h2>
+      <p class="section-subtitle">Audit-ready documentation and multi-format financial statements ready for your accounting stack.</p>
+    </div>
+
+    <div class="reports-grid">
+      <!-- 1 -->
+      <div class="report-card">
+        <span class="report-format-badge pdf">
+          <i data-lucide="file-text" style="width:13px; height:13px;"></i> PDF Executive
+        </span>
+        <h4 class="report-title">Executive Brief Summaries</h4>
+        <p class="report-desc">Clean, presentation-grade PDF reports detailing milestone completion status, total spend, delivery velocity, and contractor ratings.</p>
+      </div>
+
+      <!-- 2 -->
+      <div class="report-card">
+        <span class="report-format-badge xlsx">
+          <i data-lucide="file-spreadsheet" style="width:13px; height:13px;"></i> Excel Multi-Tab
+        </span>
+        <h4 class="report-title">Financial Workbooks</h4>
+        <p class="report-desc">Multi-tab spreadsheets containing line-item payment ledgers, escrow releases, category allocations, and tax summaries.</p>
+      </div>
+
+      <!-- 3 -->
+      <div class="report-card">
+        <span class="report-format-badge csv">
+          <i data-lucide="activity" style="width:13px; height:13px;"></i> Raw CSV Stream
+        </span>
+        <h4 class="report-title">Audit Trails &amp; BI Feeds</h4>
+        <p class="report-desc">Export raw transactional logs and activity telemetry for seamless ingestion into PowerBI, Tableau, or internal accounting systems.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ 10. CLIENT / FREELANCER / ADMIN OVERVIEW ═════════════════ -->
+<section class="hub-section hub-section-alt" id="stakeholder-overview">
+  <div class="pub-container">
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="layers"></i> Role-Based Architecture</span>
+      <h2 class="section-title">Dedicated Portals for Every Stakeholder</h2>
+      <p class="section-subtitle">Each participant operates within a purpose-built workspace engineered for their operational priorities.</p>
+    </div>
+
+    <div class="roles-overview-grid">
+      <!-- Client Portal -->
+      <div class="role-overview-card">
+        <div class="pillar-icon-box">
+          <i data-lucide="briefcase"></i>
+        </div>
+        <h4 class="role-overview-title">Client Workspace</h4>
+        <p class="role-overview-desc">Engineered for project sponsors, product managers, and enterprise team builders.</p>
+        <ul class="role-overview-features">
+          <li><i data-lucide="check"></i> Project scoping &amp; milestone authoring</li>
+          <li><i data-lucide="check"></i> Proposal comparison &amp; talent shortlisting</li>
+          <li><i data-lucide="check"></i> Escrow funding &amp; release authorization</li>
+          <li><i data-lucide="check"></i> Spend velocity telemetry &amp; tax invoices</li>
+        </ul>
+        <div style="margin-top:auto;">
+          <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-client" style="width:100%;">
+            <span>Client Registration</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Freelancer Portal -->
+      <div class="role-overview-card">
+        <div class="pillar-icon-box">
+          <i data-lucide="sparkles"></i>
+        </div>
+        <h4 class="role-overview-title">Freelancer Workspace</h4>
+        <p class="role-overview-desc">Engineered for independent engineers, designers, consultants, and domain experts.</p>
+        <ul class="role-overview-features">
+          <li><i data-lucide="check"></i> Curated brief discovery &amp; proposal submission</li>
+          <li><i data-lucide="check"></i> Milestone deliverable submission pipeline</li>
+          <li><i data-lucide="check"></i> Guaranteed escrow disbursement ledger</li>
+          <li><i data-lucide="check"></i> Cash velocity &amp; tax-ready exports</li>
+        </ul>
+        <div style="margin-top:auto;">
+          <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-freelancer" style="width:100%;">
+            <span>Freelancer Registration</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Admin Governance -->
+      <div class="role-overview-card">
+        <div class="pillar-icon-box">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <h4 class="role-overview-title">Admin Governance</h4>
+        <p class="role-overview-desc">Engineered for platform operations, trust and safety, dispute mediation, and compliance.</p>
+        <ul class="role-overview-features">
+          <li><i data-lucide="check"></i> Global platform telemetry &amp; system health</li>
+          <li><i data-lucide="check"></i> User verification &amp; credential validation</li>
+          <li><i data-lucide="check"></i> Neutral dispute mediation console</li>
+          <li><i data-lucide="check"></i> Global escrow ledgers &amp; audit tracking</li>
+        </ul>
+        <div style="margin-top:auto;">
+          <a href="{% url 'core:admin_login' %}" class="btn-fh btn-fh-secondary" style="width:100%;">
+            <span>Admin Portal</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ 11. BROWSE PROJECTS SECTION ═════════════════════════════ -->
+<section class="hub-section" id="browse-projects">
+  <div class="pub-container">
+    <div class="section-header">
+      <span class="section-badge"><i data-lucide="folder-kanban"></i> Live Marketplace</span>
+      <h2 class="section-title">Recent Project Briefs</h2>
+      <p class="section-subtitle">Explore open listings posted by verified clients seeking technical and creative domain specialists.</p>
+    </div>
+
+    <div class="projects-showcase-grid">
+      {% for project in open_projects|slice:":6" %}
+        <div class="project-brief-card">
+          <div>
+            <div class="project-brief-top">
+              <span class="project-category-tag">{{ project.get_category_display|default:project.category }}</span>
+              <span class="project-type-tag">{{ project.get_budget_type_display|default:"Fixed Milestone" }}</span>
             </div>
 
-            <h4 style="font-size:1.15rem; margin-bottom:8px; font-weight:700;">
-              <a href="{% url 'freelancer:project_detail' project.id %}" style="color:var(--text-primary);">{{ project.title }}</a>
+            <h4 class="project-brief-title">
+              <a href="{% url 'freelancer:project_detail' project.id %}">{{ project.title }}</a>
             </h4>
 
-            <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:16px;">
+            <p class="project-brief-desc">
               {{ project.description|truncatewords:20 }}
             </p>
 
             {% if project.skills_list %}
-              <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;">
+              <div class="project-skills-row">
                 {% for skill in project.skills_list|slice:":3" %}
-                  <span class="badge" style="background:var(--bg-elevated); color:var(--text-secondary);">{{ skill }}</span>
+                  <span class="skill-pill">{{ skill }}</span>
                 {% endfor %}
               </div>
             {% endif %}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid var(--border-light);">
+          <div class="project-brief-footer">
             <div>
-              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Budget</span>
-              <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.2rem; color:var(--pink-accent);">
+              <span class="project-budget-label">Milestone Budget</span>
+              <div class="project-budget-val">
                 {% if project.budget %}${{ project.budget|floatformat:0 }}{% else %}Negotiable{% endif %}
               </div>
             </div>
 
-            <a href="{% url 'freelancer:project_apply' project.id %}" class="btn btn-primary btn-sm">
+            <a href="{% url 'freelancer:project_apply' project.id %}" class="btn-fh btn-fh-primary btn-fh-sm">
               <span>Apply Brief</span>
-              <i data-lucide="arrow-right" class="fh-icon-xs"></i>
+              <i data-lucide="arrow-right"></i>
             </a>
           </div>
         </div>
       {% empty %}
-        <div class="card" style="grid-column: 1/-1; text-align:center; padding:48px;">
-          <i data-lucide="folder-kanban" class="fh-icon-lg" style="color:var(--pink-accent); margin-bottom:16px;"></i>
-          <h4 style="font-weight:700; margin-bottom:8px;">New Projects Publishing Daily</h4>
-          <p style="color:var(--text-muted); font-size:0.9rem; max-width:440px; margin:0 auto 20px;">
-            Create an account to be alerted the moment verified clients post opportunities in your domain.
-          </p>
-          <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum">Post First Project</a>
+        <!-- Curated Demo Fallback Cards if No Live Briefs in DB -->
+        <div class="project-brief-card">
+          <div>
+            <div class="project-brief-top">
+              <span class="project-category-tag">Data &amp; AI</span>
+              <span class="project-type-tag">Milestone Fixed</span>
+            </div>
+            <h4 class="project-brief-title">
+              <a href="{% url 'freelancer:register' %}">Enterprise Real-Time Analytics Pipeline</a>
+            </h4>
+            <p class="project-brief-desc">
+              Architect and implement scalable event ingestion, BigQuery reporting views, and high-performance BI telemetry dashboards.
+            </p>
+            <div class="project-skills-row">
+              <span class="skill-pill">Python</span>
+              <span class="skill-pill">BigQuery</span>
+              <span class="skill-pill">Dataflow</span>
+            </div>
+          </div>
+          <div class="project-brief-footer">
+            <div>
+              <span class="project-budget-label">Milestone Budget</span>
+              <div class="project-budget-val">$4,500</div>
+            </div>
+            <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-primary btn-fh-sm">
+              <span>Apply Brief</span>
+              <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="project-brief-card">
+          <div>
+            <div class="project-brief-top">
+              <span class="project-category-tag">Engineering</span>
+              <span class="project-type-tag">Milestone Fixed</span>
+            </div>
+            <h4 class="project-brief-title">
+              <a href="{% url 'freelancer:register' %}">SaaS Fintech Dashboard &amp; Escrow Integration</a>
+            </h4>
+            <p class="project-brief-desc">
+              Develop responsive frontend views, payment webhook handlers, and automated PDF statement generation modules.
+            </p>
+            <div class="project-skills-row">
+              <span class="skill-pill">Django</span>
+              <span class="skill-pill">JavaScript</span>
+              <span class="skill-pill">PostgreSQL</span>
+            </div>
+          </div>
+          <div class="project-brief-footer">
+            <div>
+              <span class="project-budget-label">Milestone Budget</span>
+              <div class="project-budget-val">$3,800</div>
+            </div>
+            <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-primary btn-fh-sm">
+              <span>Apply Brief</span>
+              <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="project-brief-card">
+          <div>
+            <div class="project-brief-top">
+              <span class="project-category-tag">UI / UX</span>
+              <span class="project-type-tag">Milestone Fixed</span>
+            </div>
+            <h4 class="project-brief-title">
+              <a href="{% url 'freelancer:register' %}">Design System &amp; Component Library Overhaul</a>
+            </h4>
+            <p class="project-brief-desc">
+              Create a cohesive Figma design system, component tokens, dark/light mode standards, and responsive prototypes.
+            </p>
+            <div class="project-skills-row">
+              <span class="skill-pill">Figma</span>
+              <span class="skill-pill">Design Systems</span>
+              <span class="skill-pill">UI Design</span>
+            </div>
+          </div>
+          <div class="project-brief-footer">
+            <div>
+              <span class="project-budget-label">Milestone Budget</span>
+              <div class="project-budget-val">$2,900</div>
+            </div>
+            <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-primary btn-fh-sm">
+              <span>Apply Brief</span>
+              <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
         </div>
       {% endfor %}
     </div>
 
     <div style="text-align:center;">
-      <a href="{% url 'freelancer:find_projects' %}" class="btn btn-secondary">
-        <i data-lucide="search" class="fh-icon-xs"></i>
-        <span>Explore Complete Catalog</span>
+      <a href="{% url 'freelancer:find_projects' %}" class="btn-fh btn-fh-secondary btn-fh-lg">
+        <i data-lucide="search"></i>
+        <span>Explore Complete Marketplace Catalog</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ══ BOTTOM CTA BANNER ═══════════════════════════════════════ -->
-<section style="padding:80px 0;">
+
+<!-- ══ 12. FINAL CTA BANNER ════════════════════════════════════ -->
+<section class="hub-section" style="padding-top:40px; padding-bottom:90px;">
   <div class="pub-container">
-    <div class="card" style="background: linear-gradient(135deg, rgba(247,198,217,0.3) 0%, rgba(107,49,82,0.18) 100%); border-color: rgba(217,108,157,0.35); text-align:center; padding:60px 32px;">
-      <h2 style="font-size:2.5rem; font-weight:800; margin-bottom:14px; letter-spacing:-0.02em;">Ready to Transform Your Project Execution?</h2>
-      <p style="font-size:1.1rem; color:var(--text-secondary); max-width:620px; margin:0 auto 32px; line-height:1.6;">
-        Join FreelanceHub today. Benefit from verified domain specialists, escrow-guaranteed milestones, and deep analytics.
+    <div class="hub-cta-banner-card">
+      <h2 class="hub-cta-title">Ready to Transform Your Project Execution?</h2>
+      <p class="hub-cta-subtitle">
+        Join FreelanceHub today. Connect with verified domain specialists, guarantee milestone delivery with institutional escrow, and unlock deep project analytics.
       </p>
 
       <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
-        <a href="{% url 'marketplace:client_register' %}" class="btn btn-plum btn-lg">Hire Top Talent</a>
-        <a href="{% url 'freelancer:register' %}" class="btn btn-primary btn-lg">Apply as Freelancer</a>
+        <a href="{% url 'marketplace:client_register' %}" class="btn-fh btn-fh-client btn-fh-lg">
+          <i data-lucide="briefcase"></i>
+          <span>Hire Top Talent</span>
+        </a>
+        <a href="{% url 'freelancer:register' %}" class="btn-fh btn-fh-primary btn-fh-lg">
+          <i data-lucide="sparkles"></i>
+          <span>Apply as Freelancer</span>
+        </a>
       </div>
     </div>
   </div>

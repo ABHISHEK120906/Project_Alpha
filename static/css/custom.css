@@ -66,6 +66,11 @@
   --radius-lg: 20px;
   --radius-full: 9999px;
 
+  /* Transitions */
+  --tr-fast: 0.15s ease;
+  --tr-norm: 0.25s ease;
+  --tr-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
   /* Compatibility & Semantic Aliases */
   --brand-primary: #D96C9D;
   --brand-primary-hover: #C65889;
@@ -185,35 +190,193 @@ a:hover {
   color: var(--pink-accent-hover);
 }
 
-/* Ambient Topographic / Geometric Background */
+/* ==========================================================================
+   MASTER BRAND LOGO COMPONENT
+   ========================================================================== */
+.fh-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+  user-select: none;
+  line-height: 1;
+  vertical-align: middle;
+  transition: opacity var(--tr-fast), transform var(--tr-fast);
+}
+
+.fh-brand-logo:hover {
+  opacity: 0.95;
+}
+
+.fh-brand-logo:hover .fh-logo-symbol-svg {
+  transform: scale(1.05);
+}
+
+.fh-logo-mark-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  overflow: visible;
+}
+
+.fh-logo-symbol-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  transition: transform var(--tr-fast);
+  filter: drop-shadow(0 2px 6px rgba(217, 108, 157, 0.22));
+}
+
+.fh-logo-text-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.fh-logo-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fh-logo-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.fh-logo-name-base {
+  color: var(--text-primary);
+  transition: color var(--tr-fast);
+}
+
+.fh-logo-name-accent {
+  color: var(--pink-accent);
+  font-weight: 800;
+}
+
+.fh-logo-sub-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.fh-logo-role-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(217, 108, 157, 0.15);
+  color: var(--pink-accent);
+  border: 1px solid rgba(217, 108, 157, 0.3);
+}
+
+/* Specific variants */
+.fh-brand-logo--navbar .fh-logo-mark-wrap {
+  width: 38px;
+  height: 38px;
+}
+.fh-brand-logo--navbar .fh-logo-name {
+  font-size: 1.28rem;
+}
+
+.fh-brand-logo--mobile .fh-logo-mark-wrap {
+  width: 34px;
+  height: 34px;
+}
+.fh-brand-logo--mobile .fh-logo-name {
+  font-size: 1.15rem;
+}
+
+.fh-brand-logo--footer .fh-logo-mark-wrap {
+  width: 40px;
+  height: 40px;
+}
+.fh-brand-logo--footer .fh-logo-name {
+  font-size: 1.3rem;
+}
+
+.fh-brand-logo--auth .fh-logo-mark-wrap {
+  width: 46px;
+  height: 46px;
+}
+.fh-brand-logo--auth .fh-logo-name {
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   AMBIENT LAYERED ABSTRACT DESIGNED BACKGROUND
+   ========================================================================== */
 .fh-fixed-bg-canvas {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(circle at 10% 15%, rgba(247, 198, 217, 0.45), transparent 42%),
-    radial-gradient(circle at 85% 20%, rgba(242, 175, 199, 0.35), transparent 48%),
-    radial-gradient(circle at 50% 85%, rgba(107, 49, 82, 0.12), transparent 50%);
-  opacity: 0.85;
+  background-color: var(--bg-app);
+  background-image: 
+    /* Delicate architectural dot-matrix grid */
+    radial-gradient(rgba(217, 108, 157, 0.16) 1.2px, transparent 1.2px),
+    /* Radiant upper-right baby pink & blush flow */
+    radial-gradient(ellipse 700px 500px at 85% 15%, rgba(247, 198, 217, 0.55), transparent 70%),
+    /* Soft left-center rose flow */
+    radial-gradient(ellipse 650px 450px at 10% 40%, rgba(242, 175, 199, 0.38), transparent 70%),
+    /* Deep plum contrast at bottom-right */
+    radial-gradient(ellipse 800px 600px at 80% 88%, rgba(107, 49, 82, 0.12), transparent 70%),
+    /* Soft lavender subtle aura bottom-left */
+    radial-gradient(circle 500px at 25% 90%, rgba(220, 205, 235, 0.32), transparent 65%);
+  background-size: 32px 32px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  opacity: 1;
+  transition: background-color var(--tr-smooth);
 }
 
 [data-theme="dark"] .fh-fixed-bg-canvas,
 .theme-dark .fh-fixed-bg-canvas {
-  background:
-    radial-gradient(circle at 15% 20%, rgba(107, 49, 82, 0.35), transparent 45%),
-    radial-gradient(circle at 80% 30%, rgba(217, 108, 157, 0.18), transparent 40%),
-    radial-gradient(circle at 50% 80%, rgba(46, 26, 38, 0.5), transparent 55%);
-  opacity: 0.9;
+  background-color: #120D16;
+  background-image: 
+    /* Crisp dark technical dot matrix */
+    radial-gradient(rgba(247, 198, 217, 0.11) 1.2px, transparent 1.2px),
+    /* Glowing rose & baby pink flow top-right */
+    radial-gradient(ellipse 750px 550px at 85% 15%, rgba(217, 108, 157, 0.22), transparent 70%),
+    /* Obsidian plum core left-center */
+    radial-gradient(ellipse 700px 500px at 12% 38%, rgba(107, 49, 82, 0.38), transparent 70%),
+    /* Soft lavender neon accent bottom */
+    radial-gradient(circle 600px at 65% 82%, rgba(139, 92, 246, 0.14), transparent 65%),
+    /* Deep midnight vignette */
+    radial-gradient(circle 700px at 20% 85%, rgba(40, 20, 32, 0.55), transparent 70%);
+  background-size: 32px 32px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
+/* Subtle overlay without muddy 80px blur, preserving layered design */
 .fh-fixed-bg-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  backdrop-filter: blur(80px);
-  -webkit-backdrop-filter: blur(80px);
+  background: radial-gradient(circle at 50% 50%, transparent 65%, rgba(37, 32, 42, 0.03) 100%);
+}
+
+[data-theme="dark"] .fh-fixed-bg-overlay {
+  background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(10, 6, 12, 0.35) 100%);
 }
 
 /* ==========================================================================
@@ -318,6 +481,177 @@ a:hover {
 /* Button Sizes */
 .btn-sm { padding: 6px 14px; font-size: 0.82rem; border-radius: var(--radius-xs); }
 .btn-lg { padding: 14px 28px; font-size: 1.05rem; border-radius: var(--radius-md); }
+
+/* ── Modern SaaS Button System (.btn-fh) ── */
+.btn-fh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--tr-fast);
+  text-decoration: none;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.btn-fh svg, .btn-fh i {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.btn-fh-sm {
+  padding: 8px 16px;
+  font-size: 0.84rem;
+  border-radius: var(--radius-xs);
+}
+
+.btn-fh-lg {
+  padding: 14px 28px;
+  font-size: 1.05rem;
+  border-radius: var(--radius-md);
+}
+
+.btn-fh-primary {
+  background: linear-gradient(135deg, var(--pink-accent) 0%, #C65889 100%);
+  color: #FFFFFF !important;
+  border-color: rgba(217, 108, 157, 0.4);
+  box-shadow: 0 4px 14px rgba(217, 108, 157, 0.32);
+}
+
+.btn-fh-primary:hover {
+  background: linear-gradient(135deg, #E078A7 0%, var(--pink-accent) 100%);
+  box-shadow: 0 6px 20px rgba(217, 108, 157, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-fh-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary) !important;
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-fh-secondary:hover {
+  border-color: var(--pink-accent);
+  background: var(--pink-soft-bg);
+  color: var(--pink-accent) !important;
+  transform: translateY(-1px);
+}
+
+.btn-fh-client {
+  background: linear-gradient(135deg, var(--plum-deep) 0%, #401B30 100%);
+  color: #FFFFFF !important;
+  border-color: rgba(107, 49, 82, 0.5);
+  box-shadow: 0 4px 14px rgba(107, 49, 82, 0.3);
+}
+
+.btn-fh-client:hover {
+  background: linear-gradient(135deg, #7E385F 0%, var(--plum-deep) 100%);
+  box-shadow: 0 6px 20px rgba(107, 49, 82, 0.42);
+  transform: translateY(-1px);
+}
+
+.btn-fh-freelancer {
+  background: linear-gradient(135deg, var(--pink-accent) 0%, #B84A7E 100%);
+  color: #FFFFFF !important;
+  border-color: rgba(217, 108, 157, 0.5);
+  box-shadow: 0 4px 14px rgba(217, 108, 157, 0.35);
+}
+
+.btn-fh-freelancer:hover {
+  background: linear-gradient(135deg, #EA7AA9 0%, var(--pink-accent) 100%);
+  box-shadow: 0 6px 20px rgba(217, 108, 157, 0.48);
+  transform: translateY(-1px);
+}
+
+/* ── Premium SaaS Theme Toggle Button ── */
+.hub-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--tr-fast);
+  box-shadow: var(--shadow-xs);
+  outline: none;
+  flex-shrink: 0;
+}
+
+.hub-theme-toggle:hover {
+  color: var(--pink-accent);
+  border-color: var(--pink-accent);
+  background: var(--pink-soft-bg);
+  box-shadow: 0 0 14px rgba(217, 108, 157, 0.28);
+  transform: translateY(-1px);
+}
+
+.hub-theme-toggle svg, .hub-theme-toggle i {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2px;
+}
+
+.hub-theme-toggle .icon-sun,
+.hub-theme-toggle .icon-moon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="light"] .hub-theme-toggle .icon-sun { display: none; }
+[data-theme="light"] .hub-theme-toggle .icon-moon { display: flex; }
+[data-theme="dark"] .hub-theme-toggle .icon-sun { display: flex; color: #F7C6D9; }
+[data-theme="dark"] .hub-theme-toggle .icon-moon { display: none; }
+
+/* ── SaaS Mobile Drawer Toggle ── */
+.hub-mobile-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--tr-fast);
+  box-shadow: var(--shadow-xs);
+  outline: none;
+  flex-shrink: 0;
+}
+
+.hub-mobile-toggle:hover {
+  border-color: var(--pink-accent);
+  color: var(--pink-accent);
+  background: var(--pink-soft-bg);
+}
+
+.hub-mobile-toggle svg, .hub-mobile-toggle i {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 992px) {
+  .hub-mobile-toggle {
+    display: inline-flex;
+  }
+}
 
 /* ==========================================================================
    CARDS & SURFACES
