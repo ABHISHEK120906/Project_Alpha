@@ -19,7 +19,7 @@
   <meta name="description" content="{% block meta_description %}FreelanceHub Client Workspace — Post projects, review verified proposals, and manage deliverables.{% endblock %}" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -45,14 +45,9 @@
   <aside class="client-sidebar" id="clientSidebar">
 
     <!-- Brand Header -->
-    <div class="client-sidebar-header">
-      <a href="{% url 'marketplace:client_dashboard' %}" class="client-brand-link">
-        <div class="client-brand-icon">
-          <i data-lucide="layers"></i>
-        </div>
-        <span>FreelanceHub</span>
-      </a>
-      <span class="client-role-badge">CLIENT</span>
+    <div class="client-sidebar-header" style="padding: 16px 18px; border-bottom: 1px solid var(--sidebar-border); margin-bottom: 8px;">
+      {% url 'marketplace:client_dashboard' as client_dash_url %}
+      {% include 'components/brand_logo.html' with variant='sidebar' href=client_dash_url role='Client' %}
     </div>
 
     <!-- User Profile -->

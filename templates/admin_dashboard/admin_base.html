@@ -18,7 +18,7 @@
   <title>{% block title %}{{ page_title|default:"Platform Governance" }} — FreelanceHub Admin{% endblock %}</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,15 +52,10 @@
   <aside class="admin-sidebar" id="adminSidebar">
 
     <!-- Brand -->
-    <a href="{% url 'marketplace_admin:dashboard' %}" class="admin-brand">
-      <div class="admin-brand-badge">
-        <i data-lucide="layers"></i>
-      </div>
-      <div>
-        <div class="admin-brand-name">FreelanceHub</div>
-        <div class="admin-brand-sub">ADMIN PANEL</div>
-      </div>
-    </a>
+    <div style="padding: 18px 18px 16px; border-bottom: 1px solid var(--sidebar-border); margin-bottom: 8px;">
+      {% url 'marketplace_admin:dashboard' as admin_dash_url %}
+      {% include 'components/brand_logo.html' with variant='sidebar' href=admin_dash_url role='Admin' %}
+    </div>
 
     <!-- Navigation -->
     <nav class="admin-nav" aria-label="Admin navigation">

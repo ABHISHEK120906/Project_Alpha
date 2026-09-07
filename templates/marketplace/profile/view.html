@@ -7,7 +7,7 @@
 
 {% block topbar_actions %}
   <a href="{% url 'marketplace:client_profile_edit' %}" class="btn btn-primary btn-sm">
-    <i class="bi bi-pencil"></i> Edit Profile
+    <i data-lucide="edit-3" class="fh-icon-sm"></i> Edit Profile
   </a>
 {% endblock %}
 
@@ -32,25 +32,27 @@
         {{ client_profile.full_name }}
       </div>
       {% if client_profile.company_name %}
-      <div style="font-size:0.875rem;color:var(--text-muted);margin-bottom:8px;">
-        <i class="bi bi-building"></i> {{ client_profile.company_name }}
+      <div style="font-size:0.875rem;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <i data-lucide="building" class="fh-icon-xs"></i> {{ client_profile.company_name }}
       </div>
       {% endif %}
-      <span class="badge badge-in_progress" style="margin-bottom:16px;">✓ Client Account</span>
+      <span class="badge badge-in_progress" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;">
+        <i data-lucide="shield-check" class="fh-icon-xs"></i> Client Account
+      </span>
 
       {% if client_profile.location %}
-      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">
-        <i class="bi bi-geo-alt"></i> {{ client_profile.location }}
+      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <i data-lucide="map-pin" class="fh-icon-xs"></i> {{ client_profile.location }}
       </div>
       {% endif %}
 
-      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;">
-        <i class="bi bi-envelope"></i> {{ user.email }}
+      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <i data-lucide="mail" class="fh-icon-xs"></i> {{ user.email }}
       </div>
 
       {% if client_profile.phone %}
-      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;">
-        <i class="bi bi-telephone"></i> {{ client_profile.phone }}
+      <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <i data-lucide="phone" class="fh-icon-xs"></i> {{ client_profile.phone }}
       </div>
       {% endif %}
 
@@ -94,26 +96,26 @@
 
     <!-- Security notice -->
     <div class="card" style="border-color:rgba(244,63,94,0.15);">
-      <div class="card-title" style="margin-bottom:12px;color:var(--red);">
-        <i class="bi bi-shield-lock"></i> Security
+      <div class="card-title" style="margin-bottom:12px;color:var(--red);display:flex;align-items:center;gap:6px;">
+        <i data-lucide="shield-alert" class="fh-icon-sm"></i> Security
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;font-size:0.875rem;color:var(--text-secondary);">
         <div style="display:flex;align-items:center;gap:8px;">
-          <i class="bi bi-check-circle-fill" style="color:var(--green);"></i>
+          <i data-lucide="check-circle-2" class="fh-icon-sm" style="color:var(--green);"></i>
           Password is securely hashed — never visible to anyone
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <i class="bi bi-check-circle-fill" style="color:var(--green);"></i>
+          <i data-lucide="check-circle-2" class="fh-icon-sm" style="color:var(--green);"></i>
           Session protected with CSRF & secure cookies
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <i class="bi bi-check-circle-fill" style="color:var(--green);"></i>
+          <i data-lucide="check-circle-2" class="fh-icon-sm" style="color:var(--green);"></i>
           Your data is isolated — other clients cannot access your projects
         </div>
       </div>
       <div style="margin-top:14px;">
         <a href="{% url 'core:profile_change_password' %}" class="btn btn-secondary btn-sm">
-          <i class="bi bi-key"></i> Change Password
+          <i data-lucide="key" class="fh-icon-sm"></i> Change Password
         </a>
       </div>
     </div>

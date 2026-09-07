@@ -127,12 +127,12 @@
                 </button>
               </form>
             {% elif app.status == 'accepted' %}
-              <div style="text-align: center; padding: 6px 12px; background: rgba(34, 211, 160, 0.14); color: #22d3a0; font-size: 12px; font-weight: 800; border-radius: var(--r-sm);">
-                ✓ Accepted &amp; Assigned
+              <div style="text-align: center; padding: 6px 12px; background: rgba(34, 211, 160, 0.14); color: #22d3a0; font-size: 12px; font-weight: 800; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i data-lucide="check-circle-2" style="width:13px;height:13px;"></i> Accepted &amp; Assigned
               </div>
             {% elif app.status == 'rejected' %}
-              <div style="text-align: center; padding: 6px 12px; background: rgba(200, 14, 19, 0.14); color: var(--client-red); font-size: 12px; font-weight: 800; border-radius: var(--r-sm);">
-                ✕ Declined
+              <div style="text-align: center; padding: 6px 12px; background: rgba(200, 14, 19, 0.14); color: var(--client-red); font-size: 12px; font-weight: 800; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i data-lucide="x-circle" style="width:13px;height:13px;"></i> Declined
               </div>
             {% endif %}
           </div>

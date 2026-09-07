@@ -1,0 +1,88 @@
+{% load static %}
+<!-- FreelanceHub Master Brand Logo Component -->
+{% if href %}
+<a href="{{ href }}" class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}" aria-label="FreelanceHub">
+{% else %}
+<div class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}">
+{% endif %}
+
+  <!-- Master Emblem Mark (The FH Collaboration Mark) -->
+  <div class="fh-logo-mark-wrap" aria-hidden="true">
+    <svg class="fh-logo-symbol-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fhLimeGrad_{{ variant|default:'d' }}_{{ role|default:'m' }}" x1="10%" y1="0%" x2="90%" y2="100%">
+          <stop offset="0%" stop-color="#C6F000" />
+          <stop offset="100%" stop-color="#8DBF00" />
+        </linearGradient>
+        <linearGradient id="fhPurpleGrad_{{ variant|default:'d' }}_{{ role|default:'m' }}" x1="10%" y1="0%" x2="90%" y2="100%">
+          <stop offset="0%" stop-color="#9960FF" />
+          <stop offset="100%" stop-color="#551CC0" />
+        </linearGradient>
+        <linearGradient id="fhPeachGrad_{{ variant|default:'d' }}_{{ role|default:'m' }}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FFD4CA" />
+          <stop offset="100%" stop-color="#F99B85" />
+        </linearGradient>
+      </defs>
+
+      <!-- Left 'F' Mark (Vibrant Lime) -->
+      <path d="M 28 13
+               C 38 13 48 13 52 14
+               C 58 15 62 19 62 24
+               C 62 29 58 33 52 34
+               C 46 34 41 34 38 36
+               C 37 37 36 39 36 41
+               C 40 41 46 41 49 42
+               C 55 43 58 47 58 52
+               C 58 57 54 61 48 62
+               C 43 62 39 62 37 64
+               C 36 65 36 67 36 71
+               C 36 77 34 83 29 86
+               C 24 88 18 87 15 82
+               C 13 78 13 73 13 67
+               L 13 28
+               C 13 18 19 13 28 13 Z" 
+            fill="url(#fhLimeGrad_{{ variant|default:'d' }}_{{ role|default:'m' }})" />
+
+      <!-- Right Arch Figure (Royal Purple) -->
+      <path d="M 46 87
+               C 45 71 49 54 60 45
+               C 67 39 79 39 86 45
+               C 93 51 93 67 93 87
+               L 79 87
+               C 79 72 79 57 74 55
+               C 69 53 62 57 61 69
+               L 61 87 Z" 
+            fill="url(#fhPurpleGrad_{{ variant|default:'d' }}_{{ role|default:'m' }})" />
+
+      <!-- Talent Nexus Node (Soft Peach) -->
+      <circle cx="73" cy="22" r="11" fill="url(#fhPeachGrad_{{ variant|default:'d' }}_{{ role|default:'m' }})" />
+    </svg>
+  </div>
+
+  {% if not icon_only %}
+  <!-- Wordmark & Context Tag -->
+  <div class="fh-logo-text-block">
+    <div class="fh-logo-name-row">
+      <div class="fh-logo-name">
+        <span class="fh-logo-name-base">Freelance</span><span class="fh-logo-name-accent">Hub</span>
+      </div>
+      {% if role %}
+        <span class="fh-logo-role-tag fh-logo-role-tag--{{ role|lower|slugify }}">{{ role }}</span>
+      {% endif %}
+    </div>
+
+    {% if subtitle %}
+      <div class="fh-logo-sub-text">{{ subtitle }}</div>
+    {% elif tagline %}
+      <div class="fh-logo-sub-text">{{ tagline }}</div>
+    {% elif variant == 'auth' %}
+      <div class="fh-logo-sub-text">Where Great Projects Meet Great Talent</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+{% if href %}
+</a>
+{% else %}
+</div>
+{% endif %}

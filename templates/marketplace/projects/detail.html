@@ -7,11 +7,11 @@
 
 {% block topbar_actions %}
   <a href="{% url 'marketplace:project_list' %}" class="btn btn-secondary btn-sm">
-    <i class="bi bi-arrow-left"></i> My Projects
+    <i data-lucide="arrow-left" class="fh-icon-sm"></i> My Projects
   </a>
   {% if project.status not in 'completed closed' %}
   <a href="{% url 'marketplace:project_edit' pk=project.pk %}" class="btn btn-secondary btn-sm">
-    <i class="bi bi-pencil"></i> Edit
+    <i data-lucide="edit-3" class="fh-icon-sm"></i> Edit
   </a>
   {% endif %}
 {% endblock %}
@@ -30,11 +30,11 @@
             {{ project.title }}
           </h1>
           <div style="display:flex;flex-wrap:wrap;gap:16px;font-size:0.85rem;color:var(--text-muted);">
-            <span><i class="bi bi-tag" style="color:var(--accent);"></i> {{ project.get_category_display }}</span>
-            <span><i class="bi bi-clock" style="color:var(--accent);"></i> Posted {{ project.created_at|date:"d M Y" }}</span>
+            <span><i data-lucide="tag" class="fh-icon-xs" style="color:var(--accent);vertical-align:middle;"></i> {{ project.get_category_display }}</span>
+            <span><i data-lucide="clock" class="fh-icon-xs" style="color:var(--accent);vertical-align:middle;"></i> Posted {{ project.created_at|date:"d M Y" }}</span>
             {% if project.deadline %}
             <span {% if project.is_overdue %}style="color:var(--red);"{% endif %}>
-              <i class="bi bi-calendar3" style="color:var(--accent);"></i>
+              <i data-lucide="calendar" class="fh-icon-xs" style="color:var(--accent);vertical-align:middle;"></i>
               Deadline: {{ project.deadline|date:"d M Y" }}
               {% if project.is_overdue %}<strong>(Overdue)</strong>{% endif %}
             </span>
@@ -73,7 +73,7 @@
         </div>
         {% if applications %}
         <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn btn-warning btn-sm">
-          <i class="bi bi-inbox"></i> Review All
+          <i data-lucide="inbox" class="fh-icon-sm"></i> Review All
         </a>
         {% endif %}
       </div>
@@ -84,14 +84,16 @@
             {{ project.assigned_freelancer.username|first|upper }}
           </div>
           <div>
-            <div style="font-weight:700;color:var(--green);">✓ Freelancer Assigned</div>
+            <div style="font-weight:700;color:var(--green);display:flex;align-items:center;gap:6px;">
+              <i data-lucide="check-circle-2" class="fh-icon-sm"></i> Freelancer Assigned
+            </div>
             <div style="font-size:0.875rem;color:var(--text-secondary);">
               {{ project.assigned_freelancer.get_full_name|default:project.assigned_freelancer.username }}
             </div>
           </div>
           <div style="margin-left:auto;">
             <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn btn-success btn-sm">
-              <i class="bi bi-briefcase"></i> Open Workspace
+              <i data-lucide="briefcase" class="fh-icon-sm"></i> Open Workspace
             </a>
           </div>
         </div>
@@ -118,7 +120,7 @@
           </div>
           {% endif %}
           <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn btn-primary">
-            <i class="bi bi-people"></i> Review All Applications
+            <i data-lucide="users" class="fh-icon-sm"></i> Review All Applications
           </a>
         </div>
       {% else %}
@@ -211,7 +213,7 @@
       <div style="display:flex;flex-direction:column;gap:10px;">
         {% if project.status not in 'completed closed' %}
         <a href="{% url 'marketplace:project_edit' pk=project.pk %}" class="btn btn-secondary btn-block">
-          <i class="bi bi-pencil"></i> Edit Project
+          <i data-lucide="edit-3" class="fh-icon-sm"></i> Edit Project
         </a>
         {% endif %}
 
@@ -219,7 +221,7 @@
         <form method="post" action="{% url 'marketplace:project_reopen' pk=project.pk %}">
           {% csrf_token %}
           <button type="submit" class="btn btn-success btn-block">
-            <i class="bi bi-arrow-counterclockwise"></i> Reopen Project
+            <i data-lucide="rotate-ccw" class="fh-icon-sm"></i> Reopen Project
           </button>
         </form>
         {% elif project.status not in 'completed' %}
@@ -227,19 +229,19 @@
               onsubmit="return confirm('Close this project? Freelancers won\'t be able to apply anymore.')">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger btn-block">
-            <i class="bi bi-x-circle"></i> Close Project
+            <i data-lucide="x-circle" class="fh-icon-sm"></i> Close Project
           </button>
         </form>
         {% endif %}
 
         {% if project.status in 'assigned in_progress' %}
         <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn btn-primary btn-block">
-          <i class="bi bi-briefcase"></i> Open Workspace
+          <i data-lucide="briefcase" class="fh-icon-sm"></i> Open Workspace
         </a>
         {% endif %}
 
         <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-secondary btn-sm btn-block">
-          <i class="bi bi-flag"></i> Report Issue
+          <i data-lucide="flag" class="fh-icon-sm"></i> Report Issue
         </a>
       </div>
     </div>

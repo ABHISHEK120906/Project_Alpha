@@ -7,7 +7,7 @@
 
 {% block topbar_actions %}
   <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-primary btn-sm">
-    <i class="bi bi-plus-lg"></i> File New Report
+    <i data-lucide="plus" class="fh-icon-sm"></i> File New Report
   </a>
 {% endblock %}
 
@@ -19,7 +19,7 @@
       <div class="card-subtitle">All incident reports filed by your client account</div>
     </div>
     <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-primary btn-sm">
-      <i class="bi bi-flag"></i> New Report
+      <i data-lucide="flag" class="fh-icon-sm"></i> New Report
     </a>
   </div>
 
@@ -59,8 +59,8 @@
           </td>
           <td>
             {% if report.reported_user %}
-            <span style="font-size:0.85rem; color:var(--red);">
-              <i class="bi bi-person-x"></i> {{ report.reported_user.get_full_name|default:report.reported_user.username }}
+            <span style="font-size:0.85rem; color:var(--red); display:inline-flex; align-items:center; gap:4px;">
+              <i data-lucide="user-x" class="fh-icon-xs"></i> {{ report.reported_user.get_full_name|default:report.reported_user.username }}
             </span>
             {% else %}
             <span style="color:var(--text-muted); font-size:0.8rem;">None specified</span>

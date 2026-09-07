@@ -7,7 +7,7 @@
 
 {% block topbar_actions %}
   <a href="{% url 'marketplace:client_support_list' %}" class="btn btn-secondary btn-sm">
-    <i class="bi bi-arrow-left"></i> Support Tickets
+    <i data-lucide="arrow-left" class="fh-icon-sm"></i> Support Tickets
   </a>
 {% endblock %}
 
@@ -16,7 +16,7 @@
   <div class="card">
     <div class="card-header">
       <div>
-        <div class="card-title"><i class="bi bi-shield-exclamation" style="color:var(--red);"></i> File an Incident Report</div>
+        <div class="card-title d-flex align-items-center gap-2"><i data-lucide="shield-alert" class="fh-icon-sm" style="color:var(--red);"></i> File an Incident Report</div>
         <div class="card-subtitle">Please provide comprehensive details so our compliance team can investigate promptly.</div>
       </div>
     </div>
@@ -27,7 +27,7 @@
       <div class="form-group">
         <label class="form-label" for="{{ form.reason.id_for_label }}">Reason for Report <span style="color:var(--red);">*</span></label>
         {{ form.reason }}
-        {% if form.reason.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.reason.errors|first }}</div>{% endif %}
+        {% if form.reason.errors %}<div class="form-error"><i data-lucide="alert-circle" class="fh-icon-xs"></i> {{ form.reason.errors|first }}</div>{% endif %}
       </div>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
@@ -48,18 +48,18 @@
         <label class="form-label" for="{{ form.description.id_for_label }}">Incident Details <span style="color:var(--red);">*</span></label>
         {{ form.description }}
         <div class="form-hint">Include timeline of events, deliverable status, communication summary, or dispute details.</div>
-        {% if form.description.errors %}<div class="form-error"><i class="bi bi-exclamation-circle"></i> {{ form.description.errors|first }}</div>{% endif %}
+        {% if form.description.errors %}<div class="form-error"><i data-lucide="alert-circle" class="fh-icon-xs"></i> {{ form.description.errors|first }}</div>{% endif %}
       </div>
 
-      <div style="background:var(--bg-elevated); padding:14px; border-radius:var(--radius-sm); margin-bottom:20px; font-size:0.8rem; color:var(--text-muted); line-height:1.5;">
-        <i class="bi bi-info-circle-fill" style="color:var(--blue);"></i>
-        False reporting violates FreelanceHub terms. All submitted tickets are reviewed by administrators during dispute mediation.
+      <div style="background:var(--bg-elevated); padding:14px; border-radius:var(--radius-sm); margin-bottom:20px; font-size:0.8rem; color:var(--text-muted); line-height:1.5; display:flex; align-items:center; gap:8px;">
+        <i data-lucide="info" class="fh-icon-xs flex-shrink-0" style="color:var(--blue);"></i>
+        <span>False reporting violates FreelanceHub terms. All submitted tickets are reviewed by administrators during dispute mediation.</span>
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:12px;">
         <a href="{% url 'marketplace:client_support_list' %}" class="btn btn-secondary">Cancel</a>
         <button type="submit" class="btn btn-danger">
-          <i class="bi bi-send"></i> Submit Incident Report
+          <i data-lucide="send" class="fh-icon-sm"></i> Submit Incident Report
         </button>
       </div>
     </form>

@@ -7,7 +7,7 @@
 
 {% block topbar_actions %}
   <a href="{% url 'marketplace:project_detail' pk=project.pk %}" class="btn btn-secondary btn-sm">
-    <i class="bi bi-arrow-left"></i> Project Details
+    <i data-lucide="arrow-left" class="fh-icon-sm"></i> Project Details
   </a>
 {% endblock %}
 
@@ -23,14 +23,14 @@
         <span class="badge badge-{{ project.status }}">{{ project.get_status_display }}</span>
       </div>
       <div style="display:flex; flex-wrap:wrap; gap:18px; font-size:0.85rem; color:var(--text-muted);">
-        <span><i class="bi bi-currency-rupee" style="color:var(--accent);"></i> Budget: <strong>₹{{ project.budget|floatformat:0|default:"0" }}</strong> ({{ project.get_budget_type_display }})</span>
+        <span><i data-lucide="banknote" class="fh-icon-xs" style="color:var(--accent); vertical-align:middle;"></i> Budget: <strong>₹{{ project.budget|floatformat:0|default:"0" }}</strong> ({{ project.get_budget_type_display }})</span>
         {% if project.deadline %}
         <span {% if project.is_overdue %}style="color:var(--red);"{% endif %}>
-          <i class="bi bi-calendar3" style="color:var(--accent);"></i> Deadline: <strong>{{ project.deadline|date:"d M Y" }}</strong>
+          <i data-lucide="calendar" class="fh-icon-xs" style="color:var(--accent); vertical-align:middle;"></i> Deadline: <strong>{{ project.deadline|date:"d M Y" }}</strong>
           {% if project.is_overdue %}<strong>(Overdue)</strong>{% endif %}
         </span>
         {% endif %}
-        <span><i class="bi bi-clock" style="color:var(--accent);"></i> Duration: {{ project.get_expected_duration_display|default:"Ongoing" }}</span>
+        <span><i data-lucide="clock" class="fh-icon-xs" style="color:var(--accent); vertical-align:middle;"></i> Duration: {{ project.get_expected_duration_display|default:"Ongoing" }}</span>
       </div>
     </div>
 
@@ -40,7 +40,7 @@
       <form method="post" action="{% url 'marketplace:project_mark_in_progress' pk=project.pk %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary btn-sm">
-          <i class="bi bi-play-circle"></i> Start Project (In Progress)
+          <i data-lucide="play-circle" class="fh-icon-sm"></i> Start Project (In Progress)
         </button>
       </form>
       {% endif %}
@@ -50,13 +50,13 @@
             onsubmit="return confirm('Mark project as Completed? This confirms all deliverables were accepted.')">
         {% csrf_token %}
         <button type="submit" class="btn btn-success btn-sm">
-          <i class="bi bi-check-circle-fill"></i> Complete Project
+          <i data-lucide="check-circle-2" class="fh-icon-sm"></i> Complete Project
         </button>
       </form>
       {% endif %}
 
       <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-secondary btn-sm">
-        <i class="bi bi-flag"></i> Report Issue
+        <i data-lucide="flag" class="fh-icon-sm"></i> Report Issue
       </a>
     </div>
   </div>
@@ -82,7 +82,7 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title"><i class="bi bi-file-earmark-text"></i> Accepted Proposal Details</div>
+          <div class="card-title d-flex align-items-center gap-2"><i data-lucide="file-text" class="fh-icon-sm"></i> Accepted Proposal Details</div>
           <div class="card-subtitle">Terms agreed upon during freelancer selection</div>
         </div>
       </div>
@@ -111,7 +111,7 @@
     <!-- Project Requirements & Scope -->
     <div class="card">
       <div class="card-header">
-        <div class="card-title"><i class="bi bi-card-checklist"></i> Scope & Requirements</div>
+        <div class="card-title d-flex align-items-center gap-2"><i data-lucide="check-square" class="fh-icon-sm"></i> Scope & Requirements</div>
       </div>
       <div style="color:var(--text-secondary); line-height:1.7; font-size:0.9rem; white-space:pre-line;">
         {{ project.description }}
@@ -131,11 +131,11 @@
       {% if project.attachment %}
       <div style="margin-top:16px; padding:12px; background:var(--bg-elevated); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:space-between;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <i class="bi bi-paperclip" style="color:var(--accent); font-size:1.1rem;"></i>
+          <i data-lucide="paperclip" class="fh-icon-sm" style="color:var(--accent);"></i>
           <span style="font-size:0.85rem; font-weight:500;">Project Spec Attachment</span>
         </div>
         <a href="{{ project.attachment.url }}" target="_blank" class="btn btn-secondary btn-sm">
-          <i class="bi bi-download"></i> Download
+          <i data-lucide="download" class="fh-icon-sm"></i> Download
         </a>
       </div>
       {% endif %}
@@ -145,13 +145,13 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title"><i class="bi bi-chat-dots"></i> Project Communication</div>
+          <div class="card-title d-flex align-items-center gap-2"><i data-lucide="message-square" class="fh-icon-sm"></i> Project Communication</div>
           <div class="card-subtitle">Connect with your assigned freelancer</div>
         </div>
       </div>
       <div style="background:var(--bg-elevated); padding:16px; border-radius:var(--radius-sm); font-size:0.875rem; color:var(--text-secondary);">
-        <p style="margin-bottom:10px;">
-          <i class="bi bi-info-circle" style="color:var(--blue);"></i>
+        <p style="margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+          <i data-lucide="info" class="fh-icon-xs" style="color:var(--blue);"></i>
           You can coordinate project milestones, deliverables, and queries directly with your assigned freelancer using their authorized contact information shown on the right panel.
         </p>
         <div style="font-size:0.78rem; color:var(--text-muted);">
@@ -168,7 +168,7 @@
     <!-- Assigned Freelancer Profile Card -->
     <div class="card">
       <div class="card-header">
-        <div class="card-title"><i class="bi bi-person-badge"></i> Assigned Freelancer</div>
+        <div class="card-title d-flex align-items-center gap-2"><i data-lucide="user-check" class="fh-icon-sm"></i> Assigned Freelancer</div>
       </div>
 
       {% if freelancer %}
@@ -188,13 +188,13 @@
       <!-- Allowed Professional & Contact Info -->
       <div style="border-top:1px solid var(--border); padding-top:16px; display:flex; flex-direction:column; gap:12px; font-size:0.85rem;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <i class="bi bi-envelope" style="color:var(--accent); font-size:1rem; width:18px;"></i>
+          <i data-lucide="mail" class="fh-icon-xs" style="color:var(--accent);"></i>
           <span style="color:var(--text-secondary); word-break:break-all;">{{ freelancer.email|default:"Available upon request" }}</span>
         </div>
 
         {% if freelancer_profile and freelancer_profile.phone_number %}
         <div style="display:flex; align-items:center; gap:10px;">
-          <i class="bi bi-telephone" style="color:var(--accent); font-size:1rem; width:18px;"></i>
+          <i data-lucide="phone" class="fh-icon-xs" style="color:var(--accent);"></i>
           <span style="color:var(--text-secondary);">{{ freelancer_profile.phone_number }}</span>
         </div>
         {% endif %}
@@ -208,7 +208,7 @@
 
         {% if freelancer_profile and freelancer_profile.portfolio_website %}
         <div style="display:flex; align-items:center; gap:10px; margin-top:4px;">
-          <i class="bi bi-globe" style="color:var(--accent); font-size:1rem; width:18px;"></i>
+          <i data-lucide="globe" class="fh-icon-xs" style="color:var(--accent);"></i>
           <a href="{{ freelancer_profile.portfolio_website }}" target="_blank" style="color:var(--accent); text-decoration:underline;">View Portfolio</a>
         </div>
         {% endif %}
@@ -226,7 +226,7 @@
     <!-- Workspace Payment Summary -->
     <div class="card">
       <div class="card-header">
-        <div class="card-title"><i class="bi bi-cash-stack"></i> Project Payment</div>
+        <div class="card-title d-flex align-items-center gap-2"><i data-lucide="wallet" class="fh-icon-sm"></i> Project Payment</div>
       </div>
       {% if payment_record %}
       <div style="margin-bottom:12px;">
@@ -248,7 +248,7 @@
       </div>
       <div style="margin-top:14px;">
         <a href="{% url 'marketplace:client_payments' %}" class="btn btn-secondary btn-sm btn-block">
-          <i class="bi bi-credit-card"></i> Manage Payments
+          <i data-lucide="credit-card" class="fh-icon-sm"></i> Manage Payments
         </a>
       </div>
       {% endif %}
@@ -256,12 +256,12 @@
 
     <!-- Quick Help / Support -->
     <div class="card">
-      <div class="card-title" style="margin-bottom:10px;"><i class="bi bi-shield-check"></i> Client Protection</div>
+      <div class="card-title d-flex align-items-center gap-2" style="margin-bottom:10px;"><i data-lucide="shield-check" class="fh-icon-sm"></i> Client Protection</div>
       <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
         Need to report non-performance, scam, or quality issues? Our dispute resolution desk is available 24/7.
       </p>
       <a href="{% url 'marketplace:client_support_create' %}" class="btn btn-danger btn-sm btn-block">
-        <i class="bi bi-exclamation-triangle"></i> File a Report
+        <i data-lucide="alert-triangle" class="fh-icon-sm"></i> File a Report
       </a>
     </div>
 

@@ -130,21 +130,21 @@
 <!-- Page Header -->
 <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
-    <h4 class="fw-bold mb-1" style="color:var(--text-primary);">
-      <i class="fas fa-link me-2 text-primary"></i>Connected Accounts
+    <h4 class="fw-bold mb-1 d-flex align-items-center" style="color:var(--text-primary);">
+      <i data-lucide="link" class="me-2 text-primary" style="width:20px;height:20px;"></i>Connected Accounts
     </h4>
     <p class="text-muted small mb-0">Manage social logins linked to your FreelanceHub account.</p>
   </div>
-  <a href="{% url 'core:profile_view' %}" class="btn btn-outline-secondary btn-sm">
-    <i class="fas fa-arrow-left me-1"></i> Back to Profile
+  <a href="{% url 'core:profile_view' %}" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center">
+    <i data-lucide="arrow-left" class="me-1" style="width:14px;height:14px;"></i> Back to Profile
   </a>
 </div>
 
 {% if messages %}
   {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4" role="alert">
-      <i class="fas fa-info-circle me-2"></i>
-      {{ message }}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4 d-flex align-items-center" role="alert">
+      <i data-lucide="info" class="me-2" style="width:16px;height:16px;"></i>
+      <span>{{ message }}</span>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   {% endfor %}
@@ -153,7 +153,7 @@
 <!-- Security Warning if no password set -->
 {% if not has_password and linked_count <= 1 %}
 <div class="security-alert p-3 mb-4 d-flex align-items-start gap-3">
-  <i class="fas fa-shield-exclamation fs-5 mt-1"></i>
+  <i data-lucide="shield-alert" class="me-2 mt-1 flex-shrink-0" style="width:22px;height:22px;color:var(--danger, #ef4444);"></i>
   <div>
     <strong>Security Notice:</strong> You must keep at least one login method active.
     Since you have no password set, you cannot disconnect your only linked account.
@@ -167,7 +167,7 @@
   <div class="col-lg-8">
     <div class="section-card mb-4">
       <div class="section-header">
-        <i class="fas fa-plug text-primary"></i>
+        <i data-lucide="plug" class="text-primary" style="width:18px;height:18px;"></i>
         <div>
           <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Social Login Providers</h6>
           <p class="text-muted mb-0" style="font-size:12px;">Connect accounts to enable one-click sign-in.</p>
@@ -196,7 +196,7 @@
               {% elif provider.key == 'linkedin' %}
                 <i class="fab fa-linkedin-in"></i>
               {% else %}
-                <i class="fas fa-key"></i>
+                <i data-lucide="key" style="width:24px;height:24px;"></i>
               {% endif %}
             </div>
 
@@ -206,16 +206,16 @@
                 <span class="fw-bold" style="color:var(--text-primary);font-size:15px;">{{ provider.name }}</span>
 
                 {% if provider.is_linked %}
-                  <span class="badge-linked">
-                    <i class="fas fa-check-circle" style="font-size:10px;"></i> Connected
+                  <span class="badge-linked d-inline-flex align-items-center gap-1">
+                    <i data-lucide="check-circle" style="width:12px;height:12px;"></i> Connected
                   </span>
                 {% elif not provider.is_configured %}
-                  <span class="badge-unconfigured">
-                    <i class="fas fa-wrench" style="font-size:10px;"></i> Not Configured
+                  <span class="badge-unconfigured d-inline-flex align-items-center gap-1">
+                    <i data-lucide="wrench" style="width:12px;height:12px;"></i> Not Configured
                   </span>
                 {% else %}
-                  <span class="badge-unlinked">
-                    <i class="fas fa-minus-circle" style="font-size:10px;"></i> Not Connected
+                  <span class="badge-unlinked d-inline-flex align-items-center gap-1">
+                    <i data-lucide="minus-circle" style="width:12px;height:12px;"></i> Not Connected
                   </span>
                 {% endif %}
               </div>
@@ -225,17 +225,17 @@
                   {% if provider.avatar_url %}
                     <img src="{{ provider.avatar_url }}" alt="{{ provider.name }}" class="provider-avatar">
                   {% endif %}
-                  <span>
-                    <i class="fas fa-user me-1"></i>
+                  <span class="d-inline-flex align-items-center gap-1">
+                    <i data-lucide="user" style="width:13px;height:13px;"></i>
                     {{ provider.social_account.full_name|default:"—" }}
                   </span>
                   {% if provider.social_account.email %}
-                    <span>
-                      <i class="fas fa-envelope me-1"></i>{{ provider.social_account.email }}
+                    <span class="d-inline-flex align-items-center gap-1">
+                      <i data-lucide="mail" style="width:13px;height:13px;"></i>{{ provider.social_account.email }}
                     </span>
                   {% endif %}
-                  <span>
-                    <i class="fas fa-clock me-1"></i>
+                  <span class="d-inline-flex align-items-center gap-1">
+                    <i data-lucide="clock" style="width:13px;height:13px;"></i>
                     Linked {{ provider.social_account.created_at|date:"M d, Y" }}
                   </span>
                 </div>
@@ -258,24 +258,24 @@
                         action="{% url 'social_auth:disconnect_provider' provider.key %}"
                         onsubmit="return confirm('Disconnect {{ provider.name }}? You can reconnect anytime.');">
                     {% csrf_token %}
-                    <button type="submit" class="connect-btn btn btn-outline-danger">
-                      <i class="fas fa-unlink me-1"></i> Disconnect
+                    <button type="submit" class="connect-btn btn btn-outline-danger d-inline-flex align-items-center">
+                      <i data-lucide="unlink" class="me-1" style="width:14px;height:14px;"></i> Disconnect
                     </button>
                   </form>
                 {% else %}
-                  <button class="connect-btn btn btn-outline-secondary" disabled
+                  <button class="connect-btn btn btn-outline-secondary d-inline-flex align-items-center" disabled
                           title="Set a password before disconnecting your only login method.">
-                    <i class="fas fa-lock me-1"></i> Locked
+                    <i data-lucide="lock" class="me-1" style="width:14px;height:14px;"></i> Locked
                   </button>
                 {% endif %}
               {% elif provider.is_configured %}
                 <a href="{% url 'social_auth:oauth_initiate' provider.key %}?next=/profile/connected-accounts/"
-                   class="connect-btn btn btn-outline-primary">
-                  <i class="fas fa-link me-1"></i> Connect
+                   class="connect-btn btn btn-outline-primary d-inline-flex align-items-center">
+                  <i data-lucide="link" class="me-1" style="width:14px;height:14px;"></i> Connect
                 </a>
               {% else %}
-                <button class="connect-btn btn btn-outline-secondary" disabled>
-                  <i class="fas fa-ban me-1"></i> Unavailable
+                <button class="connect-btn btn btn-outline-secondary d-inline-flex align-items-center" disabled>
+                  <i data-lucide="ban" class="me-1" style="width:14px;height:14px;"></i> Unavailable
                 </button>
               {% endif %}
             </div>
@@ -284,7 +284,7 @@
         </div>
         {% empty %}
           <div class="text-center py-5 text-muted">
-            <i class="fas fa-plug fa-3x mb-3 opacity-25"></i>
+            <i data-lucide="plug" class="mb-3 opacity-25" style="width:48px;height:48px;"></i>
             <p class="mb-0">No social providers are configured.</p>
           </div>
         {% endfor %}
@@ -294,7 +294,7 @@
     <!-- ── OAuth Login History ──────────────────────────────────────────── -->
     <div class="section-card">
       <div class="section-header">
-        <i class="fas fa-history text-primary"></i>
+        <i data-lucide="history" class="text-primary" style="width:18px;height:18px;"></i>
         <div>
           <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Recent OAuth Login History</h6>
           <p class="text-muted mb-0" style="font-size:12px;">Last 20 sign-ins via social providers.</p>
@@ -325,7 +325,7 @@
                       {% elif entry.provider == 'github' %}
                         <i class="fab fa-github"></i>
                       {% else %}
-                        <i class="fas fa-key text-muted"></i>
+                        <i data-lucide="key" class="text-muted" style="width:14px;height:14px;"></i>
                       {% endif %}
                     </span>
                     <span class="fw-medium" style="font-size:13px;">{{ entry.provider|title }}</span>
@@ -343,10 +343,10 @@
                 </td>
                 <td>
                   {% if entry.status == 'success' %}
-                    <span class="badge-linked"><i class="fas fa-check" style="font-size:9px;"></i> Success</span>
+                    <span class="badge-linked d-inline-flex align-items-center gap-1"><i data-lucide="check" style="width:12px;height:12px;"></i> Success</span>
                   {% else %}
-                    <span class="badge" style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;">
-                      <i class="fas fa-times" style="font-size:9px;"></i> {{ entry.status|title }}
+                    <span class="badge d-inline-flex align-items-center gap-1" style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;">
+                      <i data-lucide="x" style="width:12px;height:12px;"></i> {{ entry.status|title }}
                     </span>
                   {% endif %}
                 </td>
@@ -357,7 +357,7 @@
         </div>
       {% else %}
         <div class="text-center py-5 text-muted">
-          <i class="fas fa-history fa-3x mb-3 opacity-25"></i>
+          <i data-lucide="history" class="mb-3 opacity-25" style="width:48px;height:48px;"></i>
           <p class="mb-1 fw-medium">No OAuth login history yet.</p>
           <p class="small mb-0">Once you connect and use a social account to sign in, it will appear here.</p>
         </div>
@@ -371,7 +371,7 @@
     <!-- Security Status Card -->
     <div class="section-card mb-4">
       <div class="section-header">
-        <i class="fas fa-shield-halved text-primary"></i>
+        <i data-lucide="shield" class="text-primary" style="width:18px;height:18px;"></i>
         <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Security Status</h6>
       </div>
       <div class="p-4">
@@ -380,7 +380,7 @@
              style="background:var(--light-bg,#f9fafb);">
           <div class="d-flex align-items-center justify-content-center rounded-circle"
                style="width:38px;height:38px;background:{% if has_password %}#dcfce7{% else %}#fee2e2{% endif %};">
-            <i class="fas fa-{% if has_password %}lock text-success{% else %}lock-open text-danger{% endif %}" style="font-size:16px;"></i>
+            <i data-lucide="{% if has_password %}lock{% else %}unlock{% endif %}" class="{% if has_password %}text-success{% else %}text-danger{% endif %}" style="width:18px;height:18px;"></i>
           </div>
           <div>
             <div class="fw-semibold small" style="color:var(--text-primary);">Password</div>
@@ -389,10 +389,10 @@
             </div>
           </div>
           {% if has_password %}
-            <span class="ms-auto badge-linked"><i class="fas fa-check" style="font-size:9px;"></i> OK</span>
+            <span class="ms-auto badge-linked d-inline-flex align-items-center gap-1"><i data-lucide="check" style="width:12px;height:12px;"></i> OK</span>
           {% else %}
-            <span class="ms-auto" style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;">
-              <i class="fas fa-exclamation" style="font-size:9px;"></i> Warn
+            <span class="ms-auto d-inline-flex align-items-center gap-1" style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;">
+              <i data-lucide="alert-circle" style="width:12px;height:12px;"></i> Warn
             </span>
           {% endif %}
         </div>
@@ -402,7 +402,7 @@
              style="background:var(--light-bg,#f9fafb);">
           <div class="d-flex align-items-center justify-content-center rounded-circle"
                style="width:38px;height:38px;background:var(--primary-soft);">
-            <i class="fas fa-link text-primary" style="font-size:16px;"></i>
+            <i data-lucide="link" class="text-primary" style="width:18px;height:18px;"></i>
           </div>
           <div>
             <div class="fw-semibold small" style="color:var(--text-primary);">Social Logins</div>
@@ -415,7 +415,7 @@
              style="background:var(--light-bg,#f9fafb);">
           <div class="d-flex align-items-center justify-content-center rounded-circle"
                style="width:38px;height:38px;background:{% if can_disconnect %}#dcfce7{% else %}#fee2e2{% endif %};">
-            <i class="fas fa-{% if can_disconnect %}check-circle text-success{% else %}exclamation-triangle text-danger{% endif %}" style="font-size:16px;"></i>
+            <i data-lucide="{% if can_disconnect %}check-circle{% else %}alert-triangle{% endif %}" class="{% if can_disconnect %}text-success{% else %}text-danger{% endif %}" style="width:18px;height:18px;"></i>
           </div>
           <div>
             <div class="fw-semibold small" style="color:var(--text-primary);">Can Disconnect</div>
@@ -430,18 +430,18 @@
     <!-- Quick Actions -->
     <div class="section-card mb-4">
       <div class="section-header">
-        <i class="fas fa-bolt text-primary"></i>
+        <i data-lucide="zap" class="text-primary" style="width:18px;height:18px;"></i>
         <h6 class="fw-bold mb-0" style="color:var(--text-primary);">Quick Actions</h6>
       </div>
       <div class="p-4 d-flex flex-column gap-2">
-        <a href="{% url 'core:profile_view' %}" class="btn btn-outline-secondary btn-sm text-start">
-          <i class="fas fa-user me-2"></i> Edit Profile
+        <a href="{% url 'core:profile_view' %}" class="btn btn-outline-secondary btn-sm text-start d-inline-flex align-items-center">
+          <i data-lucide="user" class="me-2" style="width:14px;height:14px;"></i> Edit Profile
         </a>
-        <a href="{% url 'core:profile_view' %}#change-password" class="btn btn-outline-primary btn-sm text-start">
-          <i class="fas fa-key me-2"></i> Change Password
+        <a href="{% url 'core:profile_view' %}#change-password" class="btn btn-outline-primary btn-sm text-start d-inline-flex align-items-center">
+          <i data-lucide="key" class="me-2" style="width:14px;height:14px;"></i> Change Password
         </a>
-        <a href="{% url 'core:profile_view' %}" class="btn btn-outline-secondary btn-sm text-start">
-          <i class="fas fa-clock-rotate-left me-2"></i> View Login History
+        <a href="{% url 'core:profile_view' %}" class="btn btn-outline-secondary btn-sm text-start d-inline-flex align-items-center">
+          <i data-lucide="history" class="me-2" style="width:14px;height:14px;"></i> View Login History
         </a>
       </div>
     </div>
@@ -449,25 +449,25 @@
     <!-- Info Box -->
     <div class="section-card">
       <div class="section-header">
-        <i class="fas fa-circle-info text-primary"></i>
+        <i data-lucide="info" class="text-primary" style="width:18px;height:18px;"></i>
         <h6 class="fw-bold mb-0" style="color:var(--text-primary);">How it works</h6>
       </div>
       <div class="p-4">
         <ul class="list-unstyled small text-muted mb-0 d-flex flex-column gap-3">
           <li class="d-flex gap-2">
-            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <i data-lucide="chevron-right" class="text-primary mt-1 flex-shrink-0" style="width:14px;height:14px;"></i>
             <span>Linking a social account lets you <strong>sign in without a password</strong> using that provider.</span>
           </li>
           <li class="d-flex gap-2">
-            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <i data-lucide="chevron-right" class="text-primary mt-1 flex-shrink-0" style="width:14px;height:14px;"></i>
             <span>You can link <strong>multiple providers</strong> (e.g., both Google and GitHub) to the same account.</span>
           </li>
           <li class="d-flex gap-2">
-            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <i data-lucide="chevron-right" class="text-primary mt-1 flex-shrink-0" style="width:14px;height:14px;"></i>
             <span>Disconnecting is safe as long as you have a <strong>password set</strong> or another provider linked.</span>
           </li>
           <li class="d-flex gap-2">
-            <i class="fas fa-arrow-right text-primary mt-1 flex-shrink-0"></i>
+            <i data-lucide="chevron-right" class="text-primary mt-1 flex-shrink-0" style="width:14px;height:14px;"></i>
             <span>Your FreelanceHub data is <strong>never shared</strong> with social providers.</span>
           </li>
         </ul>

@@ -18,8 +18,8 @@
   <meta name="description" content="{% block meta_description %}FreelanceHub — Secure authentication for Clients, Freelancers, and Administrators.{% endblock %}">
   <title>{% block title %}Sign In — FreelanceHub{% endblock %}</title>
 
-  <!-- Favicon (Gold) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
   <!-- Fonts: Inter, Plus Jakarta Sans, and Playfair Display for Editorial Heading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -339,15 +339,8 @@
     <div class="auth-left-brand-pane">
 
       <!-- Brand Header -->
-      <a href="{% url 'core:home' %}" class="auth-brand-badge-row">
-        <div class="auth-brand-squircle">
-          <i data-lucide="layers" style="width:24px;height:24px;"></i>
-        </div>
-        <div>
-          <div class="auth-brand-name-text">FreelanceHub</div>
-          <div class="auth-brand-tagline">WHERE GREAT PROJECTS MEET GREAT TALENT</div>
-        </div>
-      </a>
+      {% url 'core:home' as home_url %}
+      {% include 'components/brand_logo.html' with variant='auth' href=home_url subtitle='Where Great Projects Meet Great Talent' %}
 
       <!-- Center Editorial Showcase -->
       <div class="auth-left-main-content">

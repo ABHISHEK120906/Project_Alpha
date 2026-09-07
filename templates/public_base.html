@@ -23,7 +23,7 @@
   <title>{% block title %}FreelanceHub — Where Great Projects Meet Great Talent{% endblock %}</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,12 +50,8 @@
     <div class="pub-container hub-nav-wrap">
 
       <!-- Brand -->
-      <a href="{% url 'core:home' %}" class="hub-brand" aria-label="FreelanceHub Home">
-        <div class="hub-brand-badge">
-          <i data-lucide="layers"></i>
-        </div>
-        <span class="hub-brand-name">FreelanceHub</span>
-      </a>
+      {% url 'core:home' as home_url %}
+      {% include 'components/brand_logo.html' with variant='navbar' href=home_url %}
 
       <!-- Desktop Nav Links -->
       <nav class="hub-nav-menu" role="navigation" aria-label="Main Navigation">
@@ -97,9 +93,8 @@
     </button>
 
     <!-- Brand in drawer -->
-    <div style="display:flex;align-items:center;gap:10px;padding-bottom:20px;border-bottom:1px solid rgba(212,168,83,0.12);margin-bottom:16px;">
-      <div class="hub-brand-badge" style="width:32px;height:32px;"><i data-lucide="layers"></i></div>
-      <span style="font-size:16px;font-weight:800;color:#F0EDE8;font-family:'Plus Jakarta Sans',sans-serif;">FreelanceHub</span>
+    <div style="padding-bottom:16px;border-bottom:1px solid var(--border-subtle);margin-bottom:16px;">
+      {% include 'components/brand_logo.html' with variant='mobile' href=home_url %}
     </div>
 
     <a href="{% url 'core:home' %}" class="hub-nav-link"><i data-lucide="home"></i> Home</a>
@@ -134,10 +129,9 @@
 
         <!-- Brand -->
         <div class="hub-footer-brand">
-          <a href="{% url 'core:home' %}" class="hub-brand" style="margin-bottom:12px;display:inline-flex;">
-            <div class="hub-brand-badge"><i data-lucide="layers"></i></div>
-            <span class="hub-brand-name">FreelanceHub</span>
-          </a>
+          <div style="margin-bottom:14px;">
+            {% include 'components/brand_logo.html' with variant='footer' href=home_url %}
+          </div>
           <p>A premium freelancing marketplace connecting clients with verified talent for high-impact project delivery.</p>
           <div style="display:flex;align-items:center;gap:8px;margin-top:16px;">
             <span style="width:7px;height:7px;border-radius:50%;background:#4CAF7A;display:inline-block;"></span>

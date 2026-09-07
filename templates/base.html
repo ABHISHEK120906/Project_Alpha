@@ -20,7 +20,7 @@
   <title>{% block title %}FreelanceHub{% endblock %}</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23D4A853'/><path d='M10 9h12v3H13v4h8v3h-8v6h-3V9z' fill='%230D0F14'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,15 +64,10 @@
 <aside class="sidebar" id="mainSidebar" role="navigation" aria-label="Workspace navigation">
 
   <!-- Brand -->
-  <a href="{% url 'core:dashboard' %}" class="sidebar-brand" aria-label="FreelanceHub home">
-    <div class="sidebar-brand-icon">
-      <i data-lucide="layers"></i>
-    </div>
-    <div>
-      <div class="sidebar-brand-text">FreelanceHub</div>
-      <div class="sidebar-brand-sub">Workspace Pro</div>
-    </div>
-  </a>
+  <div style="padding: 18px 18px 16px; border-bottom: 1px solid var(--sidebar-border); margin-bottom: 8px;">
+    {% url 'core:dashboard' as dash_url %}
+    {% include 'components/brand_logo.html' with variant='sidebar' href=dash_url role='Workspace Pro' %}
+  </div>
 
   <!-- Navigation -->
   <nav class="sidebar-nav" aria-label="Main navigation">

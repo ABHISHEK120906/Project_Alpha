@@ -4,7 +4,7 @@
 {% block content %}
 <div class="d-flex align-items-center justify-content-between mb-4">
   <div>
-    <h3 class="fw-bold mb-1"><i class="fas fa-sliders-h text-secondary me-2"></i> System Configuration Settings</h3>
+    <h3 class="fw-bold mb-1 d-flex align-items-center"><i data-lucide="sliders" class="text-secondary me-2" style="width:24px;height:24px;"></i> System Configuration Settings</h3>
     <p class="text-muted small mb-0">Global website parameters, email SMTP, maintenance mode, and session policies.</p>
   </div>
 </div>
@@ -15,7 +15,7 @@
     <!-- General Settings -->
     <div class="col-lg-6">
       <div class="glass-card mb-4">
-        <h6 class="fw-bold mb-3 text-purple"><i class="fas fa-globe me-2"></i> Website & General Branding</h6>
+        <h6 class="fw-bold mb-3 text-purple d-flex align-items-center"><i data-lucide="globe" class="me-2" style="width:16px;height:16px;"></i> Website & General Branding</h6>
         <div class="mb-3">
           <label class="form-label small">Website Name</label>
           <input type="text" name="site_name" value="{{ settings_dict.site_name }}" class="form-control bg-dark text-white border-secondary" required>
@@ -38,7 +38,7 @@
 
       <!-- Maintenance & Security Policy -->
       <div class="glass-card">
-        <h6 class="fw-bold mb-3 text-warning"><i class="fas fa-shield-alt me-2"></i> Maintenance & System Security</h6>
+        <h6 class="fw-bold mb-3 text-warning d-flex align-items-center"><i data-lucide="shield" class="me-2" style="width:16px;height:16px;"></i> Maintenance & System Security</h6>
         <div class="form-check form-switch mb-3">
           <input class="form-check-input" type="checkbox" name="maintenance_mode" value="true" id="maintSwitch" {% if settings_dict.maintenance_mode == 'true' %}checked{% endif %}>
           <label class="form-check-label fw-bold text-warning" for="maintSwitch">Enable Maintenance Mode (Restricts User Access)</label>
@@ -59,7 +59,7 @@
     <!-- SMTP Configuration -->
     <div class="col-lg-6">
       <div class="glass-card mb-4">
-        <h6 class="fw-bold mb-3 text-info"><i class="fas fa-envelope me-2"></i> SMTP Email Server Configuration</h6>
+        <h6 class="fw-bold mb-3 text-info d-flex align-items-center"><i data-lucide="mail" class="me-2" style="width:16px;height:16px;"></i> SMTP Email Server Configuration</h6>
         <div class="mb-3">
           <label class="form-label small">SMTP Host</label>
           <input type="text" name="smtp_host" value="{{ settings_dict.smtp_host }}" class="form-control bg-dark text-white border-secondary">
@@ -79,7 +79,7 @@
       </div>
 
       <div class="text-end">
-        <button type="submit" class="btn btn-purple btn-lg shadow"><i class="fas fa-save me-2"></i> Save All Settings</button>
+        <button type="submit" class="btn btn-purple btn-lg shadow d-inline-flex align-items-center"><i data-lucide="save" class="me-2" style="width:18px;height:18px;"></i> Save All Settings</button>
       </div>
     </div>
   </div>

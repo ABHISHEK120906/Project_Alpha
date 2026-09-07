@@ -3077,3 +3077,373 @@ th.actions-cell {
   color: var(--text-secondary);
   margin-top: 2px;
 }
+
+/* ── 60. FREELANCEHUB UNIFIED BRAND LOGO SYSTEM ───────────────────────── */
+:root {
+  --fh-logo-text-base: #FFFFFF;
+  --fh-logo-text-accent: #9BC400;
+  --fh-logo-sub-text: rgba(255, 255, 255, 0.65);
+}
+
+[data-theme="light"] {
+  --fh-logo-text-base: #0F172A;
+  --fh-logo-text-accent: #789900;
+  --fh-logo-sub-text: #64748B;
+}
+
+.fh-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+  user-select: none;
+  transition: opacity var(--ease-fast, 0.2s), transform var(--ease-fast, 0.2s);
+  line-height: 1;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.fh-brand-logo:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.fh-logo-mark-wrap {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--ease-fast, 0.2s);
+  overflow: visible;
+}
+
+.fh-brand-logo:hover .fh-logo-mark-wrap {
+  transform: scale(1.05);
+}
+
+.fh-logo-symbol-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.fh-logo-text-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.fh-logo-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.fh-logo-name {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 18.5px;
+  font-weight: 800;
+  letter-spacing: -0.35px;
+  line-height: 1.15;
+  display: flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.fh-logo-name-base {
+  color: var(--fh-logo-text-base);
+  transition: color var(--ease-fast, 0.2s);
+}
+
+.fh-logo-name-accent {
+  color: var(--fh-logo-text-accent);
+  transition: color var(--ease-fast, 0.2s);
+}
+
+.fh-logo-sub-text {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  color: var(--fh-logo-sub-text);
+  margin-top: 4px;
+  white-space: nowrap;
+  transition: color var(--ease-fast, 0.2s);
+}
+
+/* Role Badges inside logo */
+.fh-logo-role-tag {
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 6px;
+  line-height: 1.15;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.fh-logo-role-tag--client {
+  background: rgba(242, 213, 60, 0.15);
+  color: #F2D53C;
+  border: 1px solid rgba(242, 213, 60, 0.4);
+}
+[data-theme="light"] .fh-logo-role-tag--client {
+  background: #fceed1;
+  color: #7d3cff;
+  border: 1px solid rgba(125, 60, 255, 0.25);
+}
+
+.fh-logo-role-tag--freelancer {
+  background: rgba(255, 94, 108, 0.15);
+  color: #FF5E6C;
+  border: 1px solid rgba(255, 94, 108, 0.4);
+}
+[data-theme="light"] .fh-logo-role-tag--freelancer {
+  background: #fff5d7;
+  color: #ff5e6c;
+  border: 1px solid rgba(255, 94, 108, 0.3);
+}
+
+.fh-logo-role-tag--admin {
+  background: rgba(155, 196, 0, 0.15);
+  color: #9BC400;
+  border: 1px solid rgba(155, 196, 0, 0.4);
+}
+[data-theme="light"] .fh-logo-role-tag--admin {
+  background: #f4f0fa;
+  color: #7c677f;
+  border: 1px solid rgba(128, 118, 163, 0.35);
+}
+
+.fh-logo-role-tag--workspace-pro,
+.fh-logo-role-tag--workspace {
+  background: rgba(128, 118, 163, 0.16);
+  color: #b8aecd;
+  border: 1px solid rgba(128, 118, 163, 0.35);
+}
+[data-theme="light"] .fh-logo-role-tag--workspace-pro,
+[data-theme="light"] .fh-logo-role-tag--workspace {
+  background: #f0edf7;
+  color: #6a5a82;
+  border: 1px solid rgba(128, 118, 163, 0.25);
+}
+
+/* ── Logo Variants ── */
+.fh-brand-logo--navbar {
+  gap: 11px;
+}
+.fh-brand-logo--navbar .fh-logo-mark-wrap {
+  width: 36px;
+  height: 36px;
+}
+.fh-brand-logo--navbar .fh-logo-name {
+  font-size: 19px;
+}
+
+.fh-brand-logo--sidebar {
+  gap: 11px;
+}
+.fh-brand-logo--sidebar .fh-logo-mark-wrap {
+  width: 36px;
+  height: 36px;
+}
+.fh-brand-logo--sidebar .fh-logo-name {
+  font-size: 18px;
+}
+
+.fh-brand-logo--auth {
+  gap: 16px;
+}
+.fh-brand-logo--auth .fh-logo-mark-wrap {
+  width: 56px;
+  height: 56px;
+}
+.fh-brand-logo--auth .fh-logo-name {
+  font-size: 28px;
+  letter-spacing: -0.6px;
+}
+.fh-brand-logo--auth .fh-logo-sub-text {
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  color: var(--fh-logo-sub-text);
+  margin-top: 5px;
+}
+
+.fh-brand-logo--footer {
+  gap: 10px;
+}
+.fh-brand-logo--footer .fh-logo-mark-wrap {
+  width: 34px;
+  height: 34px;
+}
+.fh-brand-logo--footer .fh-logo-name {
+  font-size: 18px;
+}
+
+.fh-brand-logo--mobile {
+  gap: 8px;
+}
+.fh-brand-logo--mobile .fh-logo-mark-wrap {
+  width: 30px;
+  height: 30px;
+}
+.fh-brand-logo--mobile .fh-logo-name {
+  font-size: 16.5px;
+}
+
+/* ── 61. UNIFIED ICON & VISUAL INDICATOR SYSTEM ───────────────────────── */
+svg.lucide,
+i[data-lucide] {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  stroke-width: 1.85px;
+  transition: transform var(--ease-fast, 0.2s), color var(--ease-fast, 0.2s), stroke var(--ease-fast, 0.2s);
+}
+
+/* Standardized Icon Sizing Tokens */
+.fh-icon-xs { width: 12px; height: 12px; }
+.fh-icon-sm { width: 14px; height: 14px; }
+.fh-icon-md { width: 16px; height: 16px; }
+.fh-icon-lg { width: 18px; height: 18px; }
+.fh-icon-xl { width: 20px; height: 20px; }
+.fh-icon-2xl { width: 24px; height: 24px; }
+.fh-icon-3xl { width: 32px; height: 32px; }
+
+/* Icon Alignment in Buttons & Interactive Controls */
+.btn-icon-label,
+.fh-btn-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* KPI Metric Icon Containers */
+.fh-kpi-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--ease-fast, 0.2s);
+}
+
+.fh-kpi-card:hover .fh-kpi-icon-badge {
+  transform: scale(1.08);
+}
+
+.fh-kpi-icon-badge--purple {
+  background: rgba(125, 60, 255, 0.12);
+  color: #a855f7;
+  border: 1px solid rgba(125, 60, 255, 0.28);
+}
+
+.fh-kpi-icon-badge--lime {
+  background: rgba(155, 196, 0, 0.12);
+  color: #9bc400;
+  border: 1px solid rgba(155, 196, 0, 0.28);
+}
+
+.fh-kpi-icon-badge--coral {
+  background: rgba(255, 94, 108, 0.12);
+  color: #ff5e6c;
+  border: 1px solid rgba(255, 94, 108, 0.28);
+}
+
+.fh-kpi-icon-badge--gold {
+  background: rgba(242, 213, 60, 0.12);
+  color: #f2d53c;
+  border: 1px solid rgba(242, 213, 60, 0.28);
+}
+
+.fh-kpi-icon-badge--blue {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
+/* Standardized Status Indicator Pills */
+.fh-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.fh-status-pill svg,
+.fh-status-pill i {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2.2px;
+}
+
+.fh-status-pill--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.fh-status-pill--pending {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.fh-status-pill--warning {
+  background: rgba(249, 115, 22, 0.12);
+  color: #f97316;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.fh-status-pill--danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.fh-status-pill--info {
+  background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.fh-status-pill--purple {
+  background: rgba(125, 60, 255, 0.12);
+  color: #a855f7;
+  border: 1px solid rgba(125, 60, 255, 0.3);
+}
+
+[data-theme="light"] .fh-status-pill--success {
+  background: rgba(34, 197, 94, 0.14);
+  color: #15803d;
+}
+
+[data-theme="light"] .fh-status-pill--pending {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+}
+
+[data-theme="light"] .fh-status-pill--danger {
+  background: rgba(239, 68, 68, 0.14);
+  color: #b91c1c;
+}
