@@ -671,7 +671,8 @@ a:hover {
    ========================================================================== */
 .card,
 .glass-card,
-.fl-card {
+.fl-card,
+.fh-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -683,13 +684,15 @@ a:hover {
 
 .card:hover,
 .glass-card:hover,
-.fl-card:hover {
+.fl-card:hover,
+.fh-card-interactive:hover {
   border-color: rgba(222, 91, 136, 0.4);
   box-shadow: var(--shadow-md);
 }
 
 .card-header,
-.card-header-hub {
+.card-header-hub,
+.fh-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -700,14 +703,19 @@ a:hover {
 }
 
 .card-title,
-.card-title-hub {
+.card-title-hub,
+.fh-card-title {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.card-subtitle {
+.card-subtitle,
+.fh-card-subtitle {
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-top: 3px;
@@ -728,7 +736,8 @@ a:hover {
 .kpi-card,
 .stat-card,
 .fl-kpi-card,
-.admin-kpi-card {
+.admin-kpi-card,
+.fh-stat-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -832,12 +841,14 @@ a:hover {
 /* ==========================================================================
    FORMS, INPUTS & FILTERS
    ========================================================================== */
-.form-group {
+.form-group,
+.fh-form-group {
   margin-bottom: 20px;
 }
 
 .form-label,
-.client-label {
+.client-label,
+.fh-label {
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
@@ -883,19 +894,63 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--ring-focus);
 }
 
-.form-hint {
+.form-hint,
+.fh-label-hint {
+  display: block;
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-top: 5px;
 }
 
-.form-error {
+.form-error,
+.fh-form-error {
   font-size: 0.82rem;
   color: var(--danger);
   margin-top: 5px;
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+/* ── Project Post Wizard Steps ── */
+.post-wizard-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  background: var(--bg-card);
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+.wizard-step-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.wizard-step-node.active {
+  color: var(--pink-accent);
+}
+.wizard-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.wizard-step-node.active .wizard-step-circle {
+  background: var(--pink-accent);
+  color: #fff;
+  border-color: var(--pink-accent);
 }
 
 /* ==========================================================================

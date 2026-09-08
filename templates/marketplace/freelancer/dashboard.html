@@ -303,11 +303,14 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     if (window.renderFinancialTrendChart) {
+      const labels = {{ chart_labels_json|default:"[]"|safe }};
+      const earned = {{ chart_earned_json|default:"[]"|safe }};
+      const pending = {{ chart_pending_json|default:"[]"|safe }};
       window.renderFinancialTrendChart(
         'freelancerEarningsChart',
-        ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        [3200, 5800, 4200, 8900, 7400, 11200],
-        [1500, 2400, 1900, 3800, 3100, 4900]
+        labels.length ? labels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        earned.length ? earned : [0, 0, 0, 0, 0, 0],
+        pending.length ? pending : [0, 0, 0, 0, 0, 0]
       );
     }
   });

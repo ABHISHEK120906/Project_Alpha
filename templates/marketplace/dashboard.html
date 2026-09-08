@@ -267,11 +267,12 @@
     if (window.renderFinancialTrendChart) {
       window.renderFinancialTrendChart(
         'clientSpendChart',
-        ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        [4500, 8200, 6100, 11400, 9800, 14200],
-        [3200, 6000, 4800, 8900, 7500, 11000]
+        {{ chart_labels_json|safe }},
+        {{ chart_budget_json|safe }},
+        {{ chart_paid_json|safe }}
       );
     }
   });
 </script>
 {% endblock %}
+

@@ -117,7 +117,11 @@ def client_register(request):
 
 @_require_client
 def client_dashboard(request, client_profile=None):
-    """Client marketplace dashboard."""
+    """Client marketplace dashboard with real backend data."""
+    from django.utils import timezone as tz
+    from datetime import date as _date
+    import json as _json
+
     projects = MarketplaceProject.objects.filter(client=client_profile)
 
     # Stats
@@ -151,6 +155,26 @@ def client_dashboard(request, client_profile=None):
         status='pending'
     ).select_related('project', 'freelancer').order_by('-created_at')[:5]
 
+    # Monthly Spending Chart Data (last 6 months from real DB)
+    today = tz.now().date()
+    chart_labels = []
+    chart_budget_data = []
+    chart_paid_data = []
+    for i in range(5, -1, -1):
+        month_offset = (today.month - 1 - i) % 12 + 1
+        year_offset = today.year + ((today.month - 1 - i) // 12)
+        m_budget = float(payment_records.filter(
+            project__created_at__year=year_offset,
+            project__created_at__month=month_offset
+        ).aggregate(t=Sum('total_budget'))['t'] or 0)
+        m_paid = float(payment_records.filter(
+            project__created_at__year=year_offset,
+            project__created_at__month=month_offset
+        ).aggregate(t=Sum('amount_paid'))['t'] or 0)
+        chart_labels.append(_date(year_offset, month_offset, 1).strftime("%b '%y"))
+        chart_budget_data.append(m_budget)
+        chart_paid_data.append(m_paid)
+
     context = {
         'client_profile': client_profile,
         'total_projects': total_projects,
@@ -164,8 +188,13 @@ def client_dashboard(request, client_profile=None):
         'total_pending': float(total_budget) - float(total_paid),
         'recent_projects': recent_projects,
         'recent_applications': recent_applications,
+        # JSON-serialised chart data (real DB data, no hardcoding)
+        'chart_labels_json': _json.dumps(chart_labels),
+        'chart_budget_json': _json.dumps(chart_budget_data),
+        'chart_paid_json': _json.dumps(chart_paid_data),
     }
     return render(request, 'marketplace/dashboard.html', context)
+
 
 
 # ---------------------------------------------------------------------------

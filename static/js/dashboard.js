@@ -244,7 +244,7 @@
   };
 
   // ── LISTEN FOR THEME SWITCHING EVENTS ────────────────────────────────────
-  window.addEventListener('themeChanged', function () {
+  window.addEventListener('freelancehub:themechange', function () {
     // Re-render any registered active charts
     Object.keys(window._dashCharts).forEach(function (id) {
       const chart = window._dashCharts[id];

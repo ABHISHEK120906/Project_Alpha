@@ -182,6 +182,29 @@ def freelancer_dashboard(request, freelancer_profile=None):
     verification.update_verification_status()
     verification.save()
 
+    # Monthly Earnings & Pending Payments Chart Data (last 6 months from real DB)
+    from datetime import date as _date
+    import json as _json
+    today = timezone.now().date()
+    chart_labels = []
+    chart_earned_data = []
+    chart_pending_data = []
+    for i in range(5, -1, -1):
+        month_offset = (today.month - 1 - i) % 12 + 1
+        year_offset = today.year + ((today.month - 1 - i) // 12)
+        m_paid = float(payment_records.filter(
+            status='paid',
+            updated_at__year=year_offset,
+            updated_at__month=month_offset
+        ).aggregate(t=Sum('amount_paid'))['t'] or 0)
+        m_pending = float(payment_records.exclude(status='paid').filter(
+            created_at__year=year_offset,
+            created_at__month=month_offset
+        ).aggregate(t=Sum('total_budget') - Sum('amount_paid'))['t'] or 0)
+        chart_labels.append(_date(year_offset, month_offset, 1).strftime("%b '%y"))
+        chart_earned_data.append(m_paid)
+        chart_pending_data.append(max(0.0, m_pending))
+
     context = {
         'freelancer_profile': freelancer_profile,
         'verification': verification,
@@ -200,6 +223,9 @@ def freelancer_dashboard(request, freelancer_profile=None):
         'recent_applications': recent_applications,
         'recent_active_projects': recent_active_projects,
         'recommended_projects': recommended_projects,
+        'chart_labels_json': _json.dumps(chart_labels),
+        'chart_earned_json': _json.dumps(chart_earned_data),
+        'chart_pending_json': _json.dumps(chart_pending_data),
     }
     return render(request, 'marketplace/freelancer/dashboard.html', context)
 
