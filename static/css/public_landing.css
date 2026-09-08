@@ -1,6 +1,6 @@
 /* ==========================================================================
    FREELANCEHUB — MASTER PUBLIC LANDING PAGE STYLESHEET
-   Brand Direction: Baby Pink (#F7C6D9, #D96C9D) + Velvet Deep Plum (#6B3152)
+   Brand Direction: Soft Baby Pink (#F7B5CD), Soft Rose (#DE5B88) + Deep Plum (#3B142B)
    Modern SaaS + Professional Business Analytics Platform
    ========================================================================== */
 
@@ -164,19 +164,19 @@
   align-items: center;
   gap: 8px;
   padding: 6px 16px;
-  background: rgba(217, 108, 157, 0.12);
-  border: 1px solid rgba(217, 108, 157, 0.32);
+  background: rgba(222, 91, 136, 0.12);
+  border: 1px solid rgba(222, 91, 136, 0.32);
   border-radius: var(--radius-full);
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--pink-accent);
   margin-bottom: 22px;
-  box-shadow: 0 2px 10px rgba(217, 108, 157, 0.1);
+  box-shadow: 0 2px 10px rgba(222, 91, 136, 0.1);
 }
 
 [data-theme="dark"] .hero-pill-badge {
-  background: rgba(247, 198, 217, 0.12);
-  border-color: rgba(247, 198, 217, 0.28);
+  background: rgba(247, 181, 205, 0.12);
+  border-color: rgba(247, 181, 205, 0.28);
   color: var(--pink-primary);
 }
 
@@ -247,7 +247,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg), 0 0 32px rgba(217, 108, 157, 0.12);
+  box-shadow: var(--shadow-lg), 0 0 32px rgba(222, 91, 136, 0.12);
   padding: 24px;
   position: relative;
   transition: transform var(--tr-norm), box-shadow var(--tr-norm);
@@ -255,7 +255,7 @@
 
 .hero-preview-dashboard:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg), 0 0 40px rgba(217, 108, 157, 0.2);
+  box-shadow: var(--shadow-lg), 0 0 40px rgba(222, 91, 136, 0.2);
 }
 
 .dashboard-window-header {

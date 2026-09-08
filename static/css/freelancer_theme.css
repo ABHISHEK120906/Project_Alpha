@@ -1,12 +1,12 @@
 /* ==========================================================================
    FREELANCEHUB FREELANCER WORKSPACE THEME
-   Theme: Blush Pink (#F2AFC7) + Rose (#D96C9D) + Baby Pink (#F7C6D9)
+   Theme: Blush Pink (#FDEBF2) + Soft Rose (#DE5B88) + Soft Baby Pink (#F7B5CD)
    ========================================================================== */
 
 body.freelancer-portal {
   --brand-primary: var(--pink-accent);
   --brand-primary-hover: var(--pink-accent-hover);
-  --sidebar-active-bg: rgba(217, 108, 157, 0.16);
+  --sidebar-active-bg: rgba(222, 91, 136, 0.16);
   --border-focused: var(--pink-accent);
 }
 
@@ -54,7 +54,7 @@ body.freelancer-portal {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 4px 12px rgba(217, 108, 157, 0.3);
+  box-shadow: 0 4px 12px rgba(222, 91, 136, 0.3);
   flex-shrink: 0;
 }
 
@@ -112,15 +112,15 @@ body.freelancer-portal {
 }
 
 .fl-nav-link.active {
-  background: linear-gradient(135deg, rgba(217, 108, 157, 0.18) 0%, rgba(242, 175, 199, 0.12) 100%);
+  background: linear-gradient(135deg, rgba(222, 91, 136, 0.18) 0%, rgba(247, 181, 205, 0.12) 100%);
   color: var(--pink-accent);
-  border: 1px solid rgba(217, 108, 157, 0.32);
+  border: 1px solid rgba(222, 91, 136, 0.32);
 }
 
 [data-theme="dark"] .fl-nav-link.active {
-  background: linear-gradient(135deg, rgba(247, 198, 217, 0.16) 0%, rgba(217, 108, 157, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(247, 181, 205, 0.16) 0%, rgba(222, 91, 136, 0.1) 100%);
   color: var(--pink-primary);
-  border-color: rgba(247, 198, 217, 0.25);
+  border-color: rgba(247, 181, 205, 0.25);
 }
 
 .fl-nav-link i {

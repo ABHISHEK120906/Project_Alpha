@@ -98,19 +98,20 @@
       transition: color var(--t-fast);
     }
     .admin-nav-item:hover {
-      background: var(--border-subtle);
-      color: var(--sidebar-link-hover);
+      background: var(--plum-subtle);
+      color: var(--pink-accent);
     }
     .admin-nav-item:hover svg {
-      color: var(--role-admin-lime);
+      color: var(--pink-accent);
     }
     .admin-nav-item.active {
-      background: rgba(155, 196, 0, 0.15);
-      color: var(--text-primary);
+      background: linear-gradient(135deg, rgba(222, 91, 136, 0.16) 0%, rgba(59, 20, 43, 0.1) 100%);
+      color: var(--pink-accent);
       font-weight: 700;
+      border: 1px solid rgba(222, 91, 136, 0.28);
     }
     .admin-nav-item.active svg {
-      color: var(--role-admin-lime);
+      color: var(--pink-accent);
     }
     .admin-nav-item.active::before {
       content: '';
@@ -119,8 +120,8 @@
       top: 15%;
       bottom: 15%;
       width: 4px;
-      border-radius: 0 var(--r-xs) var(--r-xs) 0;
-      background: var(--role-admin-lime);
+      border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+      background: var(--pink-accent);
     }
 
     .admin-main {

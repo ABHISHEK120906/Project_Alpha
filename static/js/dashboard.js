@@ -16,20 +16,22 @@
   function getChartTheme() {
     const dark = isDark();
     return {
-      primary: '#D96C9D',               // Rose Accent
-      primaryGlow: 'rgba(217, 108, 157, 0.28)',
-      primaryLight: '#F7C6D9',          // Soft Baby Pink
-      secondary: '#6B3152',             // Deep Plum
-      secondaryGlow: 'rgba(107, 49, 82, 0.22)',
-      blush: '#F2AFC7',                 // Blush Pink
+      primary: '#DE5B88',               // Soft Rose Accent
+      primaryGlow: 'rgba(222, 91, 136, 0.28)',
+      primaryLight: '#F7B5CD',          // Soft Baby Pink
+      secondary: '#3B142B',             // Deep Plum
+      secondaryGlow: 'rgba(59, 20, 43, 0.22)',
+      blush: '#FDEBF2',                 // Blush Pink
+      lavender: '#ECE8F7',              // Light Lavender
+      lavenderAccent: '#9884CE',
       success: '#10B981',
       warning: '#F59E0B',
-      info: '#8B5CF6',
-      grid: dark ? 'rgba(247, 198, 217, 0.08)' : 'rgba(107, 49, 82, 0.06)',
+      info: '#9884CE',
+      grid: dark ? 'rgba(247, 181, 205, 0.08)' : 'rgba(59, 20, 43, 0.06)',
       text: dark ? '#BFAEB9' : '#756A73',
-      tooltipBg: dark ? 'rgba(37, 28, 44, 0.96)' : 'rgba(255, 255, 255, 0.98)',
-      tooltipBorder: dark ? 'rgba(247, 198, 217, 0.2)' : 'rgba(217, 108, 157, 0.25)',
-      tooltipText: dark ? '#FDF2F6' : '#25202A'
+      tooltipBg: dark ? 'rgba(25, 21, 29, 0.96)' : 'rgba(255, 255, 255, 0.98)',
+      tooltipBorder: dark ? 'rgba(247, 181, 205, 0.2)' : 'rgba(222, 91, 136, 0.25)',
+      tooltipText: dark ? '#FDF2F6' : '#19151D'
     };
   }
 
@@ -54,12 +56,12 @@
 
     const chartCtx = ctx.getContext('2d');
     const incomeGrad = chartCtx.createLinearGradient(0, 0, 0, 320);
-    incomeGrad.addColorStop(0, 'rgba(217, 108, 157, 0.35)');
-    incomeGrad.addColorStop(1, 'rgba(247, 198, 217, 0.02)');
+    incomeGrad.addColorStop(0, 'rgba(222, 91, 136, 0.35)');
+    incomeGrad.addColorStop(1, 'rgba(247, 181, 205, 0.02)');
 
     const expenseGrad = chartCtx.createLinearGradient(0, 0, 0, 320);
-    expenseGrad.addColorStop(0, 'rgba(107, 49, 82, 0.25)');
-    expenseGrad.addColorStop(1, 'rgba(107, 49, 82, 0.01)');
+    expenseGrad.addColorStop(0, 'rgba(59, 20, 43, 0.25)');
+    expenseGrad.addColorStop(1, 'rgba(59, 20, 43, 0.01)');
 
     window._dashCharts[canvasId] = new Chart(ctx, {
       type: 'line',

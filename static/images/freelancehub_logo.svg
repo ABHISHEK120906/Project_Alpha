@@ -1,57 +1,60 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 52" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" fill="none">
   <defs>
-    <linearGradient id="fhLogoLime" x1="10%" y1="0%" x2="90%" y2="100%">
-      <stop offset="0%" stop-color="#C6F000" />
-      <stop offset="100%" stop-color="#8DBF00" />
+    <linearGradient id="mainPlum" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E57399" />
+      <stop offset="100%" stop-color="#842953" />
     </linearGradient>
-    <linearGradient id="fhLogoPurple" x1="10%" y1="0%" x2="90%" y2="100%">
-      <stop offset="0%" stop-color="#9960FF" />
-      <stop offset="100%" stop-color="#551CC0" />
+    <linearGradient id="mainRose" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#DE5B88" />
+      <stop offset="100%" stop-color="#F7B5CD" />
     </linearGradient>
-    <linearGradient id="fhLogoPeach" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFD4CA" />
-      <stop offset="100%" stop-color="#F99B85" />
+    <linearGradient id="mainNode" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE2EC" />
+      <stop offset="100%" stop-color="#D9D0F3" />
     </linearGradient>
   </defs>
 
-  <!-- Master Emblem (scaled to 48x48 at x=2, y=2) -->
-  <g transform="translate(2, 2) scale(0.48)">
-    <!-- Left 'F' Mark (Vibrant Lime) -->
-    <path d="M 28 13
-             C 38 13 48 13 52 14
-             C 58 15 62 19 62 24
-             C 62 29 58 33 52 34
-             C 46 34 41 34 38 36
-             C 37 37 36 39 36 41
-             C 40 41 46 41 49 42
-             C 55 43 58 47 58 52
-             C 58 57 54 61 48 62
-             C 43 62 39 62 37 64
-             C 36 65 36 67 36 71
-             C 36 77 34 83 29 86
-             C 24 88 18 87 15 82
-             C 13 78 13 73 13 67
-             L 13 28
-             C 13 18 19 13 28 13 Z" 
-          fill="url(#fhLogoLime)" />
+  <!-- Scaled Emblem (48x48 inside 280x64 box at x=4, y=8) -->
+  <g transform="translate(4, 8) scale(0.48)">
+    <!-- Client Initiating Pillar & Arch -->
+    <path d="M 22 14
+             C 34 14 44 14 50 16
+             C 58 18 62 23 62 29
+             C 62 35 56 40 48 42
+             C 42 43 36 43 34 47
+             C 32 50 32 54 32 62
+             C 32 72 28 80 22 84
+             C 17 86 11 84 9 78
+             C 7 73 7 66 7 58
+             L 7 28
+             C 7 18 13 14 22 14 Z" 
+          fill="url(#mainPlum)" />
 
-    <!-- Right Arch Figure (Royal Purple) -->
-    <path d="M 46 87
-             C 45 71 49 54 60 45
-             C 67 39 79 39 86 45
-             C 93 51 93 67 93 87
-             L 79 87
-             C 79 72 79 57 74 55
-             C 69 53 62 57 61 69
-             L 61 87 Z" 
-          fill="url(#fhLogoPurple)" />
+    <!-- Freelancer Ascending Wing & Project Arch -->
+    <path d="M 42 84
+             C 41 68 46 50 58 40
+             C 66 34 78 34 86 41
+             C 93 48 93 66 93 84
+             L 77 84
+             C 77 69 76 54 70 51
+             C 64 49 56 54 55 67
+             L 55 84 Z" 
+          fill="url(#mainRose)" />
 
-    <!-- Talent Nexus Node (Soft Peach) -->
-    <circle cx="73" cy="22" r="11" fill="url(#fhLogoPeach)" />
+    <!-- Connection Bridge -->
+    <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#F7B5CD" opacity="0.6" />
+
+    <!-- Growth Node -->
+    <circle cx="74" cy="20" r="11" fill="url(#mainNode)" />
   </g>
 
   <!-- Wordmark Typography -->
-  <text x="58" y="34" font-family="'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="800" letter-spacing="-0.4">
-    <tspan fill="currentColor">Freelance</tspan><tspan fill="#9BC400">Hub</tspan>
-  </text>
+  <g transform="translate(60, 36)">
+    <text font-family="'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="800" letter-spacing="-0.03em">
+      <tspan fill="#3B142B" class="fh-text-base">Freelance</tspan><tspan fill="#DE5B88" class="fh-text-accent">Hub</tspan>
+    </text>
+    <text y="16" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="8.5" font-weight="600" letter-spacing="0.08em" fill="#846E7E" text-transform="uppercase">
+      Where Great Projects Meet Great Talent
+    </text>
+  </g>
 </svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 44" fill="none">
+  <defs>
+    <linearGradient id="mPlum" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E57399" />
+      <stop offset="100%" stop-color="#842953" />
+    </linearGradient>
+    <linearGradient id="mRose" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#DE5B88" />
+      <stop offset="100%" stop-color="#F7B5CD" />
+    </linearGradient>
+  </defs>
+
+  <!-- Scaled Emblem -->
+  <g transform="translate(2, 4) scale(0.36)">
+    <path d="M 22 14 C 34 14 44 14 50 16 C 58 18 62 23 62 29 C 62 35 56 40 48 42 C 42 43 36 43 34 47 C 32 50 32 54 32 62 C 32 72 28 80 22 84 C 17 86 11 84 9 78 C 7 73 7 66 7 58 L 7 28 C 7 18 13 14 22 14 Z" fill="url(#mPlum)" />
+    <path d="M 42 84 C 41 68 46 50 58 40 C 66 34 78 34 86 41 C 93 48 93 66 93 84 L 77 84 C 77 69 76 54 70 51 C 64 49 56 54 55 67 L 55 84 Z" fill="url(#mRose)" />
+    <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#F7B5CD" opacity="0.6" />
+    <circle cx="74" cy="20" r="11" fill="#F7B5CD" />
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(46, 28)">
+    <text font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="800" letter-spacing="-0.03em">
+      <tspan fill="#3B142B" class="fh-text-base">Freelance</tspan><tspan fill="#DE5B88" class="fh-text-accent">Hub</tspan>
+    </text>
+  </g>
+</svg>

@@ -4,37 +4,40 @@
    ========================================================================== */
 
 :root {
-  /* ── Color Palette: Light Mode (Baby Pink & Deep Plum) ── */
-  --pink-primary: #F7C6D9;         /* Soft Baby Pink */
-  --pink-secondary: #F2AFC7;       /* Blush Pink */
-  --pink-accent: #D96C9D;          /* Rose Accent / Action */
-  --pink-accent-hover: #C65889;    /* Darker Rose */
-  --pink-soft-bg: #FFF5F8;         /* Soft Cream Pink Mist */
-  --plum-deep: #6B3152;            /* Deep Velvet Plum */
-  --plum-hover: #562541;
-  --plum-subtle: rgba(107, 49, 82, 0.08);
+  /* ── Color Palette: Light Mode ── */
+  --pink-primary: #F7B5CD;         /* Soft Baby Pink (Signature Brand Accent) */
+  --pink-secondary: #FDEBF2;       /* Blush Pink */
+  --pink-accent: #DE5B88;          /* Soft Rose Action */
+  --pink-accent-hover: #C94A76;    /* Deeper Rose */
+  --pink-soft-bg: #FFF7FA;         /* Soft Blush Mist */
+  --plum-deep: #3B142B;            /* Deep Authority Plum */
+  --plum-hover: #290C1E;
+  --plum-subtle: rgba(59, 20, 43, 0.06);
+  --lavender-soft: #ECE8F7;        /* Light Lavender Accent */
+  --lavender-accent: #9884CE;      /* Analytics & Secondary Accent */
+  --charcoal-dark: #19151D;        /* Dark Charcoal */
 
   /* Surfaces & Backgrounds */
-  --bg-app: #FFF5F8;
-  --bg-surface: #FFFFFF;
-  --bg-card: #FFFFFF;
+  --bg-app: #FFFFFF;               /* Clean White Main Canvas */
+  --bg-surface: #FFF7FA;           /* Soft Rose/Blush Subtle Mist Surface */
+  --bg-card: #FFFFFF;              /* Crisp White Card */
   --bg-card-hover: #FFF9FB;
-  --bg-elevated: #FDF0F4;
-  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-elevated: #FDF0F5;
+  --bg-glass: rgba(255, 255, 255, 0.90);
   --bg-input: #FFFFFF;
 
   /* Typography & Text */
-  --text-primary: #25202A;         /* Deep Charcoal Blackberry */
-  --text-secondary: #756A73;       /* Muted Slate Mauve */
-  --text-muted: #958B93;           /* Subdued Mauve */
+  --text-primary: #19151D;         /* Dark Charcoal / Deep Plum text */
+  --text-secondary: #5E5361;       /* Refined Slate Plum */
+  --text-muted: #8E7D91;           /* Subdued Plum-Gray */
   --text-inverse: #FFFFFF;
-  --text-brand: #6B3152;
+  --text-brand: #3B142B;           /* Deep Plum Brand Text */
 
   /* Borders & Dividers */
-  --border-color: rgba(217, 108, 157, 0.22);
-  --border-light: rgba(217, 108, 157, 0.12);
-  --border-focus: #D96C9D;
-  --ring-focus: rgba(217, 108, 157, 0.25);
+  --border-color: rgba(222, 91, 136, 0.18);
+  --border-light: rgba(222, 91, 136, 0.10);
+  --border-focus: #DE5B88;
+  --ring-focus: rgba(222, 91, 136, 0.22);
 
   /* Functional Semantics */
   --success: #10B981;
@@ -46,16 +49,16 @@
   --danger: #EF4444;
   --danger-soft: rgba(239, 68, 68, 0.12);
   --danger-text: #B91C1C;
-  --info: #8B5CF6;
-  --info-soft: rgba(139, 92, 246, 0.12);
-  --info-text: #6D28D9;
+  --info: #9884CE;
+  --info-soft: rgba(152, 132, 206, 0.14);
+  --info-text: #6B4EB0;
 
   /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(107, 49, 82, 0.04);
-  --shadow-sm: 0 2px 8px rgba(107, 49, 82, 0.06);
-  --shadow-md: 0 6px 20px rgba(107, 49, 82, 0.08);
-  --shadow-lg: 0 12px 32px rgba(107, 49, 82, 0.12);
-  --shadow-glow: 0 0 24px rgba(217, 108, 157, 0.35);
+  --shadow-xs: 0 1px 2px rgba(59, 20, 43, 0.04);
+  --shadow-sm: 0 2px 8px rgba(59, 20, 43, 0.06);
+  --shadow-md: 0 6px 20px rgba(59, 20, 43, 0.08);
+  --shadow-lg: 0 12px 32px rgba(59, 20, 43, 0.12);
+  --shadow-glow: 0 0 24px rgba(222, 91, 136, 0.28);
 
   /* Layout Dimensions */
   --sidebar-w: 260px;
@@ -72,10 +75,10 @@
   --tr-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Compatibility & Semantic Aliases */
-  --brand-primary: #D96C9D;
-  --brand-primary-hover: #C65889;
-  --border-default: rgba(217, 108, 157, 0.22);
-  --border-subtle: rgba(217, 108, 157, 0.12);
+  --brand-primary: #DE5B88;
+  --brand-primary-hover: #C94A76;
+  --border-default: rgba(222, 91, 136, 0.18);
+  --border-subtle: rgba(222, 91, 136, 0.10);
   --bg-glass-card: var(--bg-card);
   --bg-surface-elevated: var(--bg-elevated);
   --sidebar-bg: var(--bg-glass);
@@ -88,56 +91,66 @@
   --r-lg: var(--radius-lg);
   --r-xl: 24px;
   --r-full: var(--radius-full);
-  --role-client-glow: rgba(107, 49, 82, 0.25);
-  --role-fl-glow: rgba(217, 108, 157, 0.3);
+  --role-client-glow: rgba(59, 20, 43, 0.25);
+  --role-fl-glow: rgba(222, 91, 136, 0.28);
   --role-fl-primary: var(--pink-accent);
   --font-heading: 'Plus Jakarta Sans', sans-serif;
   --font-body: 'Inter', sans-serif;
   --t-fast: var(--tr-fast);
   --t-base: var(--tr-norm);
   --t-smooth: var(--tr-smooth);
-  --admin-lime: #D96C9D;
-  --admin-primary: #6B3152;
-  --admin-rose: #F2AFC7;
-  --role-admin-lime: #D96C9D;
-  --admin-brand-green: #D96C9D;
-  --admin-brand-purple: #6B3152;
-  --admin-brand-pink: #F7C6D9;
+  --admin-lime: #DE5B88;
+  --admin-primary: #3B142B;
+  --admin-rose: #F7B5CD;
+  --role-admin-lime: #DE5B88;
+  --admin-brand-green: #DE5B88;
+  --admin-brand-purple: #3B142B;
+  --admin-brand-pink: #F7B5CD;
 }
 
-/* ── Dark Mode: Deep Obsidian Plum + Soft Pink Glow ── */
+/* ── Dark Mode: Deep Plum + Charcoal + Baby Pink + Lavender ── */
 [data-theme="dark"],
 .theme-dark {
-  --bg-app: #151019;               /* Deep Obsidian Plum */
-  --bg-surface: #1D1623;           /* Midnight Velvet */
-  --bg-card: #251C2C;             /* Plum Glass Card */
-  --bg-card-hover: #2E2236;
-  --bg-elevated: #32253A;
-  --bg-glass: rgba(37, 28, 44, 0.88);
-  --bg-input: #1D1623;
+  --bg-app: #141018;               /* Dark Charcoal Base Canvas */
+  --bg-surface: #1E1624;           /* Deep Plum Midnight Surface */
+  --bg-card: #261B2E;             /* Rich Plum Card Surface */
+  --bg-card-hover: #31223A;
+  --bg-elevated: #382842;
+  --bg-glass: rgba(32, 22, 38, 0.90);
+  --bg-input: #1A121F;
 
-  --text-primary: #FDF2F6;         /* Crisp Porcelain White */
-  --text-secondary: #BFAEB9;       /* Light Slate Mauve */
-  --text-muted: #8E7A87;
-  --text-inverse: #151019;
-  --text-brand: #F7C6D9;
+  --text-primary: #FDF5F8;         /* Crisp Porcelain White */
+  --text-secondary: #C8B9C8;       /* Light Lavender-Muted Mauve */
+  --text-muted: #8F7D93;
+  --text-inverse: #141018;
+  --text-brand: #F7B5CD;           /* Baby Pink Brand Text */
 
-  --border-color: rgba(247, 198, 217, 0.15);
-  --border-light: rgba(247, 198, 217, 0.08);
-  --border-focus: #F7C6D9;
-  --ring-focus: rgba(247, 198, 217, 0.3);
+  --pink-primary: #F7B5CD;         /* Baby Pink */
+  --pink-secondary: #362035;
+  --pink-accent: #F4A6C1;          /* Luminous Soft Pink Accent */
+  --pink-accent-hover: #FFFFFF;
+  --pink-soft-bg: rgba(247, 181, 205, 0.10);
+  --plum-deep: #4A1536;
+  --plum-subtle: rgba(247, 181, 205, 0.08);
+  --lavender-soft: #2E253E;
+  --lavender-accent: #B29FE0;
 
-  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 28px rgba(217, 108, 157, 0.22);
+  --border-color: rgba(247, 181, 205, 0.16);
+  --border-light: rgba(247, 181, 205, 0.08);
+  --border-focus: #F7B5CD;
+  --ring-focus: rgba(247, 181, 205, 0.28);
 
-  --plum-subtle: rgba(247, 198, 217, 0.08);
-  --brand-primary: #F7C6D9;
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 0 28px rgba(244, 166, 193, 0.25);
+
+  --plum-subtle: rgba(247, 181, 205, 0.08);
+  --brand-primary: #F7B5CD;
   --brand-primary-hover: #FFFFFF;
-  --border-default: rgba(247, 198, 217, 0.15);
-  --border-subtle: rgba(247, 198, 217, 0.08);
+  --border-default: rgba(247, 181, 205, 0.16);
+  --border-subtle: rgba(247, 181, 205, 0.08);
   --bg-glass-card: var(--bg-card);
   --bg-surface-elevated: var(--bg-elevated);
   --sidebar-bg: var(--bg-glass);
@@ -230,7 +243,7 @@ a:hover {
   display: block;
   overflow: visible;
   transition: transform var(--tr-fast);
-  filter: drop-shadow(0 2px 6px rgba(217, 108, 157, 0.22));
+  filter: drop-shadow(0 2px 6px rgba(222, 91, 136, 0.22));
 }
 
 .fh-logo-text-block {
@@ -284,9 +297,9 @@ a:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: rgba(217, 108, 157, 0.15);
+  background: rgba(222, 91, 136, 0.15);
   color: var(--pink-accent);
-  border: 1px solid rgba(217, 108, 157, 0.3);
+  border: 1px solid rgba(222, 91, 136, 0.3);
 }
 
 /* Specific variants */
@@ -333,15 +346,15 @@ a:hover {
   background-color: var(--bg-app);
   background-image: 
     /* Delicate architectural dot-matrix grid */
-    radial-gradient(rgba(217, 108, 157, 0.16) 1.2px, transparent 1.2px),
+    radial-gradient(rgba(222, 91, 136, 0.14) 1.2px, transparent 1.2px),
     /* Radiant upper-right baby pink & blush flow */
-    radial-gradient(ellipse 700px 500px at 85% 15%, rgba(247, 198, 217, 0.55), transparent 70%),
+    radial-gradient(ellipse 700px 500px at 85% 15%, rgba(247, 181, 205, 0.50), transparent 70%),
     /* Soft left-center rose flow */
-    radial-gradient(ellipse 650px 450px at 10% 40%, rgba(242, 175, 199, 0.38), transparent 70%),
+    radial-gradient(ellipse 650px 450px at 10% 40%, rgba(222, 91, 136, 0.22), transparent 70%),
     /* Deep plum contrast at bottom-right */
-    radial-gradient(ellipse 800px 600px at 80% 88%, rgba(107, 49, 82, 0.12), transparent 70%),
+    radial-gradient(ellipse 800px 600px at 80% 88%, rgba(59, 20, 43, 0.10), transparent 70%),
     /* Soft lavender subtle aura bottom-left */
-    radial-gradient(circle 500px at 25% 90%, rgba(220, 205, 235, 0.32), transparent 65%);
+    radial-gradient(circle 500px at 25% 90%, rgba(236, 232, 247, 0.55), transparent 65%);
   background-size: 32px 32px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
   background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
   background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
@@ -351,18 +364,18 @@ a:hover {
 
 [data-theme="dark"] .fh-fixed-bg-canvas,
 .theme-dark .fh-fixed-bg-canvas {
-  background-color: #120D16;
+  background-color: #19151D;
   background-image: 
     /* Crisp dark technical dot matrix */
-    radial-gradient(rgba(247, 198, 217, 0.11) 1.2px, transparent 1.2px),
+    radial-gradient(rgba(247, 181, 205, 0.12) 1.2px, transparent 1.2px),
     /* Glowing rose & baby pink flow top-right */
-    radial-gradient(ellipse 750px 550px at 85% 15%, rgba(217, 108, 157, 0.22), transparent 70%),
-    /* Obsidian plum core left-center */
-    radial-gradient(ellipse 700px 500px at 12% 38%, rgba(107, 49, 82, 0.38), transparent 70%),
+    radial-gradient(ellipse 750px 550px at 85% 15%, rgba(247, 181, 205, 0.20), transparent 70%),
+    /* Obsidian deep plum core left-center */
+    radial-gradient(ellipse 700px 500px at 12% 38%, rgba(59, 20, 43, 0.55), transparent 70%),
     /* Soft lavender neon accent bottom */
-    radial-gradient(circle 600px at 65% 82%, rgba(139, 92, 246, 0.14), transparent 65%),
-    /* Deep midnight vignette */
-    radial-gradient(circle 700px at 20% 85%, rgba(40, 20, 32, 0.55), transparent 70%);
+    radial-gradient(circle 600px at 65% 82%, rgba(152, 132, 206, 0.18), transparent 65%),
+    /* Deep charcoal vignette */
+    radial-gradient(circle 700px at 20% 85%, rgba(25, 21, 29, 0.75), transparent 70%);
   background-size: 32px 32px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
@@ -412,17 +425,17 @@ a:hover {
 .btn-primary,
 .btn-hub-primary,
 .btn-fl-primary {
-  background: linear-gradient(135deg, var(--pink-accent) 0%, #C65889 100%);
+  background: linear-gradient(135deg, var(--pink-accent) 0%, #C84A76 100%);
   color: #FFFFFF !important;
-  border-color: rgba(217, 108, 157, 0.4);
-  box-shadow: 0 4px 14px rgba(217, 108, 157, 0.32);
+  border-color: rgba(222, 91, 136, 0.4);
+  box-shadow: 0 4px 14px rgba(222, 91, 136, 0.32);
 }
 
 .btn-primary:hover,
 .btn-hub-primary:hover,
 .btn-fl-primary:hover {
-  background: linear-gradient(135deg, #E078A7 0%, var(--pink-accent) 100%);
-  box-shadow: 0 6px 18px rgba(217, 108, 157, 0.45);
+  background: linear-gradient(135deg, #E5729B 0%, var(--pink-accent) 100%);
+  box-shadow: 0 6px 18px rgba(222, 91, 136, 0.45);
   color: #FFFFFF !important;
 }
 
@@ -452,16 +465,16 @@ a:hover {
 /* Velvet Deep Plum Button (Executive / Admin) */
 .btn-plum,
 .btn-admin-primary {
-  background: linear-gradient(135deg, var(--plum-deep) 0%, #4D2139 100%);
+  background: linear-gradient(135deg, var(--plum-deep) 0%, #2A0E1F 100%);
   color: #FFFFFF !important;
-  border-color: rgba(107, 49, 82, 0.5);
-  box-shadow: 0 4px 14px rgba(107, 49, 82, 0.28);
+  border-color: rgba(59, 20, 43, 0.5);
+  box-shadow: 0 4px 14px rgba(59, 20, 43, 0.28);
 }
 
 .btn-plum:hover,
 .btn-admin-primary:hover {
-  background: linear-gradient(135deg, #7C3A60 0%, var(--plum-deep) 100%);
-  box-shadow: 0 6px 20px rgba(107, 49, 82, 0.38);
+  background: linear-gradient(135deg, #531D3D 0%, var(--plum-deep) 100%);
+  box-shadow: 0 6px 20px rgba(59, 20, 43, 0.38);
 }
 
 /* Danger Button */
@@ -520,15 +533,15 @@ a:hover {
 }
 
 .btn-fh-primary {
-  background: linear-gradient(135deg, var(--pink-accent) 0%, #C65889 100%);
+  background: linear-gradient(135deg, var(--pink-accent) 0%, #C84A76 100%);
   color: #FFFFFF !important;
-  border-color: rgba(217, 108, 157, 0.4);
-  box-shadow: 0 4px 14px rgba(217, 108, 157, 0.32);
+  border-color: rgba(222, 91, 136, 0.4);
+  box-shadow: 0 4px 14px rgba(222, 91, 136, 0.32);
 }
 
 .btn-fh-primary:hover {
-  background: linear-gradient(135deg, #E078A7 0%, var(--pink-accent) 100%);
-  box-shadow: 0 6px 20px rgba(217, 108, 157, 0.45);
+  background: linear-gradient(135deg, #E5729B 0%, var(--pink-accent) 100%);
+  box-shadow: 0 6px 20px rgba(222, 91, 136, 0.45);
   transform: translateY(-1px);
 }
 
@@ -547,28 +560,28 @@ a:hover {
 }
 
 .btn-fh-client {
-  background: linear-gradient(135deg, var(--plum-deep) 0%, #401B30 100%);
+  background: linear-gradient(135deg, var(--plum-deep) 0%, #2A0E1F 100%);
   color: #FFFFFF !important;
-  border-color: rgba(107, 49, 82, 0.5);
-  box-shadow: 0 4px 14px rgba(107, 49, 82, 0.3);
+  border-color: rgba(59, 20, 43, 0.5);
+  box-shadow: 0 4px 14px rgba(59, 20, 43, 0.3);
 }
 
 .btn-fh-client:hover {
-  background: linear-gradient(135deg, #7E385F 0%, var(--plum-deep) 100%);
-  box-shadow: 0 6px 20px rgba(107, 49, 82, 0.42);
+  background: linear-gradient(135deg, #531D3D 0%, var(--plum-deep) 100%);
+  box-shadow: 0 6px 20px rgba(59, 20, 43, 0.42);
   transform: translateY(-1px);
 }
 
 .btn-fh-freelancer {
   background: linear-gradient(135deg, var(--pink-accent) 0%, #B84A7E 100%);
   color: #FFFFFF !important;
-  border-color: rgba(217, 108, 157, 0.5);
-  box-shadow: 0 4px 14px rgba(217, 108, 157, 0.35);
+  border-color: rgba(222, 91, 136, 0.5);
+  box-shadow: 0 4px 14px rgba(222, 91, 136, 0.35);
 }
 
 .btn-fh-freelancer:hover {
-  background: linear-gradient(135deg, #EA7AA9 0%, var(--pink-accent) 100%);
-  box-shadow: 0 6px 20px rgba(217, 108, 157, 0.48);
+  background: linear-gradient(135deg, #E5729B 0%, var(--pink-accent) 100%);
+  box-shadow: 0 6px 20px rgba(222, 91, 136, 0.48);
   transform: translateY(-1px);
 }
 
@@ -671,7 +684,7 @@ a:hover {
 .card:hover,
 .glass-card:hover,
 .fl-card:hover {
-  border-color: rgba(217, 108, 157, 0.4);
+  border-color: rgba(222, 91, 136, 0.4);
   box-shadow: var(--shadow-md);
 }
 
@@ -780,7 +793,7 @@ a:hover {
   justify-content: center;
   background: var(--pink-soft-bg);
   color: var(--pink-accent);
-  border: 1px solid rgba(217, 108, 157, 0.2);
+  border: 1px solid rgba(222, 91, 136, 0.2);
 }
 
 [data-theme="dark"] .kpi-icon,
@@ -954,21 +967,21 @@ textarea:focus {
 
 .badge-primary,
 .badge-pink {
-  background: rgba(217, 108, 157, 0.15);
+  background: rgba(222, 91, 136, 0.15);
   color: var(--pink-accent);
-  border: 1px solid rgba(217, 108, 157, 0.3);
+  border: 1px solid rgba(222, 91, 136, 0.3);
 }
 
 .badge-plum {
-  background: rgba(107, 49, 82, 0.15);
+  background: rgba(59, 20, 43, 0.15);
   color: var(--plum-deep);
-  border: 1px solid rgba(107, 49, 82, 0.3);
+  border: 1px solid rgba(59, 20, 43, 0.3);
 }
 
 [data-theme="dark"] .badge-plum {
-  background: rgba(247, 198, 217, 0.12);
+  background: rgba(247, 181, 205, 0.12);
   color: var(--pink-primary);
-  border-color: rgba(247, 198, 217, 0.25);
+  border-color: rgba(247, 181, 205, 0.25);
 }
 
 .badge-success {
@@ -1080,15 +1093,15 @@ textarea:focus {
 }
 
 .nav-item-link.active {
-  background: linear-gradient(135deg, rgba(217, 108, 157, 0.16) 0%, rgba(107, 49, 82, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(222, 91, 136, 0.16) 0%, rgba(59, 20, 43, 0.1) 100%);
   color: var(--pink-accent);
-  border: 1px solid rgba(217, 108, 157, 0.28);
+  border: 1px solid rgba(222, 91, 136, 0.28);
 }
 
 [data-theme="dark"] .nav-item-link.active {
-  background: linear-gradient(135deg, rgba(247, 198, 217, 0.14) 0%, rgba(107, 49, 82, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(247, 181, 205, 0.14) 0%, rgba(59, 20, 43, 0.3) 100%);
   color: var(--pink-primary);
-  border-color: rgba(247, 198, 217, 0.22);
+  border-color: rgba(247, 181, 205, 0.22);
 }
 
 .app-main {

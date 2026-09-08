@@ -1,12 +1,12 @@
 /* ==========================================================================
    FREELANCEHUB CLIENT WORKSPACE THEME
-   Theme: Deep Plum (#6B3152) + Rose (#D96C9D) + Soft Baby Pink (#F7C6D9)
+   Theme: Deep Plum (#3B142B) + Soft Rose (#DE5B88) + Soft Baby Pink (#F7B5CD)
    ========================================================================== */
 
 body.client-workspace {
   --brand-primary: var(--plum-deep);
   --brand-primary-hover: var(--plum-hover);
-  --sidebar-active-bg: rgba(217, 108, 157, 0.16);
+  --sidebar-active-bg: rgba(222, 91, 136, 0.16);
   --border-focused: var(--pink-accent);
 }
 
@@ -54,7 +54,7 @@ body.client-workspace {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 4px 12px rgba(107, 49, 82, 0.25);
+  box-shadow: 0 4px 12px rgba(59, 20, 43, 0.25);
   flex-shrink: 0;
 }
 
@@ -112,15 +112,15 @@ body.client-workspace {
 }
 
 .client-nav-link.active {
-  background: linear-gradient(135deg, rgba(217, 108, 157, 0.16) 0%, rgba(107, 49, 82, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(222, 91, 136, 0.16) 0%, rgba(59, 20, 43, 0.1) 100%);
   color: var(--pink-accent);
-  border: 1px solid rgba(217, 108, 157, 0.28);
+  border: 1px solid rgba(222, 91, 136, 0.28);
 }
 
 [data-theme="dark"] .client-nav-link.active {
-  background: linear-gradient(135deg, rgba(247, 198, 217, 0.14) 0%, rgba(107, 49, 82, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(247, 181, 205, 0.14) 0%, rgba(59, 20, 43, 0.3) 100%);
   color: var(--pink-primary);
-  border-color: rgba(247, 198, 217, 0.22);
+  border-color: rgba(247, 181, 205, 0.22);
 }
 
 .client-nav-link i {
@@ -223,7 +223,7 @@ body.client-workspace {
   background: var(--plum-deep);
   border-color: var(--pink-accent);
   color: #FFFFFF;
-  box-shadow: 0 0 16px rgba(217, 108, 157, 0.4);
+  box-shadow: 0 0 16px rgba(222, 91, 136, 0.4);
 }
 
 .wizard-step.completed .wizard-step-bubble {

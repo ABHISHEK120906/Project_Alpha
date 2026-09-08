@@ -1,70 +1,73 @@
 {% load static %}
-<!-- FreelanceHub Master Brand Logo Component: Baby Pink + Deep Plum Collaboration Mark -->
+<!-- FreelanceHub Brand Logo Component: Baby Pink + Deep Plum + White + Soft Rose + Lavender -->
 {% if href %}
 <a href="{{ href }}" class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}" aria-label="FreelanceHub">
 {% else %}
 <div class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}">
 {% endif %}
 
-  <!-- Master Collaboration Monogram Emblem -->
+  <!-- Master Collaboration & Growth Emblem -->
   <div class="fh-logo-mark-wrap" aria-hidden="true">
     <svg class="fh-logo-symbol-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Primary Rose to Soft Pink Gradient -->
-        <linearGradient id="fhRoseGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#D96C9D" />
-          <stop offset="100%" stop-color="#F7C6D9" />
+        <!-- Soft Rose to Baby Pink Gradient (Freelancer / Growth Arch) -->
+        <linearGradient id="fhRoseGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#DE5B88" />
+          <stop offset="100%" stop-color="#F7B5CD" />
         </linearGradient>
 
-        <!-- Deep Plum Anchor Gradient -->
+        <!-- Deep Plum to Rose Gradient (Client / Anchor Pillar) -->
         <linearGradient id="fhPlumGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#6B3152" />
-          <stop offset="100%" stop-color="#401B30" />
+          <stop offset="0%" stop-color="#E57399" />
+          <stop offset="100%" stop-color="#3B142B" />
         </linearGradient>
 
-        <!-- Blush Highlight -->
-        <linearGradient id="fhBlushGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#F2AFC7" />
-          <stop offset="100%" stop-color="#D96C9D" />
+        <!-- Central Connection & Beacon Node (Blush Pink to Light Lavender) -->
+        <linearGradient id="fhNodeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FDE2EC" />
+          <stop offset="100%" stop-color="#D9D0F3" />
         </linearGradient>
       </defs>
 
-      <!-- Outer Continuous Nexus Loop (Deep Plum) -->
-      <path d="M 24 16
-               C 36 16 48 16 54 18
-               C 62 20 66 26 66 33
-               C 66 40 60 46 52 48
-               C 45 49 38 49 36 53
-               C 34 56 34 60 34 68
-               C 34 78 30 84 24 87
-               C 18 89 12 86 10 80
-               C 8 74 8 68 8 60
-               L 8 32
-               C 8 21 15 16 24 16 Z" 
+      <!-- Client Initiating Pillar ('F' Flow) -->
+      <path d="M 22 14
+               C 34 14 44 14 50 16
+               C 58 18 62 23 62 29
+               C 62 35 56 40 48 42
+               C 42 43 36 43 34 47
+               C 32 50 32 54 32 62
+               C 32 72 28 80 22 84
+               C 17 86 11 84 9 78
+               C 7 73 7 66 7 58
+               L 7 28
+               C 7 18 13 14 22 14 Z" 
             fill="url(#fhPlumGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
-      <!-- Intersecting Talent Arch (Vibrant Rose & Baby Pink) -->
-      <path d="M 44 86
-               C 43 70 48 52 61 42
-               C 69 36 82 36 90 43
-               C 97 50 97 68 97 86
-               L 81 86
-               C 81 71 80 55 74 52
-               C 68 50 60 55 59 69
-               L 59 86 Z" 
+      <!-- Freelancer Ascending Wing & Project Arch ('H' Uplink) -->
+      <path d="M 42 84
+               C 41 68 46 50 58 40
+               C 66 34 78 34 86 41
+               C 93 48 93 66 93 84
+               L 77 84
+               C 77 69 76 54 70 51
+               C 64 49 56 54 55 67
+               L 55 84 Z" 
             fill="url(#fhRoseGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
-      <!-- Analytics Hub Apex Node (Blush Pink) -->
-      <circle cx="76" cy="22" r="12" fill="url(#fhBlushGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
+      <!-- Connection Bridge -->
+      <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#F7B5CD" opacity="0.6" />
+
+      <!-- Growth Beacon / Milestone Apex Node -->
+      <circle cx="74" cy="20" r="11" fill="url(#fhNodeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
     </svg>
   </div>
 
-  {% if not icon_only %}
+  {% if not icon_only and variant != 'icon_only' %}
   <!-- Wordmark & Context Badge -->
   <div class="fh-logo-text-block">
     <div class="fh-logo-name-row">
       <div class="fh-logo-name">
-        <span class="fh-logo-name-base">Freelance</span><span class="fh-logo-name-accent" style="color:var(--pink-accent);">Hub</span>
+        <span class="fh-logo-name-base">Freelance</span><span class="fh-logo-name-accent">Hub</span>
       </div>
       {% if role %}
         <span class="fh-logo-role-tag fh-logo-role-tag--{{ role|lower|slugify }}">{{ role }}</span>
@@ -75,7 +78,7 @@
       <div class="fh-logo-sub-text">{{ subtitle }}</div>
     {% elif tagline %}
       <div class="fh-logo-sub-text">{{ tagline }}</div>
-    {% elif variant == 'auth' %}
+    {% elif variant == 'auth' or variant == 'footer' %}
       <div class="fh-logo-sub-text">Where Great Projects Meet Great Talent</div>
     {% endif %}
   </div>
