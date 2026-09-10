@@ -113,6 +113,22 @@ class MarketplaceClientStage1Tests(TestCase):
         self.assertTrue(hasattr(user, 'client_profile'))
         self.assertEqual(user.client_profile.company_name, 'Charlie Tech')
 
+    def test_client_registration_with_custom_username(self):
+        """Test registering a Client with an explicit custom username."""
+        response = self.client.post(reverse('marketplace:client_register'), {
+            'full_name': 'Diana Prince',
+            'username': 'diana_client',
+            'email': 'diana@themyscira.com',
+            'phone': '+919998887775',
+            'company_name': 'Amazon Enterprises',
+            'password1': 'SecretPass123!',
+            'password2': 'SecretPass123!',
+        })
+        self.assertEqual(response.status_code, 302)
+        user = User.objects.get(username='diana_client')
+        self.assertEqual(user.email, 'diana@themyscira.com')
+        self.assertEqual(user.profile.role, 'client')
+
     # -------------------------------------------------------------------------
     # 2. Login & Routing
     # -------------------------------------------------------------------------
@@ -121,7 +137,17 @@ class MarketplaceClientStage1Tests(TestCase):
         response = self.client.post(reverse('core:login'), {
             'username': 'client_alice',
             'password': 'Password123!',
-            'login_type': 'user'
+            'login_type': 'client'
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('marketplace:client_dashboard'))
+
+    def test_client_login_with_email(self):
+        """Test logging in as Client using email address instead of username."""
+        response = self.client.post(reverse('core:login'), {
+            'username': 'alice@example.com',
+            'password': 'Password123!',
+            'login_type': 'client'
         })
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('marketplace:client_dashboard'))

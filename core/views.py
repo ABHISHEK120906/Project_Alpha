@@ -155,8 +155,10 @@ def custom_login(request):
             )
             return render(request, 'registration/login.html', {'login_type': login_type})
 
-        # Resolve exact username case-insensitively
-        matched_user = User.objects.filter(username__iexact=raw_username).first()
+        # Resolve exact username or email case-insensitively
+        matched_user = User.objects.filter(
+            Q(username__iexact=raw_username) | Q(email__iexact=raw_username)
+        ).first()
         username = matched_user.username if matched_user else raw_username
 
         user = authenticate(request, username=username, password=password)
@@ -219,7 +221,9 @@ def custom_login(request):
             messages.error(request, 'Invalid username or password. Please try again.')
             return render(request, 'registration/login.html', {'login_type': login_type})
 
-    login_type = request.GET.get('type', 'user')
+    login_type = request.GET.get('role') or request.GET.get('type') or 'client'
+    if login_type not in ('client', 'freelancer', 'admin'):
+        login_type = 'client'
     return render(request, 'registration/login.html', {'login_type': login_type})
 
 
@@ -249,8 +253,10 @@ def admin_login_view(request):
             )
             return render(request, 'registration/admin_login.html', {})
 
-        # Resolve exact username case-insensitively
-        matched_user = User.objects.filter(username__iexact=raw_username).first()
+        # Resolve exact username or email case-insensitively
+        matched_user = User.objects.filter(
+            Q(username__iexact=raw_username) | Q(email__iexact=raw_username)
+        ).first()
         username = matched_user.username if matched_user else raw_username
 
         user = authenticate(request, username=username, password=password)
@@ -351,11 +357,12 @@ def forgot_password_direct(request):
             messages.error(request, 'Password must be at least 8 characters long.')
             return render(request, 'registration/password_reset_form.html', context)
 
-        # Look up user
-        try:
-            user = User.objects.get(username__iexact=username)
-        except User.DoesNotExist:
-            messages.error(request, 'No account found with that username.')
+        # Look up user by username or email
+        user = User.objects.filter(
+            Q(username__iexact=username) | Q(email__iexact=username)
+        ).first()
+        if not user:
+            messages.error(request, 'No account found with that username or email address.')
             return render(request, 'registration/password_reset_form.html', context)
 
         # Prevent resetting suspended/deleted accounts

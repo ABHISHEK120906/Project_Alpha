@@ -42,11 +42,11 @@
 <form method="post" action="{% url 'core:admin_login' %}" id="adminLoginForm" novalidate>
   {% csrf_token %}
 
-  <!-- Admin Username -->
+  <!-- Admin Username or Email -->
   <div class="fh-form-group">
-    <label for="id_admin_username" class="fh-label">Admin Username</label>
+    <label for="id_admin_username" class="fh-label">Admin Username or Email</label>
     <div style="position:relative;">
-      <input type="text" name="username" id="id_admin_username" class="fh-input" placeholder="Enter admin username" required autofocus autocomplete="username" value="{{ request.POST.username|default:'' }}">
+      <input type="text" name="username" id="id_admin_username" class="fh-input" placeholder="Enter admin username or email" required autofocus autocomplete="username" value="{{ request.POST.username|default:'' }}">
     </div>
     {% if form.username.errors %}
       <div class="fh-form-error">{{ form.username.errors.0 }}</div>

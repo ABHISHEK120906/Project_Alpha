@@ -553,6 +553,34 @@ class UserRegistrationAndSecurityTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Super Admin')
 
+    def test_login_with_email_address(self):
+        user = User.objects.create_user(username='emailtestuser', email='myuser@example.com', password='MyPassword123!')
+        resp = self.client.post(reverse('core:login'), {
+            'username': 'myuser@example.com',
+            'password': 'MyPassword123!',
+            'login_type': 'client'
+        })
+        self.assertEqual(resp.status_code, 302)
+
+    def test_admin_login_with_email_address(self):
+        resp = self.client.post(reverse('core:admin_login'), {
+            'username': 'admin@example.com',
+            'password': 'AdminPassword123!'
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('core:admin_dashboard'))
+
+    def test_forgot_password_with_email_address(self):
+        user = User.objects.create_user(username='pwuser', email='pwuser@example.com', password='OldPassword123!')
+        resp = self.client.post(reverse('core:password_reset'), {
+            'username': 'pwuser@example.com',
+            'new_password': 'BrandNewPassword123!',
+            'confirm_password': 'BrandNewPassword123!',
+        })
+        self.assertEqual(resp.status_code, 302)
+        user.refresh_from_db()
+        self.assertTrue(user.check_password('BrandNewPassword123!'))
+
 
 class SecurityHardeningTestCase(TestCase):
     def setUp(self):

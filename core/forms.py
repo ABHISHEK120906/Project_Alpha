@@ -480,8 +480,8 @@ class ProjectCommentForm(forms.ModelForm):
 
 class UserRegistrationForm(forms.Form):
     """
-    Simple registration form: Username + Password + Confirm Password.
-    No email, no full name, no verification — account is activated immediately.
+    User registration form: Username + Password + Confirm Password + optional Email & Full Name.
+    Account is activated immediately.
     """
     username = forms.CharField(
         label='Username',
@@ -491,6 +491,25 @@ class UserRegistrationForm(forms.Form):
             'placeholder': 'Choose a unique username',
             'class': 'form-control',
             'autocomplete': 'username',
+        }),
+    )
+    full_name = forms.CharField(
+        label='Full Name',
+        required=False,
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Your full name (optional)',
+            'class': 'form-control',
+            'autocomplete': 'name',
+        }),
+    )
+    email = forms.EmailField(
+        label='Email Address',
+        required=False,
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'you@domain.com (optional)',
+            'class': 'form-control',
+            'autocomplete': 'email',
         }),
     )
     password1 = forms.CharField(
@@ -524,10 +543,21 @@ class UserRegistrationForm(forms.Form):
             raise ValidationError("This username is already taken. Please choose another.")
         return username
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip().lower()
+        if email:
+            if User.objects.filter(email__iexact=email).exists():
+                raise ValidationError("An account with this email already exists.")
+        return email
+
     def clean(self):
         cleaned_data = super().clean()
-        password1 = cleaned_data.get('password1')
-        password2 = cleaned_data.get('password2')
+        password1 = cleaned_data.get('password1') or self.data.get('password')
+        password2 = cleaned_data.get('password2') or self.data.get('confirm_password') or self.data.get('password2')
+        if password1 and not cleaned_data.get('password1'):
+            cleaned_data['password1'] = password1
+        if password2 and not cleaned_data.get('password2'):
+            cleaned_data['password2'] = password2
         if password1 and password2 and password1 != password2:
             self.add_error('password2', "Passwords do not match.")
         return cleaned_data
@@ -536,10 +566,15 @@ class UserRegistrationForm(forms.Form):
         """Create and return the new active User."""
         username = self.cleaned_data['username']
         password = self.cleaned_data['password1']
+        email = self.cleaned_data.get('email', '')
+        full_name = self.cleaned_data.get('full_name', '')
 
         user = User.objects.create_user(
             username=username,
+            email=email,
             password=password,
+            first_name=full_name.split()[0] if full_name else '',
+            last_name=' '.join(full_name.split()[1:]) if len(full_name.split()) > 1 else '',
             is_active=True,
         )
         return user

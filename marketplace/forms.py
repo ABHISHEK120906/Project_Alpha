@@ -26,7 +26,7 @@ from .models import (
 
 class ClientRegistrationForm(forms.Form):
     """
-    Full client registration: name, email, password, phone, company.
+    Full client registration: name, email, password, phone, company, optional username.
     """
     full_name = forms.CharField(
         label='Full Name',
@@ -35,6 +35,7 @@ class ClientRegistrationForm(forms.Form):
             'class': 'form-control',
             'placeholder': 'Your full name',
             'autocomplete': 'name',
+            'id': 'client-reg-fullname',
         }),
     )
     email = forms.EmailField(
@@ -43,7 +44,20 @@ class ClientRegistrationForm(forms.Form):
             'class': 'form-control',
             'placeholder': 'you@company.com',
             'autocomplete': 'email',
+            'id': 'client-reg-email',
         }),
+    )
+    username = forms.CharField(
+        label='Username (optional)',
+        required=False,
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Choose a username (or leave blank to auto-generate)',
+            'autocomplete': 'username',
+            'id': 'client-reg-username',
+        }),
+        help_text='Optional. If left blank, one will be generated from your email.',
     )
     phone = forms.CharField(
         label='Phone Number',
@@ -53,6 +67,7 @@ class ClientRegistrationForm(forms.Form):
             'class': 'form-control',
             'placeholder': '+91 98765 43210',
             'autocomplete': 'tel',
+            'id': 'client-reg-phone',
         }),
     )
     company_name = forms.CharField(
@@ -62,6 +77,7 @@ class ClientRegistrationForm(forms.Form):
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Your company or organisation',
+            'id': 'client-reg-company',
         }),
     )
     password1 = forms.CharField(
@@ -69,8 +85,9 @@ class ClientRegistrationForm(forms.Form):
         min_length=8,
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Create a strong password',
+            'placeholder': 'Create a strong password (min 8 chars)',
             'autocomplete': 'new-password',
+            'id': 'client-reg-pass1',
         }),
     )
     password2 = forms.CharField(
@@ -79,6 +96,7 @@ class ClientRegistrationForm(forms.Form):
             'class': 'form-control',
             'placeholder': 'Repeat your password',
             'autocomplete': 'new-password',
+            'id': 'client-reg-pass2',
         }),
     )
 
@@ -92,25 +110,45 @@ class ClientRegistrationForm(forms.Form):
             raise ValidationError("An account with this email already exists.")
         return email
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if username:
+            if not re.match(r'^[\w.-]+$', username):
+                raise ValidationError("Username may only contain letters, numbers, dots, hyphens, and underscores.")
+            if User.objects.filter(username__iexact=username).exists():
+                raise ValidationError("This username is already taken. Please choose another.")
+        return username
+
     def clean(self):
         cleaned = super().clean()
-        p1 = cleaned.get('password1')
-        p2 = cleaned.get('password2')
+        p1 = cleaned.get('password1') or self.data.get('password')
+        p2 = cleaned.get('password2') or self.data.get('confirm_password') or self.data.get('password2')
+        if p1 and not cleaned.get('password1'):
+            cleaned['password1'] = p1
+        if p2 and not cleaned.get('password2'):
+            cleaned['password2'] = p2
         if p1 and p2 and p1 != p2:
             self.add_error('password2', "Passwords do not match.")
+        elif not p1:
+            self.add_error('password1', "Password is required.")
         return cleaned
 
     def save(self):
         """Create User + ClientProfile. Return (user, client_profile)."""
         email = self.cleaned_data['email']
         full_name = self.cleaned_data['full_name']
-        # Use email prefix as username (ensure uniqueness)
-        base_username = email.split('@')[0]
-        username = base_username
-        counter = 1
-        while User.objects.filter(username=username).exists():
-            username = f"{base_username}{counter}"
-            counter += 1
+        custom_username = self.cleaned_data.get('username')
+
+        if custom_username:
+            username = custom_username
+        else:
+            # Use email prefix as username (ensure uniqueness)
+            base_username = email.split('@')[0]
+            username = base_username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
 
         user = User.objects.create_user(
             username=username,
@@ -319,7 +357,7 @@ class ProjectReportForm(forms.ModelForm):
 class FreelancerRegistrationForm(forms.Form):
     """
     Full Freelancer registration: name, email, password, phone, professional title,
-    skills, experience, bio, portfolio links, hourly rate, avatar.
+    skills, experience, bio, portfolio links, hourly rate, avatar, optional username.
     """
     full_name = forms.CharField(
         label='Full Name',
@@ -339,6 +377,18 @@ class FreelancerRegistrationForm(forms.Form):
             'autocomplete': 'email',
             'id': 'freelancer-reg-email',
         }),
+    )
+    username = forms.CharField(
+        label='Username (optional)',
+        required=False,
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Choose a username (or leave blank to auto-generate)',
+            'autocomplete': 'username',
+            'id': 'freelancer-reg-username',
+        }),
+        help_text='Optional. If left blank, one will be generated from your email.',
     )
     phone = forms.CharField(
         label='Phone / WhatsApp (optional)',
@@ -458,24 +508,44 @@ class FreelancerRegistrationForm(forms.Form):
             raise ValidationError("An account with this email already exists.")
         return email
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if username:
+            if not re.match(r'^[\w.-]+$', username):
+                raise ValidationError("Username may only contain letters, numbers, dots, hyphens, and underscores.")
+            if User.objects.filter(username__iexact=username).exists():
+                raise ValidationError("This username is already taken. Please choose another.")
+        return username
+
     def clean(self):
         cleaned = super().clean()
-        p1 = cleaned.get('password1')
-        p2 = cleaned.get('password2')
+        p1 = cleaned.get('password1') or self.data.get('password')
+        p2 = cleaned.get('password2') or self.data.get('confirm_password') or self.data.get('password2')
+        if p1 and not cleaned.get('password1'):
+            cleaned['password1'] = p1
+        if p2 and not cleaned.get('password2'):
+            cleaned['password2'] = p2
         if p1 and p2 and p1 != p2:
             self.add_error('password2', "Passwords do not match.")
+        elif not p1:
+            self.add_error('password1', "Password is required.")
         return cleaned
 
     def save(self):
         """Create User + UserProfile(role='freelancer') + FreelancerProfile."""
         email = self.cleaned_data['email']
         full_name = self.cleaned_data['full_name']
-        base_username = email.split('@')[0]
-        username = base_username
-        counter = 1
-        while User.objects.filter(username=username).exists():
-            username = f"{base_username}{counter}"
-            counter += 1
+        custom_username = self.cleaned_data.get('username')
+
+        if custom_username:
+            username = custom_username
+        else:
+            base_username = email.split('@')[0]
+            username = base_username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
 
         first_name = full_name.split()[0] if full_name else ''
         last_name = ' '.join(full_name.split()[1:]) if len(full_name.split()) > 1 else ''

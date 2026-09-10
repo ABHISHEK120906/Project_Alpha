@@ -50,13 +50,13 @@
 <!-- Login Form -->
 <form method="post" action="{% url 'core:login' %}" id="loginForm" novalidate>
   {% csrf_token %}
-  <input type="hidden" name="login_type" id="loginTypeInput" value="client">
+  <input type="hidden" name="login_type" id="loginTypeInput" value="{{ login_type|default:'client' }}">
 
-  <!-- Username -->
+  <!-- Username or Email -->
   <div class="fh-form-group">
-    <label for="id_username" class="fh-label">Username</label>
+    <label for="id_username" class="fh-label">Username or Email Address</label>
     <div style="position:relative;">
-      <input type="text" name="username" id="id_username" class="fh-input" placeholder="Enter your username" required autofocus autocomplete="username" value="{{ request.POST.username|default:'' }}">
+      <input type="text" name="username" id="id_username" class="fh-input" placeholder="Enter your username or email address" required autofocus autocomplete="username" value="{{ request.POST.username|default:'' }}">
     </div>
     {% if form.username.errors %}
       <div class="fh-form-error">{{ form.username.errors.0 }}</div>
@@ -113,36 +113,54 @@
     const tabs = document.querySelectorAll('.auth-role-tab');
     const signUpSec = document.getElementById('signUpSection');
 
-    input.value = role;
+    if (input) input.value = role;
 
     tabs.forEach(t => {
       t.classList.toggle('active', t.getAttribute('data-role') === role);
     });
 
-    submitBtn.classList.remove('btn-fh-client', 'btn-fh-freelancer', 'btn-fh-admin');
+    if (submitBtn) {
+      submitBtn.classList.remove('btn-fh-client', 'btn-fh-freelancer', 'btn-fh-admin');
+    }
 
     if (role === 'client') {
-      headerLabel.textContent = 'Client Workspace';
-      headerLabel.style.color = '#7d3cff';
-      submitBtn.classList.add('btn-fh-client');
-      submitBtnText.textContent = 'Sign In to Client Workspace';
+      if (headerLabel) {
+        headerLabel.textContent = 'Client Workspace';
+        headerLabel.style.color = '#7d3cff';
+      }
+      if (submitBtn) submitBtn.classList.add('btn-fh-client');
+      if (submitBtnText) submitBtnText.textContent = 'Sign In to Client Workspace';
       if (signUpSec) signUpSec.style.display = 'block';
     } else if (role === 'freelancer') {
-      headerLabel.textContent = 'Freelancer Portal';
-      headerLabel.style.color = '#ff5e6c';
-      submitBtn.classList.add('btn-fh-freelancer');
-      submitBtnText.textContent = 'Sign In to Freelancer Portal';
+      if (headerLabel) {
+        headerLabel.textContent = 'Freelancer Portal';
+        headerLabel.style.color = '#ff5e6c';
+      }
+      if (submitBtn) submitBtn.classList.add('btn-fh-freelancer');
+      if (submitBtnText) submitBtnText.textContent = 'Sign In to Freelancer Portal';
       if (signUpSec) signUpSec.style.display = 'block';
     } else if (role === 'admin') {
-      headerLabel.textContent = 'Admin Governance Console';
-      headerLabel.style.color = 'var(--role-admin-lime)';
-      submitBtn.classList.add('btn-fh-admin');
-      submitBtnText.textContent = 'Sign In to Admin Console';
+      if (headerLabel) {
+        headerLabel.textContent = 'Admin Governance Console';
+        headerLabel.style.color = 'var(--role-admin-lime)';
+      }
+      if (submitBtn) submitBtn.classList.add('btn-fh-admin');
+      if (submitBtnText) submitBtnText.textContent = 'Sign In to Admin Console';
       if (signUpSec) signUpSec.style.display = 'none';
     }
 
     if (window.lucide) window.lucide.createIcons();
   }
+
+  // Initialize active role on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    const initialRole = "{{ login_type|default:'client' }}";
+    const urlParams = new URLSearchParams(window.location.search);
+    const roleParam = urlParams.get('role') || urlParams.get('type') || initialRole;
+    if (['client', 'freelancer', 'admin'].includes(roleParam)) {
+      setLoginRole(roleParam);
+    }
+  });
 
   // Password Visibility Toggle
   const toggleBtn = document.getElementById('togglePasswordBtn');

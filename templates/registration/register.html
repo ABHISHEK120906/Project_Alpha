@@ -39,7 +39,7 @@
     <div class="fh-form-group">
       <label for="{{ field.id_for_label }}" class="fh-label">{{ field.label }}</label>
       <div style="position:relative;">
-        <input type="{% if 'password' in field.name %}password{% else %}text{% endif %}" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="fh-input" placeholder="Enter {{ field.label|lower }}" value="{{ field.value|default:'' }}" required>
+        <input type="{% if 'password' in field.name %}password{% else %}text{% endif %}" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="fh-input" placeholder="Enter {{ field.label|lower }}" value="{{ field.value|default:'' }}" {% if field.field.required %}required{% endif %}>
       </div>
       {% if field.errors %}
         <div class="fh-form-error">{{ field.errors.0 }}</div>

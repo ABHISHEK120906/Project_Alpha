@@ -191,6 +191,21 @@ class MarketplaceFreelancerStage2Tests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response.context['form'], 'email', 'An account with this email already exists.')
 
+    def test_freelancer_registration_with_custom_username(self):
+        """Registering with an explicit custom username works."""
+        response = self.client.post(reverse('freelancer:register'), {
+            'full_name': 'Grace Hopper',
+            'username': 'grace_dev',
+            'email': 'grace@compiler.org',
+            'professional_title': 'Systems & Compiler Engineer',
+            'password1': 'SecretPass123!',
+            'password2': 'SecretPass123!',
+        })
+        self.assertEqual(response.status_code, 302)
+        user = User.objects.get(username='grace_dev')
+        self.assertEqual(user.email, 'grace@compiler.org')
+        self.assertEqual(user.profile.role, 'freelancer')
+
     # -------------------------------------------------------------------------
     # 2. Login & Role-Based Routing
     # -------------------------------------------------------------------------
@@ -199,7 +214,17 @@ class MarketplaceFreelancerStage2Tests(TestCase):
         response = self.client.post(reverse('core:login'), {
             'username': 'freelancer_dan',
             'password': 'Password123!',
-            'login_type': 'user'
+            'login_type': 'freelancer'
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('freelancer:dashboard'))
+
+    def test_freelancer_login_with_email(self):
+        """Logging in as Freelancer using email address works."""
+        response = self.client.post(reverse('core:login'), {
+            'username': 'dan@example.com',
+            'password': 'Password123!',
+            'login_type': 'freelancer'
         })
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('freelancer:dashboard'))

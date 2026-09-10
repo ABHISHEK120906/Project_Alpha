@@ -92,15 +92,29 @@
 
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
     <div class="fh-form-group" style="margin-bottom:0;">
-      <label for="{{ form.username.id_for_label }}" class="fh-label">Username *</label>
+      <label for="{{ form.username.id_for_label }}" class="fh-label">Username (optional)</label>
       {{ form.username }}
       {% if form.username.errors %}<div class="fh-form-error">{{ form.username.errors.0 }}</div>{% endif %}
     </div>
 
     <div class="fh-form-group" style="margin-bottom:0;">
-      <label for="{{ form.password.id_for_label }}" class="fh-label">Password *</label>
-      {{ form.password }}
-      {% if form.password.errors %}<div class="fh-form-error">{{ form.password.errors.0 }}</div>{% endif %}
+      <label for="{{ form.portfolio_website.id_for_label }}" class="fh-label">Portfolio / Website (optional)</label>
+      {{ form.portfolio_website }}
+      {% if form.portfolio_website.errors %}<div class="fh-form-error">{{ form.portfolio_website.errors.0 }}</div>{% endif %}
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.password1.id_for_label }}" class="fh-label">Password *</label>
+      {{ form.password1 }}
+      {% if form.password1.errors %}<div class="fh-form-error">{{ form.password1.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="fh-form-group" style="margin-bottom:0;">
+      <label for="{{ form.password2.id_for_label }}" class="fh-label">Confirm Password *</label>
+      {{ form.password2 }}
+      {% if form.password2.errors %}<div class="fh-form-error">{{ form.password2.errors.0 }}</div>{% endif %}
     </div>
   </div>
 
