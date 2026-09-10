@@ -132,13 +132,31 @@
     initMobileNav();
     initAlerts();
 
-    // Re-trigger icon rendering if dynamic content loaded
-    const observer = new MutationObserver(function (mutations) {
-      let hasNewNodes = false;
-      mutations.forEach(function (mutation) {
-        if (mutation.addedNodes.length > 0) hasNewNodes = true;
-      });
-      if (hasNewNodes) initIcons();
+    // Re-trigger icon rendering only for newly added data-lucide elements (debounced + guarded)
+    var iconDebounceTimer = null;
+    var iconRendering = false;
+    var observer = new MutationObserver(function (mutations) {
+      // Only proceed if any added node contains a data-lucide attribute
+      var hasNewIcons = false;
+      for (var i = 0; i < mutations.length; i++) {
+        var added = mutations[i].addedNodes;
+        for (var j = 0; j < added.length; j++) {
+          var node = added[j];
+          if (node.nodeType === 1) {
+            if (node.hasAttribute && node.hasAttribute('data-lucide')) { hasNewIcons = true; break; }
+            if (node.querySelector && node.querySelector('[data-lucide]')) { hasNewIcons = true; break; }
+          }
+        }
+        if (hasNewIcons) break;
+      }
+      if (!hasNewIcons || iconRendering) return;
+      clearTimeout(iconDebounceTimer);
+      iconDebounceTimer = setTimeout(function () {
+        if (iconRendering) return;
+        iconRendering = true;
+        initIcons();
+        iconRendering = false;
+      }, 120);
     });
     observer.observe(document.body, { childList: true, subtree: true });
   });
