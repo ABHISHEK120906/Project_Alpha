@@ -28,15 +28,40 @@
       </div>
       <div class="card-body-hub">
         <div class="text-center mb-4">
-          <div class="hub-avatar hub-avatar-xl mx-auto mb-2" style="font-size: 26px;">
-            {{ user.username|first|upper }}
+          <!-- Avatar Upload Area -->
+          <div style="position:relative;display:inline-block;margin-bottom:12px;">
+            {% if user.profile.profile_picture %}
+              <img id="avatarPreview"
+                   src="{{ user.profile.profile_picture.url }}"
+                   alt="Profile Photo"
+                   style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--accent-primary);">
+            {% else %}
+              <div id="avatarPreview" class="hub-avatar hub-avatar-xl mx-auto" style="font-size:26px;width:80px;height:80px;line-height:80px;">
+                {{ user.username|first|upper }}
+              </div>
+            {% endif %}
+            <!-- Camera overlay button -->
+            <label for="avatarFileInput"
+                   title="Change photo"
+                   style="position:absolute;bottom:2px;right:2px;
+                          width:26px;height:26px;border-radius:50%;
+                          background:var(--accent-primary);border:2px solid var(--bg-card);
+                          display:flex;align-items:center;justify-content:center;
+                          cursor:pointer;transition:transform .2s;"
+                   onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+              <i data-lucide="camera" style="width:13px;height:13px;color:#fff;"></i>
+            </label>
           </div>
           <h4 style="font-weight:700;color:var(--text-primary);margin-bottom:2px;">{{ user.get_full_name|default:user.username }}</h4>
           <p style="color:var(--text-muted);font-size:13px;">@{{ user.username }}</p>
+          <p id="avatarFileName" style="font-size:11px;color:var(--accent-primary);margin-top:4px;display:none;"></p>
         </div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data" id="profileForm">
           {% csrf_token %}
           <input type="hidden" name="action" value="profile">
+          <!-- Hidden file input for avatar -->
+          <input type="file" id="avatarFileInput" name="avatar" accept="image/*"
+                 style="display:none;">
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">First Name</label>
@@ -169,7 +194,55 @@
 
 {% block extra_js %}
 <script>
-  // Connect settings toggle with theme switcher
+  // ── AVATAR LIVE PREVIEW ─────────────────────────────────────────────────────
+  const avatarInput = document.getElementById('avatarFileInput');
+  const avatarPreview = document.getElementById('avatarPreview');
+  const avatarFileName = document.getElementById('avatarFileName');
+
+  if (avatarInput) {
+    avatarInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      // Validate type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file (PNG, JPG, GIF, WEBP).');
+        this.value = '';
+        return;
+      }
+      // Validate size (max 5 MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image must be smaller than 5 MB.');
+        this.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        // Replace preview with <img> regardless of what was there before
+        if (avatarPreview.tagName === 'IMG') {
+          avatarPreview.src = e.target.result;
+        } else {
+          // Was a div (initials) — swap with an img
+          const img = document.createElement('img');
+          img.id = 'avatarPreview';
+          img.alt = 'Profile Photo';
+          img.style.cssText = 'width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--accent-primary);';
+          img.src = e.target.result;
+          avatarPreview.replaceWith(img);
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // Show filename
+      if (avatarFileName) {
+        avatarFileName.textContent = '📎 ' + file.name;
+        avatarFileName.style.display = 'block';
+      }
+    });
+  }
+
+  // ── THEME TOGGLE ─────────────────────────────────────────────────────────────
   const sBtn = document.getElementById('themeToggleSettingsBtn');
   if (sBtn) {
     sBtn.addEventListener('click', () => {

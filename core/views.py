@@ -1717,7 +1717,7 @@ def user_settings(request):
             user = request.user
             user.first_name = request.POST.get('first_name', '').strip()[:150]
             user.last_name = request.POST.get('last_name', '').strip()[:150]
-            
+
             new_email = request.POST.get('email', '').strip()
             if new_email:
                 try:
@@ -1728,8 +1728,28 @@ def user_settings(request):
                     return render(request, 'settings.html', {'password_form': password_form})
             else:
                 user.email = ''
-                
+
             user.save()
+
+            # Handle avatar / profile picture upload
+            avatar_file = request.FILES.get('avatar')
+            if avatar_file:
+                try:
+                    from .models import validate_image_upload
+                    validate_image_upload(avatar_file)
+                    profile, _ = UserProfile.objects.get_or_create(user=user)
+                    # Delete old file to avoid orphaned files on disk
+                    if profile.profile_picture:
+                        old_path = profile.profile_picture.path
+                        import os as _os
+                        if _os.path.isfile(old_path):
+                            _os.remove(old_path)
+                    profile.profile_picture = avatar_file
+                    profile.save(update_fields=['profile_picture'])
+                except ValidationError as ve:
+                    messages.error(request, f'Avatar upload failed: {ve.message}')
+                    return redirect('core:settings')
+
             log_activity(request.user, 'update', 'user', request.user.id,
                          'Updated profile settings', request)
             messages.success(request, 'Profile updated successfully!')
