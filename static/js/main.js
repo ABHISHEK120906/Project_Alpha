@@ -73,7 +73,7 @@
       if (!sidebarBtn) return;
       e.preventDefault();
 
-      const sidebar = document.querySelector('.client-sidebar, .fl-sidebar, .admin-sidebar, .sidebar');
+      const sidebar = document.querySelector('.hub-sidebar, .client-sidebar, .fl-sidebar, .admin-sidebar, .sidebar');
       if (sidebar) {
         sidebar.classList.toggle('open');
         let overlay = document.querySelector('.sidebar-overlay, .fh-sidebar-overlay');
