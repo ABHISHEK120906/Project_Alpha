@@ -180,10 +180,10 @@
     </nav>
 
     <!-- Sign Out -->
-    <div style="padding: 14px 16px; border-top: 1px solid var(--sidebar-border);">
+    <div style="padding: 18px 20px; border-top: 1px solid var(--sidebar-border);">
       <form method="post" action="{% url 'core:logout' %}">
         {% csrf_token %}
-        <button type="submit" class="hub-nav-item" style="width:100%; background:none; border:none; cursor:pointer; color:var(--text-muted); padding:8px 10px;">
+        <button type="submit" class="hub-nav-item" style="width:100%; background:none; border:none; cursor:pointer; color:var(--text-muted); padding:11px 16px;">
           <i data-lucide="log-out"></i>
           <span>Sign Out</span>
         </button>
@@ -197,13 +197,13 @@
 
     <!-- Topbar -->
     <header class="hub-topbar">
-      <div style="display:flex; align-items:center; gap:14px;">
+      <div style="display:flex; align-items:center; gap:16px;">
         <button class="hub-mobile-menu-btn" id="sidebarToggle" aria-label="Toggle sidebar">
           <i data-lucide="menu"></i>
         </button>
         <div>
-          <h1 style="font-size:1.15rem; font-weight:700; margin:0;">{% block page_title %}Workspace Pro{% endblock %}</h1>
-          <div style="font-size:0.78rem; color:var(--text-muted);">
+          <h1 style="font-size:1.2rem; font-weight:700; margin:0;">{% block page_title %}Workspace Pro{% endblock %}</h1>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
             {% block page_subtitle %}Comprehensive freelance business management and intelligence{% endblock %}
           </div>
         </div>
