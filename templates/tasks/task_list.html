@@ -88,7 +88,7 @@
         </thead>
         <tbody>
           {% for task in page_obj %}
-          <tr {% if task.is_overdue %}style="background:rgba(224,92,92,0.06);"{% endif %}>
+          <tr {% if task.is_overdue %}class="overdue-row"{% endif %}>
             <td>
               <a href="{% url 'core:task_detail' task.id %}" style="font-weight:600;color:var(--text-primary);">{{ task.title }}</a>
               {% if task.is_overdue %}

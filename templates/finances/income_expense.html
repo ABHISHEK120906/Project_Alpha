@@ -24,42 +24,45 @@
 <!-- Financial Summary KPI Cards -->
 <div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div class="card stat-card" style="border-left:4px solid var(--success);">
+    <div class="card stat-card" style="border-top:3px solid var(--success);border-left:none;">
       <div class="d-flex align-items-center justify-content-between">
         <div>
-          <div class="stat-label" style="color:var(--text-muted);">Total Income</div>
-          <div class="stat-value" style="color:var(--success-text);margin-top:4px;">${{ total_income|floatformat:2 }}</div>
+          <div class="stat-label">Total Income</div>
+          <div class="stat-value" style="color:var(--success-text);font-size:1.8rem;margin-top:4px;">${{ total_income|floatformat:2 }}</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">All time revenue</div>
         </div>
-        <div class="stat-icon" style="background:var(--success-soft);border-color:rgba(76,175,122,0.3);color:var(--success-text);">
-          <i data-lucide="arrow-down-left" style="width:24px;height:24px;"></i>
+        <div class="stat-icon" style="background:var(--success-soft);border:1px solid rgba(16,185,129,0.25);color:var(--success-text);">
+          <i data-lucide="trending-up" style="width:22px;height:22px;"></i>
         </div>
       </div>
     </div>
   </div>
 
   <div class="col-md-4">
-    <div class="card stat-card" style="border-left:4px solid var(--danger);">
+    <div class="card stat-card" style="border-top:3px solid var(--danger);border-left:none;">
       <div class="d-flex align-items-center justify-content-between">
         <div>
-          <div class="stat-label" style="color:var(--text-muted);">Total Expenses</div>
-          <div class="stat-value" style="color:var(--danger-text);margin-top:4px;">${{ total_expenses|floatformat:2 }}</div>
+          <div class="stat-label">Total Expenses</div>
+          <div class="stat-value" style="color:var(--danger-text);font-size:1.8rem;margin-top:4px;">${{ total_expenses|floatformat:2 }}</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">All time expenses</div>
         </div>
-        <div class="stat-icon" style="background:var(--danger-soft);border-color:rgba(224,92,92,0.3);color:var(--danger-text);">
-          <i data-lucide="arrow-up-right" style="width:24px;height:24px;"></i>
+        <div class="stat-icon" style="background:var(--danger-soft);border:1px solid rgba(239,68,68,0.25);color:var(--danger-text);">
+          <i data-lucide="trending-down" style="width:22px;height:22px;"></i>
         </div>
       </div>
     </div>
   </div>
 
   <div class="col-md-4">
-    <div class="card stat-card" style="border-left:4px solid var(--hub-gold);">
+    <div class="card stat-card" style="border-top:3px solid var(--pink-accent);border-left:none;">
       <div class="d-flex align-items-center justify-content-between">
         <div>
-          <div class="stat-label" style="color:var(--text-muted);">Net Profit</div>
-          <div class="stat-value" style="color:var(--hub-gold);margin-top:4px;">${{ net_profit|floatformat:2 }}</div>
+          <div class="stat-label">Net Profit</div>
+          <div class="stat-value" style="color:var(--pink-accent);font-size:1.8rem;margin-top:4px;">${{ net_profit|floatformat:2 }}</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Income minus expenses</div>
         </div>
-        <div class="stat-icon" style="background:var(--hub-gold-soft);border-color:var(--hub-gold-border);color:var(--hub-gold);">
-          <i data-lucide="scale" style="width:24px;height:24px;"></i>
+        <div class="stat-icon" style="background:rgba(217,108,157,0.12);border:1px solid rgba(217,108,157,0.25);color:var(--pink-accent);">
+          <i data-lucide="scale" style="width:22px;height:22px;"></i>
         </div>
       </div>
     </div>

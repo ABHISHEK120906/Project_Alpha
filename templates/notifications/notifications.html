@@ -29,15 +29,15 @@
   </div>
 
   <div class="card-body p-0">
-    <div class="list-group list-group-flush">
+    <div>
       {% for notif in notifications %}
-        <div class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center border-0 mb-1" style="background:{% if not notif.is_read %}var(--bg-elevated){% else %}transparent{% endif %};border-left:3px solid {% if not notif.is_read %}var(--hub-gold){% else %}transparent{% endif %} !important;transition:background 0.15s ease;">
-          <div class="d-flex align-items-center gap-3">
-            <div style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-              {% if notif.notification_type == 'deadline' %}background:var(--danger-soft);border:1px solid rgba(224,92,92,0.3);color:var(--danger-text);
-              {% elif notif.notification_type == 'payment' %}background:var(--success-soft);border:1px solid rgba(76,175,122,0.3);color:var(--success-text);
-              {% elif notif.notification_type == 'invoice' %}background:var(--hub-gold-soft);border:1px solid var(--hub-gold-border);color:var(--hub-gold);
-              {% else %}background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-secondary);{% endif %}">
+        <div class="notif-item-wrap {% if not notif.is_read %}notif-unread{% endif %} px-4 py-3 d-flex justify-content-between align-items-start">
+          <div class="d-flex align-items-start gap-3">
+            <div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+              {% if notif.notification_type == 'deadline' %}background:var(--danger-soft);border:1px solid rgba(239,68,68,0.25);color:var(--danger-text);
+              {% elif notif.notification_type == 'payment' %}background:var(--success-soft);border:1px solid rgba(16,185,129,0.25);color:var(--success-text);
+              {% elif notif.notification_type == 'invoice' %}background:rgba(212,168,83,0.12);border:1px solid rgba(212,168,83,0.28);color:var(--hub-gold);
+              {% else %}background:var(--bg-elevated);border:1px solid var(--border-color);color:var(--text-secondary);{% endif %}">
               {% if notif.notification_type == 'deadline' %}
                 <i data-lucide="alert-triangle" style="width:18px;height:18px;"></i>
               {% elif notif.notification_type == 'payment' %}
@@ -49,13 +49,16 @@
               {% endif %}
             </div>
             <div>
-              <h6 style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:2px;">{{ notif.title }}</h6>
-              <p style="font-size:13px;color:var(--text-secondary);margin:0 0 3px;">{{ notif.message }}</p>
-              <span style="font-size:11.5px;color:var(--text-muted);">{{ notif.created_at|date:"M d, Y H:i" }}</span>
+              <h6 style="font-weight:700;font-size:0.92rem;color:var(--text-primary);margin-bottom:3px;">{{ notif.title }}</h6>
+              <p style="font-size:0.84rem;color:var(--text-secondary);margin:0 0 4px;line-height:1.5;">{{ notif.message }}</p>
+              <span style="font-size:0.75rem;color:var(--text-muted);">{{ notif.created_at|date:"M d, Y H:i" }}</span>
+              {% if not notif.is_read %}
+                <span class="badge ms-2" style="background:rgba(217,108,157,0.14);color:var(--pink-accent);border:1px solid rgba(217,108,157,0.28);font-size:0.68rem;vertical-align:middle;">Unread</span>
+              {% endif %}
             </div>
           </div>
 
-          <div class="d-flex align-items-center gap-2">
+          <div class="d-flex align-items-center gap-2 ms-3" style="flex-shrink:0;">
             {% if not notif.is_read %}
               <form method="post" action="{% url 'core:notification_mark_read' notif.pk %}" style="display:inline;margin:0;">
                 {% csrf_token %}
@@ -77,11 +80,12 @@
           <div class="stat-icon mx-auto mb-3" style="width:54px;height:54px;">
             <i data-lucide="bell-off" style="width:26px;height:26px;"></i>
           </div>
-          <h5 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No notifications</h5>
-          <p style="font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto;">You are all caught up with your projects, payments, and deadlines.</p>
+          <h5 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">All caught up!</h5>
+          <p style="font-size:0.855rem;color:var(--text-muted);max-width:360px;margin:0 auto;">No notifications yet. You'll see project alerts, payment logs, and deadline reminders here.</p>
         </div>
       {% endfor %}
     </div>
   </div>
+
 </div>
 {% endblock %}

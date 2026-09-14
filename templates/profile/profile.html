@@ -26,23 +26,23 @@
 
       <div class="d-flex justify-content-center gap-2 mb-3">
         {% if profile.portfolio_website %}
-          <a href="{{ profile.portfolio_website }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="Portfolio Website">
-            <i data-lucide="globe"></i>
+          <a href="{{ profile.portfolio_website }}" target="_blank" class="social-link-btn" title="Portfolio Website">
+            <i data-lucide="globe" style="width:16px;height:16px;"></i>
           </a>
         {% endif %}
         {% if profile.social_github %}
-          <a href="{{ profile.social_github }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="GitHub Profile">
-            <i data-lucide="github"></i>
+          <a href="{{ profile.social_github }}" target="_blank" class="social-link-btn" title="GitHub Profile">
+            <i data-lucide="github" style="width:16px;height:16px;"></i>
           </a>
         {% endif %}
         {% if profile.social_linkedin %}
-          <a href="{{ profile.social_linkedin }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="LinkedIn Profile">
-            <i data-lucide="linkedin"></i>
+          <a href="{{ profile.social_linkedin }}" target="_blank" class="social-link-btn" title="LinkedIn Profile">
+            <i data-lucide="linkedin" style="width:16px;height:16px;"></i>
           </a>
         {% endif %}
         {% if profile.social_twitter %}
-          <a href="{{ profile.social_twitter }}" target="_blank" class="btn-hub-secondary btn-icon btn-sm" title="Twitter / X Profile">
-            <i data-lucide="twitter"></i>
+          <a href="{{ profile.social_twitter }}" target="_blank" class="social-link-btn" title="Twitter / X Profile">
+            <i data-lucide="twitter" style="width:16px;height:16px;"></i>
           </a>
         {% endif %}
       </div>
@@ -82,25 +82,25 @@
   <!-- Right Column: Tabs -->
   <div class="col-lg-8">
     <div class="card p-4">
-      <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist" style="border-bottom:1px solid var(--border-color);gap:4px;">
-        <li class="nav-item">
-          <button class="nav-link active" id="edit-tab" data-bs-toggle="tab" data-bs-target="#editProfile" type="button" style="color:var(--text-primary);font-weight:700;border:none;border-bottom:2px solid var(--hub-gold);background:transparent;padding:8px 16px;">
-            <i data-lucide="user-check" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Edit Profile
+      <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="edit-tab" data-bs-toggle="tab" data-bs-target="#editProfile" type="button" role="tab">
+            <i data-lucide="user-check"></i> Edit Profile
           </button>
         </li>
-        <li class="nav-item">
-          <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" style="color:var(--text-secondary);font-weight:600;border:none;border-bottom:2px solid transparent;background:transparent;padding:8px 16px;">
-            <i data-lucide="lock" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Password
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">
+            <i data-lucide="lock"></i> Password
           </button>
         </li>
-        <li class="nav-item">
-          <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" style="color:var(--text-secondary);font-weight:600;border:none;border-bottom:2px solid transparent;background:transparent;padding:8px 16px;">
-            <i data-lucide="history" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Security Log
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">
+            <i data-lucide="history"></i> Security Log
           </button>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'social_auth:connected_accounts' %}" style="color:var(--text-secondary);font-weight:600;border:none;border-bottom:2px solid transparent;background:transparent;padding:8px 16px;">
-            <i data-lucide="link" style="width:15px;height:15px;margin-right:6px;display:inline-block;vertical-align:middle;"></i> Connected Accounts
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" href="{% url 'social_auth:connected_accounts' %}">
+            <i data-lucide="link"></i> Connected Accounts
           </a>
         </li>
       </ul>

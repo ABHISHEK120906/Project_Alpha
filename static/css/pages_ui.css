@@ -1,0 +1,443 @@
+/* ==========================================================================
+   PAGES UI ENHANCEMENT v1.0
+   All 10 inner pages: Profile, Invoices, Clients, Projects, Tasks,
+   Finances, Reports, Notifications, Chat, Calendar
+   ========================================================================== */
+
+/* ──────────────────────────────────────────────────────────────────────────
+   GLOBAL PAGE HEADER (consistent across all list pages)
+   ────────────────────────────────────────────────────────────────────────── */
+.page-title {
+  font-family: var(--font-heading);
+  font-size: 1.55rem !important;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 0.855rem !important;
+  color: var(--text-muted) !important;
+  margin: 5px 0 0 !important;
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TABLE ACTIONS GROUP
+   ────────────────────────────────────────────────────────────────────────── */
+.table-actions-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   SOCIAL LINK BUTTONS (Profile page)
+   ────────────────────────────────────────────────────────────────────────── */
+.social-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--tr-fast);
+}
+
+.social-link-btn:hover {
+  border-color: var(--pink-accent);
+  color: var(--pink-accent);
+  background: rgba(217, 108, 157, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   NAV TABS (profile page tabs override)
+   ────────────────────────────────────────────────────────────────────────── */
+.nav-tabs {
+  border-bottom: 1px solid var(--border-color) !important;
+  gap: 2px;
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-secondary) !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0 !important;
+  padding: 10px 18px !important;
+  margin-bottom: -1px;
+  transition: all var(--tr-fast);
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  background: transparent !important;
+}
+
+.nav-tabs .nav-link i, .nav-tabs .nav-link svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--pink-accent) !important;
+  background: rgba(217, 108, 157, 0.06) !important;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--pink-accent) !important;
+  border-bottom-color: var(--pink-accent) !important;
+  font-weight: 700;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   NOTIFICATION PAGE
+   ────────────────────────────────────────────────────────────────────────── */
+.notif-item-wrap {
+  border-bottom: 1px solid var(--border-light);
+  transition: background var(--tr-fast);
+  position: relative;
+}
+
+.notif-item-wrap:last-child {
+  border-bottom: none;
+}
+
+.notif-item-wrap:hover {
+  background: var(--bg-card-hover);
+}
+
+.notif-item-wrap.notif-unread {
+  background: var(--bg-elevated);
+}
+
+.notif-item-wrap.notif-unread::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--pink-accent) 0%, var(--plum-deep) 100%);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   FULLCALENDAR THEMING (Calendar page)
+   ────────────────────────────────────────────────────────────────────────── */
+.fc {
+  font-family: var(--font-body) !important;
+}
+
+.fc .fc-toolbar-title {
+  font-family: var(--font-heading) !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  color: var(--text-primary) !important;
+}
+
+.fc .fc-button {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  padding: 6px 14px !important;
+  border-radius: var(--radius-xs) !important;
+  box-shadow: none !important;
+  transition: all var(--tr-fast) !important;
+  text-transform: capitalize !important;
+}
+
+.fc .fc-button:hover {
+  background: rgba(217, 108, 157, 0.08) !important;
+  border-color: var(--pink-accent) !important;
+  color: var(--pink-accent) !important;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background: var(--pink-accent) !important;
+  border-color: var(--pink-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(217, 108, 157, 0.30) !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  font-size: 0.78rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: var(--text-secondary) !important;
+  padding: 10px 8px !important;
+  text-decoration: none !important;
+}
+
+.fc .fc-daygrid-day-number {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  text-decoration: none !important;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background: rgba(217, 108, 157, 0.06) !important;
+}
+
+.fc .fc-event {
+  border-radius: 5px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  border: none !important;
+  padding: 2px 7px !important;
+  cursor: pointer;
+}
+
+.fc-theme-standard td, .fc-theme-standard th {
+  border-color: var(--border-light) !important;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border-color: var(--border-color) !important;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   MODAL IMPROVEMENTS
+   ────────────────────────────────────────────────────────────────────────── */
+.modal-content {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  backdrop-filter: blur(24px);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-light) !important;
+  padding: 20px 24px !important;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-light) !important;
+  padding: 16px 24px !important;
+  gap: 10px;
+  display: flex;
+}
+
+.modal-body {
+  padding: 24px !important;
+}
+
+.modal-title {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  font-size: 1.05rem !important;
+  color: var(--text-primary) !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   PAGINATION IMPROVEMENTS
+   ────────────────────────────────────────────────────────────────────────── */
+.pagination {
+  gap: 4px;
+}
+
+.page-link {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-xs) !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 7px 13px;
+  transition: all var(--tr-fast);
+}
+
+.page-link:hover {
+  background: rgba(217, 108, 157, 0.08) !important;
+  border-color: var(--pink-accent) !important;
+  color: var(--pink-accent) !important;
+}
+
+.page-item.active .page-link {
+  background: var(--pink-accent) !important;
+  border-color: var(--pink-accent) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(217, 108, 157, 0.30);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TABLE ROW HOVER ANIMATION
+   ────────────────────────────────────────────────────────────────────────── */
+.hub-table tbody tr {
+  transition: background var(--tr-fast);
+}
+
+.hub-table tbody tr:hover td {
+  background: var(--bg-card-hover) !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TASK LIST – overdue row styling
+   ────────────────────────────────────────────────────────────────────────── */
+.hub-table tbody tr.overdue-row td {
+  background: rgba(239, 68, 68, 0.04) !important;
+}
+
+.hub-table tbody tr.overdue-row:hover td {
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   FORM SECTION HEADER (profile, invoices, etc.)
+   ────────────────────────────────────────────────────────────────────────── */
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 20px;
+  padding-bottom: 14px;
+  border-top: 1px solid var(--border-light);
+  margin-top: 8px;
+}
+
+.form-section-header i, .form-section-header svg {
+  width: 16px;
+  height: 16px;
+  color: var(--pink-accent);
+  flex-shrink: 0;
+}
+
+.form-section-header h6 {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   PAGE FADE-IN ANIMATION
+   ────────────────────────────────────────────────────────────────────────── */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hub-page-container > * {
+  animation: pageFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   DARK MODE OVERRIDES
+   ────────────────────────────────────────────────────────────────────────── */
+[data-theme="dark"] .modal-content {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .page-link {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .page-link:hover {
+  background: rgba(247, 198, 217, 0.08) !important;
+  border-color: var(--pink-primary) !important;
+  color: var(--pink-primary) !important;
+}
+
+[data-theme="dark"] .page-item.active .page-link {
+  background: var(--pink-accent) !important;
+  border-color: var(--pink-accent) !important;
+  color: #fff !important;
+}
+
+[data-theme="dark"] .nav-tabs {
+  border-bottom-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link:hover {
+  background: rgba(247, 198, 217, 0.06) !important;
+  color: var(--pink-primary) !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link.active {
+  color: var(--pink-primary) !important;
+  border-bottom-color: var(--pink-primary) !important;
+}
+
+[data-theme="dark"] .fc .fc-button {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .fc .fc-button:hover {
+  background: rgba(247, 198, 217, 0.08) !important;
+  border-color: var(--pink-primary) !important;
+  color: var(--pink-primary) !important;
+}
+
+[data-theme="dark"] .fc .fc-daygrid-day.fc-day-today {
+  background: rgba(247, 198, 217, 0.06) !important;
+}
+
+[data-theme="dark"] .fc-theme-standard td,
+[data-theme="dark"] .fc-theme-standard th {
+  border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] .fc .fc-toolbar-title {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .fc .fc-col-header-cell-cushion {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .fc .fc-daygrid-day-number {
+  color: var(--text-primary) !important;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   RESPONSIVE FIXES
+   ────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .page-title { font-size: 1.3rem !important; }
+  .hub-page-container { padding: 20px !important; }
+  .hub-topbar { padding: 0 20px !important; }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+  .hub-page-container { padding: 14px !important; }
+}
