@@ -211,17 +211,29 @@
       </div>
 
       <div style="display:flex; align-items:center; gap:12px;">
+        <!-- Quick Search -->
+        <div class="topbar-search-wrap d-none d-md-flex">
+          <i data-lucide="search" class="topbar-search-icon"></i>
+          <input type="search" class="topbar-search" id="topbarSearch" placeholder="Search anything…" aria-label="Quick search" autocomplete="off">
+        </div>
+
         <!-- Theme Toggle -->
         <button type="button" class="hub-theme-toggle" id="themeToggleBtn" aria-label="Toggle theme">
           <span class="icon-sun"><i data-lucide="sun"></i></span>
           <span class="icon-moon"><i data-lucide="moon"></i></span>
         </button>
 
-        <a href="{% url 'core:notifications_list' %}" class="btn-fh btn-fh-secondary btn-fh-sm" title="Notifications">
-          <i data-lucide="bell"></i>
-        </a>
+        <!-- Notification Bell with pulse badge -->
+        <div class="notif-badge-wrap">
+          <a href="{% url 'core:notifications_list' %}" class="btn-fh btn-fh-secondary btn-fh-sm" title="Notifications" data-tip="Notifications">
+            <i data-lucide="bell"></i>
+          </a>
+          {% if unread_notifications_count and unread_notifications_count > 0 %}
+          <span class="notif-badge" aria-label="{{ unread_notifications_count }} unread notifications">{{ unread_notifications_count }}</span>
+          {% endif %}
+        </div>
 
-        <a href="{% url 'core:profile_view' %}" style="text-decoration:none;">
+        <a href="{% url 'core:profile_view' %}" style="text-decoration:none;" data-tip="My Profile">
           <div class="hub-user-avatar" style="width:38px; height:38px; font-size:0.95rem;">
             {{ user.username|slice:":1"|upper }}
           </div>
@@ -248,6 +260,12 @@
   </div>
 
 </div>
+
+<!-- Scroll-to-Top FAB -->
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top" title="Back to top">
+  <i data-lucide="arrow-up"></i>
+</button>
+
 {% else %}
 <!-- Unauthenticated fallback wrapper -->
 <div style="padding-top:72px;">
@@ -260,5 +278,57 @@
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/dashboard.js' %}"></script>
 {% block extra_js %}{% endblock %}
+
+<script>
+  /* ── Topbar shadow on scroll ── */
+  (function() {
+    var topbar = document.querySelector('.hub-topbar');
+    if (!topbar) return;
+    var onScroll = function() {
+      var mainContent = document.querySelector('.hub-main-content');
+      var scrollEl = mainContent || window;
+      var scrollY = mainContent ? mainContent.scrollTop : window.scrollY;
+      topbar.classList.toggle('scrolled', scrollY > 10);
+    };
+    var mainContent = document.querySelector('.hub-main-content');
+    if (mainContent) {
+      mainContent.addEventListener('scroll', onScroll, { passive: true });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+
+  /* ── Scroll-to-Top FAB ── */
+  (function() {
+    var fab = document.getElementById('scrollTopBtn');
+    if (!fab) return;
+    var container = document.querySelector('.hub-main-content') || window;
+    var getScrollY = function() {
+      return container === window ? window.scrollY : container.scrollTop;
+    };
+    var toggle = function() {
+      fab.classList.toggle('visible', getScrollY() > 320);
+    };
+    container.addEventListener('scroll', toggle, { passive: true });
+    window.addEventListener('scroll', toggle, { passive: true });
+    fab.addEventListener('click', function() {
+      if (container === window) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        container.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  })();
+
+  /* ── Clickable table rows via data-href ── */
+  (function() {
+    document.querySelectorAll('table tbody tr[data-href]').forEach(function(row) {
+      row.addEventListener('click', function(e) {
+        if (e.target.closest('a, button, input, select, textarea')) return;
+        var href = row.getAttribute('data-href');
+        if (href) window.location.href = href;
+      });
+    });
+  })();
+</script>
 </body>
 </html>

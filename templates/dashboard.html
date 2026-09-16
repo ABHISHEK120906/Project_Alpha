@@ -61,6 +61,9 @@
       </div>
       <div class="stat-value" style="color:var(--success-text);" id="totalRevenueStat" data-target="{{ total_earnings|floatformat:0 }}" data-prefix="$">${{ total_earnings|floatformat:0 }}</div>
       <div class="stat-label">Total Revenue</div>
+      <div class="kpi-sub">
+        <span class="trend-up"><i data-lucide="trending-up" style="width:13px;height:13px;"></i> Revenue tracked</span>
+      </div>
     </div>
   </div>
 
@@ -73,6 +76,15 @@
       </div>
       <div class="stat-value" style="color:var(--warning-text);" id="pendingAmountStat" data-target="{{ pending_payments|floatformat:0 }}" data-prefix="$">${{ pending_payments|floatformat:0 }}</div>
       <div class="stat-label">Pending Invoices</div>
+      {% if pending_payments > 0 %}
+      <div class="kpi-sub">
+        <span class="trend-down"><i data-lucide="alert-circle" style="width:13px;height:13px;"></i> Awaiting payment</span>
+      </div>
+      {% else %}
+      <div class="kpi-sub">
+        <span class="trend-up"><i data-lucide="check-circle-2" style="width:13px;height:13px;"></i> All cleared</span>
+      </div>
+      {% endif %}
     </div>
   </div>
 
@@ -148,7 +160,14 @@
     <div class="stat-card h-100 reveal-up delay-4">
       <div class="stat-icon" style="background:var(--warning-soft);color:var(--warning);"><i data-lucide="list-checks" style="width:22px;height:22px;"></i></div>
       <div class="stat-value" style="color:var(--warning-text);" data-target="{{ pending_tasks_count }}">{{ pending_tasks_count }}</div>
-      <div class="stat-label">Pending Tasks ({{ overdue_tasks_count }} Overdue)</div>
+      <div class="stat-label">Pending Tasks</div>
+      {% if overdue_tasks_count > 0 %}
+      <div class="kpi-sub">
+        <span class="trend-down"><i data-lucide="alert-triangle" style="width:13px;height:13px;"></i> {{ overdue_tasks_count }} overdue</span>
+      </div>
+      {% else %}
+      <div class="kpi-sub" style="color:var(--text-muted);font-size:0.78rem;">No overdue tasks &nbsp;✓</div>
+      {% endif %}
     </div>
   </div>
 </div>

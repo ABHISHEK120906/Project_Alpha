@@ -2414,3 +2414,339 @@ textarea:focus {
   .kpi-card, .stat-card, .fl-kpi-card, .admin-kpi-card { padding: 20px 22px; }
   .modal-header, .modal-body, .modal-footer { padding: 1.25rem 1.5rem; }
 }
+
+/* ==========================================================================
+   UI/UX ENHANCEMENT LAYER v2.1
+   Micro-interactions, polish, and visual refinements
+   ========================================================================== */
+
+/* ── Sidebar Active Item — Left Border Accent ── */
+.hub-nav-item.active {
+  background: linear-gradient(135deg, rgba(217, 108, 157, 0.15) 0%, rgba(107, 49, 82, 0.08) 100%);
+  color: var(--pink-accent);
+  border-color: rgba(217, 108, 157, 0.28);
+  border-left: 3px solid var(--pink-accent) !important;
+  padding-left: 13px; /* compensate for border-left width */
+}
+
+[data-theme="dark"] .hub-nav-item.active {
+  background: linear-gradient(135deg, rgba(247, 198, 217, 0.14) 0%, rgba(107, 49, 82, 0.28) 100%);
+  color: var(--pink-primary);
+  border-color: rgba(247, 198, 217, 0.22);
+  border-left: 3px solid var(--pink-primary) !important;
+  padding-left: 13px;
+}
+
+/* ── Sidebar Nav Item hover — subtle scale on icon ── */
+.hub-nav-item:hover i,
+.hub-nav-item:hover svg {
+  opacity: 1;
+  transform: scale(1.12);
+  transition: transform var(--tr-fast), opacity var(--tr-fast);
+}
+.hub-nav-item i,
+.hub-nav-item svg {
+  transition: transform var(--tr-fast), opacity var(--tr-fast);
+}
+
+/* ── Notification Pulse Badge ── */
+.notif-badge-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid var(--bg-glass);
+  animation: notif-pulse 2.4s ease-in-out infinite;
+  z-index: 10;
+}
+@keyframes notif-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); }
+  50%       { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+}
+
+/* ── Topbar Quick Search ── */
+.topbar-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.topbar-search {
+  height: 38px;
+  width: 220px;
+  padding: 0 14px 0 38px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  outline: none;
+  transition: width var(--tr-smooth), border-color var(--tr-norm), box-shadow var(--tr-norm);
+  box-shadow: var(--shadow-xs);
+}
+.topbar-search::placeholder { color: var(--text-muted); }
+.topbar-search:focus {
+  width: 280px;
+  border-color: var(--pink-accent);
+  box-shadow: 0 0 0 3px var(--ring-focus);
+}
+.topbar-search-icon {
+  position: absolute;
+  left: 12px;
+  width: 15px;
+  height: 15px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* ── Stat Cards — Shimmer Glow on Hover ── */
+.stat-card:hover,
+.kpi-card:hover,
+.fl-kpi-card:hover,
+.admin-kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(217, 108, 157, 0.20);
+}
+[data-theme="dark"] .stat-card:hover,
+[data-theme="dark"] .kpi-card:hover {
+  box-shadow: var(--shadow-md), 0 0 24px rgba(244, 169, 195, 0.10);
+}
+
+/* Stat card value — smooth counting animation feel */
+.stat-value,
+.kpi-value {
+  transition: color var(--tr-norm);
+}
+
+/* ── Enhanced Progress Bar ── */
+.progress {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.progress-bar {
+  background: linear-gradient(90deg, var(--pink-accent) 0%, var(--plum-deep) 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: progress-shimmer 2.2s ease-in-out infinite;
+}
+@keyframes progress-shimmer {
+  0%   { left: -100%; }
+  60%  { left: 120%; }
+  100% { left: 120%; }
+}
+
+/* ── Skeleton Loading Pulse ── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-elevated) 25%,
+    var(--bg-card-hover) 50%,
+    var(--bg-elevated) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.6s ease-in-out infinite;
+  border-radius: var(--radius-xs);
+  color: transparent !important;
+  user-select: none;
+  pointer-events: none;
+}
+@keyframes skeleton-wave {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Card — elevated interactive hover ── */
+.card.fh-interactive,
+.fh-card-interactive {
+  cursor: pointer;
+  transition: transform var(--tr-norm), box-shadow var(--tr-norm), border-color var(--tr-norm);
+}
+.card.fh-interactive:hover,
+.fh-card-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(217, 108, 157, 0.35);
+}
+
+/* ── Welcome Banner — animated background shimmer ── */
+.welcome-banner {
+  background: var(--bg-card);
+  overflow: hidden;
+}
+.welcome-banner::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  right: -10%;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 108, 157, 0.10) 0%, transparent 70%);
+  pointer-events: none;
+  animation: banner-float 8s ease-in-out infinite;
+}
+[data-theme="dark"] .welcome-banner::after {
+  background: radial-gradient(circle, rgba(244, 169, 195, 0.07) 0%, transparent 70%);
+}
+@keyframes banner-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(-20px, 15px) scale(1.08); }
+}
+
+/* ── Topbar — subtle bottom shadow on scroll ── */
+.hub-topbar.scrolled {
+  box-shadow: 0 4px 20px rgba(107, 49, 82, 0.12);
+}
+[data-theme="dark"] .hub-topbar.scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.40);
+}
+
+/* ── Page Title — gradient accent ── */
+.hub-topbar h1 {
+  background: linear-gradient(135deg, var(--text-primary) 60%, var(--pink-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+[data-theme="dark"] .hub-topbar h1 {
+  background: linear-gradient(135deg, var(--text-primary) 50%, var(--pink-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Scroll-to-Top FAB ── */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--pink-accent) 0%, var(--plum-deep) 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(217, 108, 157, 0.40);
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  transition: opacity var(--tr-norm), transform var(--tr-norm);
+  pointer-events: none;
+}
+.scroll-top-btn.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.scroll-top-btn:hover {
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 8px 28px rgba(217, 108, 157, 0.55);
+}
+.scroll-top-btn svg,
+.scroll-top-btn i {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Tooltip-style title attributes — custom styled ── */
+[data-tip] {
+  position: relative;
+}
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.85);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--tr-fast), transform var(--tr-fast);
+  z-index: 999;
+}
+[data-tip]:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* ── Table rows — clickable highlight ── */
+table tbody tr[data-href] {
+  cursor: pointer;
+  transition: background var(--tr-fast);
+}
+table tbody tr[data-href]:hover {
+  background: var(--plum-subtle) !important;
+}
+
+/* ── Badge pill status — softer appearance ── */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+.badge-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+/* ── Reveal-up animation ── */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal-up {
+  animation: reveal-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reveal-up.delay-1 { animation-delay: 0.06s; }
+.reveal-up.delay-2 { animation-delay: 0.12s; }
+.reveal-up.delay-3 { animation-delay: 0.18s; }
+.reveal-up.delay-4 { animation-delay: 0.24s; }
+.reveal-up.delay-5 { animation-delay: 0.30s; }
