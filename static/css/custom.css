@@ -2750,3 +2750,16 @@ table tbody tr[data-href]:hover {
 .reveal-up.delay-3 { animation-delay: 0.18s; }
 .reveal-up.delay-4 { animation-delay: 0.24s; }
 .reveal-up.delay-5 { animation-delay: 0.30s; }
+
+/* ── KPI Sub-label (trend indicators, on-hold badges, etc.) ── */
+.kpi-sub {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.kpi-sub .trend-up   { color: var(--success);  display: flex; align-items: center; gap: 3px; }
+.kpi-sub .trend-down { color: var(--danger);   display: flex; align-items: center; gap: 3px; }

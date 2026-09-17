@@ -14,6 +14,10 @@
       </div>
       <h2 class="welcome-banner-title gradient-text">Welcome back, {{ user.get_full_name|default:user.username }}!</h2>
       <p class="welcome-banner-sub">Here is your comprehensive business performance, operational velocity, and revenue health summary.</p>
+      <p class="welcome-banner-sub" style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+        <i data-lucide="refresh-cw" style="width:11px;height:11px;display:inline-block;vertical-align:middle;"></i>
+        &nbsp;Last updated: {{ last_updated|date:"N j, Y" }} at {{ last_updated|time:"g:i A" }}
+      </p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
       <a href="{% url 'core:analytics_workspace' %}" class="welcome-banner-btn" style="background:var(--hub-gold);color:#0D0F14;border:none;font-weight:700;" title="Open Data Analytics Workspace">
@@ -132,6 +136,13 @@
       <div class="stat-icon" style="background:var(--info-soft);color:var(--info);"><i data-lucide="loader" style="width:22px;height:22px;"></i></div>
       <div class="stat-value stat-number" data-target="{{ active_projects }}">{{ active_projects }}</div>
       <div class="stat-label">Active Projects (of {{ total_projects }})</div>
+      {% if on_hold_projects > 0 %}
+      <div class="kpi-sub">
+        <span style="color:var(--text-muted);font-size:11px;">
+          <i data-lucide="pause-circle" style="width:12px;height:12px;"></i> {{ on_hold_projects }} on hold
+        </span>
+      </div>
+      {% endif %}
     </div>
   </div>
 

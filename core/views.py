@@ -434,6 +434,7 @@ def dashboard(request):
     pending_projects = user_projects.filter(status='pending').count()
     completed_projects = user_projects.filter(status='completed').count()
     cancelled_projects = user_projects.filter(status='cancelled').count()
+    on_hold_projects = user_projects.filter(status='on_hold').count()
 
     total_clients = Client.objects.filter(user=user, is_archived=False).count()
     active_clients = Client.objects.filter(
@@ -535,6 +536,8 @@ def dashboard(request):
         'cancelled':   status_dict_ss.get('cancelled', 0),
     }
 
+    last_updated = timezone.now()
+
     context = {
         'total_clients': total_clients,
         'active_clients': active_clients,
@@ -543,6 +546,7 @@ def dashboard(request):
         'pending_projects': pending_projects,
         'completed_projects': completed_projects,
         'cancelled_projects': cancelled_projects,
+        'on_hold_projects': on_hold_projects,
         'total_income': total_income,
         'total_expenses': total_expenses,
         'net_profit': net_profit,
@@ -561,6 +565,7 @@ def dashboard(request):
         'recent_payments': recent_payments,
         'total_earnings': total_income,
         'announcements': announcements,
+        'last_updated': last_updated,
         # Server-side chart data
         'chart_months_json': json.dumps(chart_months),
         'chart_revenue_json': json.dumps(chart_revenue),
