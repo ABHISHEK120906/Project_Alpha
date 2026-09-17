@@ -131,7 +131,10 @@ if 'test' not in sys.argv and DATABASE_URL and dj_database_url:
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 10},
+    },
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
@@ -183,8 +186,10 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-RATE_LIMIT_API_PER_MIN = 100
-RATE_LIMIT_AUTH_PER_MIN = 15
+# Auth endpoints (/login/, /register/) — tight to prevent brute-force
+RATE_LIMIT_AUTH_PER_MIN = 5
+# General API endpoints — per IP per minute
+RATE_LIMIT_API_PER_MIN = 60
 
 
 LOGIN_URL          = '/login/'
@@ -192,9 +197,9 @@ LOGIN_REDIRECT_URL = 'core:dashboard'
 LOGOUT_REDIRECT_URL = 'core:login'
 
 
-SESSION_COOKIE_AGE          = 28800
+SESSION_COOKIE_AGE              = 28800   # 8 hours
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_SAVE_EVERY_REQUEST   = False
+SESSION_SAVE_EVERY_REQUEST      = False
 
 
 REST_FRAMEWORK = {
@@ -209,9 +214,11 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '30/minute',
-        'user': '120/minute',
-    }
+        'anon': '20/minute',   # Unauthenticated — strict
+        'user': '60/minute',   # Authenticated — reasonable
+    },
+    # Never expose internal error tracebacks in API responses
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 }
 
 
@@ -219,22 +226,34 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS             = 'DENY'
 SECURE_REFERRER_POLICY      = 'strict-origin-when-cross-origin'
 
+# Prevents IE from executing downloads in the site's context
+SECURE_BROWSER_XSS_FILTER  = True
+
 SESSION_COOKIE_HTTPONLY     = True
-SESSION_COOKIE_SAMESITE     = 'Lax'
-CSRF_COOKIE_HTTPONLY       = False
-CSRF_COOKIE_SAMESITE       = 'Lax'
+# 'Strict' prevents the cookie being sent on cross-site navigations (better CSRF protection)
+SESSION_COOKIE_SAMESITE     = 'Strict'
+# CSRF cookie must be readable by JS (for AJAX) — keep HttpOnly=False
+CSRF_COOKIE_HTTPONLY        = False
+# Strict: CSRF token only sent on same-site requests
+CSRF_COOKIE_SAMESITE        = 'Strict'
 
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT           = False
-    SECURE_PROXY_SSL_HEADER       = ('HTTP_X_FORWARDED_PROTO', 'https')
-    USE_X_FORWARDED_HOST          = True
-    SECURE_HSTS_SECONDS           = 31536000
+    # Vercel terminates TLS at the edge — do NOT double-redirect;
+    # Django sees plain HTTP internally, so SSL_REDIRECT would loop.
+    # HSTS is set here so the *browser* enforces HTTPS on future visits.
+    SECURE_SSL_REDIRECT            = False
+    SECURE_PROXY_SSL_HEADER        = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST           = True
+    SECURE_HSTS_SECONDS            = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD           = True
+    SECURE_HSTS_PRELOAD            = True
 
     SESSION_COOKIE_SECURE  = True
     CSRF_COOKIE_SECURE     = True
+
+    # Remove the wildcard from ALLOWED_HOSTS in production .env!
+    # ALLOWED_HOSTS should list only the exact Vercel deployment URL(s).
 
 
 MESSAGE_TAGS = {
@@ -267,6 +286,12 @@ LOGGING = {
         'django.request': {
             'handlers': ['console'],
             'level': 'ERROR',
+            'propagate': False,
+        },
+        # Security events: 403 blocks, rate-limit hits, unauthorized access attempts
+        'security': {
+            'handlers': ['console'],
+            'level': 'INFO',
             'propagate': False,
         },
     },

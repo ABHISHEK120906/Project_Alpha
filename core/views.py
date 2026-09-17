@@ -49,14 +49,30 @@ def log_activity(user, action, model_type, model_id, description, request=None):
     )
 
 
-def get_client_ip(request):
-    """Extract the real client IP from request headers."""
+def get_client_ip(request) -> str:
+    """
+    Extract the real client IP from request headers.
+
+    Iterates X-Forwarded-For from right-to-left (rightmost is most trusted,
+    added by our own reverse proxy) and returns the first non-private,
+    non-loopback address — which is the actual client IP.
+    Falls back to REMOTE_ADDR if no public IP is found.
+    """
+    import ipaddress
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0].strip()
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+        ips = [ip.strip() for ip in x_forwarded_for.split(',') if ip.strip()]
+        for ip_str in reversed(ips):
+            try:
+                ip_obj = ipaddress.ip_address(ip_str)
+                if not ip_obj.is_private and not ip_obj.is_loopback:
+                    return ip_str
+            except ValueError:
+                continue
+        # All hops private (internal proxy chain) — use leftmost as client
+        if ips:
+            return ips[0]
+    return request.META.get('REMOTE_ADDR', '127.0.0.1')
 
 
 def home(request):
