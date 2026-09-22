@@ -587,7 +587,7 @@ def analytics_workspace(request):
     Complete Professional Data Analytics Workspace.
     Executes Data Profiling, Quality Audit, EDA, Statistics,
     Correlation Heatmap, Outlier Analysis, Trend Trajectory,
-    and Automated Business Insights on real user records.
+    Automated Business Insights, and Client LTV Analysis on real user records.
     """
     user = request.user
     engine = DataAnalyticsEngine(user=user, filters=request.GET)
@@ -613,6 +613,9 @@ def analytics_workspace(request):
     # 7. Insights & Recommendations
     insights_pkg = engine.generate_insights_and_recommendations()
 
+    # 8. Client LTV Analysis
+    ltv = engine.get_client_ltv_analysis()
+
     # Available filter options
     available_clients = Client.objects.filter(user=user, is_archived=False)
 
@@ -625,6 +628,7 @@ def analytics_workspace(request):
         'trends': trends,
         'insights': insights_pkg['insights'],
         'recommendations': insights_pkg['recommendations'],
+        'ltv': ltv,
         'available_clients': available_clients,
         'selected_client': request.GET.get('client', ''),
         'selected_status': request.GET.get('status', ''),
@@ -641,6 +645,14 @@ def analytics_workspace(request):
         }),
         'correlation_json': json.dumps(correlation),
         'trends_json': json.dumps(trends),
+        'ltv_json': json.dumps({
+            'tier_counts': ltv['tier_counts'],
+            'concentration_labels': ltv['concentration_labels'],
+            'concentration_values': ltv['concentration_values'],
+            'retention_months': ltv['retention_months'],
+            'retention_new': ltv['retention_new'],
+            'retention_repeat': ltv['retention_repeat'],
+        }),
     }
 
     return render(request, 'analytics/workspace.html', context)
@@ -2483,18 +2495,20 @@ def chat_conversation(request, pk):
 @login_required
 def analytics_workspace(request):
     """
-    Complete 10-phase Data Analytics workspace:
+    Complete 11-phase Data Analytics workspace:
     Data profiling, quality scorecard, EDA, descriptive statistics,
     visualizations, Pearson correlation matrix, outlier detection,
-    trend analysis, and algorithmic key business insights.
+    trend analysis, algorithmic business insights, and Client LTV analysis.
     """
     from core.services.analytics_engine import DataAnalyticsEngine
-    
+
     filters = {
         'client': request.GET.get('client', ''),
         'status': request.GET.get('status', ''),
         'start_date': request.GET.get('start_date', ''),
         'end_date': request.GET.get('end_date', ''),
+        'date_from': request.GET.get('date_from', ''),
+        'date_to': request.GET.get('date_to', ''),
     }
 
     engine = DataAnalyticsEngine(request.user, filters=filters)
@@ -2504,8 +2518,9 @@ def analytics_workspace(request):
     correlation = engine.calculate_correlation_matrix()
     outliers = engine.detect_outliers()
     trends = engine.analyze_trends()
-    insights = engine.generate_insights_and_recommendations()
-    clients_list = Client.objects.filter(user=request.user, is_archived=False).values_list('name', flat=True)
+    insights_pkg = engine.generate_insights_and_recommendations()
+    ltv = engine.get_client_ltv_analysis()
+    available_clients = Client.objects.filter(user=request.user, is_archived=False)
 
     return render(request, 'analytics/workspace.html', {
         'profiles': profiles,
@@ -2514,9 +2529,32 @@ def analytics_workspace(request):
         'correlation': correlation,
         'outliers': outliers,
         'trends': trends,
-        'insights': insights,
-        'clients_list': clients_list,
-        'filters': filters,
+        'insights': insights_pkg['insights'],
+        'recommendations': insights_pkg['recommendations'],
+        'ltv': ltv,
+        'available_clients': available_clients,
+        'selected_client': filters['client'],
+        'selected_status': filters['status'],
+        'selected_date_from': filters['date_from'],
+        'selected_date_to': filters['date_to'],
+        'eda_json': json.dumps({
+            'budget_histogram': eda['budget_histogram'],
+            'payment_histogram': eda['payment_histogram'],
+            'status_distribution': eda['status_distribution'],
+            'priority_distribution': eda['priority_distribution'],
+            'client_bivariate': eda['client_bivariate'],
+            'scatter_budget_vs_paid': eda['scatter_budget_vs_paid'],
+        }),
+        'correlation_json': json.dumps(correlation),
+        'trends_json': json.dumps(trends),
+        'ltv_json': json.dumps({
+            'tier_counts': ltv['tier_counts'],
+            'concentration_labels': ltv['concentration_labels'],
+            'concentration_values': ltv['concentration_values'],
+            'retention_months': ltv['retention_months'],
+            'retention_new': ltv['retention_new'],
+            'retention_repeat': ltv['retention_repeat'],
+        }),
         'page_title': 'Data Analytics Workspace',
     })
 

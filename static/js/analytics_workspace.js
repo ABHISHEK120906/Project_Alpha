@@ -184,7 +184,149 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+
+  // ── LTV Charts ──────────────────────────────────────────────────────────────
+  const ltv = window.ANALYTICS_DATA.ltv || {};
+
+  // 6. LTV Tier Donut Chart
+  const ltvTierCtx = document.getElementById('ltvTierDonutChart');
+  if (ltvTierCtx && ltv.tier_counts) {
+    const tc = ltv.tier_counts;
+    const totalTiers = (tc.Platinum || 0) + (tc.Gold || 0) + (tc.Silver || 0) + (tc.Bronze || 0);
+    if (totalTiers > 0) {
+      new Chart(ltvTierCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Platinum', 'Gold', 'Silver', 'Bronze'],
+          datasets: [{
+            data: [tc.Platinum || 0, tc.Gold || 0, tc.Silver || 0, tc.Bronze || 0],
+            backgroundColor: ['#e5c06c', '#a3c4f3', '#9ca3af', '#cd7f32'],
+            borderColor: dark ? '#1a1c22' : '#fff',
+            borderWidth: 3,
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  const pct = totalTiers > 0 ? ((ctx.raw / totalTiers) * 100).toFixed(1) : 0;
+                  return `${ctx.label}: ${ctx.raw} client${ctx.raw !== 1 ? 's' : ''} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // 7. Revenue Concentration Chart (horizontal bar)
+  const ltvConcCtx = document.getElementById('ltvConcentrationChart');
+  if (ltvConcCtx && ltv.concentration_labels && ltv.concentration_labels.length > 0) {
+    // Build gradient-like color array — top client darker, rest lighter
+    const concColors = ltv.concentration_labels.map((_, i) => {
+      const alpha = Math.max(0.35, 1 - i * 0.08);
+      return dark ? `rgba(163, 196, 243, ${alpha})` : `rgba(37, 99, 235, ${alpha})`;
+    });
+    new Chart(ltvConcCtx, {
+      type: 'bar',
+      data: {
+        labels: ltv.concentration_labels,
+        datasets: [{
+          label: 'Realized Revenue ($)',
+          data: ltv.concentration_values,
+          backgroundColor: concColors,
+          borderColor: infoColor,
+          borderWidth: 1,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => '$' + ctx.raw.toLocaleString(undefined, { minimumFractionDigits: 2 })
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, callback: v => '$' + v.toLocaleString() },
+            border: { display: false }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: textColor, font: { size: 11 } }
+          }
+        }
+      }
+    });
+  }
+
+  // 8. Client Retention Timeline (stacked bar)
+  const ltvRetCtx = document.getElementById('ltvRetentionChart');
+  if (ltvRetCtx && ltv.retention_months && ltv.retention_months.length > 0) {
+    new Chart(ltvRetCtx, {
+      type: 'bar',
+      data: {
+        labels: ltv.retention_months,
+        datasets: [
+          {
+            label: 'New Clients',
+            data: ltv.retention_new,
+            backgroundColor: dark ? 'rgba(96, 168, 251, 0.7)' : 'rgba(37, 99, 235, 0.7)',
+            borderRadius: 4,
+            stack: 'retention'
+          },
+          {
+            label: 'Repeat Clients',
+            data: ltv.retention_repeat,
+            backgroundColor: dark ? 'rgba(61, 170, 96, 0.7)' : 'rgba(16, 185, 129, 0.7)',
+            borderRadius: 4,
+            stack: 'retention'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { color: textColor, font: { size: 11 }, boxWidth: 12, padding: 12 }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: textColor },
+            border: { display: false },
+            stacked: true
+          },
+          y: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, stepSize: 1, precision: 0 },
+            border: { display: false },
+            beginAtZero: true,
+            stacked: true
+          }
+        }
+      }
+    });
+  }
 });
+
 
 // Interactive Drill-down Modal Engine
 window.openDrilldownModal = function (dimension, value) {

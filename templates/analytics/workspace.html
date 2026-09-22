@@ -215,6 +215,11 @@
       <i class="fas fa-lightbulb me-1"></i>9. Insights &amp; Actions
     </button>
   </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="ltv-tab" data-bs-toggle="tab" data-bs-target="#tab-ltv" type="button" role="tab">
+      <i class="fas fa-star me-1"></i>10. Client Intelligence &amp; LTV
+    </button>
+  </li>
 </ul>
 
 <!-- Tab Content -->
@@ -784,6 +789,200 @@
 
 </div>
 
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 10: CLIENT INTELLIGENCE & LTV
+       ══════════════════════════════════════════════════════════ -->
+  <div class="tab-pane fade" id="tab-ltv" role="tabpanel">
+
+    {% if ltv.is_sufficient %}
+
+    <!-- KPI Summary Row -->
+    <div class="row g-3 mb-4">
+      <!-- Avg LTV -->
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 shadow-sm p-4 h-100 text-center" style="border-radius:18px;border-top:3px solid #e5c06c !important;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#e5c06c;margin-bottom:6px;">Avg Client LTV</div>
+          <div style="font-size:28px;font-weight:800;color:var(--text-primary);line-height:1;">{{ ltv.avg_ltv_formatted }}</div>
+          <div class="text-muted small mt-2">Avg realized revenue per paying client</div>
+        </div>
+      </div>
+      <!-- Top Client -->
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 shadow-sm p-4 h-100 text-center" style="border-radius:18px;border-top:3px solid #a3c4f3 !important;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a3c4f3;margin-bottom:6px;">Highest Value Client</div>
+          <div style="font-size:18px;font-weight:800;color:var(--text-primary);line-height:1.2;">{{ ltv.top_client_name|truncatechars:16 }}</div>
+          <div class="text-muted small mt-1">{{ ltv.top_client_revenue }}</div>
+          <span class="badge bg-warning mt-2" style="font-size:10px;">{{ ltv.top_client_tier }}</span>
+        </div>
+      </div>
+      <!-- Retention Rate -->
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 shadow-sm p-4 h-100 text-center" style="border-radius:18px;border-top:3px solid #3daa60 !important;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#3daa60;margin-bottom:6px;">Retention Rate</div>
+          <div style="font-size:28px;font-weight:800;color:var(--text-primary);line-height:1;">{{ ltv.retention_rate }}%</div>
+          <div class="text-muted small mt-2">{{ ltv.n_repeat }} of {{ ltv.n_clients }} clients are repeat</div>
+        </div>
+      </div>
+      <!-- Avg Projects/Client -->
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 shadow-sm p-4 h-100 text-center" style="border-radius:18px;border-top:3px solid #d96c9d !important;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#d96c9d;margin-bottom:6px;">Avg Projects / Client</div>
+          <div style="font-size:28px;font-weight:800;color:var(--text-primary);line-height:1;">{{ ltv.avg_projects_per_client }}</div>
+          <div class="text-muted small mt-2">Across {{ ltv.n_clients }} total client{{ ltv.n_clients|pluralize }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+      <!-- LTV Tier Donut -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-radius:18px;">
+          <h6 class="fw-bold mb-1" style="color:var(--text-primary);"><i class="fas fa-layer-group text-warning me-2"></i>Client LTV Tier Distribution</h6>
+          <p class="text-muted small mb-3">Clients segmented by realized lifetime value.</p>
+          <div style="height:220px;position:relative;">
+            <canvas id="ltvTierDonutChart"></canvas>
+          </div>
+          <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+            <span style="font-size:11px;font-weight:700;color:#e5c06c;"><i class="fas fa-circle me-1"></i>Platinum ({{ ltv.tier_counts.Platinum }})</span>
+            <span style="font-size:11px;font-weight:700;color:#a3c4f3;"><i class="fas fa-circle me-1"></i>Gold ({{ ltv.tier_counts.Gold }})</span>
+            <span style="font-size:11px;font-weight:700;color:#9ca3af;"><i class="fas fa-circle me-1"></i>Silver ({{ ltv.tier_counts.Silver }})</span>
+            <span style="font-size:11px;font-weight:700;color:#cd7f32;"><i class="fas fa-circle me-1"></i>Bronze ({{ ltv.tier_counts.Bronze }})</span>
+          </div>
+        </div>
+      </div>
+      <!-- Revenue Concentration Bar -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-radius:18px;">
+          <h6 class="fw-bold mb-1" style="color:var(--text-primary);"><i class="fas fa-chart-bar text-info me-2"></i>Revenue Concentration — Top 10 Clients</h6>
+          <p class="text-muted small mb-3">Identifies revenue dependency and concentration risk across your portfolio.</p>
+          <div style="height:220px;position:relative;">
+            <canvas id="ltvConcentrationChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Retention Timeline -->
+    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:18px;">
+      <h6 class="fw-bold mb-1" style="color:var(--text-primary);"><i class="fas fa-calendar-check text-success me-2"></i>Client Retention Timeline (Last 6 Months)</h6>
+      <p class="text-muted small mb-3">Monthly breakdown of new client acquisition vs repeat client activity.</p>
+      <div style="height:200px;position:relative;">
+        <canvas id="ltvRetentionChart"></canvas>
+      </div>
+    </div>
+
+    <!-- LTV Leaderboard Table -->
+    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:18px;">
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <h6 class="fw-bold mb-0" style="color:var(--text-primary);"><i class="fas fa-trophy text-warning me-2"></i>Client LTV Leaderboard</h6>
+        <div class="text-muted small">{{ ltv.n_clients }} client{{ ltv.n_clients|pluralize }} &bull; Pareto: {{ ltv.pareto_count }} client{{ ltv.pareto_count|pluralize }} = 80% revenue</div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 small">
+          <thead>
+            <tr class="text-muted">
+              <th>#</th>
+              <th>Client</th>
+              <th>Tier</th>
+              <th>Realized Revenue</th>
+              <th>Rev Share</th>
+              <th>Projects</th>
+              <th>Completed</th>
+              <th>Repeat</th>
+              <th>Tenure (Days)</th>
+              <th>Avg Pay Velocity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in ltv.leaderboard %}
+            <tr>
+              <td class="fw-bold text-muted">{{ forloop.counter }}</td>
+              <td>
+                <div class="fw-bold" style="color:var(--text-primary);">{{ c.name }}</div>
+                {% if c.company %}<div class="text-muted" style="font-size:10px;">{{ c.company }}</div>{% endif %}
+              </td>
+              <td>
+                <span class="badge bg-{{ c.tier_badge }}" style="font-size:10px;">{{ c.tier }}</span>
+              </td>
+              <td class="fw-bold" style="color:var(--success-text);">{{ c.revenue_formatted }}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="progress" style="height:6px;width:70px;">
+                    <div class="progress-bar bg-success" style="width:{{ c.rev_share }}%;"></div>
+                  </div>
+                  <span style="font-size:11px;font-weight:700;">{{ c.rev_share }}%</span>
+                </div>
+              </td>
+              <td>{{ c.n_projects }}</td>
+              <td>
+                <span class="badge bg-success bg-opacity-10 text-success" style="font-size:10px;">{{ c.n_completed }}</span>
+              </td>
+              <td>
+                {% if c.is_repeat %}
+                  <span class="badge bg-primary" style="font-size:10px;"><i class="fas fa-repeat me-1"></i>Repeat</span>
+                {% else %}
+                  <span class="text-muted" style="font-size:11px;">Single</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if c.first_date %}
+                  <span class="badge bg-secondary bg-opacity-15 text-secondary" style="font-size:10px;">{{ c.tenure_days }}d</span>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if c.avg_pay_days is not None %}
+                  <span class="fw-bold">{{ c.avg_pay_days }} days</span>
+                {% else %}
+                  <span class="text-muted">No payments</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="10" class="text-center text-muted py-4">No clients found matching current filters.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LTV Insights -->
+    <div class="card border-0 shadow-sm p-4" style="border-radius:18px;">
+      <h6 class="fw-bold mb-3" style="color:var(--text-primary);"><i class="fas fa-lightbulb text-warning me-2"></i>Client LTV Intelligence Signals</h6>
+      <div class="row g-3">
+        {% for ins in ltv.insights %}
+        <div class="col-lg-6">
+          <div class="insight-card" style="border-left-color:{% if ins.badge == 'danger' %}#ef4444{% elif ins.badge == 'warning' %}#f59e0b{% elif ins.badge == 'success' %}#10b981{% else %}#6b7280{% endif %};">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="small text-muted fw-bold text-uppercase"><i class="fas {{ ins.icon }} me-1"></i>{{ ins.type|title }}</span>
+              <span class="badge bg-{{ ins.badge }}" style="font-size:10px;">{{ ins.badge_text }}</span>
+            </div>
+            <h6 class="fw-bold mb-1" style="color:var(--text-primary);font-size:13px;">{{ ins.title }}</h6>
+            <p class="small text-muted mb-0">{{ ins.text }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="card border-0 shadow-sm p-5 text-center" style="border-radius:18px;">
+      <i class="fas fa-users text-muted" style="font-size:48px;margin-bottom:16px;"></i>
+      <h5 class="fw-bold mb-2" style="color:var(--text-primary);">No Client Data Available</h5>
+      <p class="text-muted small mb-4">Add clients and record payment activity to unlock Client Lifetime Value analytics, retention metrics, and revenue concentration insights.</p>
+      <a href="{% url 'core:client_create' %}" class="btn btn-primary btn-sm px-4" style="background:var(--primary);border:none;font-weight:700;">+ Add First Client</a>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
 <!-- Drill-down Inspection Modal -->
 <div class="modal fade" id="drilldownModal" tabindex="-1" aria-labelledby="drilldownModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -812,7 +1011,8 @@
   window.ANALYTICS_DATA = {
     eda: {{ eda_json|safe }},
     correlation: {{ correlation_json|safe }},
-    trends: {{ trends_json|safe }}
+    trends: {{ trends_json|safe }},
+    ltv: {{ ltv_json|safe }}
   };
 </script>
 <script src="{% static 'js/analytics_workspace.js' %}"></script>

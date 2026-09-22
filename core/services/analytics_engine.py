@@ -1028,6 +1028,283 @@ class DataAnalyticsEngine:
         }
 
     # --------------------------------------------------------------------------
+    # Phase 11: Client Lifetime Value (LTV) Analysis
+    # --------------------------------------------------------------------------
+    def get_client_ltv_analysis(self):
+        """
+        Computes comprehensive Client Lifetime Value (LTV) analytics:
+        - Per-client realized revenue, project counts, tenure
+        - Payment velocity (avg days to pay)
+        - LTV tier classification (Platinum / Gold / Silver / Bronze)
+        - Retention rate, repeat clients, Pareto concentration
+        - Monthly new vs repeat client timeline
+        - LTV insights and concentration risk signals
+        """
+        from django.db.models import Min, Max
+        from collections import defaultdict
+
+        clients = list(self.clients_qs.order_by('created_at'))
+        all_payments = list(self.payments_qs.select_related('project', 'project__client'))
+        all_projects = list(self.projects_qs.select_related('client'))
+
+        # ── Per-client aggregation ────────────────────────────────────────────
+        client_revenue = defaultdict(float)
+        client_paid_payments = defaultdict(list)
+        client_projects = defaultdict(list)
+        client_completed = defaultdict(int)
+
+        for pm in all_payments:
+            if pm.status == 'paid' and pm.project and pm.project.client:
+                cid = str(pm.project.client.id)
+                client_revenue[cid] += to_float(pm.amount)
+                client_paid_payments[cid].append(pm)
+
+        for p in all_projects:
+            if p.client:
+                cid = str(p.client.id)
+                client_projects[cid].append(p)
+                if p.status == 'completed':
+                    client_completed[cid] += 1
+
+        # ── LTV tier thresholds (relative) ───────────────────────────────────
+        all_revenues = [v for v in client_revenue.values() if v > 0]
+        if all_revenues:
+            sorted_rev = sorted(all_revenues, reverse=True)
+            tier_platinum = compute_percentile(sorted(all_revenues), 90) or 0
+            tier_gold     = compute_percentile(sorted(all_revenues), 65) or 0
+            tier_silver   = compute_percentile(sorted(all_revenues), 35) or 0
+        else:
+            tier_platinum = tier_gold = tier_silver = 0
+
+        def _get_tier(rev):
+            if rev >= tier_platinum and tier_platinum > 0:
+                return {'label': 'Platinum', 'color': '#e5c06c', 'badge': 'warning'}
+            elif rev >= tier_gold and tier_gold > 0:
+                return {'label': 'Gold', 'color': '#a3c4f3', 'badge': 'info'}
+            elif rev >= tier_silver and tier_silver > 0:
+                return {'label': 'Silver', 'color': '#9ca3af', 'badge': 'secondary'}
+            else:
+                return {'label': 'Bronze', 'color': '#cd7f32', 'badge': 'dark'}
+
+        total_revenue_all = sum(all_revenues) if all_revenues else 0
+
+        # ── Build leaderboard ─────────────────────────────────────────────────
+        leaderboard = []
+        for c in clients:
+            cid = str(c.id)
+            revenue = client_revenue.get(cid, 0.0)
+            projects = client_projects.get(cid, [])
+            n_projects = len(projects)
+            n_completed = client_completed.get(cid, 0)
+            is_repeat = n_projects > 1
+
+            # Tenure: first project created_at → today
+            proj_dates = [p.created_at.date() for p in projects if p.created_at]
+            first_date = min(proj_dates) if proj_dates else None
+            last_date  = max(proj_dates) if proj_dates else None
+            tenure_days = (self.today - first_date).days if first_date else 0
+
+            # Payment velocity: avg days from project created_at to paid_date
+            velocities = []
+            for pm in client_paid_payments.get(cid, []):
+                if pm.paid_date and pm.project and pm.project.created_at:
+                    days = (pm.paid_date - pm.project.created_at.date()).days
+                    if days >= 0:
+                        velocities.append(days)
+            avg_pay_days = round(sum(velocities) / len(velocities), 1) if velocities else None
+
+            tier = _get_tier(revenue)
+            rev_share = round((revenue / total_revenue_all * 100), 1) if total_revenue_all > 0 else 0.0
+
+            leaderboard.append({
+                'id': cid,
+                'name': c.name,
+                'company': c.company or '',
+                'status': c.status,
+                'revenue': round(revenue, 2),
+                'revenue_formatted': f"${revenue:,.2f}",
+                'n_projects': n_projects,
+                'n_completed': n_completed,
+                'is_repeat': is_repeat,
+                'tenure_days': tenure_days,
+                'first_date': first_date.isoformat() if first_date else None,
+                'last_date': last_date.isoformat() if last_date else None,
+                'avg_pay_days': avg_pay_days,
+                'tier': tier['label'],
+                'tier_badge': tier['badge'],
+                'tier_color': tier['color'],
+                'rev_share': rev_share,
+            })
+
+        # Sort by revenue descending
+        leaderboard.sort(key=lambda x: x['revenue'], reverse=True)
+
+        # ── KPI summary ───────────────────────────────────────────────────────
+        n_clients = len(leaderboard)
+        n_with_revenue = sum(1 for c in leaderboard if c['revenue'] > 0)
+        n_repeat = sum(1 for c in leaderboard if c['is_repeat'])
+        retention_rate = round((n_repeat / n_clients * 100), 1) if n_clients > 0 else 0.0
+        avg_ltv = round(total_revenue_all / n_with_revenue, 2) if n_with_revenue > 0 else 0.0
+        avg_projects_per_client = round(
+            sum(c['n_projects'] for c in leaderboard) / n_clients, 1
+        ) if n_clients > 0 else 0.0
+        top_client = leaderboard[0] if leaderboard else None
+
+        # ── Pareto (80/20) analysis ───────────────────────────────────────────
+        cumulative = 0.0
+        pareto_count = 0
+        for c in leaderboard:
+            cumulative += c['revenue']
+            pareto_count += 1
+            if total_revenue_all > 0 and cumulative / total_revenue_all >= 0.80:
+                break
+        pareto_pct = round((pareto_count / n_clients * 100), 1) if n_clients > 0 else 0.0
+
+        # ── LTV tier distribution ─────────────────────────────────────────────
+        tier_counts = {'Platinum': 0, 'Gold': 0, 'Silver': 0, 'Bronze': 0}
+        for c in leaderboard:
+            tier_counts[c['tier']] = tier_counts.get(c['tier'], 0) + 1
+
+        # ── Revenue concentration (top 10) for chart ──────────────────────────
+        top10 = leaderboard[:10]
+        concentration_labels = [c['name'][:18] for c in top10]
+        concentration_values = [c['revenue'] for c in top10]
+
+        # ── Monthly retention timeline (last 6 months) ────────────────────────
+        retention_months = []
+        retention_new = []
+        retention_repeat = []
+        seen_clients = set()
+
+        for i in range(5, -1, -1):
+            month_offset = (self.today.month - 1 - i) % 12 + 1
+            year_offset = self.today.year + ((self.today.month - 1 - i) // 12)
+            from datetime import date as _date_cls
+            label = _date_cls(year_offset, month_offset, 1).strftime("%b'%y")
+            retention_months.append(label)
+
+            new_count = 0
+            repeat_count = 0
+            month_client_ids = set()
+
+            for p in all_projects:
+                if p.created_at.year == year_offset and p.created_at.month == month_offset and p.client:
+                    month_client_ids.add(str(p.client.id))
+
+            for cid in month_client_ids:
+                if cid in seen_clients:
+                    repeat_count += 1
+                else:
+                    new_count += 1
+
+            seen_clients.update(month_client_ids)
+            retention_new.append(new_count)
+            retention_repeat.append(repeat_count)
+
+        # ── LTV Insights ──────────────────────────────────────────────────────
+        insights = []
+
+        if pareto_count < n_clients and n_clients >= 3:
+            insights.append({
+                'type': 'pareto',
+                'icon': 'fa-chart-pie',
+                'title': f'Pareto Concentration: {pareto_pct}% of clients drive 80% of revenue',
+                'text': f'{pareto_count} client(s) account for 80% of your total realized revenue. '
+                        f'{"High concentration risk — diversify your client base." if pareto_pct < 25 else "Healthy distribution across your client portfolio."}',
+                'badge': 'warning' if pareto_pct < 25 else 'success',
+                'badge_text': 'Concentrate Risk' if pareto_pct < 25 else 'Healthy Mix',
+            })
+
+        if retention_rate >= 50:
+            insights.append({
+                'type': 'retention',
+                'icon': 'fa-repeat',
+                'title': f'Strong Client Retention: {retention_rate}% repeat rate',
+                'text': f'{n_repeat} out of {n_clients} clients have returned for multiple projects — '
+                        f'a strong signal of client satisfaction and relationship stickiness.',
+                'badge': 'success',
+                'badge_text': 'Strong',
+            })
+        elif n_clients >= 3:
+            insights.append({
+                'type': 'retention',
+                'icon': 'fa-user-minus',
+                'title': f'Retention Opportunity: Only {retention_rate}% repeat clients',
+                'text': f'Most clients ({n_clients - n_repeat}) have only engaged once. '
+                        f'Consider post-project follow-ups and retainer proposals to grow LTV.',
+                'badge': 'warning',
+                'badge_text': 'Improve',
+            })
+
+        if top_client and top_client['revenue'] > 0:
+            top_share = top_client['rev_share']
+            if top_share > 40:
+                insights.append({
+                    'type': 'risk',
+                    'icon': 'fa-triangle-exclamation',
+                    'title': f'Key Account Dependency: {top_client["name"]} = {top_share}% of revenue',
+                    'text': f'Your top client accounts for {top_share}% of realized revenue. '
+                            f'This single-client dependency is a cash flow risk — actively develop other accounts.',
+                    'badge': 'danger',
+                    'badge_text': 'High Risk',
+                })
+
+        avg_pay = [c['avg_pay_days'] for c in leaderboard if c['avg_pay_days'] is not None]
+        if avg_pay:
+            overall_avg_pay = round(sum(avg_pay) / len(avg_pay), 1)
+            slow_payers = [c for c in leaderboard if c['avg_pay_days'] and c['avg_pay_days'] > overall_avg_pay * 1.5]
+            if slow_payers:
+                insights.append({
+                    'type': 'payment',
+                    'icon': 'fa-clock',
+                    'title': f'{len(slow_payers)} Client(s) with Slow Payment Velocity',
+                    'text': f'{", ".join(c["name"] for c in slow_payers[:3])} pay significantly slower than average '
+                            f'({overall_avg_pay} days). Consider requiring deposits or shorter payment terms.',
+                    'badge': 'warning',
+                    'badge_text': 'Cash Flow Risk',
+                })
+
+        if not insights:
+            insights.append({
+                'type': 'info',
+                'icon': 'fa-circle-info',
+                'title': 'Add More Client & Payment Data to Unlock LTV Insights',
+                'text': 'LTV intelligence activates once you have multiple clients with recorded payment activity.',
+                'badge': 'secondary',
+                'badge_text': 'Awaiting Data',
+            })
+
+        return {
+            # KPI summary
+            'avg_ltv': round(avg_ltv, 2),
+            'avg_ltv_formatted': f"${avg_ltv:,.2f}",
+            'total_revenue': round(total_revenue_all, 2),
+            'total_revenue_formatted': f"${total_revenue_all:,.2f}",
+            'n_clients': n_clients,
+            'n_repeat': n_repeat,
+            'retention_rate': retention_rate,
+            'avg_projects_per_client': avg_projects_per_client,
+            'top_client_name': top_client['name'] if top_client else '—',
+            'top_client_revenue': top_client['revenue_formatted'] if top_client else '$0',
+            'top_client_tier': top_client['tier'] if top_client else '—',
+            # Pareto
+            'pareto_count': pareto_count,
+            'pareto_pct': pareto_pct,
+            # Leaderboard
+            'leaderboard': leaderboard,
+            # Charts (JSON-serializable)
+            'tier_counts': tier_counts,
+            'concentration_labels': concentration_labels,
+            'concentration_values': concentration_values,
+            'retention_months': retention_months,
+            'retention_new': retention_new,
+            'retention_repeat': retention_repeat,
+            # Insights
+            'insights': insights,
+            'is_sufficient': n_clients >= 1,
+        }
+
+    # --------------------------------------------------------------------------
     # Phase 10: Interactive Drill-Down Engine
     # --------------------------------------------------------------------------
     def get_drilldown_data(self, dimension, value):
