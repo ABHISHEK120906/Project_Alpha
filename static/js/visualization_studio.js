@@ -1,3 +1,4 @@
+
 /**
  * FreelanceTrack — Visualization Studio v2
  * ─────────────────────────────────────────
@@ -43,19 +44,19 @@ window.VisualizationStudio = (function () {
   function getTokens() {
     const dark = isDark();
     return {
-      primary:    dark ? '#f0c470' : '#c8881e',
-      primaryBg:  dark ? 'rgba(240,196,112,0.20)' : 'rgba(200,136,30,0.12)',
-      accent:     dark ? '#e04b2a' : '#ae2c11',
-      accentBg:   dark ? 'rgba(224,75,42,0.15)' : 'rgba(174,44,17,0.08)',
-      success:    dark ? '#3daa60' : '#276640',
-      successBg:  dark ? 'rgba(61,170,96,0.18)' : 'rgba(39,102,64,0.10)',
+      primary: dark ? '#f0c470' : '#c8881e',
+      primaryBg: dark ? 'rgba(240,196,112,0.20)' : 'rgba(200,136,30,0.12)',
+      accent: dark ? '#e04b2a' : '#ae2c11',
+      accentBg: dark ? 'rgba(224,75,42,0.15)' : 'rgba(174,44,17,0.08)',
+      success: dark ? '#3daa60' : '#276640',
+      successBg: dark ? 'rgba(61,170,96,0.18)' : 'rgba(39,102,64,0.10)',
       donut: dark
         ? ['#f0c470', '#3daa60', '#e04b2a', '#60a8fb', '#94a3b8', '#c084fc', '#fb923c']
         : ['#c8881e', '#276640', '#ae2c11', '#2563eb', '#64748b', '#7c3aed', '#ea580c'],
-      grid:        dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-      text:        dark ? '#c8baa8' : '#3a4450',
-      tick:        dark ? '#8a8070' : '#6a7480',
-      tooltipBg:   dark ? '#131f2b' : '#ffffff',
+      grid: dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+      text: dark ? '#c8baa8' : '#3a4450',
+      tick: dark ? '#8a8070' : '#6a7480',
+      tooltipBg: dark ? '#131f2b' : '#ffffff',
       tooltipBorder: dark ? 'rgba(219,153,65,0.3)' : '#e2e8f0',
     };
   }
@@ -68,9 +69,9 @@ window.VisualizationStudio = (function () {
         const existing = Chart.getChart(canvasId);
         if (existing) existing.destroy();
       }
-    } catch (e) {}
+    } catch (e) { }
     if (_charts[canvasId]) {
-      try { _charts[canvasId].destroy(); } catch (e) {}
+      try { _charts[canvasId].destroy(); } catch (e) { }
       delete _charts[canvasId];
     }
   }
@@ -101,11 +102,11 @@ window.VisualizationStudio = (function () {
     if (!canvas) return;
     safeDestroy(canvasId);
 
-    const t   = getTokens();
+    const t = getTokens();
     const ctx = canvas.getContext('2d');
     const isDoughnut = ['doughnut', 'pie'].includes(chartType);
-    const isLine  = chartType === 'line';
-    const isArea  = chartType === 'area';
+    const isLine = chartType === 'line';
+    const isArea = chartType === 'area';
     const resolvedType = isArea ? 'line' : chartType;
     const isFilled = isLine || isArea;
 
@@ -157,7 +158,7 @@ window.VisualizationStudio = (function () {
           barPercentage: 0.7,
         }];
       } else {
-        const grad = makeGradient(ctx, t.primaryBg.replace('0.20','0.30').replace('0.12','0.22'), t.primaryBg.replace('0.20','0.02').replace('0.12','0.02'));
+        const grad = makeGradient(ctx, t.primaryBg.replace('0.20', '0.30').replace('0.12', '0.22'), t.primaryBg.replace('0.20', '0.02').replace('0.12', '0.02'));
         datasets = [{
           label: configData.label || 'Amount',
           data: dataVals,
@@ -202,12 +203,12 @@ window.VisualizationStudio = (function () {
           },
           tooltip: {
             backgroundColor: t.tooltipBg,
-            borderColor:      t.tooltipBorder,
-            borderWidth:      1,
-            titleColor:       t.text,
-            bodyColor:        t.tick,
-            padding:          12,
-            cornerRadius:     10,
+            borderColor: t.tooltipBorder,
+            borderWidth: 1,
+            titleColor: t.text,
+            bodyColor: t.tick,
+            padding: 12,
+            cornerRadius: 10,
             callbacks: {
               label: function (c) {
                 const val = c.parsed && typeof c.parsed.y !== 'undefined' ? c.parsed.y : (c.parsed && typeof c.parsed.x !== 'undefined' ? c.parsed.x : c.raw);
@@ -218,14 +219,14 @@ window.VisualizationStudio = (function () {
         },
         scales: isDoughnut ? {} : {
           x: {
-            grid:   { color: t.grid, drawBorder: false },
-            ticks:  { color: t.tick, font: { family: 'Inter', size: 11 }, maxRotation: 0 },
+            grid: { color: t.grid, drawBorder: false },
+            ticks: { color: t.tick, font: { family: 'Inter', size: 11 }, maxRotation: 0 },
             border: { color: 'transparent' },
           },
           y: {
             beginAtZero: true,
-            grid:   { color: t.grid, drawBorder: false },
-            ticks:  { color: t.tick, font: { family: 'Inter', size: 11 }, callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v) },
+            grid: { color: t.grid, drawBorder: false },
+            ticks: { color: t.tick, font: { family: 'Inter', size: 11 }, callback: v => '₹' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v) },
             border: { color: 'transparent' },
           }
         }
@@ -268,9 +269,9 @@ window.VisualizationStudio = (function () {
 
   function updateGoalDisplay(current, target) {
     const pct = Math.min(100, Math.round((current / (target || 1)) * 100));
-    const pctEl  = document.getElementById('goalPercentage');
-    const barEl  = document.getElementById('goalProgressBar');
-    const txtEl  = document.getElementById('goalTargetText');
+    const pctEl = document.getElementById('goalPercentage');
+    const barEl = document.getElementById('goalProgressBar');
+    const txtEl = document.getElementById('goalTargetText');
     if (pctEl) pctEl.textContent = `${pct}%`;
     if (barEl) barEl.style.width = `${pct}%`;
     if (txtEl) txtEl.textContent = `₹${current.toLocaleString()} / ₹${target.toLocaleString()}`;
@@ -331,18 +332,18 @@ window.VisualizationStudio = (function () {
         }
 
         if (data.status_distribution) {
-          const keys  = ['in_progress','completed','pending','on_hold','cancelled'];
-          const names = ['In Progress','Completed','Pending','On Hold','Cancelled'];
+          const keys = ['in_progress', 'completed', 'pending', 'on_hold', 'cancelled'];
+          const names = ['In Progress', 'Completed', 'Pending', 'On Hold', 'Cancelled'];
           renderChart('statusDistChart', 'doughnut', {
             labels: names,
-            data:   keys.map(k => data.status_distribution[k] || 0),
+            data: keys.map(k => data.status_distribution[k] || 0),
           });
         }
 
         if (data.client_revenue) {
           renderChart('clientRevenueChart', 'bar', {
-            labels:     data.client_revenue.labels,
-            data:       data.client_revenue.data,
+            labels: data.client_revenue.labels,
+            data: data.client_revenue.data,
             horizontal: true,
           });
         }

@@ -19,8 +19,8 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{% block meta_description %}FreelanceHub — Where Great Projects Meet Great Talent. The premier marketplace connecting clients with verified freelancers.{% endblock %}">
-  <title>{% block title %}FreelanceHub — Where Great Projects Meet Great Talent{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}FreelanceHub — Connect. Work. Grow. A freelancing website that connects Clients and Freelancers.{% endblock %}">
+  <title>{% block title %}FreelanceHub — Connect. Work. Grow.{% endblock %}</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="{% static 'images/freelancehub_icon.svg' %}">
@@ -56,9 +56,12 @@
       <!-- Desktop Nav Links -->
       <nav class="hub-nav-menu" role="navigation" aria-label="Main Navigation">
         <a href="{% url 'core:home' %}" class="hub-nav-link">Home</a>
+        <a href="#what-is-freelancehub" class="hub-nav-link">About</a>
         <a href="#how-it-works" class="hub-nav-link">How It Works</a>
-        <a href="#browse-projects" class="hub-nav-link">Browse Projects</a>
-        <a href="#find-freelancers" class="hub-nav-link">Find Freelancers</a>
+        <a href="#for-clients" class="hub-nav-link">For Clients</a>
+        <a href="#for-freelancers" class="hub-nav-link">For Freelancers</a>
+        <a href="#browse-projects" class="hub-nav-link">Projects</a>
+        <a href="#analytics-reports" class="hub-nav-link">Reports</a>
       </nav>
 
       <!-- Actions -->
@@ -96,9 +99,12 @@
     </div>
 
     <a href="{% url 'core:home' %}" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="home"></i> Home</a>
+    <a href="#what-is-freelancehub" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="info"></i> About</a>
     <a href="#how-it-works" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="git-merge"></i> How It Works</a>
-    <a href="#browse-projects" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="folder-kanban"></i> Browse Projects</a>
-    <a href="#find-freelancers" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="users"></i> Find Freelancers</a>
+    <a href="#for-clients" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="briefcase"></i> For Clients</a>
+    <a href="#for-freelancers" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="sparkles"></i> For Freelancers</a>
+    <a href="#browse-projects" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="folder-kanban"></i> Projects</a>
+    <a href="#analytics-reports" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="bar-chart-3"></i> Reports</a>
     <a href="#role-selection" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="layout-grid"></i> Choose Role</a>
 
     <div style="margin-top:auto; padding-top:20px; border-top:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:10px;">
@@ -141,10 +147,10 @@
           <div style="margin-bottom:14px;">
             {% include 'components/brand_logo.html' with variant='footer' href=home_url %}
           </div>
-          <p>A premium freelancing marketplace connecting ambitious clients with verified top-tier talent for high-impact project delivery.</p>
+          <p>A freelancing website that connects Clients and Freelancers to post, find, and manage projects — with tracking, analytics, and reports built in.</p>
           <div style="display:flex; align-items:center; gap:8px; margin-top:16px;">
             <span style="width:8px; height:8px; border-radius:50%; background:var(--success); display:inline-block;"></span>
-            <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Platform Operational • 99.9% Uptime</span>
+            <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Platform Operational • Live</span>
           </div>
         </div>
 
@@ -154,7 +160,8 @@
           <div class="hub-footer-links">
             <a href="#how-it-works">How It Works</a>
             <a href="#browse-projects">Browse Projects</a>
-            <a href="#find-freelancers">Find Freelancers</a>
+            <a href="#for-clients">For Clients</a>
+            <a href="#for-freelancers">For Freelancers</a>
             <a href="#role-selection">Choose Role</a>
           </div>
         </div>
@@ -174,17 +181,17 @@
         <div>
           <h4 class="hub-footer-col-title">Trust & Security</h4>
           <div class="hub-footer-links">
-            <a href="javascript:void(0)">Identity Verification</a>
-            <a href="javascript:void(0)">Escrow Protection</a>
-            <a href="javascript:void(0)">Dispute Resolution</a>
-            <a href="javascript:void(0)">Terms & Privacy</a>
+            <a href="#trust-verification">Identity Verification</a>
+            <a href="#project-tracking">Project Tracking</a>
+            <a href="#analytics-reports">PDF &amp; Excel Reports</a>
+            <a href="javascript:void(0)">Terms &amp; Privacy</a>
           </div>
         </div>
 
       </div>
 
       <div class="hub-footer-bottom">
-        <div>&copy; {% now "Y" %} FreelanceHub Inc. All rights reserved. "Where Great Projects Meet Great Talent."</div>
+        <div>&copy; {% now "Y" %} FreelanceHub. All rights reserved. "Connect. Work. Grow."</div>
         <div style="display:flex; gap:16px;">
           <a href="{% url 'core:home' %}">Home</a>
           <a href="{% url 'core:login' %}">Login</a>
