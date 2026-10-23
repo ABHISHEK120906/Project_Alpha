@@ -98,20 +98,21 @@
       transition: color var(--t-fast);
     }
     .admin-nav-item:hover {
-      background: var(--plum-subtle);
-      color: var(--pink-accent);
+      background: var(--forest-subtle);
+      color: var(--lime-accent);
     }
     .admin-nav-item:hover svg {
-      color: var(--pink-accent);
+      color: var(--lime-accent);
     }
     .admin-nav-item.active {
-      background: linear-gradient(135deg, rgba(222, 91, 136, 0.16) 0%, rgba(59, 20, 43, 0.1) 100%);
-      color: var(--pink-accent);
+      background: linear-gradient(135deg, rgba(163, 230, 53, 0.16) 0%, rgba(20, 83, 45, 0.25) 100%);
+      color: var(--text-primary);
       font-weight: 700;
-      border: 1px solid rgba(222, 91, 136, 0.28);
+      border: 1px solid rgba(163, 230, 53, 0.35);
+      box-shadow: 0 4px 16px rgba(163, 230, 53, 0.12);
     }
     .admin-nav-item.active svg {
-      color: var(--pink-accent);
+      color: var(--lime-accent);
     }
     .admin-nav-item.active::before {
       content: '';
@@ -121,7 +122,8 @@
       bottom: 15%;
       width: 4px;
       border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
-      background: var(--pink-accent);
+      background: var(--lime-accent);
+      box-shadow: 0 0 10px var(--lime-glow);
     }
 
     .admin-main {

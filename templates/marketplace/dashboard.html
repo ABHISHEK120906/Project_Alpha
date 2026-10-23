@@ -36,7 +36,7 @@
     </div>
     <div class="kpi-value">{{ pending_applications|default:"0" }}</div>
     <div class="kpi-sub">
-      <span style="color:var(--pink-accent); font-weight:600;"><i data-lucide="clock" class="fh-icon-xs"></i> Awaiting</span>
+      <span style="color:var(--client-accent); font-weight:600;"><i data-lucide="clock" class="fh-icon-xs"></i> Awaiting</span>
       <span>Candidate review</span>
     </div>
   </div>
@@ -81,7 +81,7 @@
     <div class="card-header">
       <div>
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="trending-up" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="trending-up" class="fh-icon-sm" style="color:var(--client-accent);"></i>
           <span>Capital Allocation &amp; Spending Trend</span>
         </h3>
         <div class="card-subtitle">Monthly breakdown of project milestones and escrow disbursements</div>
@@ -99,12 +99,12 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="zap" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="zap" class="fh-icon-sm" style="color:var(--client-accent);"></i>
           <span>Quick Actions</span>
         </h3>
       </div>
       <div style="display:flex; flex-direction:column; gap:10px;">
-        <a href="{% url 'marketplace:project_post' %}" class="btn btn-plum" style="justify-content:flex-start;">
+        <a href="{% url 'marketplace:project_post' %}" class="btn btn-primary" style="justify-content:flex-start;">
           <i data-lucide="plus-circle" class="fh-icon-xs"></i>
           <span>Post New Project</span>
         </a>
@@ -146,7 +146,7 @@
     <div class="card-header">
       <div>
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="folder-kanban" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="folder-kanban" class="fh-icon-sm" style="color:var(--client-accent);"></i>
           <span>Your Posted Projects</span>
         </h3>
         <div class="card-subtitle">Manage project briefs, candidate proposals, and ongoing milestones</div>
@@ -166,7 +166,7 @@
                 <a href="{% url 'marketplace:project_detail' pk=project.pk %}" style="font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:700; color:var(--text-primary);">
                   {{ project.title }}
                 </a>
-                <span class="badge {% if project.status == 'open' %}badge-primary{% elif project.status == 'in_progress' %}badge-warning{% elif project.status == 'completed' %}badge-success{% else %}badge-plum{% endif %}">
+                <span class="badge {% if project.status == 'open' %}badge-primary{% elif project.status == 'in_progress' %}badge-warning{% elif project.status == 'completed' %}badge-success{% else %}badge-info{% endif %}">
                   {{ project.get_status_display }}
                 </span>
               </div>
@@ -184,7 +184,7 @@
                 <i data-lucide="clipboard-check" class="fh-icon-xs"></i>
                 <span>Proposals ({{ project.app_count|default:"0" }})</span>
               </a>
-              <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn btn-plum btn-sm">
+              <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn btn-primary btn-sm">
                 <i data-lucide="play" class="fh-icon-xs"></i>
                 <span>Workspace</span>
               </a>
@@ -194,10 +194,10 @@
       </div>
     {% else %}
       <div style="text-align:center; padding:36px 16px;">
-        <i data-lucide="folder-open" class="fh-icon-lg" style="color:var(--pink-accent); margin-bottom:12px;"></i>
+        <i data-lucide="folder-open" class="fh-icon-lg" style="color:var(--client-accent); margin-bottom:12px;"></i>
         <h4 style="font-weight:700; margin-bottom:4px;">No projects posted yet</h4>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Create your first project requirement to connect with verified specialists.</p>
-        <a href="{% url 'marketplace:project_post' %}" class="btn btn-plum">
+        <a href="{% url 'marketplace:project_post' %}" class="btn btn-primary">
           <i data-lucide="plus-circle" class="fh-icon-xs"></i>
           <span>Post a Project</span>
         </a>
@@ -210,7 +210,7 @@
     <div class="card-header">
       <div>
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="clipboard-list" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="clipboard-list" class="fh-icon-sm" style="color:var(--client-accent);"></i>
           <span>Recent Proposals</span>
         </h3>
         <div class="card-subtitle">Incoming candidate bids</div>
@@ -222,7 +222,7 @@
         {% for app in recent_applications %}
           <div style="background:var(--bg-elevated); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:14px 16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
             <div style="display:flex; align-items:center; gap:12px;">
-              <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, var(--pink-accent) 0%, var(--plum-deep) 100%); color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem;">
+              <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, var(--client-accent) 0%, #0369a1 100%); color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem;">
                 {{ app.freelancer.get_full_name|default:app.freelancer.username|slice:":1"|upper }}
               </div>
               <div>
@@ -237,7 +237,7 @@
 
             <div style="display:flex; align-items:center; gap:12px;">
               <div style="text-align:right;">
-                <div style="font-weight:700; color:var(--pink-accent); font-size:0.95rem;">${{ app.proposed_price|floatformat:0|default:app.project.budget }}</div>
+                <div style="font-weight:700; color:var(--client-accent); font-size:0.95rem;">${{ app.proposed_price|floatformat:0|default:app.project.budget }}</div>
                 <div style="font-size:0.7rem; color:var(--text-muted);">Bid</div>
               </div>
               <a href="{% url 'marketplace:project_applications' pk=app.project.pk %}" class="btn btn-secondary btn-sm">

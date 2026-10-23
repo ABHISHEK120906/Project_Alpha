@@ -1,33 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
   <defs>
-    <!-- Background Squircle Gradient (Plum Obsidian to Charcoal) -->
+    <!-- Background Squircle Gradient (Deep Obsidian Forest) -->
     <linearGradient id="fhSquircleBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3B142B" />
-      <stop offset="100%" stop-color="#1A121D" />
+      <stop offset="0%" stop-color="#0F2913" />
+      <stop offset="100%" stop-color="#050B06" />
     </linearGradient>
 
-    <!-- Client Wing Gradient (Deep Plum to Rose) -->
+    <!-- Client Wing Gradient (Emerald to Teal Forest) -->
     <linearGradient id="fhClientGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#E57399" />
-      <stop offset="100%" stop-color="#9E3B68" />
+      <stop offset="0%" stop-color="#4ADE80" />
+      <stop offset="100%" stop-color="#166534" />
     </linearGradient>
 
-    <!-- Freelancer Wing Gradient (Baby Pink to Blush) -->
+    <!-- Freelancer Wing Gradient (Electric Lime to Neon Green) -->
     <linearGradient id="fhFreelancerGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#DE5B88" />
-      <stop offset="100%" stop-color="#F7B5CD" />
+      <stop offset="0%" stop-color="#65A30D" />
+      <stop offset="100%" stop-color="#A3E635" />
     </linearGradient>
 
-    <!-- Connection & Growth Apex Node (Lavender to Soft Baby Pink) -->
+    <!-- Connection & Growth Apex Node (Mint Glow to Electric Lime) -->
     <linearGradient id="fhGrowthNode" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FDE2EC" />
-      <stop offset="50%" stop-color="#F7B5CD" />
-      <stop offset="100%" stop-color="#D9D0F3" />
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#BEF264" />
+      <stop offset="100%" stop-color="#84CC16" />
     </linearGradient>
   </defs>
 
-  <!-- Squircle Tile Container -->
-  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#fhSquircleBg)" stroke="rgba(247, 181, 205, 0.28)" stroke-width="2"/>
+  <!-- Squircle Tile Container with Neon Border -->
+  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#fhSquircleBg)" stroke="rgba(163, 230, 53, 0.35)" stroke-width="2"/>
 
   <!-- Master Collaboration & Growth Emblem -->
   <g transform="translate(10, 10) scale(0.8)">
@@ -62,7 +62,7 @@
              C 52 48 54 51 54 55
              C 54 59 50 62 44 62
              L 32 62 Z" 
-          fill="rgba(247, 181, 205, 0.45)" />
+          fill="rgba(163, 230, 53, 0.45)" />
 
     <!-- Growth Beacon / Milestone Apex Node -->
     <circle cx="74" cy="20" r="11" fill="url(#fhGrowthNode)" />

@@ -1,6 +1,7 @@
 /* ==========================================================================
-   PAGES UI ENHANCEMENT v1.0
-   All 10 inner pages: Profile, Invoices, Clients, Projects, Tasks,
+   PAGES UI ENHANCEMENT v3.0
+   Theme: Electric Lime + Dark Forest Obsidian + Emerald Analytics
+   Inner pages: Profile, Invoices, Clients, Projects, Tasks,
    Finances, Reports, Notifications, Chat, Calendar
    ========================================================================== */
 
@@ -57,9 +58,9 @@
 }
 
 .social-link-btn:hover {
-  border-color: var(--pink-accent);
-  color: var(--pink-accent);
-  background: rgba(217, 108, 157, 0.08);
+  border-color: var(--lime-accent);
+  color: var(--lime-accent);
+  background: rgba(163, 230, 53, 0.08);
   transform: translateY(-2px);
 }
 
@@ -96,13 +97,13 @@
 }
 
 .nav-tabs .nav-link:hover {
-  color: var(--pink-accent) !important;
-  background: rgba(217, 108, 157, 0.06) !important;
+  color: var(--lime-accent) !important;
+  background: rgba(163, 230, 53, 0.06) !important;
 }
 
 .nav-tabs .nav-link.active {
-  color: var(--pink-accent) !important;
-  border-bottom-color: var(--pink-accent) !important;
+  color: var(--lime-accent) !important;
+  border-bottom-color: var(--lime-accent) !important;
   font-weight: 700;
 }
 
@@ -134,7 +135,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, var(--pink-accent) 0%, var(--plum-deep) 100%);
+  background: linear-gradient(180deg, var(--lime-accent) 0%, var(--forest-deep) 100%);
   border-radius: 0 2px 2px 0;
 }
 
@@ -167,17 +168,18 @@
 }
 
 .fc .fc-button:hover {
-  background: rgba(217, 108, 157, 0.08) !important;
-  border-color: var(--pink-accent) !important;
-  color: var(--pink-accent) !important;
+  background: rgba(163, 230, 53, 0.08) !important;
+  border-color: var(--lime-accent) !important;
+  color: var(--lime-accent) !important;
 }
 
 .fc .fc-button-primary:not(:disabled).fc-button-active,
 .fc .fc-button-primary:not(:disabled):active {
-  background: var(--pink-accent) !important;
-  border-color: var(--pink-accent) !important;
-  color: #fff !important;
-  box-shadow: 0 2px 8px rgba(217, 108, 157, 0.30) !important;
+  background: var(--lime-accent) !important;
+  border-color: var(--lime-accent) !important;
+  color: #060D06 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(163, 230, 53, 0.35) !important;
 }
 
 .fc .fc-col-header-cell-cushion {
@@ -199,7 +201,7 @@
 }
 
 .fc .fc-daygrid-day.fc-day-today {
-  background: rgba(217, 108, 157, 0.06) !important;
+  background: rgba(163, 230, 53, 0.06) !important;
 }
 
 .fc .fc-event {
@@ -274,16 +276,17 @@
 }
 
 .page-link:hover {
-  background: rgba(217, 108, 157, 0.08) !important;
-  border-color: var(--pink-accent) !important;
-  color: var(--pink-accent) !important;
+  background: rgba(163, 230, 53, 0.08) !important;
+  border-color: var(--lime-accent) !important;
+  color: var(--lime-accent) !important;
 }
 
 .page-item.active .page-link {
-  background: var(--pink-accent) !important;
-  border-color: var(--pink-accent) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(217, 108, 157, 0.30);
+  background: var(--lime-accent) !important;
+  border-color: var(--lime-accent) !important;
+  color: #060D06 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(163, 230, 53, 0.35);
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -324,7 +327,7 @@
 .form-section-header i, .form-section-header svg {
   width: 16px;
   height: 16px;
-  color: var(--pink-accent);
+  color: var(--lime-accent);
   flex-shrink: 0;
 }
 
@@ -362,15 +365,16 @@
 }
 
 [data-theme="dark"] .page-link:hover {
-  background: rgba(247, 198, 217, 0.08) !important;
-  border-color: var(--pink-primary) !important;
-  color: var(--pink-primary) !important;
+  background: rgba(163, 230, 53, 0.08) !important;
+  border-color: var(--lime-primary) !important;
+  color: var(--lime-primary) !important;
 }
 
 [data-theme="dark"] .page-item.active .page-link {
-  background: var(--pink-accent) !important;
-  border-color: var(--pink-accent) !important;
-  color: #fff !important;
+  background: var(--lime-accent) !important;
+  border-color: var(--lime-accent) !important;
+  color: #060D06 !important;
+  font-weight: 700;
 }
 
 [data-theme="dark"] .nav-tabs {
@@ -382,13 +386,13 @@
 }
 
 [data-theme="dark"] .nav-tabs .nav-link:hover {
-  background: rgba(247, 198, 217, 0.06) !important;
-  color: var(--pink-primary) !important;
+  background: rgba(163, 230, 53, 0.06) !important;
+  color: var(--lime-primary) !important;
 }
 
 [data-theme="dark"] .nav-tabs .nav-link.active {
-  color: var(--pink-primary) !important;
-  border-bottom-color: var(--pink-primary) !important;
+  color: var(--lime-primary) !important;
+  border-bottom-color: var(--lime-primary) !important;
 }
 
 [data-theme="dark"] .fc .fc-button {
@@ -398,13 +402,13 @@
 }
 
 [data-theme="dark"] .fc .fc-button:hover {
-  background: rgba(247, 198, 217, 0.08) !important;
-  border-color: var(--pink-primary) !important;
-  color: var(--pink-primary) !important;
+  background: rgba(163, 230, 53, 0.08) !important;
+  border-color: var(--lime-primary) !important;
+  color: var(--lime-primary) !important;
 }
 
 [data-theme="dark"] .fc .fc-daygrid-day.fc-day-today {
-  background: rgba(247, 198, 217, 0.06) !important;
+  background: rgba(163, 230, 53, 0.06) !important;
 }
 
 [data-theme="dark"] .fc-theme-standard td,

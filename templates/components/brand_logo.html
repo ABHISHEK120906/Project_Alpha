@@ -1,5 +1,5 @@
 {% load static %}
-<!-- FreelanceHub Brand Logo Component: Baby Pink + Deep Plum + White + Soft Rose + Lavender -->
+<!-- FreelanceHub Brand Logo Component: Electric Lime + Emerald + Forest Green + Crisp Mint -->
 {% if href %}
 <a href="{{ href }}" class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}" aria-label="FreelanceHub">
 {% else %}
@@ -10,22 +10,22 @@
   <div class="fh-logo-mark-wrap" aria-hidden="true">
     <svg class="fh-logo-symbol-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Soft Rose to Baby Pink Gradient (Freelancer / Growth Arch) -->
+        <!-- Electric Lime to Neon Mint Gradient (Freelancer / Growth Arch) -->
         <linearGradient id="fhRoseGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#DE5B88" />
-          <stop offset="100%" stop-color="#F7B5CD" />
+          <stop offset="0%" stop-color="#84CC16" />
+          <stop offset="100%" stop-color="#A3E635" />
         </linearGradient>
 
-        <!-- Deep Plum to Rose Gradient (Client / Anchor Pillar) -->
+        <!-- Emerald to Deep Forest Gradient (Client / Anchor Pillar) -->
         <linearGradient id="fhPlumGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#E57399" />
-          <stop offset="100%" stop-color="#3B142B" />
+          <stop offset="0%" stop-color="#4ADE80" />
+          <stop offset="100%" stop-color="#14532D" />
         </linearGradient>
 
-        <!-- Central Connection & Beacon Node (Blush Pink to Light Lavender) -->
+        <!-- Central Connection & Beacon Node (White Mint to Lime Glow) -->
         <linearGradient id="fhNodeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FDE2EC" />
-          <stop offset="100%" stop-color="#D9D0F3" />
+          <stop offset="0%" stop-color="#FFFFFF" />
+          <stop offset="100%" stop-color="#BEF264" />
         </linearGradient>
       </defs>
 
@@ -55,7 +55,7 @@
             fill="url(#fhRoseGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
       <!-- Connection Bridge -->
-      <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#F7B5CD" opacity="0.6" />
+      <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#A3E635" opacity="0.6" />
 
       <!-- Growth Beacon / Milestone Apex Node -->
       <circle cx="74" cy="20" r="11" fill="url(#fhNodeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />

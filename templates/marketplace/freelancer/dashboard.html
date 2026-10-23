@@ -9,11 +9,11 @@
 {% block content %}
 
 <!-- ══ ROW 1: VERIFICATION & PROFILE STATUS BANNER ═════════ -->
-<div class="card" style="border-left: 4px solid {% if is_verified %}var(--success){% elif verification.final_verification_status == 'pending_admin_review' %}var(--warning){% else %}var(--pink-accent){% endif %}; margin-bottom: 24px;">
+<div class="card" style="border-left: 4px solid {% if is_verified %}var(--success){% elif verification.final_verification_status == 'pending_admin_review' %}var(--info){% else %}var(--warning){% endif %}; margin-bottom: 24px;">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
     
     <div style="display: flex; align-items: center; gap: 16px;">
-      <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 22px; {% if is_verified %}background: var(--success-soft); color: var(--success);{% elif verification.final_verification_status == 'pending_admin_review' %}background: var(--warning-soft); color: var(--warning);{% else %}background: rgba(217,108,157,0.15); color: var(--pink-accent);{% endif %}">
+      <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 22px; {% if is_verified %}background: var(--success-soft); color: var(--success);{% elif verification.final_verification_status == 'pending_admin_review' %}background: var(--info-soft); color: var(--info);{% else %}background: var(--warning-soft); color: var(--warning);{% endif %}">
         <i data-lucide="{% if is_verified %}shield-check{% elif verification.final_verification_status == 'pending_admin_review' %}clock{% else %}shield-alert{% endif %}"></i>
       </div>
       
@@ -27,17 +27,17 @@
               <i data-lucide="check-circle-2" class="fh-icon-xs"></i> Verified Professional Talent
             </span>
           {% elif verification.final_verification_status == 'pending_admin_review' %}
-            <span style="color: var(--warning); display: inline-flex; align-items: center; gap: 6px;">
+            <span style="color: var(--info); display: inline-flex; align-items: center; gap: 6px;">
               <i data-lucide="clock" class="fh-icon-xs"></i> Submitted — Pending Admin Review
             </span>
           {% else %}
-            <span style="color: var(--pink-accent); display: inline-flex; align-items: center; gap: 6px;">
+            <span style="color: var(--warning); display: inline-flex; align-items: center; gap: 6px;">
               <i data-lucide="alert-circle" class="fh-icon-xs"></i> Verification Incomplete (Required to apply)
             </span>
           {% endif %}
         </div>
         <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <span>Checkpoints: <strong style="color: var(--pink-accent);">{{ verification.get_completed_steps_count|default:"0" }}/6 Complete</strong></span>
+          <span>Checkpoints: <strong style="color: var(--text-primary);">{{ verification.get_completed_steps_count|default:"0" }}/6 Complete</strong></span>
           <span style="color: var(--border-color);">&bull;</span>
           <span style="display: inline-flex; align-items: center; gap: 4px;">Email {% if verification.email_verified %}<i data-lucide="check" class="fh-icon-xs" style="color: var(--success);"></i>{% else %}<i data-lucide="x" class="fh-icon-xs" style="color: var(--danger);"></i>{% endif %}</span>
           <span style="color: var(--border-color);">&bull;</span>
@@ -93,7 +93,7 @@
     </div>
     <div class="kpi-value">{{ total_applications|default:"0" }}</div>
     <div class="kpi-sub">
-      <span style="color:var(--pink-accent); font-weight:600;"><i data-lucide="send" class="fh-icon-xs"></i> Submitted</span>
+      <span style="color:var(--lime-accent); font-weight:600;"><i data-lucide="send" class="fh-icon-xs"></i> Submitted</span>
       <span>Candidate bids</span>
     </div>
   </div>
@@ -138,7 +138,7 @@
     <div class="card-header">
       <div>
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="trending-up" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="trending-up" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
           <span>Earnings Velocity &amp; Proposal Volume</span>
         </h3>
         <div class="card-subtitle">Monthly breakdown of gross realized income and proposal bids</div>
@@ -155,7 +155,7 @@
     <div>
       <div class="card-header">
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="zap" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="zap" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
           <span>Quick Actions</span>
         </h3>
       </div>
@@ -182,7 +182,7 @@
     <!-- Escrow Guarantee -->
     <div style="background:var(--bg-elevated); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-light); margin-top:16px;">
       <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-        <i data-lucide="lock" class="fh-icon-xs" style="color:var(--pink-accent);"></i> Guaranteed Escrow Protection
+        <i data-lucide="lock" class="fh-icon-xs" style="color:var(--lime-accent);"></i> Guaranteed Escrow Protection
       </div>
       <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">
         Client payments are funded in escrow before you begin coding or design deliverables.
@@ -200,7 +200,7 @@
     <div class="card-header">
       <div>
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="sparkles" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="sparkles" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
           <span>Recommended Opportunities</span>
         </h3>
         <div class="card-subtitle">Verified client requirements matching your skillset</div>
@@ -240,7 +240,7 @@
       </div>
     {% else %}
       <div style="text-align:center; padding:36px 16px;">
-        <i data-lucide="search" class="fh-icon-lg" style="color:var(--pink-accent); margin-bottom:12px;"></i>
+        <i data-lucide="search" class="fh-icon-lg" style="color:var(--lime-accent); margin-bottom:12px;"></i>
         <h4 style="font-weight:700; margin-bottom:4px;">Explore Open Briefs</h4>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Browse verified projects across web engineering, UI/UX design, data science, and cloud operations.</p>
         <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary">
@@ -256,7 +256,7 @@
     <div class="card-header">
       <div>
         <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="clipboard-check" class="fh-icon-sm" style="color:var(--pink-accent);"></i>
+          <i data-lucide="clipboard-check" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
           <span>My Applications</span>
         </h3>
         <div class="card-subtitle">Proposal responses from clients</div>
@@ -278,7 +278,7 @@
                 Proposed: <strong>${{ app.proposed_price|floatformat:0 }}</strong> &bull; {{ app.created_at|date:"M d" }}
               </div>
             </div>
-            <span class="badge {% if app.status == 'accepted' %}badge-success{% elif app.status == 'pending' %}badge-warning{% elif app.status == 'rejected' %}badge-danger{% else %}badge-plum{% endif %}">
+            <span class="badge {% if app.status == 'accepted' %}badge-success{% elif app.status == 'pending' %}badge-warning{% elif app.status == 'rejected' %}badge-danger{% else %}badge-primary{% endif %}">
               {{ app.get_status_display }}
             </span>
           </div>

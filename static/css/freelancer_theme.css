@@ -1,11 +1,277 @@
 /* ==========================================================================
-   FREELANCEHUB FREELANCER WORKSPACE THEME — Minimal Overrides
-   Core styles are in custom.css
+   FREELANCEHUB FREELANCER WORKSPACE THEME v3.0
+   Role Identity: Electric Lime + Emerald — Growth, Energy, Opportunity
    ========================================================================== */
 
 body.freelancer-portal {
-  --brand-primary:        var(--pink-accent);
-  --brand-primary-hover:  var(--pink-accent-hover);
-  --sidebar-active-bg:    rgba(217, 108, 157, 0.15);
-  --border-focused:       var(--pink-accent);
+  /* Freelancer-specific brand overrides */
+  --fl-accent:          #A3E635;   /* Electric Lime — Freelancer Identity */
+  --fl-accent-hover:    #BEF264;
+  --fl-accent-deep:     #65A30D;
+  --fl-accent-soft:     rgba(163, 230, 53, 0.10);
+  --fl-accent-glow:     rgba(163, 230, 53, 0.32);
+  --brand-primary:      #A3E635;
+  --brand-primary-hover:#BEF264;
+  --sidebar-active-bg:  rgba(163, 230, 53, 0.14);
+  --border-focused:     #A3E635;
+}
+
+/* ── Freelancer App Layout ── */
+.fl-app-layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.fl-sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg-glass);
+  border-right: 1px solid var(--border-color);
+  backdrop-filter: blur(28px) saturate(1.5);
+  -webkit-backdrop-filter: blur(28px) saturate(1.5);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  transition: transform var(--tr-smooth);
+  overflow: hidden;
+}
+
+.fl-sidebar-header {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.fl-sidebar-user {
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.fl-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #A3E635 0%, #14532D 100%);
+  color: #0A0F0A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(163, 230, 53, 0.35);
+  transition: box-shadow var(--tr-norm), transform var(--tr-norm);
+}
+
+.fl-user-avatar:hover {
+  box-shadow: 0 6px 22px rgba(163, 230, 53, 0.52);
+  transform: scale(1.06);
+}
+
+.fl-user-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.fl-user-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #A3E635;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-top: 2px;
+}
+
+.fl-user-badge-row svg,
+.fl-user-badge-row i {
+  width: 13px;
+  height: 13px;
+}
+
+.fl-sidebar-nav {
+  flex: 1;
+  padding: 18px 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.fl-sidebar-nav::-webkit-scrollbar { width: 4px; }
+.fl-sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+.fl-nav-group-title {
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  padding: 18px 14px 8px;
+  margin: 0;
+}
+
+.fl-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--tr-norm);
+  border: 1px solid transparent;
+  min-height: 44px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fl-nav-item i,
+.fl-nav-item svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  opacity: 0.60;
+  transition: all var(--tr-norm);
+}
+
+.fl-nav-item:hover {
+  background: rgba(163, 230, 53, 0.09);
+  color: #A3E635;
+  border-color: rgba(163, 230, 53, 0.20);
+  transform: translateX(2px);
+}
+
+.fl-nav-item:hover i,
+.fl-nav-item:hover svg {
+  opacity: 1;
+  color: #A3E635;
+}
+
+.fl-nav-item.active {
+  background: linear-gradient(135deg, rgba(163, 230, 53, 0.18) 0%, rgba(20, 83, 45, 0.12) 100%);
+  color: #A3E635;
+  border-color: rgba(163, 230, 53, 0.30);
+  box-shadow: inset 3px 0 0 #A3E635, 0 2px 14px rgba(163, 230, 53, 0.14);
+  font-weight: 700;
+}
+
+.fl-nav-item.active i,
+.fl-nav-item.active svg {
+  opacity: 1;
+  color: #A3E635;
+}
+
+.fl-nav-badge {
+  margin-left: auto;
+  background: linear-gradient(135deg, #A3E635 0%, #84CC16 100%);
+  color: #0A0F0A;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  min-width: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(163, 230, 53, 0.40);
+  animation: fh-pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* ── Freelancer Main Layout ── */
+.fl-main {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+
+.fl-topbar {
+  height: var(--topbar-h);
+  background: var(--bg-glass);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 36px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  gap: 16px;
+  transition: box-shadow var(--tr-norm);
+}
+
+.fl-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fl-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fl-topbar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.fl-content-body {
+  padding: var(--content-padding);
+  flex: 1;
+  max-width: 100%;
+  animation: fh-slide-in-up 0.4s ease both;
+}
+
+/* Freelancer specific button */
+body.freelancer-portal .btn-fh-freelancer,
+body.freelancer-portal .btn-primary {
+  background: linear-gradient(135deg, #A3E635 0%, #65A30D 100%);
+  color: #0A0F0A !important;
+  border-color: rgba(163, 230, 53, 0.48);
+  box-shadow: 0 4px 18px rgba(163, 230, 53, 0.38);
+  font-weight: 700;
+}
+
+body.freelancer-portal .btn-fh-freelancer:hover,
+body.freelancer-portal .btn-primary:hover {
+  background: linear-gradient(135deg, #BEF264 0%, #A3E635 100%);
+  box-shadow: 0 8px 30px rgba(163, 230, 53, 0.55);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 991px) {
+  .fl-sidebar { transform: translateX(-100%); }
+  .fl-sidebar.open { transform: translateX(0); }
+  .fl-main { margin-left: 0; }
+  .fl-content-body { padding: 20px 16px; }
 }

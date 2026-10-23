@@ -53,7 +53,7 @@
   <div class="admin-kpi-card">
     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
       <span class="admin-kpi-label">Pending Verification</span>
-      <i data-lucide="shield-check" style="color:var(--admin-brand-pink); width:18px; height:18px;"></i>
+      <i data-lucide="shield-check" style="color:var(--admin-lime); width:18px; height:18px;"></i>
     </div>
     <div class="admin-kpi-val">{{ pending_verifications.count|default:"0" }}</div>
     <div style="font-size:11px; color:var(--admin-text-muted); margin-top:4px;">Awaiting KYC clearance</div>
@@ -147,7 +147,7 @@
                 </div>
               </div>
               <div>
-                <span class="badge" style="background: rgba(128, 118, 163, 0.15); color: var(--admin-brand-pink); font-size: 11px; padding: 3px 8px; border-radius: 4px;">
+                <span class="badge" style="background: rgba(163, 230, 53, 0.12); color: var(--admin-lime); font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(163, 230, 53, 0.25);">
                   {% if user.is_staff %}Admin{% elif user.freelancer_profile %}Freelancer{% else %}Client{% endif %}
                 </span>
               </div>
@@ -169,7 +169,7 @@
     <!-- Pending Verification Queue -->
     <div class="admin-card">
       <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="shield-alert" style="color: var(--admin-brand-pink);"></i>
+        <i data-lucide="shield-alert" style="color: var(--admin-lime);"></i>
         <span>Pending Verification Queue</span>
       </h3>
 
