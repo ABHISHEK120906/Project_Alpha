@@ -230,12 +230,11 @@ SECURE_REFERRER_POLICY      = 'strict-origin-when-cross-origin'
 SECURE_BROWSER_XSS_FILTER  = True
 
 SESSION_COOKIE_HTTPONLY     = True
-# 'Strict' prevents the cookie being sent on cross-site navigations (better CSRF protection)
-SESSION_COOKIE_SAMESITE     = 'Strict'
+# 'Lax' allows cookie to be sent with top-level navigations while protecting against CSRF
+SESSION_COOKIE_SAMESITE     = 'Lax'
 # CSRF cookie must be readable by JS (for AJAX) — keep HttpOnly=False
 CSRF_COOKIE_HTTPONLY        = False
-# Strict: CSRF token only sent on same-site requests
-CSRF_COOKIE_SAMESITE        = 'Strict'
+CSRF_COOKIE_SAMESITE        = 'Lax'
 
 
 if not DEBUG:

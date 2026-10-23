@@ -88,8 +88,10 @@ class SecurityHeadersMiddleware:
             "form-action 'self'",
             "object-src 'none'",
             "base-uri 'self'",
-            "upgrade-insecure-requests",
         ]
+        if not getattr(settings, 'DEBUG', True):
+            csp_directives.append("upgrade-insecure-requests")
+
         response['Content-Security-Policy'] = '; '.join(csp_directives)
 
         # HSTS — only in production (set via settings too; belt-and-suspenders)
