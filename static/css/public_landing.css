@@ -1619,16 +1619,18 @@
 }
 
 .fhp-btn-primary {
-  background: linear-gradient(135deg, var(--pink-accent, #D96C9D) 0%, #C45B8B 100%);
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 4px 16px rgba(217, 108, 157, 0.32);
+  background: var(--brand-primary, #A3E635);
+  color: #060D06 !important;
+  font-weight: 800;
+  border: 1px solid rgba(163, 230, 53, 0.4);
+  box-shadow: 0 4px 18px rgba(163, 230, 53, 0.35);
 }
 
 .fhp-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(217, 108, 157, 0.44);
-  background: linear-gradient(135deg, #E073A4 0%, #B84F7E 100%);
+  box-shadow: 0 8px 26px rgba(163, 230, 53, 0.5);
+  background: #BEF264;
+  color: #060D06 !important;
 }
 
 .fhp-btn-outline {
@@ -1659,27 +1661,33 @@
 }
 
 .fhp-btn-client {
-  background: linear-gradient(135deg, #6B3152 0%, #521E3D 100%);
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 14px rgba(107, 49, 82, 0.3);
+  background: #14532D;
+  color: #F0FDF4 !important;
+  font-weight: 700;
+  border: 1px solid rgba(163, 230, 53, 0.3);
+  box-shadow: 0 4px 14px rgba(20, 83, 45, 0.4);
 }
 
 .fhp-btn-client:hover {
-  background: linear-gradient(135deg, #7C3A60 0%, #5E2346 100%);
+  background: #166534;
+  border-color: #A3E635;
+  color: #FFFFFF !important;
   transform: translateY(-2px);
 }
 
 .fhp-btn-freelancer {
-  background: linear-gradient(135deg, var(--pink-accent, #D96C9D) 0%, #C45B8B 100%);
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 14px rgba(217, 108, 157, 0.3);
+  background: var(--brand-primary, #A3E635);
+  color: #060D06 !important;
+  font-weight: 800;
+  border: 1px solid rgba(163, 230, 53, 0.4);
+  box-shadow: 0 4px 18px rgba(163, 230, 53, 0.35);
 }
 
 .fhp-btn-freelancer:hover {
-  background: linear-gradient(135deg, #E073A4 0%, #B84F7E 100%);
+  background: #BEF264;
+  color: #060D06 !important;
   transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(163, 230, 53, 0.5);
 }
 
 .fhp-btn-admin {
@@ -3501,4 +3509,78 @@
   .fhp-kpi-summary-strip {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* Fix Steps Grid to Clean 3-Column Layout & Hide Loose Connector Blocks */
+.fhp-steps-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 24px !important;
+}
+.fhp-step-connector {
+  display: none !important;
+}
+@media (max-width: 992px) {
+  .fhp-steps-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 576px) {
+  .fhp-steps-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Fix Chart Buttons & Active States for Crisp High Contrast */
+.fhp-chart-btn {
+  border: 1px solid var(--border-light) !important;
+  background: var(--bg-surface) !important;
+  color: var(--text-secondary) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  padding: 7px 14px !important;
+  border-radius: var(--radius-xs, 6px) !important;
+  cursor: pointer;
+  transition: all var(--tr-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fhp-chart-btn:hover {
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+  background: var(--bg-elevated) !important;
+}
+.fhp-chart-btn.active {
+  background: var(--brand-primary, #A3E635) !important;
+  color: #060D06 !important;
+  font-weight: 800 !important;
+  border-color: var(--brand-primary, #A3E635) !important;
+  box-shadow: 0 0 16px rgba(163, 230, 53, 0.4) !important;
+}
+
+.fhp-legend-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  padding: 6px 14px;
+  border-radius: var(--radius-full, 9999px);
+  cursor: pointer;
+  transition: all var(--tr-fast);
+  user-select: none;
+}
+.fhp-legend-chip:hover {
+  border-color: var(--brand-primary, #A3E635);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+.fhp-legend-chip.inactive {
+  opacity: 0.35;
+  text-decoration: line-through;
 }

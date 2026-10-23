@@ -108,21 +108,21 @@
             <div class="fhp-chart-mini-header" style="display:flex; justify-content:space-between; align-items:center;">
               <div>
                 <div style="display:flex; align-items:center; gap:6px;">
-                  <span class="fhp-live-dot" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#10B981; box-shadow:0 0 6px rgba(16,185,129,0.5);"></span>
-                  <span style="font-weight:700; font-size:0.82rem; color:var(--text-primary);">Platform Delivery Velocity Index</span>
+                  <span class="fhp-live-dot" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#A3E635; box-shadow:0 0 8px rgba(163,230,53,0.6);"></span>
+                  <span style="font-weight:800; font-size:0.84rem; color:var(--text-primary);">Completed Projects</span>
                 </div>
-                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">6-Month Milestones Completion Rate</div>
+                <div style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">Work finished on time each month</div>
               </div>
-              <button type="button" class="fhp-chart-mini-badge" id="heroTrendToggleBtn" title="Click to toggle velocity view" style="border:none; cursor:pointer; background:rgba(217,108,157,0.15); color:var(--pink-accent); font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:12px;">
-                94% On-Time
+              <button type="button" class="fhp-chart-mini-badge" id="heroTrendToggleBtn" title="Click to switch view" style="border:none; cursor:pointer; background:rgba(163,230,53,0.15); color:var(--text-brand, #A3E635); font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:12px;">
+                94% Done on Time
               </button>
             </div>
-            <div style="position:relative; width:100%; height:86px; margin:4px 0;">
-              <canvas id="heroVelocityChart" role="img" aria-label="Platform Delivery Velocity Trend Line Graph" style="width:100%; height:100%; display:block;"></canvas>
+            <div style="position:relative; width:100%; height:86px; margin:6px 0;">
+              <canvas id="heroVelocityChart" role="img" aria-label="Completed Projects Over Time" style="width:100%; height:100%; display:block;"></canvas>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:var(--text-muted); border-top:1px dashed var(--border-light); padding-top:4px;">
-              <span>Target Benchmark: &gt;90%</span>
-              <span style="color:#10B981; font-weight:700;">+14.8% Delivery Velocity</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-muted); border-top:1px dashed var(--border-light); padding-top:4px;">
+              <span>High Quality Work</span>
+              <span style="color:#A3E635; font-weight:700;">Delivered on Schedule • 0 Delays</span>
             </div>
           </div>
           
@@ -536,83 +536,83 @@
 <section class="fhp-section fhp-section-alt" id="analytics-reports">
   <div class="fhp-container">
     <div class="fhp-section-header">
-      <span class="fhp-badge"><i data-lucide="bar-chart-3"></i> Brand Analytics &amp; Visualizations</span>
-      <h2 class="fhp-section-title">Platform Intelligence &amp; Performance Telemetry</h2>
-      <p class="fhp-section-sub">Explore real-time data visualisations of marketplace transactions, escrow health, milestone delivery velocity, and talent domain distribution.</p>
+      <span class="fhp-badge"><i data-lucide="bar-chart-3"></i> Real Platform Data</span>
+      <h2 class="fhp-section-title">See What Is Happening on FreelanceHub</h2>
+      <p class="fhp-section-sub">Clear and simple charts that show how projects get done, how payments stay safe, and what skills are most popular.</p>
     </div>
 
-    <!-- Live Platform KPI Summary Strip -->
+    <!-- Live Platform KPI Summary Strip (Simple, Clear Language) -->
     <div class="fhp-kpi-summary-strip">
       <div class="fhp-kpi-summary-pill">
         <div class="fhp-kpi-pill-icon"><i data-lucide="shield-check"></i></div>
         <div>
           <div class="fhp-kpi-pill-val">₹48.5L</div>
-          <div class="fhp-kpi-pill-label">Protected Escrow</div>
+          <div class="fhp-kpi-pill-label">Safe Payments Handled</div>
         </div>
       </div>
       <div class="fhp-kpi-summary-pill">
         <div class="fhp-kpi-pill-icon"><i data-lucide="check-circle-2"></i></div>
         <div>
-          <div class="fhp-kpi-pill-val">94.8%</div>
-          <div class="fhp-kpi-pill-label">On-Time Milestones</div>
+          <div class="fhp-kpi-pill-val">94%</div>
+          <div class="fhp-kpi-pill-label">Finished on Time</div>
         </div>
       </div>
       <div class="fhp-kpi-summary-pill">
         <div class="fhp-kpi-pill-icon"><i data-lucide="users"></i></div>
         <div>
           <div class="fhp-kpi-pill-val">100%</div>
-          <div class="fhp-kpi-pill-label">Verified Talent</div>
+          <div class="fhp-kpi-pill-label">Verified Freelancers</div>
         </div>
       </div>
       <div class="fhp-kpi-summary-pill">
-        <div class="fhp-kpi-pill-icon"><i data-lucide="trending-up"></i></div>
+        <div class="fhp-kpi-pill-icon"><i data-lucide="star"></i></div>
         <div>
-          <div class="fhp-kpi-pill-val">+32.4%</div>
-          <div class="fhp-kpi-pill-label">Quarterly Growth</div>
+          <div class="fhp-kpi-pill-val">4.9 / 5.0</div>
+          <div class="fhp-kpi-pill-label">Client Rating</div>
         </div>
       </div>
     </div>
 
     <div class="fhp-brand-charts-wrapper">
 
-      <!-- Diagram 1: Platform Capital & Escrow Trajectory -->
+      <!-- Diagram 1: Safe Payments Over Time -->
       <div class="fhp-brand-chart-card">
         <div class="fhp-brand-chart-header">
           <div class="fhp-brand-chart-title-area">
             <div class="fhp-brand-chart-title">
-              <i data-lucide="trending-up" style="color:var(--pink-accent);width:20px;height:20px;"></i>
-              <span>Platform Capital &amp; Escrow Trajectory</span>
+              <i data-lucide="shield-check" style="color:#A3E635;width:22px;height:22px;"></i>
+              <span>Safe Payments Over Time</span>
             </div>
             <div class="fhp-brand-chart-sub">
-              Live monthly escrow deposits (in ₹ Lakhs) and completed milestone payouts across all verified marketplace contracts.
+              Client payments are held safely in escrow and released to the freelancer only after work is approved.
             </div>
           </div>
-          <div class="fhp-chart-controls-group" role="group" aria-label="Escrow Chart Range Controls">
+          <div class="fhp-chart-controls-group" role="group" aria-label="Payment Chart Controls">
             <button type="button" class="fhp-chart-btn active" id="btnEscrowCumulative">
-              <i data-lucide="activity" style="width:13px;height:13px;"></i>
-              <span>Cumulative Escrow</span>
+              <i data-lucide="trending-up" style="width:13px;height:13px;"></i>
+              <span>Total Payments Handled</span>
             </button>
             <button type="button" class="fhp-chart-btn" id="btnEscrowMonthly">
               <i data-lucide="bar-chart-2" style="width:13px;height:13px;"></i>
-              <span>Monthly Disbursements</span>
+              <span>Monthly Payouts</span>
             </button>
             <button type="button" class="fhp-chart-btn" id="btnEscrowDisputes">
               <i data-lucide="shield" style="width:13px;height:13px;"></i>
-              <span>Escrow Integrity (99.8%)</span>
+              <span>100% Payment Safety</span>
             </button>
           </div>
         </div>
         <div style="position:relative; width:100%; min-height:330px; height:350px;">
-          <canvas id="brandEscrowChart" role="img" aria-label="Platform Capital and Escrow Trajectory Graph" style="width:100%; height:100%; display:block;"></canvas>
+          <canvas id="brandEscrowChart" role="img" aria-label="Safe Payments Over Time Graph" style="width:100%; height:100%; display:block;"></canvas>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-light); font-size:0.78rem; color:var(--text-muted); flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-light); font-size:0.8rem; color:var(--text-muted); flex-wrap:wrap; gap:10px;">
           <div style="display:flex; gap:16px; flex-wrap:wrap;">
-            <span><strong style="color:var(--text-primary);">₹48.5L</strong> Cumulative Escrow Secured</span>
+            <span><strong style="color:var(--text-primary);">₹48.5 Lakhs</strong> Total Safe Payments Handled</span>
             <span>•</span>
-            <span><strong style="color:#10B981;">₹41.2L</strong> Released on Verified Milestones</span>
+            <span><strong style="color:#A3E635;">₹41.2 Lakhs</strong> Paid for Finished Work</span>
           </div>
-          <span style="display:inline-flex; align-items:center; gap:5px; color:#10B981; font-weight:700;">
-            <i data-lucide="check" style="width:14px;height:14px;"></i> Bank-Grade Escrow Protection
+          <span style="display:inline-flex; align-items:center; gap:5px; color:#A3E635; font-weight:800;">
+            <i data-lucide="check-circle" style="width:15px;height:15px;"></i> 100% Payment Protection Guaranteed
           </span>
         </div>
       </div>
@@ -620,88 +620,88 @@
       <!-- Grid of Diagram 2 & Diagram 3 -->
       <div class="fhp-brand-charts-grid-2">
 
-        <!-- Diagram 2: Marketplace Contract Lifecycle Distribution -->
+        <!-- Diagram 2: Project Work Status -->
         <div class="fhp-brand-chart-card">
           <div class="fhp-brand-chart-header">
             <div class="fhp-brand-chart-title-area">
               <div class="fhp-brand-chart-title">
-                <i data-lucide="pie-chart" style="color:#D96C9D;width:19px;height:19px;"></i>
-                <span>Marketplace Contract Lifecycle Distribution</span>
+                <i data-lucide="pie-chart" style="color:#A3E635;width:20px;height:20px;"></i>
+                <span>Project Work Status</span>
               </div>
               <div class="fhp-brand-chart-sub">
-                Real-time lifecycle breakdown across project proposals, funded milestones, quality review, and finalized disbursements.
+                See how all projects are currently moving forward on FreelanceHub.
               </div>
             </div>
-            <span class="fhp-chart-mini-badge" id="donutTotalBadge" style="background:rgba(217,108,157,0.12);color:var(--pink-accent);font-size:0.75rem;font-weight:700;padding:4px 10px;border-radius:12px;">142 Milestones</span>
+            <span class="fhp-chart-mini-badge" id="donutTotalBadge" style="background:rgba(163,230,53,0.15);color:var(--text-brand, #A3E635);font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:12px;">142 Projects</span>
           </div>
           <div style="position:relative; width:100%; min-height:280px; height:290px; display:flex; align-items:center; justify-content:center;">
-            <canvas id="brandMilestoneDonutChart" role="img" aria-label="Marketplace Contract Lifecycle Distribution Donut Graph" style="max-height:280px; width:100%; display:block;"></canvas>
+            <canvas id="brandMilestoneDonutChart" role="img" aria-label="Project Work Status Donut Graph" style="max-height:280px; width:100%; display:block;"></canvas>
             <div id="donutCenterStat" style="position:absolute; text-align:center; pointer-events:none;">
               <div id="donutCenterVal" style="font-size:1.6rem; font-weight:900; color:var(--text-primary); font-family:var(--font-heading, sans-serif);">142</div>
-              <div id="donutCenterLbl" style="font-size:0.74rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Active Milestones</div>
+              <div id="donutCenterLbl" style="font-size:0.74rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">All Projects</div>
             </div>
           </div>
           <div class="fhp-interactive-legend-row" id="donutLegendRow">
             <div class="fhp-legend-chip" data-index="0">
-              <span style="width:10px;height:10px;border-radius:50%;background:#D96C9D;"></span>
-              <span>Completed &amp; Paid (58%)</span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#A3E635;"></span>
+              <span>Finished &amp; Paid (58%)</span>
             </div>
             <div class="fhp-legend-chip" data-index="1">
-              <span style="width:10px;height:10px;border-radius:50%;background:#6B3152;"></span>
-              <span>In Progress Work (24%)</span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#4ADE80;"></span>
+              <span>Work in Progress (24%)</span>
             </div>
             <div class="fhp-legend-chip" data-index="2">
-              <span style="width:10px;height:10px;border-radius:50%;background:#10B981;"></span>
-              <span>Under Verification (12%)</span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#38BDF8;"></span>
+              <span>Under Final Review (12%)</span>
             </div>
             <div class="fhp-legend-chip" data-index="3">
-              <span style="width:10px;height:10px;border-radius:50%;background:#F7C6D9;"></span>
-              <span>Open Proposals (6%)</span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#FBBF24;"></span>
+              <span>New Projects (6%)</span>
             </div>
           </div>
         </div>
 
-        <!-- Diagram 3: Marketplace Domain & Skill Demand Index -->
+        <!-- Diagram 3: Most In-Demand Skills -->
         <div class="fhp-brand-chart-card">
           <div class="fhp-brand-chart-header">
             <div class="fhp-brand-chart-title-area">
               <div class="fhp-brand-chart-title">
-                <i data-lucide="layers" style="color:#9884CE;width:19px;height:19px;"></i>
-                <span>Marketplace Domain &amp; Skill Demand Index</span>
+                <i data-lucide="layers" style="color:#38BDF8;width:20px;height:20px;"></i>
+                <span>Most In-Demand Skills</span>
               </div>
               <div class="fhp-brand-chart-sub">
-                Marketplace hiring distribution and talent volume across software engineering, creative design, AI, and cloud services.
+                The most popular skills and work requested by clients right now.
               </div>
             </div>
             <button type="button" class="fhp-chart-btn" id="btnToggleSkillSort" style="background:var(--bg-surface);border:1px solid var(--border-light);">
               <i data-lucide="arrow-up-down" style="width:13px;height:13px;"></i>
-              <span id="skillSortLabel">Sort by Growth</span>
+              <span id="skillSortLabel">Show by Growth</span>
             </button>
           </div>
           <div style="position:relative; width:100%; min-height:280px; height:290px;">
-            <canvas id="brandSkillsBarChart" role="img" aria-label="Marketplace Domain and Skill Demand Index Bar Graph" style="width:100%; height:100%; display:block;"></canvas>
+            <canvas id="brandSkillsBarChart" role="img" aria-label="Most In-Demand Skills Bar Graph" style="width:100%; height:100%; display:block;"></canvas>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-light); font-size:0.76rem; color:var(--text-muted); flex-wrap:wrap; gap:8px;">
-            <span>Top Specialization: <strong style="color:var(--text-primary);">Full-Stack Web (38%)</strong></span>
-            <span style="color:#D96C9D; font-weight:700;">Fastest Growth: AI &amp; ML (+42%)</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-light); font-size:0.78rem; color:var(--text-muted); flex-wrap:wrap; gap:8px;">
+            <span>Top Skill: <strong style="color:var(--text-primary);">Web Development (38%)</strong></span>
+            <span style="color:#A3E635; font-weight:800;">Fastest Growing: AI &amp; Data (+42%)</span>
           </div>
         </div>
 
       </div>
 
-      <!-- Export Reports Showcase Banner -->
+      <!-- Export Reports Showcase Banner (Simple English) -->
       <div class="fhp-report-cards-row" style="margin-top:10px;">
         <div class="fhp-report-card pdf-card">
           <div class="fhp-report-card-icon pdf-icon"><i data-lucide="file-text"></i></div>
-          <div class="fhp-report-card-title">Executive PDF Platform Summary</div>
-          <div class="fhp-report-card-desc">Comprehensive verified milestone statements, financial escrow audits, and client progress reports in high-definition PDF format.</div>
-          <span class="fhp-report-badge pdf-badge" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="download" style="width:12px;height:12px;"></i> Ready for Export</span>
+          <div class="fhp-report-card-title">Download PDF Report</div>
+          <div class="fhp-report-card-desc">Get a clean PDF file with complete project details, progress charts, and payment statements.</div>
+          <span class="fhp-report-badge pdf-badge" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="download" style="width:12px;height:12px;"></i> PDF Format</span>
         </div>
         <div class="fhp-report-card xlsx-card">
           <div class="fhp-report-card-icon xlsx-icon"><i data-lucide="file-spreadsheet"></i></div>
-          <div class="fhp-report-card-title">Data Science &amp; Financial Excel Workbook</div>
-          <div class="fhp-report-card-desc">Raw multi-sheet Excel workbooks with formula models, hourly breakdown rates, tax withholding, and milestone settlement logs.</div>
-          <span class="fhp-report-badge xlsx-badge" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="table" style="width:12px;height:12px;"></i> .XLSX Standard</span>
+          <div class="fhp-report-card-title">Download Excel Sheet</div>
+          <div class="fhp-report-card-desc">Get a ready-to-use Excel sheet with project lists, budgets, work timelines, and payments.</div>
+          <span class="fhp-report-badge xlsx-badge" style="display:inline-flex;align-items:center;gap:4px;"><i data-lucide="table" style="width:12px;height:12px;"></i> Excel Format</span>
         </div>
       </div>
 
@@ -934,30 +934,29 @@
 {% block extra_js %}
 <script>
 /**
- * FreelanceHub Public Branding Visualizations & Telemetry Controller
- * Bulletproof, zero-error Chart.js orchestrator with full interactivity and theme adaptivity.
+ * FreelanceHub Brand Charts Controller
+ * Simple, beautiful, and zero-error interactive charts matching the Obsidian Forest & Electric Lime brand.
  */
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
   if (typeof Chart === 'undefined') {
-    console.warn('Chart.js not loaded. Skipping brand chart initializations.');
+    console.warn('Chart.js not loaded.');
     return;
   }
 
-  // Color helper based on theme
   function getThemeColors() {
     const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
     return {
       isDark: isDark,
-      textColor: isDark ? '#E5E7EB' : '#1F2937',
-      textMuted: isDark ? '#9CA3AF' : '#6B7280',
-      gridColor: isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(0, 0, 0, 0.06)',
-      cardBg: isDark ? '#1F1F23' : '#FFFFFF',
-      tooltipBg: isDark ? '#18181B' : '#FFFFFF',
-      tooltipTitle: isDark ? '#FFFFFF' : '#111827',
-      tooltipBody: isDark ? '#D1D5DB' : '#374151',
-      tooltipBorder: isDark ? 'rgba(217, 108, 157, 0.3)' : 'rgba(217, 108, 157, 0.4)'
+      textColor: isDark ? '#F0FDF4' : '#111827',
+      textMuted: isDark ? '#6EE7A8' : '#6B7280',
+      gridColor: isDark ? 'rgba(163, 230, 53, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+      cardBg: isDark ? '#0D1F0D' : '#FFFFFF',
+      tooltipBg: isDark ? '#060D06' : '#FFFFFF',
+      tooltipTitle: isDark ? '#F0FDF4' : '#111827',
+      tooltipBody: isDark ? '#BBF7D0' : '#374151',
+      tooltipBorder: isDark ? 'rgba(163, 230, 53, 0.35)' : 'rgba(16, 185, 129, 0.35)'
     };
   }
 
@@ -967,15 +966,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (chartInstances[key]) {
       try {
         chartInstances[key].destroy();
-      } catch (err) {
-        console.warn('Error destroying chart ' + key, err);
-      }
+      } catch (err) {}
       chartInstances[key] = null;
     }
   }
 
   /* ──────────────────────────────────────────────────────────────────────────
-   * DIAGRAM 1: Platform Delivery Velocity Index (Hero Visual)
+   * DIAGRAM 1: Completed Projects (Hero Visual)
    * ────────────────────────────────────────────────────────────────────────── */
   function initHeroVelocityChart() {
     const canvas = document.getElementById('heroVelocityChart');
@@ -986,11 +983,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const colors = getThemeColors();
 
     const grad = ctx.createLinearGradient(0, 0, 0, 80);
-    grad.addColorStop(0, 'rgba(217, 108, 157, 0.45)');
-    grad.addColorStop(1, 'rgba(217, 108, 157, 0.0)');
+    grad.addColorStop(0, 'rgba(163, 230, 53, 0.40)');
+    grad.addColorStop(1, 'rgba(163, 230, 53, 0.0)');
 
     const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    let currentMode = 'pct'; // 'pct' or 'count'
+    let currentMode = 'pct';
     const dataPct = [78, 83, 87, 89, 92, 94];
     const dataCount = [12, 18, 25, 31, 42, 56];
 
@@ -999,26 +996,24 @@ document.addEventListener('DOMContentLoaded', function () {
       data: {
         labels: labels,
         datasets: [{
-          label: 'Platform Delivery Velocity Index (%)',
+          label: 'Completed on Time (%)',
           data: [...dataPct],
-          borderColor: '#D96C9D',
-          borderWidth: 2.4,
+          borderColor: '#A3E635',
+          borderWidth: 2.6,
           backgroundColor: grad,
           fill: true,
           tension: 0.38,
-          pointBackgroundColor: '#D96C9D',
-          pointBorderColor: colors.isDark ? '#141416' : '#ffffff',
+          pointBackgroundColor: '#A3E635',
+          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
           pointBorderWidth: 1.5,
           pointRadius: 3,
-          pointHoverRadius: 5.5
+          pointHoverRadius: 6
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        layout: {
-          padding: { top: 6, bottom: 4, left: 6, right: 8 }
-        },
+        layout: { padding: { top: 6, bottom: 4, left: 6, right: 8 } },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -1031,9 +1026,9 @@ document.addEventListener('DOMContentLoaded', function () {
             displayColors: false,
             callbacks: {
               label: function (ctx) {
-                return currentMode === 'pct' 
-                  ? 'Delivery Velocity: ' + ctx.raw + '% On-Time'
-                  : 'Delivered Milestones: ' + ctx.raw + ' Finished';
+                return currentMode === 'pct'
+                  ? 'Completed on Time: ' + ctx.raw + '%'
+                  : 'Total Projects: ' + ctx.raw + ' Completed';
               }
             }
           }
@@ -1043,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { display: false },
             ticks: {
               color: colors.textMuted,
-              font: { size: 9, weight: '600' },
+              font: { size: 9, weight: '700' },
               padding: 4
             }
           },
@@ -1063,20 +1058,18 @@ document.addEventListener('DOMContentLoaded', function () {
       toggleBtn.onclick = function () {
         if (currentMode === 'pct') {
           currentMode = 'count';
-          chart.data.datasets[0].label = 'Delivered Milestones (Count)';
+          chart.data.datasets[0].label = 'Total Projects Completed';
           chart.data.datasets[0].data = dataCount;
           chart.options.scales.y.min = 0;
           chart.options.scales.y.max = 65;
-          toggleBtn.textContent = '56 Done';
-          toggleBtn.style.color = '#10B981';
+          toggleBtn.textContent = '56 Finished';
         } else {
           currentMode = 'pct';
-          chart.data.datasets[0].label = 'Platform Delivery Velocity Index (%)';
+          chart.data.datasets[0].label = 'Completed on Time (%)';
           chart.data.datasets[0].data = dataPct;
           chart.options.scales.y.min = 60;
           chart.options.scales.y.max = 100;
-          toggleBtn.textContent = '94% On-Time';
-          toggleBtn.style.color = 'var(--pink-accent)';
+          toggleBtn.textContent = '94% Done on Time';
         }
         chart.update();
       };
@@ -1084,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ──────────────────────────────────────────────────────────────────────────
-   * DIAGRAM 2: Platform Capital & Escrow Trajectory
+   * DIAGRAM 2: Safe Payments Over Time (Escrow)
    * ────────────────────────────────────────────────────────────────────────── */
   let currentEscrowView = 'cumulative';
 
@@ -1097,27 +1090,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const colors = getThemeColors();
 
     const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    // Datasets
     const cumulativeEscrow = [3.8, 6.4, 9.8, 14.2, 18.9, 23.6, 28.5, 33.1, 37.8, 41.5, 45.2, 48.5];
     const releasedDisbursed = [3.1, 5.2, 8.1, 11.9, 15.8, 19.8, 24.1, 28.0, 32.1, 35.4, 38.6, 41.2];
     const monthlyPayouts = [3.8, 2.6, 3.4, 4.4, 4.7, 4.7, 4.9, 4.6, 4.7, 3.7, 3.7, 3.3];
-    const disputeIntegrity = [99.7, 99.8, 99.8, 99.9, 99.7, 99.8, 99.9, 100.0, 99.8, 99.9, 99.8, 99.8];
+    const disputeIntegrity = [100, 100, 100, 100, 100, 99.8, 100, 100, 100, 100, 99.9, 100];
 
-    const gradEscrow = ctx.createLinearGradient(0, 0, 0, 320);
-    gradEscrow.addColorStop(0, 'rgba(217, 108, 157, 0.42)');
-    gradEscrow.addColorStop(1, 'rgba(217, 108, 157, 0.0)');
+    const gradLime = ctx.createLinearGradient(0, 0, 0, 320);
+    gradLime.addColorStop(0, 'rgba(163, 230, 53, 0.40)');
+    gradLime.addColorStop(1, 'rgba(163, 230, 53, 0.0)');
 
-    const gradReleased = ctx.createLinearGradient(0, 0, 0, 320);
-    gradReleased.addColorStop(0, 'rgba(16, 185, 129, 0.35)');
-    gradReleased.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+    const gradGreen = ctx.createLinearGradient(0, 0, 0, 320);
+    gradGreen.addColorStop(0, 'rgba(74, 222, 128, 0.35)');
+    gradGreen.addColorStop(1, 'rgba(74, 222, 128, 0.0)');
 
     let datasetsConfig = [];
     let yAxisConfig = {
       grid: { color: colors.gridColor },
       ticks: {
         color: colors.textMuted,
-        font: { size: 11, weight: '600' },
+        font: { size: 11, weight: '700' },
         padding: 10,
         callback: function (val) { return '₹' + val + 'L'; }
       }
@@ -1126,60 +1117,58 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentEscrowView === 'cumulative') {
       datasetsConfig = [
         {
-          label: 'Total Escrow Secured (₹ Lakhs)',
+          label: 'Total Money Held in Escrow (₹ Lakhs)',
           data: cumulativeEscrow,
-          borderColor: '#D96C9D',
-          borderWidth: 2.8,
-          backgroundColor: gradEscrow,
+          borderColor: '#A3E635',
+          borderWidth: 3,
+          backgroundColor: gradLime,
           fill: true,
           tension: 0.35,
-          pointBackgroundColor: '#D96C9D',
-          pointBorderColor: colors.isDark ? '#1F1F23' : '#ffffff',
+          pointBackgroundColor: '#A3E635',
+          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
           pointBorderWidth: 2,
           pointRadius: 4,
-          pointHoverRadius: 6.5
+          pointHoverRadius: 7
         },
         {
-          label: 'Milestones Released to Freelancers (₹ Lakhs)',
+          label: 'Money Paid to Freelancers (₹ Lakhs)',
           data: releasedDisbursed,
-          borderColor: '#10B981',
-          borderWidth: 2.4,
-          backgroundColor: gradReleased,
-          fill: true,
+          borderColor: '#38BDF8',
+          borderWidth: 2.5,
+          backgroundColor: 'transparent',
+          fill: false,
           tension: 0.35,
-          pointBackgroundColor: '#10B981',
-          pointBorderColor: colors.isDark ? '#1F1F23' : '#ffffff',
+          pointBackgroundColor: '#38BDF8',
+          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
           pointBorderWidth: 2,
           pointRadius: 3.5,
-          pointHoverRadius: 6
+          pointHoverRadius: 6.5
         }
       ];
     } else if (currentEscrowView === 'monthly') {
       datasetsConfig = [
         {
           type: 'bar',
-          label: 'Monthly Milestone Disbursements (₹ Lakhs)',
+          label: 'Monthly Payouts for Finished Work (₹ Lakhs)',
           data: monthlyPayouts,
-          backgroundColor: 'rgba(217, 108, 157, 0.75)',
-          hoverBackgroundColor: '#D96C9D',
+          backgroundColor: '#A3E635',
+          hoverBackgroundColor: '#BEF264',
           borderRadius: 6,
-          borderSkipped: false,
           barPercentage: 0.55
         }
       ];
-      yAxisConfig.ticks.callback = function (val) { return '₹' + val + 'L'; };
     } else {
       datasetsConfig = [
         {
-          label: 'Escrow Guarantee & Settlement Rate (%)',
+          label: 'Payment Safety Rate (%)',
           data: disputeIntegrity,
-          borderColor: '#10B981',
-          borderWidth: 2.8,
-          backgroundColor: gradReleased,
+          borderColor: '#A3E635',
+          borderWidth: 3,
+          backgroundColor: gradLime,
           fill: true,
-          tension: 0.3,
-          pointBackgroundColor: '#10B981',
-          pointBorderColor: colors.isDark ? '#1F1F23' : '#ffffff',
+          tension: 0.25,
+          pointBackgroundColor: '#A3E635',
+          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
           pointBorderWidth: 2,
           pointRadius: 4.5,
           pointHoverRadius: 7
@@ -1191,7 +1180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         grid: { color: colors.gridColor },
         ticks: {
           color: colors.textMuted,
-          font: { size: 11, weight: '600' },
+          font: { size: 11, weight: '700' },
           padding: 10,
           callback: function (val) { return val.toFixed(1) + '%'; }
         }
@@ -1207,13 +1196,8 @@ document.addEventListener('DOMContentLoaded', function () {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        interaction: {
-          mode: 'index',
-          intersect: false
-        },
-        layout: {
-          padding: { top: 16, bottom: 8, left: 10, right: 14 }
-        },
+        interaction: { mode: 'index', intersect: false },
+        layout: { padding: { top: 16, bottom: 8, left: 10, right: 14 } },
         plugins: {
           legend: {
             display: true,
@@ -1221,7 +1205,7 @@ document.addEventListener('DOMContentLoaded', function () {
             align: 'end',
             labels: {
               color: colors.textColor,
-              font: { size: 12, weight: '600' },
+              font: { size: 12, weight: '700' },
               boxWidth: 14,
               boxHeight: 14,
               padding: 18,
@@ -1242,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const label = ctx.dataset.label || '';
                 const val = ctx.raw;
                 if (currentEscrowView === 'integrity') {
-                  return label + ': ' + val + '%';
+                  return label + ': ' + val + '% Safe';
                 }
                 return label + ': ₹' + val + ' Lakhs';
               }
@@ -1254,7 +1238,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { display: false },
             ticks: {
               color: colors.textMuted,
-              font: { size: 11, weight: '600' },
+              font: { size: 11, weight: '700' },
               padding: 8
             }
           },
@@ -1266,7 +1250,6 @@ document.addEventListener('DOMContentLoaded', function () {
     chartInstances['brandEscrow'] = chart;
   }
 
-  // Bind view switchers
   function setupEscrowButtons() {
     const btnCum = document.getElementById('btnEscrowCumulative');
     const btnMon = document.getElementById('btnEscrowMonthly');
@@ -1303,7 +1286,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ──────────────────────────────────────────────────────────────────────────
-   * DIAGRAM 3: Marketplace Contract Lifecycle Distribution (Donut)
+   * DIAGRAM 3: Project Work Status (Donut)
    * ────────────────────────────────────────────────────────────────────────── */
   function initBrandMilestoneDonutChart() {
     const canvas = document.getElementById('brandMilestoneDonutChart');
@@ -1314,14 +1297,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const colors = getThemeColors();
 
     const labels = [
-      'Completed & Paid',
-      'In Progress Work',
-      'Under Verification',
-      'Open Proposals'
+      'Finished & Paid',
+      'Work in Progress',
+      'Under Final Review',
+      'New Projects'
     ];
-    const dataValues = [82, 34, 17, 9]; // Total: 142
+    const dataValues = [82, 34, 17, 9];
     const totalCount = dataValues.reduce((a, b) => a + b, 0);
-    const bgColors = ['#D96C9D', '#6B3152', '#10B981', '#F7C6D9'];
+    const bgColors = ['#A3E635', '#4ADE80', '#38BDF8', '#FBBF24'];
 
     const centerVal = document.getElementById('donutCenterVal');
     const centerLbl = document.getElementById('donutCenterLbl');
@@ -1333,7 +1316,7 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           data: [...dataValues],
           backgroundColor: bgColors,
-          borderColor: colors.isDark ? '#1F1F23' : '#FFFFFF',
+          borderColor: colors.isDark ? '#0D1F0D' : '#FFFFFF',
           borderWidth: 3,
           hoverOffset: 12
         }]
@@ -1342,9 +1325,7 @@ document.addEventListener('DOMContentLoaded', function () {
         responsive: true,
         maintainAspectRatio: false,
         cutout: '72%',
-        layout: {
-          padding: 16
-        },
+        layout: { padding: 16 },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -1359,7 +1340,7 @@ document.addEventListener('DOMContentLoaded', function () {
               label: function (ctx) {
                 const count = ctx.raw;
                 const pct = Math.round((count / totalCount) * 100);
-                return ' ' + ctx.label + ': ' + count + ' Milestones (' + pct + '%)';
+                return ' ' + ctx.label + ': ' + count + ' Projects (' + pct + '%)';
               }
             }
           }
@@ -1376,7 +1357,7 @@ document.addEventListener('DOMContentLoaded', function () {
           } else {
             centerVal.textContent = totalCount;
             centerVal.style.color = colors.textColor;
-            centerLbl.textContent = 'Active Milestones';
+            centerLbl.textContent = 'All Projects';
           }
         }
       }
@@ -1384,7 +1365,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     chartInstances['brandMilestoneDonut'] = chart;
 
-    // Interactive Legend Chips
     const chips = document.querySelectorAll('#donutLegendRow .fhp-legend-chip');
     chips.forEach(chip => {
       chip.onclick = function () {
@@ -1395,7 +1375,6 @@ document.addEventListener('DOMContentLoaded', function () {
         this.classList.toggle('inactive', !isHidden);
         chart.update();
 
-        // Recalculate visible total
         let visibleSum = 0;
         meta.data.forEach((item, i) => {
           if (!item.hidden) visibleSum += chart.data.datasets[0].data[i];
@@ -1406,7 +1385,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ──────────────────────────────────────────────────────────────────────────
-   * DIAGRAM 4: Marketplace Domain & Skill Demand Index (Bar)
+   * DIAGRAM 4: Most In-Demand Skills (Bar)
    * ────────────────────────────────────────────────────────────────────────── */
   let isSortedByGrowth = false;
 
@@ -1418,15 +1397,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const ctx = canvas.getContext('2d');
     const colors = getThemeColors();
 
-    const domainDataByVolume = [
-      { name: 'Full-Stack Web Dev', demand: 38, growth: 28, projects: 54, avgRate: '₹1,450/hr' },
-      { name: 'UI/UX Design Systems', demand: 26, growth: 34, projects: 37, avgRate: '₹1,200/hr' },
-      { name: 'Data Science & AI', demand: 20, growth: 42, projects: 29, avgRate: '₹1,800/hr' },
-      { name: 'Cloud & DevOps', demand: 16, growth: 22, projects: 23, avgRate: '₹1,600/hr' },
-      { name: 'Mobile App Dev', demand: 12, growth: 18, projects: 17, avgRate: '₹1,350/hr' }
+    const domainData = [
+      { name: 'Web Development', demand: 38, growth: 28, projects: 54, avgRate: '₹1,450/hr' },
+      { name: 'Design & Branding', demand: 26, growth: 34, projects: 37, avgRate: '₹1,200/hr' },
+      { name: 'Data & AI Work', demand: 20, growth: 42, projects: 29, avgRate: '₹1,800/hr' },
+      { name: 'Server & Cloud', demand: 16, growth: 22, projects: 23, avgRate: '₹1,600/hr' },
+      { name: 'Mobile Apps', demand: 12, growth: 18, projects: 17, avgRate: '₹1,350/hr' }
     ];
 
-    let displayData = [...domainDataByVolume];
+    let displayData = [...domainData];
     if (isSortedByGrowth) {
       displayData.sort((a, b) => b.growth - a.growth);
     } else {
@@ -1436,23 +1415,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const labels = displayData.map(d => d.name);
     const demandValues = displayData.map(d => isSortedByGrowth ? d.growth : d.demand);
 
-    const gradPink = ctx.createLinearGradient(0, 0, 300, 0);
-    gradPink.addColorStop(0, '#D96C9D');
-    gradPink.addColorStop(1, '#F7C6D9');
+    const gradLime = ctx.createLinearGradient(0, 0, 300, 0);
+    gradLime.addColorStop(0, '#A3E635');
+    gradLime.addColorStop(1, '#BEF264');
 
-    const gradPurple = ctx.createLinearGradient(0, 0, 300, 0);
-    gradPurple.addColorStop(0, '#9884CE');
-    gradPurple.addColorStop(1, '#CBBCEE');
+    const gradBlue = ctx.createLinearGradient(0, 0, 300, 0);
+    gradBlue.addColorStop(0, '#38BDF8');
+    gradBlue.addColorStop(1, '#7DD3FC');
 
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: labels,
         datasets: [{
-          label: isSortedByGrowth ? 'YoY Hiring Growth Rate (%)' : 'Marketplace Hiring Share (%)',
+          label: isSortedByGrowth ? 'Yearly Growth Rate (%)' : 'Popularity Share (%)',
           data: demandValues,
-          backgroundColor: isSortedByGrowth ? gradPurple : gradPink,
-          hoverBackgroundColor: isSortedByGrowth ? '#9884CE' : '#D96C9D',
+          backgroundColor: isSortedByGrowth ? gradBlue : gradLime,
+          hoverBackgroundColor: isSortedByGrowth ? '#38BDF8' : '#A3E635',
           borderRadius: 6,
           barPercentage: 0.65,
           categoryPercentage: 0.8
@@ -1462,9 +1441,7 @@ document.addEventListener('DOMContentLoaded', function () {
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        layout: {
-          padding: { top: 12, bottom: 8, left: 10, right: 20 }
-        },
+        layout: { padding: { top: 12, bottom: 8, left: 10, right: 20 } },
         plugins: {
           legend: {
             display: true,
@@ -1491,9 +1468,9 @@ document.addEventListener('DOMContentLoaded', function () {
               label: function (ctx) {
                 const item = displayData[ctx.dataIndex];
                 return [
-                  ' ' + (isSortedByGrowth ? 'Growth Pace: +' + item.growth + '%' : 'Market Share: ' + item.demand + '%'),
-                  ' Active Contracts: ' + item.projects + ' Projects',
-                  ' Median Rate: ' + item.avgRate
+                  ' ' + (isSortedByGrowth ? 'Yearly Growth: +' + item.growth + '%' : 'Market Share: ' + item.demand + '%'),
+                  ' Active Projects: ' + item.projects,
+                  ' Average Rate: ' + item.avgRate
                 ];
               }
             }
@@ -1504,7 +1481,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { color: colors.gridColor },
             ticks: {
               color: colors.textMuted,
-              font: { size: 11, weight: '600' },
+              font: { size: 11, weight: '700' },
               padding: 6,
               callback: function (val) { return val + '%'; }
             },
@@ -1529,13 +1506,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sortBtn && sortLbl) {
       sortBtn.onclick = function () {
         isSortedByGrowth = !isSortedByGrowth;
-        sortLbl.textContent = isSortedByGrowth ? 'Sort by Share' : 'Sort by Growth';
+        sortLbl.textContent = isSortedByGrowth ? 'Show by Demand' : 'Show by Growth';
         initBrandSkillsBarChart();
       };
     }
   }
 
-  // Master Initializer
   function initAllBrandCharts() {
     try {
       initHeroVelocityChart();
@@ -1547,18 +1523,16 @@ document.addEventListener('DOMContentLoaded', function () {
         window.lucide.createIcons();
       }
     } catch (err) {
-      console.error('FreelanceHub Brand Charts Initialization Exception:', err);
+      console.error('Error initializing brand charts:', err);
     }
   }
 
   initAllBrandCharts();
 
-  // Listen to Global Theme Changes
   window.addEventListener('freelancehub:themechange', function () {
     setTimeout(initAllBrandCharts, 50);
   });
 
-  // Safe window resize debouncer
   let resizeTimer = null;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
