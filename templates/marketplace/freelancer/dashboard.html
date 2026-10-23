@@ -131,21 +131,21 @@
 </div>
 
 <!-- ══ ROW 3: EARNINGS VELOCITY CHART & QUICK ACTIONS ══════════ -->
-<div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-bottom:28px;">
+<div style="display:grid; grid-template-columns: 2fr 1fr; gap:28px; margin-bottom:36px;">
 
   <!-- Earnings Trend Chart -->
-  <div class="card">
-    <div class="card-header">
+  <div class="fh-chart-card">
+    <div class="fh-chart-header">
       <div>
-        <h3 class="card-title d-flex align-items-center gap-2">
+        <h3 class="fh-chart-title">
           <i data-lucide="trending-up" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
           <span>Earnings Velocity &amp; Proposal Volume</span>
         </h3>
-        <div class="card-subtitle">Monthly breakdown of gross realized income and proposal bids</div>
+        <div class="fh-chart-subtitle">Monthly breakdown of gross realized income and proposal bids</div>
       </div>
-      <span class="badge badge-primary">Analytical Telemetry</span>
+      <span class="badge badge-primary" style="padding:6px 12px;font-size:0.75rem;">Analytical Telemetry</span>
     </div>
-    <div style="height:240px; position:relative;">
+    <div class="fh-chart-container">
       <canvas id="freelancerEarningsChart"></canvas>
     </div>
   </div>

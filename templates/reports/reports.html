@@ -151,31 +151,29 @@
 </div>
 
 <!-- Interactive Analytics Visualization Card -->
-<div class="card mb-4">
-  <div class="card-header-hub">
+<div class="fh-chart-card mb-5">
+  <div class="fh-chart-header">
     <div>
       <div class="d-flex align-items-center gap-2">
-        <i data-lucide="trending-up" style="width:18px;height:18px;color:var(--hub-gold);"></i>
-        <span class="card-title-hub">Historical Monthly Revenue Trajectory</span>
+        <i data-lucide="trending-up" style="width:20px;height:20px;color:var(--hub-gold);"></i>
+        <h3 class="fh-chart-title" style="margin:0;">Historical Monthly Revenue Trajectory</h3>
       </div>
-      <p style="margin:2px 0 0;font-size:12.5px;color:var(--text-muted);">Realized earnings trajectory across the previous 12 months</p>
+      <p class="fh-chart-subtitle">Realized earnings trajectory across the previous 12 months with multi-model trend projection</p>
     </div>
-    <div class="d-flex align-items-center gap-1">
-      <button type="button" class="btn-hub-secondary btn-sm active" onclick="switchReportChart('bar', this)" title="Bar Chart">
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="btn-hub-secondary btn-sm active" onclick="switchReportChart('bar', this)" title="Bar Chart" style="padding:6px 14px;">
         <i data-lucide="bar-chart-2"></i> <span>Bar</span>
       </button>
-      <button type="button" class="btn-hub-secondary btn-sm" onclick="switchReportChart('line', this)" title="Line Chart">
+      <button type="button" class="btn-hub-secondary btn-sm" onclick="switchReportChart('line', this)" title="Line Chart" style="padding:6px 14px;">
         <i data-lucide="trending-up"></i> <span>Line</span>
       </button>
-      <button type="button" class="btn-hub-secondary btn-sm" onclick="switchReportChart('area', this)" title="Area Chart">
+      <button type="button" class="btn-hub-secondary btn-sm" onclick="switchReportChart('area', this)" title="Area Chart" style="padding:6px 14px;">
         <i data-lucide="activity"></i> <span>Area</span>
       </button>
     </div>
   </div>
-  <div class="card-body p-4">
-    <div style="height:300px;position:relative;">
-      <canvas id="monthlyChart"></canvas>
-    </div>
+  <div class="fh-chart-container">
+    <canvas id="monthlyChart"></canvas>
   </div>
 </div>
 
@@ -298,19 +296,45 @@ function initReportsChart() {
           backgroundColor: dark ? 'rgba(232, 168, 58, 0.75)' : '#E8A83A',
           borderColor: '#C88A22',
           borderWidth: 1.5,
-          borderRadius: 6
+          borderRadius: 8,
+          barPercentage: 0.62,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         spanGaps: true,
+        layout: {
+          padding: {
+            top: 22,
+            bottom: 12,
+            left: 14,
+            right: 18
+          }
+        },
         plugins: {
-          legend: { display: false }
+          legend: { display: false },
+          tooltip: {
+            padding: 12,
+            cornerRadius: 10
+          }
         },
         scales: {
-          x: { grid: { display: false }, border: { display: false } },
-          y: { ticks: { callback: v => '$' + Number(v).toLocaleString() }, border: { display: false }, beginAtZero: true }
+          x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: { padding: 10 }
+          },
+          y: {
+            ticks: {
+              padding: 12,
+              callback: v => '$' + Number(v).toLocaleString()
+            },
+            border: { display: false },
+            grid: { color: dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', drawBorder: false },
+            beginAtZero: true
+          }
         }
       }
     });
@@ -339,7 +363,7 @@ function switchReportChart(type, btnEl) {
       ds.pointHoverRadius = 7;
       const canvas = reportChartInstance.canvas;
       const gradCtx = canvas.getContext('2d');
-      const grad = gradCtx.createLinearGradient(0, 0, 0, canvas.clientHeight || 300);
+      const grad = gradCtx.createLinearGradient(0, 0, 0, canvas.clientHeight || 340);
       grad.addColorStop(0, 'rgba(232, 168, 58, 0.35)');
       grad.addColorStop(1, 'rgba(232, 168, 58, 0.02)');
       ds.backgroundColor = grad;
@@ -363,7 +387,9 @@ function switchReportChart(type, btnEl) {
       ds.pointRadius = 0;
       ds.backgroundColor = 'rgba(232, 168, 58, 0.75)';
       ds.borderColor = '#C88A22';
-      ds.borderRadius = 6;
+      ds.borderRadius = 8;
+      ds.barPercentage = 0.62;
+      ds.categoryPercentage = 0.72;
     }
     reportChartInstance.update();
   }

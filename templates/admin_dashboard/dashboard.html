@@ -120,15 +120,18 @@
   <span>Platform Visual Analytics &amp; Trends</span>
 </h6>
 
-<div class="row g-4 mb-4">
+<div class="row g-4 mb-5">
   <!-- Visualization 1: Monthly Revenue Trend (Line Chart) -->
   <div class="col-lg-8">
-    <div class="glass-card h-100 p-3">
-      <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-        <i data-lucide="line-chart" style="width:16px;height:16px;color:var(--admin-lime);"></i>
-        <span>1. Monthly Revenue Trend</span>
-      </h6>
-      <div style="height:260px;position:relative;">
+    <div class="glass-card h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+        <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
+          <i data-lucide="line-chart" style="width:18px;height:18px;color:var(--admin-lime);"></i>
+          <span>1. Monthly Revenue Trend</span>
+        </h6>
+        <span class="badge" style="background:rgba(155,196,0,0.15);color:var(--admin-lime);border:1px solid rgba(155,196,0,0.3);font-size:0.75rem;padding:4px 10px;">Growth Telemetry</span>
+      </div>
+      <div class="fh-chart-container">
         <canvas id="chartMonthlyRevenue"></canvas>
       </div>
     </div>
@@ -136,12 +139,15 @@
 
   <!-- Visualization 2: Project Status Distribution (Donut Chart) -->
   <div class="col-lg-4">
-    <div class="glass-card h-100 p-3">
-      <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-        <i data-lucide="pie-chart" style="width:16px;height:16px;color:var(--admin-primary);"></i>
-        <span>2. Project Status Distribution</span>
-      </h6>
-      <div style="height:260px;position:relative;">
+    <div class="glass-card h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+        <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
+          <i data-lucide="pie-chart" style="width:18px;height:18px;color:var(--admin-primary);"></i>
+          <span>2. Project Status Distribution</span>
+        </h6>
+        <span class="badge" style="background:rgba(128,118,163,0.15);color:var(--admin-primary);border:1px solid rgba(128,118,163,0.3);font-size:0.75rem;padding:4px 10px;">Lifecycle</span>
+      </div>
+      <div class="fh-chart-container fh-chart-container-sm">
         <canvas id="chartProjectStatus"></canvas>
       </div>
     </div>
@@ -149,12 +155,15 @@
 
   <!-- Visualization 3: Income vs Expenses (Bar Chart) -->
   <div class="col-lg-6">
-    <div class="glass-card h-100 p-3">
-      <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-        <i data-lucide="scale" style="width:16px;height:16px;color:var(--admin-lime);"></i>
-        <span>3. Income vs Expenses</span>
-      </h6>
-      <div style="height:240px;position:relative;">
+    <div class="glass-card h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+        <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
+          <i data-lucide="scale" style="width:18px;height:18px;color:var(--admin-lime);"></i>
+          <span>3. Income vs Expenses</span>
+        </h6>
+        <span class="badge" style="background:rgba(155,196,0,0.15);color:var(--admin-lime);border:1px solid rgba(155,196,0,0.3);font-size:0.75rem;padding:4px 10px;">Cash Flow Audit</span>
+      </div>
+      <div class="fh-chart-container">
         <canvas id="chartIncomeVsExpense"></canvas>
       </div>
     </div>
@@ -162,12 +171,15 @@
 
   <!-- Visualization 4: Top Clients Revenue (Horizontal Bar Chart) -->
   <div class="col-lg-6">
-    <div class="glass-card h-100 p-3">
-      <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-        <i data-lucide="award" style="width:16px;height:16px;color:var(--admin-rose);"></i>
-        <span>4. Top Clients by Contribution</span>
-      </h6>
-      <div style="height:240px;position:relative;">
+    <div class="glass-card h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+        <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
+          <i data-lucide="award" style="width:18px;height:18px;color:var(--admin-rose);"></i>
+          <span>4. Top Clients by Contribution</span>
+        </h6>
+        <span class="badge" style="background:rgba(249,197,189,0.15);color:var(--admin-rose);border:1px solid rgba(249,197,189,0.3);font-size:0.75rem;padding:4px 10px;">Accounts</span>
+      </div>
+      <div class="fh-chart-container">
         <canvas id="chartTopClients"></canvas>
       </div>
     </div>
@@ -287,7 +299,7 @@
       if (!ctx) return;
       safeDestroy(id);
       const gradCtx = ctx.getContext('2d');
-      const gradient = gradCtx.createLinearGradient(0, 0, 0, ctx.clientHeight || 200);
+      const gradient = gradCtx.createLinearGradient(0, 0, 0, ctx.clientHeight || 320);
       gradient.addColorStop(0, color + '55');
       gradient.addColorStop(1, color + '05');
       new Chart(ctx, {
@@ -313,14 +325,22 @@
           responsive: true,
           maintainAspectRatio: false,
           spanGaps: true,
+          layout: {
+            padding: {
+              top: 22,
+              bottom: 12,
+              left: 14,
+              right: 18
+            }
+          },
           interaction: { mode: 'index', intersect: false },
           plugins: {
             legend: { display: false },
-            tooltip: { cornerRadius: 8, padding: 10 }
+            tooltip: { cornerRadius: 8, padding: 12 }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { color: textColor, font: { size: 11 } }, border: { display: false } },
-            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, border: { display: false } }
+            x: { grid: { display: false }, ticks: { color: textColor, font: { size: 11.5 }, padding: 10 }, border: { display: false } },
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11.5 }, padding: 12 }, border: { display: false } }
           }
         }
       });
@@ -338,27 +358,37 @@
             label: label,
             data: data || [],
             backgroundColor: color,
-            borderRadius: 6
+            borderRadius: 6,
+            barPercentage: 0.65,
+            categoryPercentage: 0.75
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           indexAxis: isHorizontal ? 'y' : 'x',
+          layout: {
+            padding: {
+              top: 20,
+              bottom: 12,
+              left: 14,
+              right: 18
+            }
+          },
           plugins: {
             legend: { display: false },
-            tooltip: { cornerRadius: 8, padding: 10 }
+            tooltip: { cornerRadius: 8, padding: 12 }
           },
           scales: {
             [isHorizontal ? 'x' : 'y']: {
               beginAtZero: true,
               grid: { color: gridColor },
-              ticks: { color: textColor, font: { size: 11 } },
+              ticks: { color: textColor, font: { size: 11.5 }, padding: 10 },
               border: { display: false }
             },
             [isHorizontal ? 'y' : 'x']: {
               grid: { display: false },
-              ticks: { color: textColor, font: { size: 11 } },
+              ticks: { color: textColor, font: { size: 11.5 }, padding: 10 },
               border: { display: false }
             }
           }
@@ -388,13 +418,24 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          cutout: '66%',
+          layout: {
+            padding: 18
+          },
           plugins: {
             legend: {
               position: 'bottom',
-              labels: { boxWidth: 12, color: textColor, font: { size: 11 } }
+              labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                color: textColor,
+                font: { size: 11.5 },
+                padding: 20
+              }
             }
-          },
-          cutout: '70%'
+          }
         }
       });
     }
@@ -408,19 +449,37 @@
         data: {
           labels: chartData.months || [],
           datasets: [
-            { label: 'Revenue ($)', data: chartData.revenue || [], backgroundColor: '#9bc400', borderRadius: 4 },
-            { label: 'Expenses ($)', data: chartData.expenses || [], backgroundColor: '#ff5e6c', borderRadius: 4 }
+            { label: 'Revenue ($)', data: chartData.revenue || [], backgroundColor: '#9bc400', borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.75 },
+            { label: 'Expenses ($)', data: chartData.expenses || [], backgroundColor: '#ff5e6c', borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.75 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 22,
+              bottom: 12,
+              left: 14,
+              right: 18
+            }
+          },
           plugins: {
-            legend: { labels: { color: textColor, font: { size: 11 } } }
+            legend: {
+              labels: {
+                color: textColor,
+                font: { size: 11.5, weight: '600' },
+                padding: 18,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                boxWidth: 9,
+                boxHeight: 9
+              }
+            }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { color: textColor } },
-            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } }
+            x: { grid: { display: false }, ticks: { color: textColor, padding: 10 } },
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, padding: 12 } }
           }
         }
       });

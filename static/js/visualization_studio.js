@@ -185,8 +185,16 @@ window.VisualizationStudio = (function () {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: 20,
+            bottom: 12,
+            left: 14,
+            right: 18
+          }
+        },
         indexAxis: configData.horizontal ? 'y' : 'x',
-        cutout: isDoughnut ? '68%' : undefined,
+        cutout: isDoughnut ? '66%' : undefined,
         interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: {
@@ -195,10 +203,12 @@ window.VisualizationStudio = (function () {
             align: 'end',
             labels: {
               color: t.text,
-              font: { family: 'Inter', size: 11, weight: '500' },
+              font: { family: 'Inter', size: 12, weight: '500' },
               usePointStyle: true,
-              boxHeight: 6,
-              padding: 14,
+              pointStyle: 'circle',
+              boxWidth: 9,
+              boxHeight: 9,
+              padding: 20,
             }
           },
           tooltip: {
@@ -220,13 +230,13 @@ window.VisualizationStudio = (function () {
         scales: isDoughnut ? {} : {
           x: {
             grid: { color: t.grid, drawBorder: false },
-            ticks: { color: t.tick, font: { family: 'Inter', size: 11 }, maxRotation: 0 },
+            ticks: { color: t.tick, font: { family: 'Inter', size: 11.5 }, maxRotation: 0, padding: 10 },
             border: { color: 'transparent' },
           },
           y: {
             beginAtZero: true,
             grid: { color: t.grid, drawBorder: false },
-            ticks: { color: t.tick, font: { family: 'Inter', size: 11 }, callback: v => '₹' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v) },
+            ticks: { color: t.tick, font: { family: 'Inter', size: 11.5 }, padding: 12, callback: v => '₹' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v) },
             border: { color: 'transparent' },
           }
         }

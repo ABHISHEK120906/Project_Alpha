@@ -34,16 +34,24 @@ document.addEventListener('DOMContentLoaded', function () {
           backgroundColor: 'rgba(219, 153, 65, 0.65)',
           borderColor: primaryColor,
           borderWidth: 1.5,
-          borderRadius: 6
+          borderRadius: 6,
+          barPercentage: 0.62,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        layout: {
+          padding: { top: 20, bottom: 12, left: 14, right: 18 }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { cornerRadius: 8, padding: 12 }
+        },
         scales: {
-          x: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor, stepSize: 1 } }
+          x: { grid: { display: false }, ticks: { color: textColor, font: { size: 11 }, padding: 10 } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor, stepSize: 1, padding: 12 } }
         }
       }
     });
@@ -62,16 +70,24 @@ document.addEventListener('DOMContentLoaded', function () {
           backgroundColor: 'rgba(46, 125, 71, 0.65)',
           borderColor: successColor,
           borderWidth: 1.5,
-          borderRadius: 6
+          borderRadius: 6,
+          barPercentage: 0.62,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        layout: {
+          padding: { top: 20, bottom: 12, left: 14, right: 18 }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { cornerRadius: 8, padding: 12 }
+        },
         scales: {
-          x: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor, stepSize: 1 } }
+          x: { grid: { display: false }, ticks: { color: textColor, font: { size: 11 }, padding: 10 } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor, stepSize: 1, padding: 12 } }
         }
       }
     });
@@ -88,17 +104,25 @@ document.addEventListener('DOMContentLoaded', function () {
           label: 'Realized Revenue ($)',
           data: eda.client_bivariate.map(c => c.revenue),
           backgroundColor: infoColor,
-          borderRadius: 6
+          borderRadius: 6,
+          barPercentage: 0.65,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        layout: {
+          padding: { top: 18, bottom: 12, left: 14, right: 18 }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { cornerRadius: 8, padding: 12 }
+        },
         scales: {
-          x: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v.toLocaleString() } },
-          y: { grid: { display: false }, ticks: { color: textColor } }
+          x: { grid: { color: gridColor }, ticks: { color: textColor, padding: 10, callback: v => '$' + v.toLocaleString() } },
+          y: { grid: { display: false }, ticks: { color: textColor, padding: 10, font: { size: 11.5 } } }
         }
       }
     });
@@ -120,7 +144,8 @@ document.addEventListener('DOMContentLoaded', function () {
             borderWidth: 2.5,
             fill: true,
             tension: 0.35,
-            pointRadius: 4
+            pointRadius: 4,
+            pointHoverRadius: 7
           },
           {
             label: 'Expenses ($)',
@@ -130,7 +155,8 @@ document.addEventListener('DOMContentLoaded', function () {
             borderWidth: 2,
             borderDash: [5, 5],
             tension: 0.35,
-            pointRadius: 3
+            pointRadius: 3.5,
+            pointHoverRadius: 6
           }
         ]
       },
@@ -138,12 +164,27 @@ document.addEventListener('DOMContentLoaded', function () {
         responsive: true,
         maintainAspectRatio: false,
         spanGaps: true,
+        layout: {
+          padding: { top: 22, bottom: 12, left: 14, right: 18 }
+        },
         plugins: {
-          legend: { position: 'top', labels: { color: textColor, font: { size: 11 } } }
+          legend: {
+            position: 'top',
+            labels: {
+              color: textColor,
+              font: { size: 12, weight: '600' },
+              padding: 22,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              boxWidth: 9,
+              boxHeight: 9
+            }
+          },
+          tooltip: { cornerRadius: 8, padding: 12 }
         },
         scales: {
-          x: { grid: { display: false }, ticks: { color: textColor }, border: { display: false } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v.toLocaleString() }, border: { display: false }, beginAtZero: true }
+          x: { grid: { display: false }, ticks: { color: textColor, padding: 10, font: { size: 11.5 } }, border: { display: false } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor, padding: 12, font: { size: 11.5 }, callback: v => '$' + v.toLocaleString() }, border: { display: false }, beginAtZero: true }
         }
       }
     });
@@ -166,6 +207,9 @@ document.addEventListener('DOMContentLoaded', function () {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: { top: 18, bottom: 12, left: 14, right: 18 }
+        },
         plugins: {
           tooltip: {
             callbacks: {
@@ -178,8 +222,8 @@ document.addEventListener('DOMContentLoaded', function () {
           legend: { display: false }
         },
         scales: {
-          x: { title: { display: true, text: 'Budget ($)', color: textColor }, grid: { color: gridColor }, ticks: { color: textColor } },
-          y: { title: { display: true, text: 'Paid Realization ($)', color: textColor }, grid: { color: gridColor }, ticks: { color: textColor } }
+          x: { title: { display: true, text: 'Budget ($)', color: textColor }, grid: { color: gridColor }, ticks: { color: textColor, padding: 10 } },
+          y: { title: { display: true, text: 'Paid Realization ($)', color: textColor }, grid: { color: gridColor }, ticks: { color: textColor, padding: 10 } }
         }
       }
     });
@@ -209,7 +253,10 @@ document.addEventListener('DOMContentLoaded', function () {
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          cutout: '62%',
+          cutout: '66%',
+          layout: {
+            padding: 16
+          },
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -244,13 +291,18 @@ document.addEventListener('DOMContentLoaded', function () {
           backgroundColor: concColors,
           borderColor: infoColor,
           borderWidth: 1,
-          borderRadius: 6
+          borderRadius: 6,
+          barPercentage: 0.65,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: { top: 16, bottom: 12, left: 14, right: 18 }
+        },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -262,12 +314,12 @@ document.addEventListener('DOMContentLoaded', function () {
         scales: {
           x: {
             grid: { color: gridColor },
-            ticks: { color: textColor, callback: v => '$' + v.toLocaleString() },
+            ticks: { color: textColor, padding: 10, callback: v => '$' + v.toLocaleString() },
             border: { display: false }
           },
           y: {
             grid: { display: false },
-            ticks: { color: textColor, font: { size: 11 } }
+            ticks: { color: textColor, padding: 10, font: { size: 11.5 } }
           }
         }
       }
@@ -287,6 +339,8 @@ document.addEventListener('DOMContentLoaded', function () {
             data: ltv.retention_new,
             backgroundColor: dark ? 'rgba(96, 168, 251, 0.7)' : 'rgba(37, 99, 235, 0.7)',
             borderRadius: 4,
+            barPercentage: 0.62,
+            categoryPercentage: 0.72,
             stack: 'retention'
           },
           {
@@ -294,6 +348,8 @@ document.addEventListener('DOMContentLoaded', function () {
             data: ltv.retention_repeat,
             backgroundColor: dark ? 'rgba(61, 170, 96, 0.7)' : 'rgba(16, 185, 129, 0.7)',
             borderRadius: 4,
+            barPercentage: 0.62,
+            categoryPercentage: 0.72,
             stack: 'retention'
           }
         ]
@@ -301,24 +357,35 @@ document.addEventListener('DOMContentLoaded', function () {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: { top: 20, bottom: 12, left: 14, right: 18 }
+        },
         plugins: {
           legend: {
             position: 'top',
-            labels: { color: textColor, font: { size: 11 }, boxWidth: 12, padding: 12 }
+            labels: {
+              color: textColor,
+              font: { size: 11.5, weight: '600' },
+              boxWidth: 9,
+              boxHeight: 9,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              padding: 20
+            }
           }
         },
         scales: {
           x: {
             grid: { display: false },
-            ticks: { color: textColor },
+            ticks: { color: textColor, padding: 10, font: { size: 11.5 } },
             border: { display: false },
             stacked: true
           },
           y: {
-            grid: { color: gridColor },
-            ticks: { color: textColor, stepSize: 1, precision: 0 },
-            border: { display: false },
             beginAtZero: true,
+            grid: { color: gridColor },
+            ticks: { color: textColor, padding: 12, stepSize: 1, font: { size: 11.5 } },
+            border: { display: false },
             stacked: true
           }
         }

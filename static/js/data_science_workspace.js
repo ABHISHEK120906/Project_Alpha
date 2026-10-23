@@ -96,9 +96,25 @@ document.addEventListener('DOMContentLoaded', function () {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: { top: 20, bottom: 12, left: 14, right: 18 }
+        },
         plugins: {
-          legend: { position: 'top', labels: { color: textColor, font: { size: 11 } } },
+          legend: {
+            position: 'top',
+            labels: {
+              color: textColor,
+              font: { size: 11.5, weight: '600' },
+              padding: 20,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              boxWidth: 9,
+              boxHeight: 9
+            }
+          },
           tooltip: {
+            padding: 12,
+            cornerRadius: 8,
             callbacks: {
               label: function (ctx) {
                 return ctx.raw !== null ? `${ctx.dataset.label}: $${Number(ctx.raw).toLocaleString()}` : '';
@@ -107,8 +123,8 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         },
         scales: {
-          x: { grid: { display: false }, ticks: { color: textColor }, border: { display: false } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => '$' + v.toLocaleString() }, border: { display: false } }
+          x: { grid: { display: false }, ticks: { color: textColor, padding: 10, font: { size: 11.5 } }, border: { display: false } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor, padding: 12, font: { size: 11.5 }, callback: v => '$' + v.toLocaleString() }, border: { display: false } }
         },
         spanGaps: true
       }
@@ -127,17 +143,22 @@ document.addEventListener('DOMContentLoaded', function () {
           label: 'Relative Contribution (%)',
           data: featData.map(f => f.importance_pct),
           backgroundColor: primaryColor,
-          borderRadius: 6
+          borderRadius: 6,
+          barPercentage: 0.65,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        layout: {
+          padding: { top: 12, bottom: 8, left: 12, right: 14 }
+        },
+        plugins: { legend: { display: false }, tooltip: { cornerRadius: 8, padding: 10 } },
         scales: {
-          x: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => v + '%' }, max: 100 },
-          y: { grid: { display: false }, ticks: { color: textColor } }
+          x: { grid: { color: gridColor }, ticks: { color: textColor, padding: 8, callback: v => v + '%' }, max: 100 },
+          y: { grid: { display: false }, ticks: { color: textColor, padding: 8 } }
         }
       }
     });

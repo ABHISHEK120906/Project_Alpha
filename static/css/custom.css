@@ -1294,7 +1294,7 @@ a:hover { color: var(--pink-accent-hover); }
 .trend-down { color: var(--danger);  font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
 
 /* ==========================================================================
-   DASHBOARD: CHART CARDS
+   DASHBOARD: CHART CARDS & VISUALIZATION SPACING
    ========================================================================== */
 .dash-chart-card {
   background: var(--bg-card);
@@ -1302,6 +1302,12 @@ a:hover { color: var(--pink-accent-hover); }
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  transition: transform var(--tr-smooth), box-shadow var(--tr-smooth), border-color var(--tr-norm);
+}
+
+.dash-chart-card:hover {
+  box-shadow: var(--shadow-md), 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(222, 91, 136, 0.35);
 }
 
 .dash-chart-card-strip {
@@ -1312,8 +1318,99 @@ a:hover { color: var(--pink-accent-hover); }
 }
 
 .dash-chart-card-body {
-  padding: 28px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
 }
+
+/* Universal Chart Card & Container Spacing Subsystem */
+.fh-chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--tr-smooth), box-shadow var(--tr-smooth), border-color var(--tr-norm);
+}
+
+.fh-chart-card:hover {
+  border-color: rgba(222, 91, 136, 0.35);
+  box-shadow: var(--shadow-md), 0 10px 32px rgba(0, 0, 0, 0.09);
+}
+
+.fh-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-light);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fh-chart-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.fh-chart-subtitle {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+.fh-chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 330px;
+  height: 350px;
+  padding: 12px 6px 8px 6px;
+  flex: 1;
+}
+
+.fh-chart-container-sm {
+  min-height: 290px;
+  height: 310px;
+  padding: 10px 4px 6px 4px;
+}
+
+.fh-chart-container-lg {
+  min-height: 370px;
+  height: 390px;
+  padding: 14px 8px 8px 8px;
+}
+
+.fh-chart-grid {
+  display: grid;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+
+@media (max-width: 991px) {
+  .fh-chart-card, .dash-chart-card-body {
+    padding: 22px 20px;
+  }
+  .fh-chart-container {
+    min-height: 280px;
+    height: 300px;
+  }
+  .fh-chart-container-sm {
+    min-height: 260px;
+    height: 280px;
+  }
+}
+
 
 /* ==========================================================================
    ALERTS / NOTIFICATIONS

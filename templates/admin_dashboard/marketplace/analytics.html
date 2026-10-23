@@ -47,19 +47,25 @@
   </div>
 
   <!-- Charts Row -->
-  <div class="row g-4 mb-4">
+  <div class="row g-4 mb-5">
     <div class="col-lg-6">
-      <div class="glass-card h-100">
-        <h5 class="fw-bold mb-3"><i class="fas fa-tags text-primary me-2"></i>Projects by Category</h5>
-        <div style="height: 260px;">
+      <div class="glass-card h-100 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+          <h5 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;"><i class="fas fa-tags text-primary"></i>Projects by Category</h5>
+          <span class="badge" style="background:rgba(111,66,193,0.15);color:#a370f7;border:1px solid rgba(111,66,193,0.3);font-size:0.75rem;padding:4px 10px;">Market Demand</span>
+        </div>
+        <div class="fh-chart-container">
           <canvas id="categoryChart"></canvas>
         </div>
       </div>
     </div>
     <div class="col-lg-6">
-      <div class="glass-card h-100">
-        <h5 class="fw-bold mb-3"><i class="fas fa-tasks text-info me-2"></i>Project Lifecycle Distribution</h5>
-        <div style="height: 260px;">
+      <div class="glass-card h-100 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+          <h5 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;"><i class="fas fa-tasks text-info"></i>Project Lifecycle Distribution</h5>
+          <span class="badge" style="background:rgba(23,162,184,0.15);color:#17a2b8;border:1px solid rgba(23,162,184,0.3);font-size:0.75rem;padding:4px 10px;">Status Breakdown</span>
+        </div>
+        <div class="fh-chart-container">
           <canvas id="statusChart"></canvas>
         </div>
       </div>
@@ -140,16 +146,29 @@
           label: 'Projects',
           data: catCounts.length ? catCounts : [0, 0, 0, 0, 0, 0],
           backgroundColor: '#6f42c1',
-          borderRadius: 4
+          borderRadius: 6,
+          barPercentage: 0.62,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        layout: {
+          padding: {
+            top: 20,
+            bottom: 12,
+            left: 14,
+            right: 18
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { cornerRadius: 8, padding: 12 }
+        },
         scales: {
-          x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
-          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+          x: { ticks: { color: '#94a3b8', padding: 10, font: { family: 'Inter', size: 11.5 } }, grid: { display: false } },
+          y: { ticks: { color: '#94a3b8', padding: 12, font: { family: 'Inter', size: 11.5 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
         }
       }
     });
@@ -164,14 +183,31 @@
         datasets: [{
           data: statusCounts,
           backgroundColor: ['#28a745', '#17a2b8', '#6f42c1', '#007bff', '#20c997', '#6c757d'],
-          borderWidth: 0
+          borderWidth: 0,
+          hoverOffset: 6
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '66%',
+        layout: {
+          padding: 16
+        },
         plugins: {
-          legend: { position: 'right', labels: { color: '#e2e8f0', font: { family: 'Inter' } } }
+          legend: {
+            position: 'right',
+            labels: {
+              color: '#e2e8f0',
+              font: { family: 'Inter', size: 12 },
+              padding: 16,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              boxWidth: 9,
+              boxHeight: 9
+            }
+          },
+          tooltip: { cornerRadius: 8, padding: 12 }
         }
       }
     });

@@ -77,7 +77,7 @@
             tension: 0.4,
             borderWidth: 2.5,
             pointRadius: 4,
-            pointHoverRadius: 6,
+            pointHoverRadius: 7,
             pointBackgroundColor: theme.primary,
             pointBorderColor: '#FFFFFF',
             pointBorderWidth: 2
@@ -90,8 +90,8 @@
             fill: true,
             tension: 0.4,
             borderWidth: 2,
-            pointRadius: 3,
-            pointHoverRadius: 5,
+            pointRadius: 3.5,
+            pointHoverRadius: 6,
             pointBackgroundColor: theme.secondary
           }
         ]
@@ -99,14 +99,25 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: 20,
+            bottom: 12,
+            left: 14,
+            right: 18
+          }
+        },
         plugins: {
           legend: {
             position: 'top',
             labels: {
               color: theme.text,
-              font: { family: "'Plus Jakarta Sans', sans-serif", weight: '600', size: 12 },
+              font: { family: "'Plus Jakarta Sans', sans-serif", weight: '600', size: 12.5 },
               usePointStyle: true,
-              boxWidth: 8
+              pointStyle: 'circle',
+              boxWidth: 9,
+              boxHeight: 9,
+              padding: 24
             }
           },
           tooltip: {
@@ -115,8 +126,9 @@
             borderWidth: 1,
             titleColor: theme.tooltipText,
             bodyColor: theme.tooltipText,
-            padding: 12,
-            boxPadding: 6,
+            padding: 14,
+            boxPadding: 8,
+            cornerRadius: 10,
             usePointStyle: true,
             bodyFont: { family: "'Inter', sans-serif", size: 12 },
             titleFont: { family: "'Plus Jakarta Sans', sans-serif", weight: '700', size: 13 }
@@ -124,14 +136,20 @@
         },
         scales: {
           x: {
-            grid: { color: theme.grid },
-            ticks: { color: theme.text, font: { family: "'Inter', sans-serif", size: 11.5 } }
-          },
-          y: {
-            grid: { color: theme.grid },
+            grid: { color: theme.grid, drawBorder: false },
             ticks: {
               color: theme.text,
               font: { family: "'Inter', sans-serif", size: 11.5 },
+              padding: 10
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: theme.grid, drawBorder: false },
+            ticks: {
+              color: theme.text,
+              font: { family: "'Inter', sans-serif", size: 11.5 },
+              padding: 12,
               callback: function (val) {
                 return '$' + Number(val).toLocaleString();
               }
@@ -160,25 +178,37 @@
             theme.success,
             theme.primary,
             theme.blush,
-            theme.secondary
+            theme.secondary,
+            theme.lavenderAccent
           ],
           borderColor: isDark() ? '#251C2C' : '#FFFFFF',
           borderWidth: 3,
-          hoverOffset: 6
+          hoverOffset: 8
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '72%',
+        cutout: '66%',
+        layout: {
+          padding: {
+            top: 16,
+            bottom: 16,
+            left: 16,
+            right: 16
+          }
+        },
         plugins: {
           legend: {
             position: 'bottom',
             labels: {
               color: theme.text,
-              font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
+              font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '600' },
               usePointStyle: true,
-              padding: 16
+              pointStyle: 'circle',
+              boxWidth: 9,
+              boxHeight: 9,
+              padding: 22
             }
           },
           tooltip: {
@@ -187,7 +217,9 @@
             borderWidth: 1,
             titleColor: theme.tooltipText,
             bodyColor: theme.tooltipText,
-            padding: 10
+            padding: 12,
+            cornerRadius: 10,
+            boxPadding: 6
           }
         }
       }
@@ -212,12 +244,22 @@
           backgroundColor: theme.primary,
           borderRadius: 8,
           borderSkipped: false,
-          hoverBackgroundColor: '#E078A7'
+          hoverBackgroundColor: '#E078A7',
+          barPercentage: 0.62,
+          categoryPercentage: 0.72
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: 20,
+            bottom: 12,
+            left: 12,
+            right: 16
+          }
+        },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -226,22 +268,88 @@
             borderWidth: 1,
             titleColor: theme.tooltipText,
             bodyColor: theme.tooltipText,
-            padding: 10
+            padding: 12,
+            cornerRadius: 10
           }
         },
         scales: {
           x: {
             grid: { display: false },
-            ticks: { color: theme.text }
+            ticks: { color: theme.text, padding: 10, font: { size: 11.5 } }
           },
           y: {
-            grid: { color: theme.grid },
-            ticks: { color: theme.text }
+            beginAtZero: true,
+            grid: { color: theme.grid, drawBorder: false },
+            ticks: {
+              color: theme.text,
+              padding: 12,
+              font: { size: 11.5 },
+              callback: function(v) { return '$' + Number(v).toLocaleString(); }
+            }
           }
         }
       }
     });
   };
+
+  // ── CHART TYPE SWITCHER HELPER ───────────────────────────────────────────
+  window.switchDashboardChart = function (type, btnEl) {
+    if (btnEl && btnEl.parentNode) {
+      btnEl.parentNode.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+    const chart = window._dashCharts['financialTrendChart'];
+    if (!chart) return;
+    const theme = getChartTheme();
+    const datasets = chart.data.datasets;
+
+    if (type === 'area') {
+      chart.config.type = 'line';
+      datasets.forEach((ds) => {
+        ds.fill = true;
+        ds.tension = 0.4;
+        ds.borderRadius = 0;
+      });
+    } else if (type === 'line') {
+      chart.config.type = 'line';
+      datasets.forEach((ds, idx) => {
+        ds.fill = (idx === 0);
+        ds.tension = 0.4;
+        ds.borderRadius = 0;
+      });
+    } else if (type === 'bar') {
+      chart.config.type = 'bar';
+      datasets.forEach((ds) => {
+        ds.fill = false;
+        ds.borderRadius = 8;
+        ds.barPercentage = 0.65;
+        ds.categoryPercentage = 0.72;
+      });
+    }
+    chart.update();
+  };
+
+  // ── AUTO-INITIALIZE DASHBOARD CHARTS ──────────────────────────────────────
+  function autoInitDashboard() {
+    if (window.DASH_MONTHLY && document.getElementById('financialTrendChart')) {
+      const labels = window.DASH_MONTHLY.labels || [];
+      const income = window.DASH_MONTHLY.income || window.DASH_MONTHLY.revenue || [];
+      const expense = window.DASH_MONTHLY.expenses || [];
+      window.renderFinancialTrendChart('financialTrendChart', labels, income, expense);
+    }
+    if (window.DASH_STATUS && document.getElementById('statusDistChart')) {
+      const statusObj = window.DASH_STATUS;
+      const labels = Object.keys(statusObj).map(k => k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+      const data = Object.values(statusObj);
+      window.renderProjectStatusDonut('statusDistChart', labels, data);
+    }
+  }
+
+  if (document.readyState !== 'loading') {
+    autoInitDashboard();
+  } else {
+    document.addEventListener('DOMContentLoaded', autoInitDashboard);
+  }
 
   // ── LISTEN FOR THEME SWITCHING EVENTS ────────────────────────────────────
   window.addEventListener('freelancehub:themechange', function () {

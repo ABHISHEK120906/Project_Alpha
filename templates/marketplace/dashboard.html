@@ -74,21 +74,21 @@
 </div>
 
 <!-- ══ ROW 2: SPENDING TELEMETRY & PROJECT DISTRIBUTION ════════ -->
-<div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-bottom:28px;">
+<div style="display:grid; grid-template-columns: 2fr 1fr; gap:28px; margin-bottom:36px;">
   
   <!-- Financial Spending Velocity Chart -->
-  <div class="card">
-    <div class="card-header">
+  <div class="fh-chart-card">
+    <div class="fh-chart-header">
       <div>
-        <h3 class="card-title d-flex align-items-center gap-2">
+        <h3 class="fh-chart-title">
           <i data-lucide="trending-up" class="fh-icon-sm" style="color:var(--client-accent);"></i>
           <span>Capital Allocation &amp; Spending Trend</span>
         </h3>
-        <div class="card-subtitle">Monthly breakdown of project milestones and escrow disbursements</div>
+        <div class="fh-chart-subtitle">Monthly breakdown of project milestones and escrow disbursements</div>
       </div>
-      <span class="badge badge-primary">Monthly Velocity</span>
+      <span class="badge badge-primary" style="padding:6px 12px;font-size:0.75rem;">Monthly Velocity</span>
     </div>
-    <div style="height:240px; position:relative;">
+    <div class="fh-chart-container">
       <canvas id="clientSpendChart"></canvas>
     </div>
   </div>

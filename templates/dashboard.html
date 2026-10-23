@@ -370,16 +370,16 @@
 </div>
 
 <!-- ── Analytics Visualizations Grid ── -->
-<div class="row g-4 mb-4">
+<div class="row g-4 mb-5">
   <!-- Financial Performance Chart (8 cols) -->
   <div class="col-lg-8">
     <div class="card p-0 h-100 reveal-up delay-1 dash-chart-card">
       <div class="dash-chart-card-strip"></div>
       <div class="dash-chart-card-body">
-        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-2 border-bottom" style="border-color:var(--border-light) !important;">
           <div>
-            <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
-              <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--warning);"></i>Financial Performance
+            <h6 class="fw-bold mb-1" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;font-size:1.05rem;">
+              <i data-lucide="trending-up" style="width:18px;height:18px;color:var(--warning);"></i>Financial Performance
             </h6>
             <p class="mb-0 small" style="color:var(--text-muted);">Monthly revenue &amp; expenses trend</p>
           </div>
@@ -397,7 +397,7 @@
             </div>
           </div>
         </div>
-        <div style="height:260px;position:relative;">
+        <div class="fh-chart-container">
           <canvas id="financialTrendChart"></canvas>
         </div>
       </div>
@@ -409,16 +409,16 @@
     <div class="card p-0 h-100 reveal-up delay-2 dash-chart-card">
       <div class="dash-chart-card-strip" style="background:linear-gradient(90deg,var(--success),var(--hub-gold));"></div>
       <div class="dash-chart-card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom" style="border-color:var(--border-light) !important;">
           <div>
-            <h6 class="fw-bold mb-0" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;">
-              <i data-lucide="pie-chart" style="width:16px;height:16px;color:var(--success);"></i>Project Status
+            <h6 class="fw-bold mb-1" style="color:var(--text-primary);display:flex;align-items:center;gap:8px;font-size:1.05rem;">
+              <i data-lucide="pie-chart" style="width:18px;height:18px;color:var(--success);"></i>Project Status
             </h6>
             <p class="mb-0 small" style="color:var(--text-muted);">Distribution overview</p>
           </div>
-          <span class="badge-gold" style="font-size:0.7rem;">{{ total_projects }} total</span>
+          <span class="badge-gold" style="font-size:0.75rem;padding:4px 10px;">{{ total_projects }} total</span>
         </div>
-        <div style="height:240px;position:relative;">
+        <div class="fh-chart-container fh-chart-container-sm">
           <canvas id="statusDistChart"></canvas>
         </div>
       </div>
