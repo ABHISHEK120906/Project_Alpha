@@ -1,7 +1,7 @@
 /* ==========================================================================
-   FREELANCEHUB — MASTER DESIGN SYSTEM v4.0
-   Color Architecture: Muted Deep Petrol Teal + Warm Porcelain / Deep Charcoal-Green
-   Aesthetic: Refined SaaS • Mineral Tones • Botanical Accents • Accessible WCAG 2.2 AA
+   FREELANCEHUB — MASTER DESIGN SYSTEM v5.0
+   Color Architecture: Arlen McCluskey Palette (#ece5eb, #f03737, #eb7b5c, #bb8dc1)
+   Aesthetic: Clean White Base • Vibrant Coral-Red & Mauve Gradients • Accessible WCAG 2.2 AA
    ========================================================================== */
 
 /* ── Typography Imports ── */
@@ -31,94 +31,111 @@
   to { transform: scaleX(1); }
 }
 @keyframes notif-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(172, 74, 67, 0.45); }
-  50% { box-shadow: 0 0 0 5px rgba(172, 74, 67, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(240, 55, 55, 0.45); }
+  50% { box-shadow: 0 0 0 5px rgba(240, 55, 55, 0); }
 }
 
 /* ==========================================================================
-   DESIGN TOKENS — LIGHT MODE (Warm Porcelain & Muted Mineral Tones)
+   DESIGN TOKENS — LIGHT MODE (White Base & Arlen McCluskey Gradient Tones)
+   Colors: #ece5eb, #f03737, #eb7b5c, #bb8dc1
    ========================================================================== */
 :root {
-  /* ── Master Brand Palette: Muted Deep Petrol Teal ── */
-  --primary:                #356B68;   /* Signature Brand Teal */
-  --primary-hover:          #2A5754;   /* Deepened Active Teal */
-  --primary-active:         #214542;
-  --primary-subtle:         rgba(53, 107, 104, 0.08);
-  --primary-soft:           rgba(53, 107, 104, 0.12);
-  --primary-border:         rgba(53, 107, 104, 0.22);
-  --primary-contrast:       #FFFFFF;   /* Text on Primary */
+  /* ── Master Brand Palette: Arlen McCluskey Signature Red ── */
+  --primary:                #f03737;   /* Vibrant Signature Crimson Red */
+  --primary-hover:          #d92929;   /* Deepened Active Red */
+  --primary-active:         #be1f1f;
+  --primary-subtle:         rgba(240, 55, 55, 0.08);
+  --primary-soft:           rgba(240, 55, 55, 0.12);
+  --primary-border:         rgba(240, 55, 55, 0.25);
+  --primary-contrast:       #FFFFFF;   /* Crisp Text on Primary */
 
-  /* ── Supporting Palette (Muted Botanical & Mineral) ── */
-  --muted-sage:             #A5B9A5;
-  --muted-sage-soft:        rgba(165, 185, 165, 0.15);
-  --muted-sage-text:        #324E38;
+  /* ── Arlen McCluskey Signature Palette Tones ── */
+  --coral-accent:           #eb7b5c;   /* Warm Coral Orange */
+  --coral-soft:             rgba(235, 123, 92, 0.14);
+  --coral-text:             #9e3a20;
 
-  --soft-clay:              #C58F78;
-  --soft-clay-soft:         rgba(197, 143, 120, 0.14);
-  --soft-clay-text:         #5D3323;
+  --mauve-accent:           #bb8dc1;   /* Soft Mauve Orchid */
+  --mauve-soft:             rgba(187, 141, 193, 0.16);
+  --mauve-text:             #6d3e74;
 
-  --dusty-blue:             #829DB5;
-  --dusty-blue-soft:        rgba(130, 157, 181, 0.15);
-  --dusty-blue-text:        #2C4B63;
+  --base-tint:              #ece5eb;   /* Light Lavender-Mist Base */
+  --base-tint-soft:         rgba(236, 229, 235, 0.6);
 
-  --warm-sand:              #D9C9AE;
-  --warm-sand-soft:         rgba(217, 201, 174, 0.18);
-  --warm-sand-text:         #57472A;
+  --muted-sage:             #bb8dc1;
+  --muted-sage-soft:        rgba(187, 141, 193, 0.14);
+  --muted-sage-text:        #6d3e74;
 
-  --neutral-stone:          #777B78;
-  --neutral-stone-soft:     rgba(119, 123, 120, 0.12);
+  --soft-clay:              #eb7b5c;
+  --soft-clay-soft:         rgba(235, 123, 92, 0.14);
+  --soft-clay-text:         #9e3a20;
 
-  /* ── Light Mode Surfaces ── */
-  --bg-app:                 #F6F5F0;   /* Warm Porcelain Canvas */
+  --dusty-blue:             #bb8dc1;
+  --dusty-blue-soft:        rgba(187, 141, 193, 0.14);
+  --dusty-blue-text:        #6d3e74;
+
+  --warm-sand:              #ece5eb;
+  --warm-sand-soft:         rgba(236, 229, 235, 0.5);
+  --warm-sand-text:         #5a4f5b;
+
+  --neutral-stone:          #7f7481;
+  --neutral-stone-soft:     rgba(127, 116, 129, 0.12);
+
+  /* ── Arlen McCluskey Gradients ── */
+  --brand-gradient:         linear-gradient(135deg, #f03737 0%, #eb7b5c 50%, #bb8dc1 100%);
+  --brand-gradient-hover:   linear-gradient(135deg, #d92929 0%, #d66a4c 50%, #a978b0 100%);
+  --brand-gradient-subtle:  linear-gradient(135deg, rgba(240, 55, 55, 0.08) 0%, rgba(235, 123, 92, 0.08) 50%, rgba(187, 141, 193, 0.08) 100%);
+
+  /* ── Light Mode Surfaces (Clean White Background for Page Base) ── */
+  --bg-app:                 #FFFFFF;   /* Clean White Base Canvas */
   --bg-surface:             #FFFFFF;   /* Pure White Card */
   --bg-card:                #FFFFFF;
-  --bg-card-hover:          #FAF9F6;
-  --bg-elevated:            #EFEFE8;   /* Subtle Contrast Surface */
-  --bg-glass:               rgba(255, 255, 255, 0.92);
+  --bg-card-hover:          #FAF7FA;
+  --bg-elevated:            #ece5eb;   /* Soft Mist Tint Surface */
+  --bg-glass:               rgba(255, 255, 255, 0.94);
   --bg-glass-card:          #FFFFFF;
   --bg-input:               #FFFFFF;
-  --bg-secondary:           #EFEFE8;
+  --bg-secondary:           #ece5eb;
 
   /* ── Light Mode Typography ── */
-  --text-primary:           #252E2C;   /* Deep Charcoal-Slate (WCAG AAA) */
-  --text-secondary:         #626C68;   /* Medium Neutral Slate */
-  --text-muted:             #777B78;   /* Muted Stone Gray */
+  --text-primary:           #1e1820;   /* Rich Charcoal-Purple (WCAG AAA) */
+  --text-secondary:         #5d525f;   /* Medium Neutral Slate */
+  --text-muted:             #857887;   /* Muted Gray */
   --text-inverse:           #FFFFFF;
-  --text-brand:             #356B68;
+  --text-brand:             #f03737;
 
   /* ── Light Mode Borders & Dividers ── */
-  --border-color:           #E2E3DC;   /* Soft Stone Border */
-  --border-light:           #EBECE5;
-  --border-strong:          #CED0C6;
-  --border-default:         #E2E3DC;
-  --border-subtle:          #EBECE5;
-  --border-focus:           #356B68;
-  --ring-focus:             rgba(53, 107, 104, 0.22);
+  --border-color:           #E5DEE5;   /* Soft Mist Border */
+  --border-light:           #EFE9EE;
+  --border-strong:          #D0C5D0;
+  --border-default:         #E5DEE5;
+  --border-subtle:          #EFE9EE;
+  --border-focus:           #f03737;
+  --ring-focus:             rgba(240, 55, 55, 0.22);
 
-  /* ── Semantic Colors (Restrained, Muted, Accessible) ── */
-  --success:                #3D7D62;   /* Botanical Forest Green */
-  --success-soft:           rgba(61, 125, 98, 0.10);
-  --success-text:           #255541;
+  /* ── Semantic Colors (Accessible, Harmonious) ── */
+  --success:                #2E8B57;   /* Sea Green */
+  --success-soft:           rgba(46, 139, 87, 0.10);
+  --success-text:           #1E5E3A;
 
-  --warning:                #B07534;   /* Warm Ochre / Amber */
-  --warning-soft:           rgba(176, 117, 52, 0.10);
-  --warning-text:           #754716;
+  --warning:                #eb7b5c;   /* Coral Accent */
+  --warning-soft:           rgba(235, 123, 92, 0.12);
+  --warning-text:           #9e3a20;
 
-  --danger:                 #AC4A43;   /* Muted Terracotta Crimson */
-  --danger-soft:            rgba(172, 74, 67, 0.10);
-  --danger-text:            #772A24;
+  --danger:                 #f03737;   /* Signature Red */
+  --danger-soft:            rgba(240, 55, 55, 0.10);
+  --danger-text:            #a81b1b;
 
-  --info:                   #4A7490;   /* Slate Dusty Blue */
-  --info-soft:              rgba(74, 116, 144, 0.10);
-  --info-text:              #244B65;
+  --info:                   #bb8dc1;   /* Soft Mauve */
+  --info-soft:              rgba(187, 141, 193, 0.14);
+  --info-text:              #6d3e74;
 
-  /* ── Shadows (Restrained, Natural, Non-Glowing) ── */
-  --shadow-xs:              0 1px 2px rgba(37, 46, 44, 0.04);
-  --shadow-sm:              0 2px 6px rgba(37, 46, 44, 0.05);
-  --shadow-md:              0 6px 18px rgba(37, 46, 44, 0.07);
-  --shadow-lg:              0 12px 32px rgba(37, 46, 44, 0.09);
-  --shadow-glow:            0 0 16px rgba(53, 107, 104, 0.12);
-  --shadow-glow-sm:         0 0 8px rgba(53, 107, 104, 0.08);
+  /* ── Shadows ── */
+  --shadow-xs:              0 1px 2px rgba(30, 24, 32, 0.04);
+  --shadow-sm:              0 2px 6px rgba(30, 24, 32, 0.05);
+  --shadow-md:              0 6px 18px rgba(30, 24, 32, 0.07);
+  --shadow-lg:              0 12px 32px rgba(30, 24, 32, 0.09);
+  --shadow-glow:            0 0 16px rgba(240, 55, 55, 0.14);
+  --shadow-glow-sm:         0 0 8px rgba(240, 55, 55, 0.09);
 
   /* ── Layout Dimensions ── */
   --sidebar-w:              272px;
@@ -153,42 +170,42 @@
   --font-body:              'Inter', sans-serif;
   --font-mono:              'JetBrains Mono', monospace;
 
-  /* ── Legacy Theme Aliases (Mapped to new Petrol Teal & Stone) ── */
-  --brand-primary:          #356B68;
-  --brand-primary-hover:    #2A5754;
+  /* ── Theme Aliases ── */
+  --brand-primary:          #f03737;
+  --brand-primary-hover:    #d92929;
   --sidebar-bg:             var(--bg-glass);
   --sidebar-border:         var(--border-color);
   --navbar-bg:              var(--bg-glass);
   --navbar-border:          var(--border-color);
   --sidebar-link:           var(--text-secondary);
-  --sidebar-active-bg:      rgba(53, 107, 104, 0.09);
+  --sidebar-active-bg:      rgba(240, 55, 55, 0.08);
 
-  --lime-primary:           #356B68;
-  --lime-secondary:         #8AB8AE;
-  --lime-accent:            #356B68;
-  --lime-accent-hover:      #2A5754;
-  --lime-soft-bg:           rgba(53, 107, 104, 0.07);
-  --lime-glow:              rgba(53, 107, 104, 0.15);
-  --forest-deep:            #252E2C;
-  --forest-hover:           #1D2422;
-  --forest-subtle:          rgba(37, 46, 44, 0.05);
-  --emerald-soft:           #EFEFE8;
-  --emerald-accent:         #3D7D62;
+  --lime-primary:           #f03737;
+  --lime-secondary:         #eb7b5c;
+  --lime-accent:            #f03737;
+  --lime-accent-hover:      #d92929;
+  --lime-soft-bg:           rgba(240, 55, 55, 0.07);
+  --lime-glow:              rgba(240, 55, 55, 0.15);
+  --forest-deep:            #1e1820;
+  --forest-hover:           #150f16;
+  --forest-subtle:          rgba(30, 24, 32, 0.05);
+  --emerald-soft:           #ece5eb;
+  --emerald-accent:         #2E8B57;
 
-  --pink-primary:           #356B68;
-  --pink-secondary:         #8AB8AE;
-  --pink-accent:            #356B68;
-  --pink-accent-hover:      #2A5754;
-  --pink-soft-bg:           rgba(53, 107, 104, 0.07);
-  --plum-deep:              #252E2C;
-  --plum-hover:             #1D2422;
-  --plum-subtle:            rgba(37, 46, 44, 0.05);
-  --lavender-soft:          #EFEFE8;
-  --lavender-accent:        #829DB5;
+  --pink-primary:           #f03737;
+  --pink-secondary:         #eb7b5c;
+  --pink-accent:            #f03737;
+  --pink-accent-hover:      #d92929;
+  --pink-soft-bg:           rgba(240, 55, 55, 0.08);
+  --plum-deep:              #1e1820;
+  --plum-hover:             #150f16;
+  --plum-subtle:            rgba(30, 24, 32, 0.05);
+  --lavender-soft:          #ece5eb;
+  --lavender-accent:        #bb8dc1;
 
-  --role-client-glow:       rgba(53, 107, 104, 0.12);
-  --role-fl-glow:           rgba(138, 184, 174, 0.12);
-  --role-fl-primary:        #356B68;
+  --role-client-glow:       rgba(240, 55, 55, 0.14);
+  --role-fl-glow:           rgba(235, 123, 92, 0.14);
+  --role-fl-primary:        #f03737;
   --admin-lime:             var(--primary);
   --admin-primary:          var(--primary);
   --admin-rose:             var(--primary);
@@ -198,131 +215,146 @@
   --admin-brand-purple:     var(--primary);
   --admin-brand-pink:       var(--primary);
 
-  --hub-gold:               #B07534;
-  --hub-gold-border:        rgba(176, 117, 52, 0.25);
-  --hub-gold-soft:          rgba(176, 117, 52, 0.10);
-  --hub-burgundy:           #356B68;
-  --hub-burgundy-light:     #8AB8AE;
-  --hub-burgundy-soft:      rgba(53, 107, 104, 0.08);
+  --hub-gold:               #eb7b5c;
+  --hub-gold-border:        rgba(235, 123, 92, 0.25);
+  --hub-gold-soft:          rgba(235, 123, 92, 0.10);
+  --hub-burgundy:           #f03737;
+  --hub-burgundy-light:     #eb7b5c;
+  --hub-burgundy-soft:      rgba(240, 55, 55, 0.08);
 }
 
 /* ==========================================================================
-   DESIGN TOKENS — DARK MODE (Deep Charcoal-Green & Soft Muted Teal)
+   DESIGN TOKENS — DARK MODE (Deep Charcoal Base & Arlen McCluskey Accents)
    ========================================================================== */
 [data-theme="dark"],
 .theme-dark {
-  /* ── Master Brand Palette: Soft Muted Petrol Teal ── */
-  --primary:                #8AB8AE;   /* Refined Muted Teal (Contrast on Charcoal) */
-  --primary-hover:          #A3CCC3;
-  --primary-active:         #6FA095;
-  --primary-subtle:         rgba(138, 184, 174, 0.10);
-  --primary-soft:           rgba(138, 184, 174, 0.15);
-  --primary-border:         rgba(138, 184, 174, 0.25);
-  --primary-contrast:       #171D1C;   /* Text on Soft Teal Button */
+  /* ── Master Brand Palette ── */
+  --primary:                #f03737;   /* Radiant Signature Red */
+  --primary-hover:          #ff5757;
+  --primary-active:         #d92929;
+  --primary-subtle:         rgba(240, 55, 55, 0.15);
+  --primary-soft:           rgba(240, 55, 55, 0.20);
+  --primary-border:         rgba(240, 55, 55, 0.32);
+  --primary-contrast:       #FFFFFF;
 
-  /* ── Supporting Palette (Dark Adjusted) ── */
-  --muted-sage:             #B4C7B4;
-  --muted-sage-soft:        rgba(180, 199, 180, 0.12);
-  --muted-sage-text:        #CDE0CD;
+  /* ── Arlen McCluskey Supporting Palette (Dark Adjusted) ── */
+  --coral-accent:           #eb7b5c;
+  --coral-soft:             rgba(235, 123, 92, 0.16);
+  --coral-text:             #f5a18b;
 
-  --soft-clay:              #D6A38E;
-  --soft-clay-soft:         rgba(214, 163, 142, 0.12);
-  --soft-clay-text:         #F0C4B4;
+  --mauve-accent:           #bb8dc1;
+  --mauve-soft:             rgba(187, 141, 193, 0.18);
+  --mauve-text:             #dcb6e0;
 
-  --dusty-blue:             #96B2C8;
-  --dusty-blue-soft:        rgba(150, 178, 200, 0.12);
-  --dusty-blue-text:        #C3DAED;
+  --base-tint:              #241a25;
+  --base-tint-soft:         rgba(36, 26, 37, 0.5);
 
-  --warm-sand:              #E2D5BE;
-  --warm-sand-soft:         rgba(226, 213, 190, 0.12);
-  --warm-sand-text:         #F3E8D5;
+  --muted-sage:             #bb8dc1;
+  --muted-sage-soft:        rgba(187, 141, 193, 0.15);
+  --muted-sage-text:        #dcb6e0;
 
-  --neutral-stone:          #929693;
-  --neutral-stone-soft:     rgba(146, 150, 147, 0.12);
+  --soft-clay:              #eb7b5c;
+  --soft-clay-soft:         rgba(235, 123, 92, 0.15);
+  --soft-clay-text:         #f5a18b;
+
+  --dusty-blue:             #bb8dc1;
+  --dusty-blue-soft:        rgba(187, 141, 193, 0.15);
+  --dusty-blue-text:        #dcb6e0;
+
+  --warm-sand:              #d4c4d5;
+  --warm-sand-soft:         rgba(212, 196, 213, 0.14);
+  --warm-sand-text:         #f3e8f4;
+
+  --neutral-stone:          #9d8f9f;
+  --neutral-stone-soft:     rgba(157, 143, 159, 0.14);
+
+  --brand-gradient:         linear-gradient(135deg, #f03737 0%, #eb7b5c 50%, #bb8dc1 100%);
+  --brand-gradient-hover:   linear-gradient(135deg, #ff5757 0%, #f58f73 50%, #cca0d1 100%);
+  --brand-gradient-subtle:  linear-gradient(135deg, rgba(240, 55, 55, 0.15) 0%, rgba(235, 123, 92, 0.15) 50%, rgba(187, 141, 193, 0.15) 100%);
 
   /* ── Dark Mode Surfaces ── */
-  --bg-app:                 #171D1C;   /* Deep Charcoal-Green Canvas */
-  --bg-surface:             #202927;   /* Elevated Surface Card */
-  --bg-card:                #202927;
-  --bg-card-hover:          #242F2C;
-  --bg-elevated:            #293330;   /* Secondary Surface */
-  --bg-glass:               rgba(23, 29, 28, 0.92);
-  --bg-glass-card:          #202927;
-  --bg-input:               #1B2321;
-  --bg-secondary:           #293330;
+  --bg-app:                 #130e14;   /* Deep Charcoal Base */
+  --bg-surface:             #1c151e;   /* Elevated Surface Card */
+  --bg-card:                #1c151e;
+  --bg-card-hover:          #251c27;
+  --bg-elevated:            #281e2a;   /* Secondary Surface */
+  --bg-glass:               rgba(19, 14, 20, 0.94);
+  --bg-glass-card:          #1c151e;
+  --bg-input:               #161017;
+  --bg-secondary:           #281e2a;
 
   /* ── Dark Mode Typography ── */
-  --text-primary:           #F0F2EC;   /* Warm Soft Off-White (WCAG AAA) */
-  --text-secondary:         #B5C0B9;   /* Muted Sage-Slate Text */
-  --text-muted:             #808D86;   /* Quiet Stone Subtitle Text */
-  --text-inverse:           #171D1C;
-  --text-brand:             #8AB8AE;
+  --text-primary:           #FBF8FB;   /* Warm Soft Off-White (WCAG AAA) */
+  --text-secondary:         #C6BCC8;   /* Muted Slate Text */
+  --text-muted:             #918593;   /* Quiet Stone Subtitle Text */
+  --text-inverse:           #130e14;
+  --text-brand:             #f03737;
 
   /* ── Dark Mode Borders & Dividers ── */
-  --border-color:           #394541;   /* Muted Charcoal-Green Border */
-  --border-light:           #2E3834;
-  --border-strong:          #4B5954;
-  --border-default:         #394541;
-  --border-subtle:          #2E3834;
-  --border-focus:           #8AB8AE;
-  --ring-focus:             rgba(138, 184, 174, 0.25);
+  --border-color:           #3a2c3c;   /* Soft Charcoal Border */
+  --border-light:           #2c212e;
+  --border-strong:          #4e3b50;
+  --border-default:         #3a2c3c;
+  --border-subtle:          #2c212e;
+  --border-focus:           #f03737;
+  --ring-focus:             rgba(240, 55, 55, 0.30);
 
   /* ── Semantic Colors (Dark Theme Accessible Contrast) ── */
-  --success:                #6BB892;   /* Soft Botanical Sage Green */
-  --success-soft:           rgba(107, 184, 146, 0.14);
-  --success-text:           #A3DFC0;
+  --success:                #48BB78;
+  --success-soft:           rgba(72, 187, 120, 0.14);
+  --success-text:           #9AE6B4;
 
-  --warning:                #DEAB6A;   /* Soft Warm Amber */
-  --warning-soft:           rgba(222, 171, 106, 0.14);
-  --warning-text:           #F6D4A5;
+  --warning:                #eb7b5c;
+  --warning-soft:           rgba(235, 123, 92, 0.16);
+  --warning-text:           #f5a18b;
 
-  --danger:                 #D97B75;   /* Soft Terracotta Red */
-  --danger-soft:            rgba(217, 123, 117, 0.14);
-  --danger-text:            #F7B6B2;
+  --danger:                 #f03737;
+  --danger-soft:            rgba(240, 55, 55, 0.16);
+  --danger-text:            #FEB2B2;
 
-  --info:                   #82AEC4;   /* Soft Slate Blue */
-  --info-soft:              rgba(130, 174, 196, 0.14);
-  --info-text:              #B8DCF0;
+  --info:                   #bb8dc1;
+  --info-soft:              rgba(187, 141, 193, 0.18);
+  --info-text:              #dcb6e0;
 
-  /* ── Shadows (Restrained, Deep, Non-Glowing) ── */
+  /* ── Shadows ── */
   --shadow-xs:              0 1px 3px rgba(0, 0, 0, 0.35);
   --shadow-sm:              0 2px 8px rgba(0, 0, 0, 0.45);
   --shadow-md:              0 6px 20px rgba(0, 0, 0, 0.55);
   --shadow-lg:              0 14px 40px rgba(0, 0, 0, 0.65);
-  --shadow-glow:            0 0 16px rgba(138, 184, 174, 0.10);
-  --shadow-glow-sm:         0 0 8px rgba(138, 184, 174, 0.08);
+  --shadow-glow:            0 0 16px rgba(240, 55, 55, 0.18);
+  --shadow-glow-sm:         0 0 8px rgba(240, 55, 55, 0.12);
 
   /* ── Legacy Aliases in Dark Mode ── */
-  --brand-primary:          #8AB8AE;
-  --brand-primary-hover:    #A3CCC3;
+  --brand-primary:          #f03737;
+  --brand-primary-hover:    #ff5757;
   --sidebar-bg:             var(--bg-glass);
   --sidebar-border:         var(--border-color);
   --navbar-bg:              var(--bg-glass);
   --navbar-border:          var(--border-color);
   --sidebar-link:           var(--text-secondary);
-  --sidebar-active-bg:      rgba(138, 184, 174, 0.12);
+  --sidebar-active-bg:      rgba(240, 55, 55, 0.12);
 
-  --lime-primary:           #8AB8AE;
-  --lime-secondary:         #A3CCC3;
-  --lime-accent:            #8AB8AE;
-  --lime-accent-hover:      #A3CCC3;
-  --lime-soft-bg:           rgba(138, 184, 174, 0.10);
-  --lime-glow:              rgba(138, 184, 174, 0.15);
-  --forest-deep:            #8AB8AE;
-  --forest-subtle:          rgba(138, 184, 174, 0.08);
-  --emerald-soft:           #293330;
-  --emerald-accent:         #6BB892;
+  --lime-primary:           #f03737;
+  --lime-secondary:         #eb7b5c;
+  --lime-accent:            #f03737;
+  --lime-accent-hover:      #ff5757;
+  --lime-soft-bg:           rgba(240, 55, 55, 0.10);
+  --lime-glow:              rgba(240, 55, 55, 0.20);
+  --forest-deep:            #f03737;
+  --forest-subtle:          rgba(240, 55, 55, 0.10);
+  --emerald-soft:           #281e2a;
+  --emerald-accent:         #48BB78;
 
-  --pink-primary:           #8AB8AE;
-  --pink-secondary:         #A3CCC3;
-  --pink-accent:            #8AB8AE;
-  --pink-accent-hover:      #A3CCC3;
-  --pink-soft-bg:           rgba(138, 184, 174, 0.10);
-  --plum-deep:              #293330;
-  --plum-hover:             #202927;
-  --plum-subtle:            rgba(138, 184, 174, 0.06);
-  --lavender-soft:          #293330;
-  --lavender-accent:        #96B2C8;
+  --pink-primary:           #f03737;
+  --pink-secondary:         #eb7b5c;
+  --pink-accent:            #f03737;
+  --pink-accent-hover:      #ff5757;
+  --pink-soft-bg:           rgba(240, 55, 55, 0.12);
+  --plum-deep:              #1c151e;
+  --plum-hover:             #251c27;
+  --plum-subtle:            rgba(240, 55, 55, 0.08);
+  --lavender-soft:          #281e2a;
+  --lavender-accent:        #bb8dc1;
 
   --role-admin-lime:        var(--primary);
   --role-admin-violet:      var(--primary);
@@ -405,9 +437,10 @@ a:hover {
   background-color: var(--bg-app);
   background-image:
     radial-gradient(var(--border-color) 0.8px, transparent 0.8px),
-    radial-gradient(ellipse 650px 420px at 92% 5%, rgba(53, 107, 104, 0.04), transparent 70%),
-    radial-gradient(ellipse 500px 380px at 4% 50%, rgba(165, 185, 165, 0.05), transparent 70%);
-  background-size: 24px 24px, 100% 100%, 100% 100%;
+    radial-gradient(ellipse 700px 450px at 92% 5%, rgba(235, 123, 92, 0.07), transparent 70%),
+    radial-gradient(ellipse 550px 380px at 4% 50%, rgba(187, 141, 193, 0.08), transparent 70%),
+    radial-gradient(ellipse 600px 300px at 50% 0%, rgba(240, 55, 55, 0.04), transparent 70%);
+  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
   transition: background-color var(--tr-norm);
 }
 
@@ -415,10 +448,11 @@ a:hover {
 .theme-dark .fh-fixed-bg-canvas {
   background-color: var(--bg-app);
   background-image:
-    radial-gradient(rgba(57, 69, 65, 0.4) 0.8px, transparent 0.8px),
-    radial-gradient(ellipse 700px 480px at 90% 8%, rgba(138, 184, 174, 0.04), transparent 70%),
-    radial-gradient(ellipse 600px 400px at 8% 50%, rgba(41, 51, 48, 0.6), transparent 70%);
-  background-size: 24px 24px, 100% 100%, 100% 100%;
+    radial-gradient(rgba(58, 44, 60, 0.5) 0.8px, transparent 0.8px),
+    radial-gradient(ellipse 700px 480px at 90% 8%, rgba(235, 123, 92, 0.06), transparent 70%),
+    radial-gradient(ellipse 600px 400px at 8% 50%, rgba(187, 141, 193, 0.06), transparent 70%),
+    radial-gradient(ellipse 600px 300px at 50% 0%, rgba(240, 55, 55, 0.04), transparent 70%);
+  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
 }
 
 .fh-fixed-bg-overlay {

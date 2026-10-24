@@ -1,7 +1,7 @@
 /* ==========================================================================
    FREELANCEHUB — MASTER PUBLIC LANDING PAGE STYLESHEET
-   Brand Direction: Soft Baby Pink (#F7B5CD), Soft Rose (#DE5B88) + Deep Plum (#3B142B)
-   Modern SaaS + Professional Business Analytics Platform
+   Brand Direction: Arlen McCluskey Palette (#ece5eb, #f03737, #eb7b5c, #bb8dc1)
+   White Page Base • Above-The-Fold & Footer Signature Gradient Effects
    ========================================================================== */
 
 /* ── CONTAINER & GLOBAL SHELL ────────────────────────────────────────────── */
@@ -58,7 +58,7 @@
 }
 
 .hub-nav-link:hover {
-  color: var(--pink-accent);
+  color: var(--primary);
 }
 
 .hub-nav-link::after {
@@ -68,7 +68,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--pink-accent);
+  background: linear-gradient(90deg, #f03737, #eb7b5c);
   border-radius: 2px;
   transition: width var(--tr-fast);
 }
@@ -191,13 +191,13 @@
 }
 
 .hero-title .gradient-text {
-  background: linear-gradient(135deg, var(--pink-accent) 0%, var(--plum-deep) 100%);
+  background: linear-gradient(135deg, #f03737 0%, #eb7b5c 50%, #bb8dc1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 [data-theme="dark"] .hero-title .gradient-text {
-  background: linear-gradient(135deg, #FFB3D1 0%, var(--pink-primary) 100%);
+  background: linear-gradient(135deg, #ff5757 0%, #eb7b5c 50%, #cca0d1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -755,7 +755,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--pink-accent) 0%, var(--plum-deep) 100%);
+  background: linear-gradient(135deg, #f03737 0%, #eb7b5c 100%);
   color: #FFFFFF;
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
@@ -1322,19 +1322,19 @@
 
 /* ── 11. FINAL CTA BANNER ────────────────────────────────────────────────── */
 .hub-cta-banner-card {
-  background: linear-gradient(135deg, rgba(247, 198, 217, 0.35) 0%, rgba(107, 49, 82, 0.18) 100%);
-  border: 1px solid rgba(217, 108, 157, 0.38);
+  background: linear-gradient(135deg, rgba(236, 229, 235, 0.9) 0%, rgba(187, 141, 193, 0.22) 40%, rgba(235, 123, 92, 0.18) 75%, rgba(240, 55, 55, 0.12) 100%);
+  border: 1px solid rgba(235, 123, 92, 0.35);
   border-radius: var(--radius-lg);
   text-align: center;
   padding: 68px 36px;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-lg), 0 0 32px rgba(217, 108, 157, 0.15);
+  box-shadow: var(--shadow-lg), 0 0 32px rgba(240, 55, 55, 0.12);
 }
 
 [data-theme="dark"] .hub-cta-banner-card {
-  background: linear-gradient(135deg, rgba(107, 49, 82, 0.35) 0%, rgba(26, 18, 30, 0.8) 100%);
-  border-color: rgba(247, 198, 217, 0.22);
+  background: linear-gradient(135deg, rgba(36, 26, 37, 0.9) 0%, rgba(187, 141, 193, 0.16) 40%, rgba(235, 123, 92, 0.14) 75%, rgba(240, 55, 55, 0.12) 100%);
+  border-color: rgba(235, 123, 92, 0.30);
 }
 
 .hub-cta-title {
@@ -1353,13 +1353,27 @@
   line-height: 1.6;
 }
 
-/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+/* ── FOOTER (Arlen McCluskey Signature Gradient Effect) ─────────────────────── */
 .hub-footer {
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-color);
-  padding: 60px 0 30px;
   position: relative;
   z-index: 10;
+  padding: 72px 0 34px;
+  background:
+    radial-gradient(circle at 12% 88%, rgba(187, 141, 193, 0.20) 0%, transparent 45%),
+    radial-gradient(circle at 88% 12%, rgba(235, 123, 92, 0.16) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 100%, rgba(240, 55, 55, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, #FFFFFF 0%, #ece5eb 100%);
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, #bb8dc1 0%, #eb7b5c 50%, #f03737 100%) 1;
+}
+
+[data-theme="dark"] .hub-footer {
+  background:
+    radial-gradient(circle at 12% 88%, rgba(187, 141, 193, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 88% 12%, rgba(235, 123, 92, 0.12) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 100%, rgba(240, 55, 55, 0.06) 0%, transparent 55%),
+    linear-gradient(180deg, #130e14 0%, #1f1720 100%);
+  border-image: linear-gradient(90deg, #bb8dc1 0%, #eb7b5c 50%, #f03737 100%) 1;
 }
 
 .hub-footer-grid {
@@ -1395,15 +1409,16 @@
 .hub-footer-links a {
   font-size: 0.88rem;
   color: var(--text-secondary);
-  transition: color var(--tr-fast);
+  transition: color var(--tr-fast), transform var(--tr-fast);
 }
 
 .hub-footer-links a:hover {
-  color: var(--pink-accent);
+  color: #f03737;
+  transform: translateX(3px);
 }
 
 .hub-footer-bottom {
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid rgba(187, 141, 193, 0.25);
   padding-top: 24px;
   display: flex;
   align-items: center;
@@ -1576,13 +1591,14 @@
 }
 
 .fhp-gradient-text {
-  color: var(--primary);
-  background: none;
-  -webkit-text-fill-color: initial;
+  background: linear-gradient(135deg, #f03737 0%, #eb7b5c 50%, #bb8dc1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
 .fhp-pink-text {
-  color: var(--primary);
+  color: #f03737;
 }
 
 /* ── Buttons ── */
@@ -1618,19 +1634,18 @@
 }
 
 .fhp-btn-primary {
-  background: var(--primary);
-  color: var(--primary-contrast) !important;
+  background: linear-gradient(135deg, #f03737 0%, #eb7b5c 100%);
+  color: #FFFFFF !important;
   font-weight: 700;
-  border: 1px solid var(--primary);
-  box-shadow: var(--shadow-sm);
+  border: none;
+  box-shadow: 0 4px 16px rgba(240, 55, 55, 0.28);
 }
 
 .fhp-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  background: var(--primary-hover);
-  border-color: var(--primary-hover);
-  color: var(--primary-contrast) !important;
+  box-shadow: 0 6px 22px rgba(240, 55, 55, 0.38);
+  background: linear-gradient(135deg, #d92929 0%, #d66a4c 100%);
+  color: #FFFFFF !important;
 }
 
 .fhp-btn-outline {
@@ -1703,11 +1718,25 @@
   transform: translateY(-2px);
 }
 
-/* ── 1. HERO SECTION ── */
+/* ── 1. HERO SECTION (Above-the-fold Arlen McCluskey Gradient Effect) ── */
 .fhp-hero {
   position: relative;
-  padding: 56px 0 72px;
+  padding: 68px 0 84px;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(235, 123, 92, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 12% 75%, rgba(187, 141, 193, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(240, 55, 55, 0.08) 0%, transparent 70%),
+    linear-gradient(180deg, #FFFFFF 0%, #ece5eb 100%);
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .fhp-hero {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(235, 123, 92, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 12% 75%, rgba(187, 141, 193, 0.14) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(240, 55, 55, 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, #130e14 0%, #1c151e 100%);
 }
 
 .fhp-hero-grid {
@@ -1721,14 +1750,15 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
-  background: var(--primary-soft);
-  border: 1px solid var(--primary-border);
+  padding: 6px 16px;
+  background: linear-gradient(135deg, rgba(240, 55, 55, 0.08) 0%, rgba(235, 123, 92, 0.10) 50%, rgba(187, 141, 193, 0.12) 100%);
+  border: 1px solid rgba(235, 123, 92, 0.35);
   border-radius: var(--radius-full, 9999px);
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--primary);
+  color: #f03737;
   margin-bottom: 22px;
+  box-shadow: 0 2px 10px rgba(240, 55, 55, 0.08);
 }
 
 .fhp-hero-title {
@@ -2309,7 +2339,7 @@
 
 .fhp-mockup-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #D96C9D 0%, #F7C6D9 100%);
+  background: linear-gradient(90deg, #f03737 0%, #eb7b5c 100%);
   border-radius: var(--radius-full, 9999px);
 }
 
@@ -2611,7 +2641,7 @@
   border-radius: var(--radius-full, 9999px);
 }
 
-.fhp-track-bar-fill.fill-wip { width: 68%; background: linear-gradient(90deg, #D96C9D, #F7C6D9); }
+.fhp-track-bar-fill.fill-wip { width: 68%; background: linear-gradient(90deg, #f03737, #eb7b5c); }
 .fhp-track-bar-fill.fill-done { width: 100%; background: #10B981; }
 
 .fhp-tracking-features {
@@ -3121,14 +3151,14 @@
 /* ── 12. FINAL CALL TO ACTION ── */
 .fhp-final-cta-card {
   position: relative;
-  background: linear-gradient(135deg, #6B3152 0%, #3B142B 100%);
+  background: linear-gradient(135deg, #f03737 0%, #eb7b5c 52%, #bb8dc1 100%);
   border-radius: var(--radius-lg, 22px);
   padding: 64px 32px;
   text-align: center;
   color: #FFFFFF;
   overflow: hidden;
-  box-shadow: 0 16px 48px rgba(107, 49, 82, 0.35);
-  border: 1px solid rgba(217, 108, 157, 0.3);
+  box-shadow: 0 16px 48px rgba(240, 55, 55, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .fhp-cta-inner {
@@ -3149,7 +3179,7 @@
 
 .fhp-cta-sub {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.92);
   margin-bottom: 32px;
 }
 
@@ -3158,9 +3188,9 @@
   align-items: center;
   gap: 12px;
   padding: 10px 22px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-full, 9999px);
   margin-bottom: 36px;
 }
@@ -3177,11 +3207,11 @@
 .fhp-cta-role-chip i, .fhp-cta-role-chip svg {
   width: 16px;
   height: 16px;
-  color: var(--pink-primary, #F7C6D9);
+  color: #ece5eb;
 }
 
 .fhp-cta-plus, .fhp-cta-equals {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 800;
 }
 
@@ -3191,7 +3221,7 @@
   gap: 6px;
   font-size: 0.88rem;
   font-weight: 800;
-  color: #10B981;
+  color: #FFFFFF;
 }
 
 .fhp-cta-result i, .fhp-cta-result svg {
@@ -3218,7 +3248,7 @@
   height: 320px;
   top: -100px;
   right: -80px;
-  background: radial-gradient(circle, rgba(217, 108, 157, 0.25) 0%, rgba(217, 108, 157, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
 .fhp-deco-2 {
@@ -3226,7 +3256,7 @@
   height: 260px;
   bottom: -90px;
   left: -60px;
-  background: radial-gradient(circle, rgba(152, 132, 206, 0.25) 0%, rgba(152, 132, 206, 0) 70%);
+  background: radial-gradient(circle, rgba(187, 141, 193, 0.35) 0%, rgba(187, 141, 193, 0) 70%);
 }
 
 /* ── RESPONSIVE MEDIA QUERIES ── */
