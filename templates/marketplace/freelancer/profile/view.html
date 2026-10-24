@@ -11,7 +11,7 @@
     <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
       <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
         {% if freelancer_profile.avatar %}
-          <img src="{{ freelancer_profile.avatar.url }}" alt="{{ freelancer_profile.display_name }}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(16,185,129,0.4);" />
+          <img src="{{ freelancer_profile.avatar.url }}" alt="{{ freelancer_profile.display_name }}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-color);" />
         {% else %}
           <div class="user-avatar-sm" style="width: 80px; height: 80px; font-size: 32px; border-width: 3px;">
             {{ freelancer_profile.display_name|make_list|first|upper }}
@@ -58,7 +58,7 @@
 
       <div>
         <span style="font-size: 11.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Completed Projects</span>
-        <div style="font-size: 18px; font-weight: 800; color: var(--green); margin-top: 2px;">
+        <div style="font-size: 18px; font-weight: 800; color: var(--primary); margin-top: 2px;">
           {{ completed_projects_count }}
         </div>
       </div>

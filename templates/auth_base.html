@@ -233,19 +233,19 @@
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
             <div>
               <div style="display:flex; align-items:center; gap:6px;">
-                <span style="width:7px; height:7px; border-radius:50%; background:#A3E635; display:inline-block; box-shadow:0 0 8px rgba(163,230,53,0.6);"></span>
+                <span style="width:7px; height:7px; border-radius:50%; background:var(--primary); display:inline-block;"></span>
                 <span style="font-size:0.84rem; font-weight:800; color:var(--text-primary);">Safe Payments Guarantee</span>
               </div>
               <div style="font-size:0.72rem; color:var(--text-secondary); margin-top:2px;">Client payments stay safe until work is approved</div>
             </div>
-            <span style="padding:3px 9px; border-radius:20px; background:rgba(163, 230, 53, 0.15); color:#A3E635; font-size:0.72rem; font-weight:800; border:1px solid rgba(163,230,53,0.3);">100% Safe Payments</span>
+            <span style="padding:3px 9px; border-radius:20px; background:var(--primary-subtle); color:var(--primary); font-size:0.72rem; font-weight:800; border:1px solid var(--border-default);">100% Safe Payments</span>
           </div>
           <div style="position:relative; width:100%; height:90px;">
             <canvas id="authTrustChart" role="img" aria-label="Safe Payments Guarantee Graph" style="width:100%; height:100%; display:block;"></canvas>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:0.72rem; color:var(--text-muted); border-top:1px dashed var(--border-subtle); padding-top:6px;">
             <span>Verified Escrow Payouts</span>
-            <span style="color:#A3E635; font-weight:800;">100% Protected</span>
+            <span style="color:var(--primary); font-weight:800;">100% Protected</span>
           </div>
         </div>
       </div>
@@ -291,10 +291,13 @@
 
         const ctx = canvas.getContext('2d');
         const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        const primaryColor = isDark ? '#8AB8AE' : '#356B68';
+        const surfaceBg = isDark ? '#202927' : '#FFFFFF';
+        const textCol = isDark ? '#F0F2EC' : '#252E2C';
 
         const grad = ctx.createLinearGradient(0, 0, 0, 90);
-        grad.addColorStop(0, 'rgba(16, 185, 129, 0.35)');
-        grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+        grad.addColorStop(0, isDark ? 'rgba(138, 184, 174, 0.35)' : 'rgba(53, 107, 104, 0.25)');
+        grad.addColorStop(1, isDark ? 'rgba(138, 184, 174, 0.0)' : 'rgba(53, 107, 104, 0.0)');
 
         const labels = ['Day 1', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30'];
         const values = [98.6, 99.1, 99.3, 99.5, 99.7, 99.8, 99.9];
@@ -306,13 +309,13 @@
             datasets: [{
               label: 'Reliability Index (%)',
               data: values,
-              borderColor: '#10B981',
+              borderColor: primaryColor,
               borderWidth: 2.2,
               backgroundColor: grad,
               fill: true,
               tension: 0.38,
-              pointBackgroundColor: '#10B981',
-              pointBorderColor: isDark ? '#141416' : '#ffffff',
+              pointBackgroundColor: primaryColor,
+              pointBorderColor: surfaceBg,
               pointBorderWidth: 1.5,
               pointRadius: 2.5,
               pointHoverRadius: 5
@@ -325,10 +328,10 @@
             plugins: {
               legend: { display: false },
               tooltip: {
-                backgroundColor: isDark ? '#1A1A1E' : '#FFFFFF',
-                titleColor: isDark ? '#FFFFFF' : '#111827',
-                bodyColor: '#10B981',
-                borderColor: 'rgba(16, 185, 129, 0.4)',
+                backgroundColor: surfaceBg,
+                titleColor: textCol,
+                bodyColor: primaryColor,
+                borderColor: isDark ? '#394541' : '#E2E3DC',
                 borderWidth: 1,
                 padding: 8,
                 displayColors: false,
@@ -353,9 +356,17 @@
         window.addEventListener('freelancehub:themechange', function (e) {
           try {
             const nextDark = e.detail && e.detail.theme !== 'light';
-            chart.options.plugins.tooltip.backgroundColor = nextDark ? '#1A1A1E' : '#FFFFFF';
-            chart.options.plugins.tooltip.titleColor = nextDark ? '#FFFFFF' : '#111827';
-            chart.data.datasets[0].pointBorderColor = nextDark ? '#141416' : '#ffffff';
+            const nextPrimary = nextDark ? '#8AB8AE' : '#356B68';
+            const nextSurface = nextDark ? '#202927' : '#FFFFFF';
+            const nextText = nextDark ? '#F0F2EC' : '#252E2C';
+
+            chart.options.plugins.tooltip.backgroundColor = nextSurface;
+            chart.options.plugins.tooltip.titleColor = nextText;
+            chart.options.plugins.tooltip.bodyColor = nextPrimary;
+            chart.options.plugins.tooltip.borderColor = nextDark ? '#394541' : '#E2E3DC';
+            chart.data.datasets[0].borderColor = nextPrimary;
+            chart.data.datasets[0].pointBackgroundColor = nextPrimary;
+            chart.data.datasets[0].pointBorderColor = nextSurface;
             chart.update('none');
           } catch (err) {}
         });

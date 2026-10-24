@@ -98,21 +98,20 @@
       transition: color var(--t-fast);
     }
     .admin-nav-item:hover {
-      background: var(--forest-subtle);
-      color: var(--lime-accent);
+      background: var(--primary-subtle);
+      color: var(--primary);
     }
     .admin-nav-item:hover svg {
-      color: var(--lime-accent);
+      color: var(--primary);
     }
     .admin-nav-item.active {
-      background: linear-gradient(135deg, rgba(163, 230, 53, 0.16) 0%, rgba(20, 83, 45, 0.25) 100%);
-      color: var(--text-primary);
+      background: var(--primary-subtle);
+      color: var(--primary);
       font-weight: 700;
-      border: 1px solid rgba(163, 230, 53, 0.35);
-      box-shadow: 0 4px 16px rgba(163, 230, 53, 0.12);
+      border: 1px solid var(--border-default);
     }
     .admin-nav-item.active svg {
-      color: var(--lime-accent);
+      color: var(--primary);
     }
     .admin-nav-item.active::before {
       content: '';
@@ -120,10 +119,9 @@
       left: 0;
       top: 15%;
       bottom: 15%;
-      width: 4px;
+      width: 3px;
       border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
-      background: var(--lime-accent);
-      box-shadow: 0 0 10px var(--lime-glow);
+      background: var(--primary);
     }
 
     .admin-main {
@@ -243,12 +241,12 @@
     <!-- Sidebar Footer -->
     <div style="padding: 16px; border-top: 1px solid var(--sidebar-border); flex-shrink:0;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-        <div style="width:36px; height:36px; border-radius:var(--r-full); background:linear-gradient(135deg, var(--role-admin-lime), var(--role-admin-violet)); display:flex; align-items:center; justify-content:center; color:#080c14; font-weight:800; font-size:14px; flex-shrink:0;">
+        <div style="width:36px; height:36px; border-radius:var(--r-full); background:var(--primary); display:flex; align-items:center; justify-content:center; color:var(--primary-contrast, #FFFFFF); font-weight:800; font-size:14px; flex-shrink:0;">
           {{ request.user.username|first|upper }}
         </div>
         <div style="min-width:0; flex:1;">
           <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ request.user.get_full_name|default:request.user.username }}</div>
-          <div style="font-size:0.72rem; color:var(--role-admin-lime); font-weight:700;">Super Admin</div>
+          <div style="font-size:0.72rem; color:var(--primary); font-weight:700;">Super Admin</div>
         </div>
       </div>
 

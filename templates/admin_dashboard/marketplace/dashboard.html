@@ -6,67 +6,110 @@
 
 {% block content %}
 
+<!-- ══ EXECUTIVE GOVERNANCE BANNER ═══════════════════════════════ -->
+<div class="card mb-4" style="border: 1px solid var(--border-default); background: var(--bg-surface); padding: 24px 28px; box-shadow: var(--shadow-sm); border-radius: var(--r-md);">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:18px;">
+    <div>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="badge" style="background:var(--primary-subtle); color:var(--primary); font-weight:700; font-size:0.75rem; border:1px solid var(--border-default); padding:4px 10px; border-radius:20px;">
+          Super Admin Console
+        </span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">&bull;</span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">Platform Governance &amp; Moderation</span>
+      </div>
+      <h2 style="font-family:var(--font-heading); font-size:1.45rem; font-weight:800; color:var(--text-primary); margin:0 0 6px;">
+        Platform Overview &amp; Telemetry
+      </h2>
+      <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;">
+        Real-time metrics, user oversight, catalog compliance, dispute arbitration, and audit logs.
+      </p>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a href="{% url 'marketplace_admin:exports_hub' %}" class="btn-fh btn-fh-primary" style="padding:10px 18px; font-weight:700;">
+        <i data-lucide="download" style="width:16px;height:16px;"></i>
+        <span>Data Exports</span>
+      </a>
+      <a href="{% url 'marketplace_admin:reports_list' %}" class="btn-fh btn-fh-secondary" style="padding:10px 16px;">
+        <i data-lucide="shield-alert" style="width:16px;height:16px;"></i>
+        <span>Incident Reports</span>
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- ══ ROW 1: KPI CARDS (6 REQUIRED METRICS) ═════════════════ -->
-<div class="admin-kpi-grid">
+<div class="kpi-grid mb-4">
   
   <!-- 1. Total Users -->
-  <div class="admin-kpi-card">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-      <span class="admin-kpi-label">Total Users</span>
-      <i data-lucide="users" style="color:var(--admin-brand-purple); width:18px; height:18px;"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total Users</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="users" style="width:18px;height:18px;"></i>
+      </div>
     </div>
-    <div class="admin-kpi-val">{{ kpi.total_clients|add:kpi.total_freelancers|default:"0" }}</div>
-    <div style="font-size:11px; color:var(--admin-text-muted); margin-top:4px;">Platform registered accounts</div>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ kpi.total_clients|add:kpi.total_freelancers|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted);">Platform registered accounts</div>
   </div>
 
   <!-- 2. Clients -->
-  <div class="admin-kpi-card">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-      <span class="admin-kpi-label">Clients</span>
-      <i data-lucide="briefcase" style="color:#a855f7; width:18px; height:18px;"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Clients</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="briefcase" style="width:18px;height:18px;"></i>
+      </div>
     </div>
-    <div class="admin-kpi-val">{{ kpi.total_clients|default:"0" }}</div>
-    <div style="font-size:11px; color:var(--admin-text-muted); margin-top:4px;">Project hiring employers</div>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ kpi.total_clients|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted);">Project hiring employers</div>
   </div>
 
   <!-- 3. Freelancers -->
-  <div class="admin-kpi-card">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-      <span class="admin-kpi-label">Freelancers</span>
-      <i data-lucide="user-check" style="color:#ff5e6c; width:18px; height:18px;"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Freelancers</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="user-check" style="width:18px;height:18px;"></i>
+      </div>
     </div>
-    <div class="admin-kpi-val">{{ kpi.total_freelancers|default:"0" }}</div>
-    <div style="font-size:11px; color:var(--admin-text-muted); margin-top:4px;">Verified domain talent</div>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ kpi.total_freelancers|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted);">Verified domain talent</div>
   </div>
 
   <!-- 4. Active Projects -->
-  <div class="admin-kpi-card">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-      <span class="admin-kpi-label">Active Projects</span>
-      <i data-lucide="folder-kanban" style="color:var(--admin-brand-green); width:18px; height:18px;"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Active Projects</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="folder-kanban" style="width:18px;height:18px;"></i>
+      </div>
     </div>
-    <div class="admin-kpi-val">{{ kpi.active_projects|default:kpi.total_projects|default:"0" }}</div>
-    <div style="font-size:11px; color:var(--admin-text-muted); margin-top:4px;">In-progress delivery workspaces</div>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ kpi.active_projects|default:kpi.total_projects|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted);">In-progress delivery workspaces</div>
   </div>
 
-  <!-- 5. Pending Verification -->
-  <div class="admin-kpi-card">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-      <span class="admin-kpi-label">Pending Verification</span>
-      <i data-lucide="shield-check" style="color:var(--admin-lime); width:18px; height:18px;"></i>
+  <!-- 5. Pending KYC Queue -->
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Pending Verification</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
+      </div>
     </div>
-    <div class="admin-kpi-val">{{ pending_verifications.count|default:"0" }}</div>
-    <div style="font-size:11px; color:var(--admin-text-muted); margin-top:4px;">Awaiting KYC clearance</div>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ pending_verifications.count|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted);">Awaiting KYC clearance</div>
   </div>
 
-  <!-- 6. Open Reports -->
-  <div class="admin-kpi-card">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-      <span class="admin-kpi-label">Open Reports</span>
-      <i data-lucide="life-buoy" style="color:#ef4444; width:18px; height:18px;"></i>
+  <!-- 6. Open Incident Reports -->
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Open Incidents</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="life-buoy" style="width:18px;height:18px;"></i>
+      </div>
     </div>
-    <div class="admin-kpi-val">{{ kpi.open_reports|default:kpi.open_disputes|default:"0" }}</div>
-    <div style="font-size:11px; color:var(--admin-text-muted); margin-top:4px;">Incidents &amp; support tickets</div>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ kpi.open_reports|default:kpi.open_disputes|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted);">Incidents &amp; support tickets</div>
   </div>
 
 </div>
@@ -78,76 +121,77 @@
   <div style="display: flex; flex-direction: column; gap: 24px;">
     
     <!-- Recent Marketplace Projects -->
-    <div class="admin-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--admin-border-subtle);">
-        <h3 style="font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="folder-kanban" style="color: var(--admin-brand-green);"></i>
-          <span>Recent Projects</span>
+    <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border-default);">
+        <h3 style="font-family:var(--font-heading); font-size: 1.05rem; font-weight: 800; color:var(--text-primary); margin:0; display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="folder-kanban" style="color: var(--primary); width:18px; height:18px;"></i>
+          <span>Recent Marketplace Projects</span>
         </h3>
-        <a href="{% url 'marketplace_admin:projects_list' %}" class="btn-hub-ghost" style="padding: 4px 10px; font-size: 12px;">
-          <span>View All Catalog</span>
-          <i data-lucide="arrow-right"></i>
+        <a href="{% url 'marketplace_admin:projects_list' %}" class="btn-fh btn-fh-secondary btn-fh-sm">
+          <span>View Catalog</span>
+          <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
         </a>
       </div>
 
       {% if recent_projects %}
         <div style="display: flex; flex-direction: column; gap: 10px;">
           {% for project in recent_projects %}
-            <div style="background: var(--admin-bg-surface); border: 1px solid var(--admin-border); border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: var(--r-sm); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
               <div>
-                <a href="{% url 'marketplace_admin:project_detail' project_id=project.pk %}" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; color: var(--admin-text-primary); text-decoration: none;">
+                <a href="{% url 'marketplace_admin:project_detail' project_id=project.pk %}" style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700; color: var(--text-primary); text-decoration: none;">
                   {{ project.title }}
                 </a>
-                <div style="font-size: 11.5px; color: var(--admin-text-muted); margin-top: 2px;">
-                  Posted by <strong>{{ project.client.user.username }}</strong> &bull; Budget: <strong>₹{{ project.budget|floatformat:0 }}</strong>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
+                  Posted by <strong>{{ project.client.user.username }}</strong> &bull; Budget: <strong style="color:var(--text-primary);">₹{{ project.budget|floatformat:0 }}</strong>
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="badge" style="background: rgba(155, 196, 0, 0.15); color: var(--admin-brand-green); font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 700;">
+                <span class="badge" style="background: var(--primary-subtle); color: var(--primary); font-size: 0.72rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; border: 1px solid var(--border-default);">
                   {{ project.get_status_display }}
                 </span>
-                <a href="{% url 'marketplace_admin:project_detail' project_id=project.pk %}" class="btn-hub-ghost" style="padding: 4px 8px; font-size: 11px;">
-                  <i data-lucide="eye"></i>
+                <a href="{% url 'marketplace_admin:project_detail' project_id=project.pk %}" class="btn-fh btn-fh-secondary btn-fh-sm" style="padding:4px 10px;">
+                  <i data-lucide="eye" style="width:14px;height:14px;"></i>
+                  <span>Inspect</span>
                 </a>
               </div>
             </div>
           {% endfor %}
         </div>
       {% else %}
-        <div style="text-align: center; padding: 32px; color: var(--admin-text-muted); font-size: 13px;">
+        <div style="text-align: center; padding: 36px 16px; border:1px dashed var(--border-default); border-radius:var(--r-sm); color: var(--text-muted); font-size: 0.85rem;">
           No projects currently in the catalog.
         </div>
       {% endif %}
     </div>
 
     <!-- Recent Platform Users -->
-    <div class="admin-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--admin-border-subtle);">
-        <h3 style="font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="users" style="color: var(--admin-brand-purple);"></i>
-          <span>Recent Platform Users</span>
+    <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border-default);">
+        <h3 style="font-family:var(--font-heading); font-size: 1.05rem; font-weight: 800; color:var(--text-primary); margin:0; display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="users" style="color: var(--primary); width:18px; height:18px;"></i>
+          <span>Recent Platform Registrations</span>
         </h3>
-        <a href="{% url 'marketplace_admin:users_list' %}" class="btn-hub-ghost" style="padding: 4px 10px; font-size: 12px;">
+        <a href="{% url 'marketplace_admin:users_list' %}" class="btn-fh btn-fh-secondary btn-fh-sm">
           <span>Manage Users</span>
-          <i data-lucide="arrow-right"></i>
+          <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
         </a>
       </div>
 
       {% if recent_users %}
         <div style="display: flex; flex-direction: column; gap: 10px;">
           {% for user in recent_users %}
-            <div style="background: var(--admin-bg-surface); border: 1px solid var(--admin-border); border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: var(--r-sm); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
               <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--admin-brand-purple), var(--admin-brand-green)); color: #0b0914; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">
+                <div style="width: 36px; height: 36px; border-radius: var(--r-full); background: var(--primary); color: var(--primary-contrast); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.88rem; flex-shrink:0;">
                   {{ user.username|slice:":1"|upper }}
                 </div>
                 <div>
-                  <div style="font-size: 13.5px; font-weight: 700;">{{ user.username }}</div>
-                  <div style="font-size: 11.5px; color: var(--admin-text-muted);">{{ user.email }} &bull; Joined {{ user.date_joined|date:"d M Y" }}</div>
+                  <div style="font-family:var(--font-heading); font-size: 0.92rem; font-weight: 700; color:var(--text-primary);">{{ user.username }}</div>
+                  <div style="font-size: 0.78rem; color: var(--text-muted);">{{ user.email }} &bull; Joined {{ user.date_joined|date:"d M Y" }}</div>
                 </div>
               </div>
               <div>
-                <span class="badge" style="background: rgba(163, 230, 53, 0.12); color: var(--admin-lime); font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(163, 230, 53, 0.25);">
+                <span class="badge" style="background: var(--primary-subtle); color: var(--primary); font-size: 0.72rem; padding: 4px 10px; border-radius: 20px; font-weight:700; border: 1px solid var(--border-default);">
                   {% if user.is_staff %}Admin{% elif user.freelancer_profile %}Freelancer{% else %}Client{% endif %}
                 </span>
               </div>
@@ -155,7 +199,7 @@
           {% endfor %}
         </div>
       {% else %}
-        <div style="text-align: center; padding: 32px; color: var(--admin-text-muted); font-size: 13px;">
+        <div style="text-align: center; padding: 36px 16px; border:1px dashed var(--border-default); border-radius:var(--r-sm); color: var(--text-muted); font-size: 0.85rem;">
           No recent user records found.
         </div>
       {% endif %}
@@ -167,41 +211,45 @@
   <div style="display: flex; flex-direction: column; gap: 24px;">
     
     <!-- Pending Verification Queue -->
-    <div class="admin-card">
-      <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="shield-alert" style="color: var(--admin-lime);"></i>
-        <span>Pending Verification Queue</span>
+    <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:24px;">
+      <h3 style="font-family:var(--font-heading); font-size: 1.05rem; font-weight: 800; color:var(--text-primary); margin:0 0 12px; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="shield-alert" style="color: var(--primary); width:18px; height:18px;"></i>
+        <span>KYC Verification Queue</span>
       </h3>
 
-      <div style="font-size: 12.5px; color: var(--admin-text-secondary); line-height: 1.5; margin-bottom: 16px;">
+      <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 16px;">
         Freelancers awaiting administrative identity and skills verification review before accessing the bidding marketplace.
       </div>
 
-      <a href="{% url 'marketplace_admin:reports_list' %}" class="btn-hub-ghost" style="justify-content: center; width: 100%; font-size: 12.5px;">
-        <i data-lucide="shield-check"></i>
+      <a href="{% url 'marketplace_admin:reports_list' %}" class="btn-fh btn-fh-secondary" style="justify-content: center; width: 100%;">
+        <i data-lucide="shield-check" style="width:15px;height:15px;"></i>
         <span>Review KYC Submissions</span>
       </a>
     </div>
 
     <!-- Platform Telemetry & Activity -->
-    <div class="admin-card">
-      <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="activity" style="color: var(--admin-brand-green);"></i>
-        <span>Platform Status</span>
+    <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:24px;">
+      <h3 style="font-family:var(--font-heading); font-size: 1.05rem; font-weight: 800; color:var(--text-primary); margin:0 0 14px; display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="activity" style="color: var(--primary); width:18px; height:18px;"></i>
+        <span>Platform Services Health</span>
       </h3>
 
-      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 12.5px;">
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--admin-text-muted);">Database / Auth Engine</span>
-          <span style="color: var(--admin-brand-green); font-weight: 700;">Operational</span>
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.82rem;">
+        <div style="display: flex; justify-content: space-between; align-items:center;">
+          <span style="color: var(--text-secondary);">Database &amp; Auth Engine</span>
+          <span style="color: var(--success); font-weight: 700; display:flex; align-items:center; gap:4px;">
+            <i data-lucide="check-circle-2" style="width:13px;height:13px;"></i> Operational
+          </span>
         </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--admin-text-muted);">Escrow &amp; Payment Ledger</span>
-          <span style="color: var(--admin-brand-green); font-weight: 700;">Active</span>
+        <div style="display: flex; justify-content: space-between; align-items:center;">
+          <span style="color: var(--text-secondary);">Escrow &amp; Payment Ledger</span>
+          <span style="color: var(--success); font-weight: 700; display:flex; align-items:center; gap:4px;">
+            <i data-lucide="check-circle-2" style="width:13px;height:13px;"></i> Active
+          </span>
         </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--admin-text-muted);">Application Conversion</span>
-          <span style="color: var(--admin-text-primary); font-weight: 700;">{{ kpi.hire_conversion_rate|default:"100" }}%</span>
+        <div style="display: flex; justify-content: space-between; align-items:center;">
+          <span style="color: var(--text-secondary);">Application Conversion</span>
+          <span style="color: var(--text-primary); font-weight: 800;">{{ kpi.hire_conversion_rate|default:"100" }}%</span>
         </div>
       </div>
     </div>

@@ -2,19 +2,20 @@
 {% block title %}Super Admin Master Dashboard — FreelanceHub Admin{% endblock %}
 
 {% block content %}
-<div class="d-flex align-items-center justify-content-between mb-4">
+<!-- Executive Welcome & Quick Actions -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
   <div>
     <h3 class="fw-bold mb-1 d-flex align-items-center gap-2">
-      <i data-lucide="crown" style="width:24px;height:24px;color:var(--admin-lime);"></i>
+      <i data-lucide="crown" style="width:22px;height:22px;color:var(--primary);"></i>
       <span>Super Admin Master Dashboard</span>
     </h3>
     <p class="text-muted small mb-0">System health, performance analytics, and platform governance statistics.</p>
   </div>
   <div class="d-flex gap-2">
-    <a href="{% url 'core:admin_reports' %}" class="btn-admin-primary" style="font-size:12.5px;padding:7px 14px;border-radius:var(--r-md);">
+    <a href="{% url 'core:admin_reports' %}" class="btn-fh-primary" style="font-size:12.5px;padding:8px 16px;border-radius:var(--r-md);text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
       <i data-lucide="download" style="width:14px;height:14px;"></i> <span>Export Reports</span>
     </a>
-    <a href="{% url 'core:admin_database_backup' %}" class="btn-hub-secondary" style="font-size:12.5px;padding:7px 14px;border-radius:var(--r-md);">
+    <a href="{% url 'core:admin_database_backup' %}" class="btn-hub-secondary" style="font-size:12.5px;padding:8px 16px;border-radius:var(--r-md);text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
       <i data-lucide="database" style="width:14px;height:14px;"></i> <span>Backup DB</span>
     </a>
   </div>
@@ -23,113 +24,130 @@
 <!-- ═════════════════════════════════════════════════════════
      EXECUTIVE KPI STAT CARDS (8 Core Metrics)
      ═════════════════════════════════════════════════════════ -->
-<h6 class="text-uppercase text-muted fw-bold mb-3 small d-flex align-items-center gap-2">
-  <i data-lucide="layout-grid" style="width:15px;height:15px;color:var(--admin-primary);"></i>
-  <span>Executive Key Performance Indicators</span>
-</h6>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="text-uppercase text-muted fw-bold small mb-0 d-flex align-items-center gap-2">
+    <i data-lucide="layout-grid" style="width:15px;height:15px;color:var(--primary);"></i>
+    <span>Executive Key Performance Indicators</span>
+  </h6>
+  <span class="badge" style="background:var(--primary-subtle);color:var(--primary);font-size:0.75rem;padding:4px 8px;border-radius:var(--r-sm);">Live Platform Telemetry</span>
+</div>
 
 <div class="row g-3 mb-4">
   <!-- 1. Total Users -->
   <div class="col-xl-3 col-md-6 col-6">
-    <div class="glass-card kpi-card" style="border-left: 3px solid var(--admin-primary);">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="users" style="width:16px;height:16px;color:var(--admin-primary);"></i>
-        <span>Total Users</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--primary);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Total Users</span>
+        <i data-lucide="users" style="width:16px;height:16px;color:var(--primary);"></i>
       </div>
-      <div class="kpi-value mt-2" style="color:var(--text-primary);">{{ kpi.total_users }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--text-primary);">{{ kpi.total_users }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">Platform registry</div>
     </div>
   </div>
+
   <!-- 2. Active Users -->
   <div class="col-xl-3 col-md-6 col-6">
-    <div class="glass-card kpi-card" style="border-left: 3px solid var(--admin-lime);">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="user-check" style="width:16px;height:16px;color:var(--admin-lime);"></i>
-        <span>Active Users</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--primary);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Active Users</span>
+        <i data-lucide="user-check" style="width:16px;height:16px;color:var(--primary);"></i>
       </div>
-      <div class="kpi-value mt-2" style="color:var(--admin-lime);">{{ kpi.active_users }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--primary);">{{ kpi.active_users }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">Verified &amp; active</div>
     </div>
   </div>
+
   <!-- 3. Total Projects -->
   <div class="col-xl-3 col-md-6 col-6">
-    <div class="glass-card kpi-card" style="border-left: 3px solid var(--admin-primary);">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="folder-kanban" style="width:16px;height:16px;color:var(--admin-primary);"></i>
-        <span>Total Projects</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--primary);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Total Projects</span>
+        <i data-lucide="folder-kanban" style="width:16px;height:16px;color:var(--primary);"></i>
       </div>
-      <div class="kpi-value mt-2">{{ kpi.total_projects }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--text-primary);">{{ kpi.total_projects }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">All postings</div>
     </div>
   </div>
+
   <!-- 4. Active Running Projects -->
   <div class="col-xl-3 col-md-6 col-6">
-    <div class="glass-card kpi-card" style="border-left: 3px solid var(--admin-lime);">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="activity" style="width:16px;height:16px;color:var(--admin-lime);"></i>
-        <span>Active Projects</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--primary);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Active Workspaces</span>
+        <i data-lucide="activity" style="width:16px;height:16px;color:var(--primary);"></i>
       </div>
-      <div class="kpi-value mt-2" style="color:var(--admin-lime);">{{ kpi.running_projects }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--primary);">{{ kpi.running_projects }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">Under active delivery</div>
     </div>
   </div>
 
   <!-- 5. Total Clients -->
   <div class="col-xl-3 col-md-6 col-6">
-    <div class="glass-card kpi-card" style="border-left: 3px solid var(--admin-rose);">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="briefcase" style="width:16px;height:16px;color:var(--admin-rose);"></i>
-        <span>Total Clients</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--border-color);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Total Clients</span>
+        <i data-lucide="briefcase" style="width:16px;height:16px;color:var(--text-secondary);"></i>
       </div>
-      <div class="kpi-value mt-2">{{ kpi.total_clients }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--text-primary);">{{ kpi.total_clients }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">Employer accounts</div>
     </div>
   </div>
+
   <!-- 6. Total Revenue -->
   <div class="col-xl-3 col-md-6 col-12">
-    <div class="glass-card kpi-card" style="border-left: 3px solid var(--admin-lime);">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="wallet" style="width:16px;height:16px;color:var(--admin-lime);"></i>
-        <span>Total Revenue</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--primary);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Total Revenue</span>
+        <i data-lucide="wallet" style="width:16px;height:16px;color:var(--primary);"></i>
       </div>
-      <div class="kpi-value mt-2" style="color:var(--admin-lime);">${{ kpi.total_revenue|floatformat:2 }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--text-primary);">${{ kpi.total_revenue|floatformat:2 }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">Gross platform volume</div>
     </div>
   </div>
+
   <!-- 7. Total Expenses -->
   <div class="col-xl-3 col-md-6 col-12">
-    <div class="glass-card kpi-card" style="border-left: 3px solid #ff5e6c;">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="receipt" style="width:16px;height:16px;color:#ff5e6c;"></i>
-        <span>Total Expenses</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--border-color);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Total Payouts</span>
+        <i data-lucide="receipt" style="width:16px;height:16px;color:var(--text-secondary);"></i>
       </div>
-      <div class="kpi-value mt-2" style="color:#ff5e6c;">${{ kpi.total_expenses|floatformat:2 }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--text-primary);">${{ kpi.total_expenses|floatformat:2 }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">Freelancer disbursements</div>
     </div>
   </div>
+
   <!-- 8. Net Profit -->
   <div class="col-xl-3 col-md-6 col-12">
-    <div class="glass-card kpi-card" style="border-left: 3px solid var(--admin-lime);">
-      <div class="kpi-title d-flex align-items-center gap-2">
-        <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--admin-lime);"></i>
-        <span>Net Profit</span>
+    <div class="card-fh-elevated kpi-card" style="border-left: 3px solid var(--primary);padding:1.1rem;">
+      <div class="kpi-title d-flex align-items-center justify-content-between">
+        <span class="text-muted small">Platform Margins</span>
+        <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--primary);"></i>
       </div>
-      <div class="kpi-value mt-2" style="color:var(--admin-lime);">${{ kpi.net_profit|floatformat:2 }}</div>
+      <div class="kpi-value mt-2 fw-bold" style="font-size:1.6rem;color:var(--primary);">${{ kpi.net_profit|floatformat:2 }}</div>
+      <div class="small text-muted mt-1" style="font-size:0.75rem;">Retained escrow commissions</div>
     </div>
   </div>
 </div>
 
 <!-- ═════════════════════════════════════════════════════════
-     PLATFORM VISUAL ANALYTICS (Exactly 5 High-Impact Visualizations)
+     PLATFORM VISUAL ANALYTICS (5 High-Impact Visualizations)
      ═════════════════════════════════════════════════════════ -->
 <h6 class="text-uppercase text-muted fw-bold mb-3 small d-flex align-items-center gap-2">
-  <i data-lucide="bar-chart-3" style="width:15px;height:15px;color:var(--admin-primary);"></i>
+  <i data-lucide="bar-chart-3" style="width:15px;height:15px;color:var(--primary);"></i>
   <span>Platform Visual Analytics &amp; Trends</span>
 </h6>
 
-<div class="row g-4 mb-5">
+<div class="row g-4 mb-4">
   <!-- Visualization 1: Monthly Revenue Trend (Line Chart) -->
   <div class="col-lg-8">
-    <div class="glass-card h-100 p-4">
-      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+    <div class="card-fh-elevated h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-color) !important;">
         <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
-          <i data-lucide="line-chart" style="width:18px;height:18px;color:var(--admin-lime);"></i>
-          <span>1. Monthly Revenue Trend</span>
+          <i data-lucide="line-chart" style="width:18px;height:18px;color:var(--primary);"></i>
+          <span>1. Monthly Platform Volume Trend</span>
         </h6>
-        <span class="badge" style="background:rgba(155,196,0,0.15);color:var(--admin-lime);border:1px solid rgba(155,196,0,0.3);font-size:0.75rem;padding:4px 10px;">Growth Telemetry</span>
+        <span class="badge" style="background:var(--primary-subtle);color:var(--primary);border:1px solid var(--border-color);font-size:0.75rem;padding:4px 10px;">Growth Telemetry</span>
       </div>
       <div class="fh-chart-container">
         <canvas id="chartMonthlyRevenue"></canvas>
@@ -139,13 +157,13 @@
 
   <!-- Visualization 2: Project Status Distribution (Donut Chart) -->
   <div class="col-lg-4">
-    <div class="glass-card h-100 p-4">
-      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+    <div class="card-fh-elevated h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-color) !important;">
         <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
-          <i data-lucide="pie-chart" style="width:18px;height:18px;color:var(--admin-primary);"></i>
+          <i data-lucide="pie-chart" style="width:18px;height:18px;color:var(--primary);"></i>
           <span>2. Project Status Distribution</span>
         </h6>
-        <span class="badge" style="background:rgba(128,118,163,0.15);color:var(--admin-primary);border:1px solid rgba(128,118,163,0.3);font-size:0.75rem;padding:4px 10px;">Lifecycle</span>
+        <span class="badge" style="background:var(--primary-subtle);color:var(--primary);border:1px solid var(--border-color);font-size:0.75rem;padding:4px 10px;">Lifecycle</span>
       </div>
       <div class="fh-chart-container fh-chart-container-sm">
         <canvas id="chartProjectStatus"></canvas>
@@ -155,13 +173,13 @@
 
   <!-- Visualization 3: Income vs Expenses (Bar Chart) -->
   <div class="col-lg-6">
-    <div class="glass-card h-100 p-4">
-      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+    <div class="card-fh-elevated h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-color) !important;">
         <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
-          <i data-lucide="scale" style="width:18px;height:18px;color:var(--admin-lime);"></i>
-          <span>3. Income vs Expenses</span>
+          <i data-lucide="scale" style="width:18px;height:18px;color:var(--primary);"></i>
+          <span>3. Inflow vs Outflow Comparison</span>
         </h6>
-        <span class="badge" style="background:rgba(155,196,0,0.15);color:var(--admin-lime);border:1px solid rgba(155,196,0,0.3);font-size:0.75rem;padding:4px 10px;">Cash Flow Audit</span>
+        <span class="badge" style="background:var(--primary-subtle);color:var(--primary);border:1px solid var(--border-color);font-size:0.75rem;padding:4px 10px;">Audit Telemetry</span>
       </div>
       <div class="fh-chart-container">
         <canvas id="chartIncomeVsExpense"></canvas>
@@ -171,13 +189,13 @@
 
   <!-- Visualization 4: Top Clients Revenue (Horizontal Bar Chart) -->
   <div class="col-lg-6">
-    <div class="glass-card h-100 p-4">
-      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-subtle) !important;">
+    <div class="card-fh-elevated h-100 p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom" style="border-color:var(--border-color) !important;">
         <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size:1.05rem;">
-          <i data-lucide="award" style="width:18px;height:18px;color:var(--admin-rose);"></i>
-          <span>4. Top Clients by Contribution</span>
+          <i data-lucide="award" style="width:18px;height:18px;color:var(--primary);"></i>
+          <span>4. Top Accounts by Project Spend</span>
         </h6>
-        <span class="badge" style="background:rgba(249,197,189,0.15);color:var(--admin-rose);border:1px solid rgba(249,197,189,0.3);font-size:0.75rem;padding:4px 10px;">Accounts</span>
+        <span class="badge" style="background:var(--primary-subtle);color:var(--primary);border:1px solid var(--border-color);font-size:0.75rem;padding:4px 10px;">Accounts</span>
       </div>
       <div class="fh-chart-container">
         <canvas id="chartTopClients"></canvas>
@@ -189,19 +207,19 @@
 <!-- ═════════════════════════════════════════════════════════
      Visualization 5: RECENT AUDIT ACTIVITIES & QUICK ACTIONS (Table)
      ═════════════════════════════════════════════════════════ -->
-<div class="row g-4">
+<div class="row g-4 mb-4">
   <!-- Recent Activities -->
   <div class="col-lg-8">
-    <div class="glass-card h-100">
+    <div class="card-fh-elevated h-100">
       <div class="d-flex align-items-center justify-content-between mb-3 p-3 pb-0">
         <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
-          <i data-lucide="history" style="width:16px;height:16px;color:var(--admin-primary);"></i>
-          <span>5. Recent Audit Activity Logs</span>
+          <i data-lucide="history" style="width:16px;height:16px;color:var(--primary);"></i>
+          <span>5. Recent Platform Audit Activity</span>
         </h6>
-        <a href="{% url 'core:admin_activity_logs' %}" class="btn btn-sm btn-link text-decoration-none" style="color:var(--admin-lime);">View All &rarr;</a>
+        <a href="{% url 'core:admin_activity_logs' %}" class="btn btn-sm btn-link text-decoration-none" style="color:var(--primary);font-size:0.85rem;">View Complete Logs &rarr;</a>
       </div>
       <div class="table-responsive p-3 pt-2">
-        <table class="table table-hover align-middle small mb-0">
+        <table class="table-fh-clean align-middle small mb-0">
           <thead>
             <tr>
               <th>User</th>
@@ -214,14 +232,14 @@
           <tbody>
             {% for log in recent_activities %}
             <tr>
-              <td class="fw-bold" style="color:var(--admin-lime);">{{ log.user.username }}</td>
-              <td><span class="badge-role-admin" style="font-size:11px;padding:3px 8px;">{{ log.action }}</span></td>
-              <td>{{ log.description|truncatechars:45 }}</td>
+              <td class="fw-semibold" style="color:var(--primary);">{{ log.user.username }}</td>
+              <td><span class="badge" style="background:var(--primary-subtle);color:var(--primary);font-size:11px;padding:3px 8px;border-radius:var(--r-sm);">{{ log.action }}</span></td>
+              <td class="text-secondary">{{ log.description|truncatechars:45 }}</td>
               <td class="text-muted">{{ log.ip_address|default:"127.0.0.1" }}</td>
               <td class="text-muted">{{ log.timestamp|date:"M d, H:i" }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="5" class="text-center text-muted py-3">No activity logs recorded.</td></tr>
+            <tr><td colspan="5" class="text-center text-muted py-4">No activity logs recorded.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -231,40 +249,40 @@
 
   <!-- Quick Actions & Feeds -->
   <div class="col-lg-4">
-    <div class="glass-card mb-4 p-3">
+    <div class="card-fh-elevated mb-4 p-3">
       <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-        <i data-lucide="zap" style="width:16px;height:16px;color:var(--admin-lime);"></i>
-        <span>Quick Actions Panel</span>
+        <i data-lucide="zap" style="width:16px;height:16px;color:var(--primary);"></i>
+        <span>Administrative Quick Actions</span>
       </h6>
       <div class="d-grid gap-2">
-        <a href="{% url 'core:admin_users_list' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:8px;">
-          <i data-lucide="user-plus" style="width:15px;height:15px;color:var(--admin-primary);"></i> <span>Create New User</span>
+        <a href="{% url 'core:admin_users_list' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:10px;text-decoration:none;">
+          <i data-lucide="user-plus" style="width:15px;height:15px;color:var(--primary);"></i> <span>Create New User</span>
         </a>
-        <a href="{% url 'core:admin_projects_list' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:8px;">
-          <i data-lucide="folder-plus" style="width:15px;height:15px;color:var(--admin-lime);"></i> <span>Assign New Project</span>
+        <a href="{% url 'core:admin_projects_list' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:10px;text-decoration:none;">
+          <i data-lucide="folder-plus" style="width:15px;height:15px;color:var(--primary);"></i> <span>Manage All Projects</span>
         </a>
-        <a href="{% url 'core:admin_notifications' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:8px;">
-          <i data-lucide="megaphone" style="width:15px;height:15px;color:var(--admin-rose);"></i> <span>Broadcast Announcement</span>
+        <a href="{% url 'core:admin_notifications' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:10px;text-decoration:none;">
+          <i data-lucide="megaphone" style="width:15px;height:15px;color:var(--primary);"></i> <span>Broadcast Announcement</span>
         </a>
-        <a href="{% url 'core:admin_database_backup' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:8px;">
-          <i data-lucide="hard-drive-download" style="width:15px;height:15px;color:var(--admin-mauve);"></i> <span>Download DB Backup</span>
+        <a href="{% url 'core:admin_database_backup' %}" class="btn-hub-secondary text-start" style="font-size:13px;padding:9px 14px;border-radius:var(--r-md);display:flex;align-items:center;gap:10px;text-decoration:none;">
+          <i data-lucide="hard-drive-download" style="width:15px;height:15px;color:var(--primary);"></i> <span>Download DB Snapshot</span>
         </a>
       </div>
     </div>
 
     <!-- Pinned Announcements -->
-    <div class="glass-card p-3">
+    <div class="card-fh-elevated p-3">
       <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
-        <i data-lucide="pin" style="width:16px;height:16px;color:#ff5e6c;"></i>
-        <span>Pinned Announcements</span>
+        <i data-lucide="pin" style="width:16px;height:16px;color:var(--primary);"></i>
+        <span>Pinned Governance Notices</span>
       </h6>
       {% for ann in pinned_announcements %}
-      <div class="p-2 mb-2 rounded" style="background:var(--bg-glass-card);border:1px solid var(--border-subtle);">
-        <div class="fw-bold small" style="color:var(--admin-primary);">{{ ann.title }}</div>
+      <div class="p-2 mb-2 rounded" style="background:var(--bg-glass-card);border:1px solid var(--border-color);">
+        <div class="fw-bold small" style="color:var(--primary);">{{ ann.title }}</div>
         <div class="text-muted small">{{ ann.message|truncatechars:80 }}</div>
       </div>
       {% empty %}
-      <p class="text-muted small mb-0">No active pinned announcements.</p>
+      <p class="text-muted small mb-0">No active pinned notices.</p>
       {% endfor %}
     </div>
   </div>
@@ -290,18 +308,21 @@
     }
 
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    const textColor = isLight ? '#475569' : '#94a3b8';
-    const gridColor = isLight ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.06)';
+    const primaryColor = isLight ? '#356B68' : '#8AB8AE';
+    const secondaryColor = isLight ? '#626C68' : '#B5C0B9';
+    const accentColor = '#A5B9A5';
+    const textColor = isLight ? '#252E2C' : '#F0F2EC';
+    const gridColor = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)';
 
-    // Helper Chart Builder
+    // Helper Line Chart Builder
     function createLineChart(id, label, labels, data, color) {
       const ctx = document.getElementById(id);
       if (!ctx) return;
       safeDestroy(id);
       const gradCtx = ctx.getContext('2d');
       const gradient = gradCtx.createLinearGradient(0, 0, 0, ctx.clientHeight || 320);
-      gradient.addColorStop(0, color + '55');
-      gradient.addColorStop(1, color + '05');
+      gradient.addColorStop(0, color + '40');
+      gradient.addColorStop(1, color + '00');
       new Chart(ctx, {
         type: 'line',
         data: {
@@ -326,12 +347,7 @@
           maintainAspectRatio: false,
           spanGaps: true,
           layout: {
-            padding: {
-              top: 22,
-              bottom: 12,
-              left: 14,
-              right: 18
-            }
+            padding: { top: 20, bottom: 12, left: 14, right: 18 }
           },
           interaction: { mode: 'index', intersect: false },
           plugins: {
@@ -339,8 +355,8 @@
             tooltip: { cornerRadius: 8, padding: 12 }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { color: textColor, font: { size: 11.5 }, padding: 10 }, border: { display: false } },
-            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11.5 }, padding: 12 }, border: { display: false } }
+            x: { grid: { display: false }, ticks: { color: secondaryColor, font: { size: 11.5 }, padding: 10 }, border: { display: false } },
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: secondaryColor, font: { size: 11.5 }, padding: 12 }, border: { display: false } }
           }
         }
       });
@@ -368,12 +384,7 @@
           maintainAspectRatio: false,
           indexAxis: isHorizontal ? 'y' : 'x',
           layout: {
-            padding: {
-              top: 20,
-              bottom: 12,
-              left: 14,
-              right: 18
-            }
+            padding: { top: 20, bottom: 12, left: 14, right: 18 }
           },
           plugins: {
             legend: { display: false },
@@ -383,12 +394,12 @@
             [isHorizontal ? 'x' : 'y']: {
               beginAtZero: true,
               grid: { color: gridColor },
-              ticks: { color: textColor, font: { size: 11.5 }, padding: 10 },
+              ticks: { color: secondaryColor, font: { size: 11.5 }, padding: 10 },
               border: { display: false }
             },
             [isHorizontal ? 'y' : 'x']: {
               grid: { display: false },
-              ticks: { color: textColor, font: { size: 11.5 }, padding: 10 },
+              ticks: { color: secondaryColor, font: { size: 11.5 }, padding: 10 },
               border: { display: false }
             }
           }
@@ -396,10 +407,10 @@
       });
     }
 
-    // 1. Monthly Revenue Trend (Line Chart) — Admin Slate Violet & Lime
-    createLineChart('chartMonthlyRevenue', 'Revenue ($)', chartData.months, chartData.revenue, '#9bc400');
+    // 1. Monthly Revenue Trend (Line Chart) — Unified Petrol Teal
+    createLineChart('chartMonthlyRevenue', 'Revenue ($)', chartData.months, chartData.revenue, primaryColor);
 
-    // 2. Project Status (Donut Chart) — Admin 4-Tone Palette
+    // 2. Project Status (Donut Chart) — Unified Petrol Teal & Warm Neutrals
     const ctxStatus = document.getElementById('chartProjectStatus');
     if (ctxStatus) {
       safeDestroy('chartProjectStatus');
@@ -411,28 +422,28 @@
           labels: ['Pending', 'In Progress', 'Completed', 'On Hold', 'Cancelled'],
           datasets: [{
             data: hasStatusData ? statusData : [1, 0, 0, 0, 0],
-            backgroundColor: hasStatusData ? ['#8076a3', '#9bc400', '#f9c5bd', '#7c677f', '#a398c2'] : ['rgba(150,150,150,0.25)'],
+            backgroundColor: hasStatusData 
+              ? [primaryColor, accentColor, '#4A6984', '#9E7B50', '#889895'] 
+              : ['rgba(150,150,150,0.25)'],
             borderWidth: 0
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          cutout: '66%',
-          layout: {
-            padding: 18
-          },
+          cutout: '68%',
+          layout: { padding: 16 },
           plugins: {
             legend: {
               position: 'bottom',
               labels: {
-                boxWidth: 10,
-                boxHeight: 10,
+                boxWidth: 9,
+                boxHeight: 9,
                 usePointStyle: true,
                 pointStyle: 'circle',
-                color: textColor,
+                color: secondaryColor,
                 font: { size: 11.5 },
-                padding: 20
+                padding: 16
               }
             }
           }
@@ -440,7 +451,7 @@
       });
     }
 
-    // 3. Income vs Expenses (Bar Chart) — Admin Lime (Revenue) vs Coral (Expenses)
+    // 3. Inflow vs Outflow (Bar Chart) — Unified Petrol Teal vs Accent Sage
     const ctxInEx = document.getElementById('chartIncomeVsExpense');
     if (ctxInEx) {
       safeDestroy('chartIncomeVsExpense');
@@ -449,27 +460,22 @@
         data: {
           labels: chartData.months || [],
           datasets: [
-            { label: 'Revenue ($)', data: chartData.revenue || [], backgroundColor: '#9bc400', borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.75 },
-            { label: 'Expenses ($)', data: chartData.expenses || [], backgroundColor: '#ff5e6c', borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.75 }
+            { label: 'Revenue Inflow ($)', data: chartData.revenue || [], backgroundColor: primaryColor, borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.75 },
+            { label: 'Freelancer Outflow ($)', data: chartData.expenses || [], backgroundColor: accentColor, borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.75 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           layout: {
-            padding: {
-              top: 22,
-              bottom: 12,
-              left: 14,
-              right: 18
-            }
+            padding: { top: 20, bottom: 12, left: 14, right: 18 }
           },
           plugins: {
             legend: {
               labels: {
-                color: textColor,
+                color: secondaryColor,
                 font: { size: 11.5, weight: '600' },
-                padding: 18,
+                padding: 16,
                 usePointStyle: true,
                 pointStyle: 'circle',
                 boxWidth: 9,
@@ -478,15 +484,15 @@
             }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { color: textColor, padding: 10 } },
-            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, padding: 12 } }
+            x: { grid: { display: false }, ticks: { color: secondaryColor, padding: 10 } },
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: secondaryColor, padding: 12 } }
           }
         }
       });
     }
 
-    // 4. Top Clients (Horizontal Bar Chart) — Slate Violet
-    createBarChart('chartTopClients', 'Spent ($)', chartData.top_clients_names, chartData.top_clients_spent, '#8076a3', true);
+    // 4. Top Clients (Horizontal Bar Chart) — Unified Petrol Teal
+    createBarChart('chartTopClients', 'Spent ($)', chartData.top_clients_names, chartData.top_clients_spent, primaryColor, true);
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
@@ -498,10 +504,10 @@
   }
 
   // Re-draw on theme toggle
-  const themeToggle = document.getElementById('adminThemeToggle');
+  const themeToggle = document.getElementById('adminThemeToggle') || document.querySelector('[data-theme-toggle]');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
-      setTimeout(initAdminCharts, 100);
+      setTimeout(initAdminCharts, 120);
     });
   }
 })();

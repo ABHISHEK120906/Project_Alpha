@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const models = window.DATA_SCIENCE_DATA.models || {};
 
   // Palette tokens
-  const primaryColor = dark ? '#f0c470' : '#c8881e';
-  const infoColor = dark ? '#60a8fb' : '#2563eb';
-  const successColor = dark ? '#3daa60' : '#276640';
-  const dangerColor = dark ? '#ef4444' : '#dc2626';
-  const gridColor = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
-  const textColor = dark ? '#c8baa8' : '#3a4450';
+  const primaryColor = dark ? '#8AB8AE' : '#356B68';
+  const infoColor = dark ? '#82AEC4' : '#4A7490';
+  const successColor = dark ? '#6BB892' : '#3D7D62';
+  const dangerColor = dark ? '#D97B75' : '#AC4A43';
+  const gridColor = dark ? 'rgba(240, 242, 236, 0.06)' : 'rgba(37, 46, 44, 0.06)';
+  const textColor = dark ? '#B5C0B9' : '#626C68';
 
   // 1. Time-Series Revenue Forecast Chart
   const forecastCtx = document.getElementById('forecastChart');
@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
             label: 'Estimated Forecast ($)',
             data: fcData,
             borderColor: primaryColor,
-            backgroundColor: 'rgba(219, 153, 65, 0.15)',
-            borderWidth: 2.5,
+            backgroundColor: dark ? 'rgba(138, 184, 174, 0.16)' : 'rgba(53, 107, 104, 0.10)',
+            borderWidth: 2.2,
             borderDash: [6, 4],
             pointRadius: 5,
             pointBackgroundColor: primaryColor,
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
             label: '95% Upper Bound',
             data: upperData,
             borderColor: 'transparent',
-            backgroundColor: 'rgba(219, 153, 65, 0.12)',
+            backgroundColor: dark ? 'rgba(138, 184, 174, 0.12)' : 'rgba(53, 107, 104, 0.08)',
             pointRadius: 0,
             fill: 3,
             tension: 0.2

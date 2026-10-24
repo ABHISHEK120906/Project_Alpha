@@ -44,20 +44,20 @@ window.VisualizationStudio = (function () {
   function getTokens() {
     const dark = isDark();
     return {
-      primary: dark ? '#f0c470' : '#c8881e',
-      primaryBg: dark ? 'rgba(240,196,112,0.20)' : 'rgba(200,136,30,0.12)',
-      accent: dark ? '#e04b2a' : '#ae2c11',
-      accentBg: dark ? 'rgba(224,75,42,0.15)' : 'rgba(174,44,17,0.08)',
-      success: dark ? '#3daa60' : '#276640',
-      successBg: dark ? 'rgba(61,170,96,0.18)' : 'rgba(39,102,64,0.10)',
+      primary: dark ? '#8AB8AE' : '#356B68',
+      primaryBg: dark ? 'rgba(138,184,174,0.20)' : 'rgba(53,107,104,0.12)',
+      accent: dark ? '#D6A38E' : '#C58F78',
+      accentBg: dark ? 'rgba(214,163,142,0.15)' : 'rgba(197,143,120,0.10)',
+      success: dark ? '#6BB892' : '#3D7D62',
+      successBg: dark ? 'rgba(107,184,146,0.18)' : 'rgba(61,125,98,0.10)',
       donut: dark
-        ? ['#f0c470', '#3daa60', '#e04b2a', '#60a8fb', '#94a3b8', '#c084fc', '#fb923c']
-        : ['#c8881e', '#276640', '#ae2c11', '#2563eb', '#64748b', '#7c3aed', '#ea580c'],
-      grid: dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-      text: dark ? '#c8baa8' : '#3a4450',
-      tick: dark ? '#8a8070' : '#6a7480',
-      tooltipBg: dark ? '#131f2b' : '#ffffff',
-      tooltipBorder: dark ? 'rgba(219,153,65,0.3)' : '#e2e8f0',
+        ? ['#8AB8AE', '#6BB892', '#D6A38E', '#96B2C8', '#E2D5BE', '#929693', '#B4C7B4']
+        : ['#356B68', '#3D7D62', '#C58F78', '#829DB5', '#D9C9AE', '#777B78', '#A5B9A5'],
+      grid: dark ? 'rgba(240,242,236,0.06)' : 'rgba(37,46,44,0.06)',
+      text: dark ? '#B5C0B9' : '#626C68',
+      tick: dark ? '#808D86' : '#777B78',
+      tooltipBg: dark ? '#202927' : '#FFFFFF',
+      tooltipBorder: dark ? '#394541' : '#E2E3DC',
     };
   }
 

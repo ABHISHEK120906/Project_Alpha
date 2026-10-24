@@ -15,11 +15,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const trends = window.ANALYTICS_DATA.trends || {};
 
   // Palette tokens
-  const primaryColor = dark ? '#f0c470' : '#c8881e';
-  const successColor = dark ? '#3daa60' : '#276640';
-  const infoColor = dark ? '#60a8fb' : '#2563eb';
-  const gridColor = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
-  const textColor = dark ? '#c8baa8' : '#3a4450';
+  const primaryColor = dark ? '#8AB8AE' : '#356B68';
+  const successColor = dark ? '#6BB892' : '#3D7D62';
+  const infoColor = dark ? '#82AEC4' : '#4A7490';
+  const clayColor = dark ? '#D6A38E' : '#C58F78';
+  const gridColor = dark ? 'rgba(240, 242, 236, 0.06)' : 'rgba(37, 46, 44, 0.06)';
+  const textColor = dark ? '#B5C0B9' : '#626C68';
 
   // 1. Budget Histogram Chart
   const budgetHistCtx = document.getElementById('budgetHistogramChart');
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           label: 'Project Count',
           data: eda.budget_histogram.counts,
-          backgroundColor: 'rgba(219, 153, 65, 0.65)',
+          backgroundColor: dark ? 'rgba(138, 184, 174, 0.45)' : 'rgba(53, 107, 104, 0.35)',
           borderColor: primaryColor,
           borderWidth: 1.5,
           borderRadius: 6,
@@ -140,8 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
             label: 'Revenue ($)',
             data: trends.revenue_series,
             borderColor: primaryColor,
-            backgroundColor: 'rgba(219, 153, 65, 0.15)',
-            borderWidth: 2.5,
+            backgroundColor: dark ? 'rgba(138, 184, 174, 0.16)' : 'rgba(53, 107, 104, 0.10)',
+            borderWidth: 2.2,
             fill: true,
             tension: 0.35,
             pointRadius: 4,
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
           {
             label: 'Expenses ($)',
             data: trends.expenses_series,
-            borderColor: '#ef4444',
+            borderColor: dark ? '#D97B75' : '#AC4A43',
             backgroundColor: 'transparent',
             borderWidth: 2,
             borderDash: [5, 5],

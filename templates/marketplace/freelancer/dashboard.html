@@ -6,57 +6,88 @@
 {% block page_subtitle %}<p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Discover open marketplace briefs, track active contracts, monitor earnings, and verify KYC checkpoints.</p>{% endblock %}
 {% block nav_dashboard %}active{% endblock %}
 
-{% block content %}
+{{% block content %}
+
+<!-- ══ WELCOME HERO BANNER ═══════════════════════════════════════ -->
+<div class="card mb-4" style="border: 1px solid var(--border-default); background: var(--bg-surface); padding: 24px 28px; box-shadow: var(--shadow-sm); border-radius: var(--r-md);">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:18px;">
+    <div>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="badge" style="background:var(--primary-subtle); color:var(--primary); font-weight:700; font-size:0.75rem; border:1px solid var(--border-default); padding:4px 10px; border-radius:20px;">
+          Freelancer Portal
+        </span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">&bull;</span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">{{ freelancer_profile.professional_title|default:"Verified Talent" }}</span>
+      </div>
+      <h2 style="font-family:var(--font-heading); font-size:1.45rem; font-weight:800; color:var(--text-primary); margin:0 0 6px;">
+        Welcome back, {{ freelancer_profile.full_name|default:request.user.username }}
+      </h2>
+      <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;">
+        Discover open client briefs, track active proposals, and manage your earnings milestones.
+      </p>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a href="{% url 'freelancer:find_projects' %}" class="btn-fh btn-fh-primary" style="padding:10px 18px; font-weight:700;">
+        <i data-lucide="search" style="width:16px;height:16px;"></i>
+        <span>Find Projects</span>
+      </a>
+      <a href="{% url 'freelancer:my_applications' %}" class="btn-fh btn-fh-secondary" style="padding:10px 16px;">
+        <i data-lucide="clipboard-check" style="width:16px;height:16px;"></i>
+        <span>My Proposals</span>
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- ══ ROW 1: VERIFICATION & PROFILE STATUS BANNER ═════════ -->
-<div class="card" style="border-left: 4px solid {% if is_verified %}var(--success){% elif verification.final_verification_status == 'pending_admin_review' %}var(--info){% else %}var(--warning){% endif %}; margin-bottom: 24px;">
+<div class="card mb-4" style="border:1px solid var(--border-default); border-left:4px solid {% if is_verified %}var(--success){% elif verification.final_verification_status == 'pending_admin_review' %}var(--info){% else %}var(--warning){% endif %}; background:var(--bg-surface); padding:20px 24px; border-radius:var(--r-md); box-shadow:var(--shadow-sm);">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
     
     <div style="display: flex; align-items: center; gap: 16px;">
-      <div style="width: 48px; height: 48px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 22px; {% if is_verified %}background: var(--success-soft); color: var(--success);{% elif verification.final_verification_status == 'pending_admin_review' %}background: var(--info-soft); color: var(--info);{% else %}background: var(--warning-soft); color: var(--warning);{% endif %}">
+      <div style="width: 44px; height: 44px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-size: 20px; {% if is_verified %}background: var(--success-soft); color: var(--success);{% elif verification.final_verification_status == 'pending_admin_review' %}background: var(--info-soft); color: var(--info);{% else %}background: var(--warning-soft); color: var(--warning);{% endif %}">
         <i data-lucide="{% if is_verified %}shield-check{% elif verification.final_verification_status == 'pending_admin_review' %}clock{% else %}shield-alert{% endif %}"></i>
       </div>
       
       <div>
-        <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);">
+        <div style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);">
           Platform Multi-Tier KYC &amp; Verification Status
         </div>
-        <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin-top: 2px;">
+        <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin-top: 2px;">
           {% if is_verified %}
             <span style="color: var(--success); display: inline-flex; align-items: center; gap: 6px;">
-              <i data-lucide="check-circle-2" class="fh-icon-xs"></i> Verified Professional Talent
+              <i data-lucide="check-circle-2" style="width:16px;height:16px;"></i> Verified Professional Talent
             </span>
           {% elif verification.final_verification_status == 'pending_admin_review' %}
             <span style="color: var(--info); display: inline-flex; align-items: center; gap: 6px;">
-              <i data-lucide="clock" class="fh-icon-xs"></i> Submitted — Pending Admin Review
+              <i data-lucide="clock" style="width:16px;height:16px;"></i> Submitted — Pending Admin Review
             </span>
           {% else %}
             <span style="color: var(--warning); display: inline-flex; align-items: center; gap: 6px;">
-              <i data-lucide="alert-circle" class="fh-icon-xs"></i> Verification Incomplete (Required to apply)
+              <i data-lucide="alert-circle" style="width:16px;height:16px;"></i> Verification Incomplete (Required to apply)
             </span>
           {% endif %}
         </div>
         <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
           <span>Checkpoints: <strong style="color: var(--text-primary);">{{ verification.get_completed_steps_count|default:"0" }}/6 Complete</strong></span>
-          <span style="color: var(--border-color);">&bull;</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;">Email {% if verification.email_verified %}<i data-lucide="check" class="fh-icon-xs" style="color: var(--success);"></i>{% else %}<i data-lucide="x" class="fh-icon-xs" style="color: var(--danger);"></i>{% endif %}</span>
-          <span style="color: var(--border-color);">&bull;</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;">Phone {% if verification.phone_verified %}<i data-lucide="check" class="fh-icon-xs" style="color: var(--success);"></i>{% else %}<i data-lucide="x" class="fh-icon-xs" style="color: var(--danger);"></i>{% endif %}</span>
-          <span style="color: var(--border-color);">&bull;</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px;">Identity {% if verification.identity_status == 'verified' %}<i data-lucide="check" class="fh-icon-xs" style="color: var(--success);"></i>{% else %}<i data-lucide="x" class="fh-icon-xs" style="color: var(--danger);"></i>{% endif %}</span>
+          <span style="color: var(--border-default);">&bull;</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;">Email {% if verification.email_verified %}<i data-lucide="check" style="width:13px;height:13px; color: var(--success);"></i>{% else %}<i data-lucide="x" style="width:13px;height:13px; color: var(--danger);"></i>{% endif %}</span>
+          <span style="color: var(--border-default);">&bull;</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;">Phone {% if verification.phone_verified %}<i data-lucide="check" style="width:13px;height:13px; color: var(--success);"></i>{% else %}<i data-lucide="x" style="width:13px;height:13px; color: var(--danger);"></i>{% endif %}</span>
+          <span style="color: var(--border-default);">&bull;</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px;">Identity {% if verification.identity_status == 'verified' %}<i data-lucide="check" style="width:13px;height:13px; color: var(--success);"></i>{% else %}<i data-lucide="x" style="width:13px;height:13px; color: var(--danger);"></i>{% endif %}</span>
         </div>
       </div>
     </div>
 
     <div>
       {% if is_verified %}
-        <a href="{% url 'freelancer:verification_center' %}" class="btn btn-secondary btn-sm">
-          <i data-lucide="shield-check" class="fh-icon-xs"></i>
+        <a href="{% url 'freelancer:verification_center' %}" class="btn-fh btn-fh-secondary btn-fh-sm">
+          <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
           <span>Verification Center</span>
         </a>
       {% else %}
-        <a href="{% url 'freelancer:verification_center' %}" class="btn btn-primary btn-sm">
-          <i data-lucide="shield-alert" class="fh-icon-xs"></i>
+        <a href="{% url 'freelancer:verification_center' %}" class="btn-fh btn-fh-primary btn-fh-sm">
+          <i data-lucide="shield-alert" style="width:14px;height:14px;"></i>
           <span>Complete Verification</span>
         </a>
       {% endif %}
@@ -66,64 +97,64 @@
 </div>
 
 <!-- ══ ROW 2: ANALYTICAL KPI STATS GRID ════════════════════════ -->
-<div class="kpi-grid">
+<div class="kpi-grid mb-4">
 
   <!-- 1. Available Projects -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <span class="kpi-label">Available Projects</span>
-      <div class="kpi-icon">
-        <i data-lucide="folder-kanban" class="fh-icon-sm"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Available Projects</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="folder-kanban" style="width:18px;height:18px;"></i>
       </div>
     </div>
-    <div class="kpi-value">{{ open_projects_count|default:"0" }}</div>
-    <div class="kpi-sub">
-      <span class="trend-up"><i data-lucide="sparkles" class="fh-icon-xs"></i> Open</span>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ open_projects_count|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+      <span style="color:var(--primary); font-weight:700;"><i data-lucide="sparkles" style="width:13px;height:13px; display:inline;"></i> Open</span>
       <span>Matching briefs</span>
     </div>
   </div>
 
   <!-- 2. Total Proposals -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <span class="kpi-label">My Applications</span>
-      <div class="kpi-icon">
-        <i data-lucide="clipboard-check" class="fh-icon-sm"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">My Proposals</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="clipboard-check" style="width:18px;height:18px;"></i>
       </div>
     </div>
-    <div class="kpi-value">{{ total_applications|default:"0" }}</div>
-    <div class="kpi-sub">
-      <span style="color:var(--lime-accent); font-weight:600;"><i data-lucide="send" class="fh-icon-xs"></i> Submitted</span>
-      <span>Candidate bids</span>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ total_applications|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+      <span style="color:var(--primary); font-weight:700;"><i data-lucide="send" style="width:13px;height:13px; display:inline;"></i> Submitted</span>
+      <span>Active proposals</span>
     </div>
   </div>
 
   <!-- 3. Active Workspaces -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <span class="kpi-label">Active Workspaces</span>
-      <div class="kpi-icon">
-        <i data-lucide="play-circle" class="fh-icon-sm"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Active Workspaces</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="play-circle" style="width:18px;height:18px;"></i>
       </div>
     </div>
-    <div class="kpi-value">{{ active_projects_count|default:"0" }}</div>
-    <div class="kpi-sub">
-      <span class="trend-up"><i data-lucide="activity" class="fh-icon-xs"></i> Delivery</span>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ active_projects_count|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+      <span style="color:var(--primary); font-weight:700;"><i data-lucide="activity" style="width:13px;height:13px; display:inline;"></i> In Progress</span>
       <span>Contracts underway</span>
     </div>
   </div>
 
   <!-- 4. Completed Projects -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <span class="kpi-label">Completed Deliveries</span>
-      <div class="kpi-icon">
-        <i data-lucide="award" class="fh-icon-sm"></i>
+  <div class="kpi-card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px;">
+    <div class="kpi-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <span class="kpi-label" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Completed Deliveries</span>
+      <div class="kpi-icon" style="width:36px; height:36px; border-radius:var(--r-sm); background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+        <i data-lucide="award" style="width:18px;height:18px;"></i>
       </div>
     </div>
-    <div class="kpi-value">{{ completed_projects_count|default:"0" }}</div>
-    <div class="kpi-sub">
-      <span class="trend-up"><i data-lucide="check-circle-2" class="fh-icon-xs"></i> 100%</span>
+    <div class="kpi-value" style="font-family:var(--font-heading); font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;">{{ completed_projects_count|default:"0" }}</div>
+    <div class="kpi-sub" style="font-size:0.78rem; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+      <span style="color:var(--success); font-weight:700;"><i data-lucide="check-circle-2" style="width:13px;height:13px; display:inline;"></i> 100%</span>
       <span>Disbursed milestones</span>
     </div>
   </div>
@@ -131,60 +162,62 @@
 </div>
 
 <!-- ══ ROW 3: EARNINGS VELOCITY CHART & QUICK ACTIONS ══════════ -->
-<div style="display:grid; grid-template-columns: 2fr 1fr; gap:28px; margin-bottom:36px;">
+<div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-bottom:32px;">
 
   <!-- Earnings Trend Chart -->
-  <div class="fh-chart-card">
-    <div class="fh-chart-header">
+  <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; border-bottom:1px solid var(--border-default); padding-bottom:14px;">
       <div>
-        <h3 class="fh-chart-title">
-          <i data-lucide="trending-up" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
+        <h3 style="font-family:var(--font-heading); font-size:1.05rem; font-weight:800; color:var(--text-primary); margin:0 0 4px; display:flex; align-items:center; gap:8px;">
+          <i data-lucide="trending-up" style="width:18px;height:18px; color:var(--primary);"></i>
           <span>Earnings Velocity &amp; Proposal Volume</span>
         </h3>
-        <div class="fh-chart-subtitle">Monthly breakdown of gross realized income and proposal bids</div>
+        <div style="font-size:0.78rem; color:var(--text-secondary);">Monthly breakdown of gross realized income and proposal bids</div>
       </div>
-      <span class="badge badge-primary" style="padding:6px 12px;font-size:0.75rem;">Analytical Telemetry</span>
+      <span class="badge" style="background:var(--primary-subtle); color:var(--primary); font-weight:700; font-size:0.75rem; border:1px solid var(--border-default); padding:4px 10px; border-radius:20px;">
+        Realized Income
+      </span>
     </div>
-    <div class="fh-chart-container">
-      <canvas id="freelancerEarningsChart"></canvas>
+    <div style="position:relative; width:100%; height:260px;">
+      <canvas id="freelancerEarningsChart" style="width:100%; height:100%; display:block;"></canvas>
     </div>
   </div>
 
   <!-- Quick Actions Panel -->
-  <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+  <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:20px; display:flex; flex-direction:column; justify-content:space-between;">
     <div>
-      <div class="card-header">
-        <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="zap" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
+      <div style="margin-bottom:14px; border-bottom:1px solid var(--border-default); padding-bottom:10px;">
+        <h4 style="font-family:var(--font-heading); font-size:0.95rem; font-weight:800; color:var(--text-primary); margin:0; display:flex; align-items:center; gap:8px;">
+          <i data-lucide="zap" style="width:16px;height:16px; color:var(--primary);"></i>
           <span>Quick Actions</span>
-        </h3>
+        </h4>
       </div>
-      <div style="display:flex; flex-direction:column; gap:10px;">
-        <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary" style="justify-content:flex-start;">
-          <i data-lucide="search" class="fh-icon-xs"></i>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <a href="{% url 'freelancer:find_projects' %}" class="btn-fh btn-fh-primary" style="justify-content:flex-start; width:100%;">
+          <i data-lucide="search" style="width:15px;height:15px;"></i>
           <span>Find Project Briefs</span>
         </a>
-        <a href="{% url 'freelancer:profile_edit' %}" class="btn btn-secondary" style="justify-content:flex-start;">
-          <i data-lucide="user" class="fh-icon-xs"></i>
+        <a href="{% url 'freelancer:profile_edit' %}" class="btn-fh btn-fh-secondary" style="justify-content:flex-start; width:100%;">
+          <i data-lucide="user" style="width:15px;height:15px;"></i>
           <span>Edit Public Profile</span>
         </a>
-        <a href="{% url 'freelancer:verification_center' %}" class="btn btn-secondary" style="justify-content:flex-start;">
-          <i data-lucide="shield-check" class="fh-icon-xs"></i>
+        <a href="{% url 'freelancer:verification_center' %}" class="btn-fh btn-fh-secondary" style="justify-content:flex-start; width:100%;">
+          <i data-lucide="shield-check" style="width:15px;height:15px;"></i>
           <span>Identity Verification</span>
         </a>
-        <a href="{% url 'freelancer:payments' %}" class="btn btn-secondary" style="justify-content:flex-start;">
-          <i data-lucide="wallet" class="fh-icon-xs"></i>
+        <a href="{% url 'freelancer:payments' %}" class="btn-fh btn-fh-secondary" style="justify-content:flex-start; width:100%;">
+          <i data-lucide="wallet" style="width:15px;height:15px;"></i>
           <span>Earnings &amp; Payouts</span>
         </a>
       </div>
     </div>
 
     <!-- Escrow Guarantee -->
-    <div style="background:var(--bg-elevated); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-light); margin-top:16px;">
+    <div style="background:var(--bg-elevated); padding:14px; border-radius:var(--r-sm); border:1px solid var(--border-default); margin-top:16px;">
       <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-        <i data-lucide="lock" class="fh-icon-xs" style="color:var(--lime-accent);"></i> Guaranteed Escrow Protection
+        <i data-lucide="lock" style="width:14px;height:14px; color:var(--primary);"></i> Guaranteed Escrow Protection
       </div>
-      <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">
+      <div style="font-size:0.75rem; color:var(--text-secondary); line-height:1.45;">
         Client payments are funded in escrow before you begin coding or design deliverables.
       </div>
     </div>
@@ -196,55 +229,55 @@
 <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:24px;">
 
   <!-- Recommended Projects -->
-  <div class="card">
-    <div class="card-header">
+  <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; border-bottom:1px solid var(--border-default); padding-bottom:12px;">
       <div>
-        <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="sparkles" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
+        <h3 style="font-family:var(--font-heading); font-size:1.05rem; font-weight:800; color:var(--text-primary); margin:0 0 4px; display:flex; align-items:center; gap:8px;">
+          <i data-lucide="sparkles" style="width:18px;height:18px; color:var(--primary);"></i>
           <span>Recommended Opportunities</span>
         </h3>
-        <div class="card-subtitle">Verified client requirements matching your skillset</div>
+        <div style="font-size:0.78rem; color:var(--text-secondary);">Verified client requirements matching your skillset</div>
       </div>
-      <a href="{% url 'freelancer:find_projects' %}" class="btn btn-secondary btn-sm">
+      <a href="{% url 'freelancer:find_projects' %}" class="btn-fh btn-fh-secondary btn-fh-sm">
         <span>Browse All</span>
-        <i data-lucide="arrow-right" class="fh-icon-xs"></i>
+        <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
       </a>
     </div>
 
     {% if recommended_projects %}
-      <div style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; flex-direction:column; gap:12px;">
         {% for project in recommended_projects %}
-          <div style="background:var(--bg-elevated); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:16px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+          <div style="background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:var(--r-sm); padding:16px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
             <div style="flex:1; min-width:240px;">
               <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
-                <a href="{% url 'freelancer:project_detail' pk=project.pk %}" style="font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:700; color:var(--text-primary);">
+                <a href="{% url 'freelancer:project_detail' pk=project.pk %}" style="font-family:var(--font-heading); font-size:0.96rem; font-weight:700; color:var(--text-primary); text-decoration:none;">
                   {{ project.title }}
                 </a>
-                <span class="badge badge-primary">Open</span>
+                <span class="badge badge-primary" style="font-size:0.72rem; padding:3px 8px;">Open</span>
               </div>
               <div style="display:flex; gap:16px; font-size:0.8rem; color:var(--text-muted); flex-wrap:wrap;">
-                <span><i data-lucide="wallet" class="fh-icon-xs"></i> Budget: <strong>${{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
-                <span><i data-lucide="tag" class="fh-icon-xs"></i> {{ project.get_category_display }}</span>
+                <span><i data-lucide="wallet" style="width:13px;height:13px; display:inline;"></i> Budget: <strong style="color:var(--text-primary);">${{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
+                <span><i data-lucide="tag" style="width:13px;height:13px; display:inline;"></i> {{ project.get_category_display }}</span>
                 {% if project.deadline %}
-                  <span><i data-lucide="calendar" class="fh-icon-xs"></i> Due: {{ project.deadline|date:"M d, Y" }}</span>
+                  <span><i data-lucide="calendar" style="width:13px;height:13px; display:inline;"></i> Due: {{ project.deadline|date:"M d, Y" }}</span>
                 {% endif %}
               </div>
             </div>
 
-            <a href="{% url 'freelancer:project_detail' pk=project.pk %}" class="btn btn-primary btn-sm">
-              <i data-lucide="arrow-up-right" class="fh-icon-xs"></i>
+            <a href="{% url 'freelancer:project_detail' pk=project.pk %}" class="btn-fh btn-fh-primary btn-fh-sm">
+              <i data-lucide="arrow-up-right" style="width:14px;height:14px;"></i>
               <span>View Brief</span>
             </a>
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <div style="text-align:center; padding:36px 16px;">
-        <i data-lucide="search" class="fh-icon-lg" style="color:var(--lime-accent); margin-bottom:12px;"></i>
-        <h4 style="font-weight:700; margin-bottom:4px;">Explore Open Briefs</h4>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Browse verified projects across web engineering, UI/UX design, data science, and cloud operations.</p>
-        <a href="{% url 'freelancer:find_projects' %}" class="btn btn-primary">
-          <i data-lucide="search" class="fh-icon-xs"></i>
+      <div style="text-align:center; padding:36px 16px; border:1px dashed var(--border-default); border-radius:var(--r-sm);">
+        <i data-lucide="search" style="width:36px;height:36px; color:var(--text-muted); margin-bottom:10px;"></i>
+        <h4 style="font-family:var(--font-heading); font-weight:700; font-size:0.95rem; margin-bottom:4px; color:var(--text-primary);">Explore Open Briefs</h4>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:14px;">Browse verified projects across web engineering, UI/UX design, data science, and cloud operations.</p>
+        <a href="{% url 'freelancer:find_projects' %}" class="btn-fh btn-fh-primary btn-fh-sm">
+          <i data-lucide="search" style="width:14px;height:14px;"></i>
           <span>Browse Projects Catalog</span>
         </a>
       </div>
@@ -252,16 +285,16 @@
   </div>
 
   <!-- My Recent Applications -->
-  <div class="card">
-    <div class="card-header">
+  <div class="card" style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; border-bottom:1px solid var(--border-default); padding-bottom:12px;">
       <div>
-        <h3 class="card-title d-flex align-items-center gap-2">
-          <i data-lucide="clipboard-check" class="fh-icon-sm" style="color:var(--lime-accent);"></i>
+        <h3 style="font-family:var(--font-heading); font-size:1.05rem; font-weight:800; color:var(--text-primary); margin:0 0 4px; display:flex; align-items:center; gap:8px;">
+          <i data-lucide="clipboard-check" style="width:18px;height:18px; color:var(--primary);"></i>
           <span>My Applications</span>
         </h3>
-        <div class="card-subtitle">Proposal responses from clients</div>
+        <div style="font-size:0.78rem; color:var(--text-secondary);">Proposal responses from clients</div>
       </div>
-      <a href="{% url 'freelancer:my_applications' %}" class="btn btn-secondary btn-sm">
+      <a href="{% url 'freelancer:my_applications' %}" class="btn-fh btn-fh-secondary btn-fh-sm">
         <span>View All</span>
       </a>
     </div>
@@ -269,25 +302,25 @@
     {% if recent_applications %}
       <div style="display:flex; flex-direction:column; gap:12px;">
         {% for app in recent_applications %}
-          <div style="background:var(--bg-elevated); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:var(--r-sm); padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
             <div>
-              <div style="font-weight:700; color:var(--text-primary); font-size:0.92rem; margin-bottom:2px;">
+              <div style="font-family:var(--font-heading); font-weight:700; color:var(--text-primary); font-size:0.92rem; margin-bottom:2px;">
                 {{ app.project.title|truncatechars:28 }}
               </div>
               <div style="font-size:0.75rem; color:var(--text-muted);">
-                Proposed: <strong>${{ app.proposed_price|floatformat:0 }}</strong> &bull; {{ app.created_at|date:"M d" }}
+                Proposed: <strong style="color:var(--text-primary);">${{ app.proposed_price|floatformat:0 }}</strong> &bull; {{ app.created_at|date:"M d" }}
               </div>
             </div>
-            <span class="badge {% if app.status == 'accepted' %}badge-success{% elif app.status == 'pending' %}badge-warning{% elif app.status == 'rejected' %}badge-danger{% else %}badge-primary{% endif %}">
+            <span class="badge {% if app.status == 'accepted' %}badge-success{% elif app.status == 'pending' %}badge-warning{% elif app.status == 'rejected' %}badge-danger{% else %}badge-primary{% endif %}" style="font-size:0.72rem; padding:3px 8px;">
               {{ app.get_status_display }}
             </span>
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <div style="text-align:center; padding:32px 16px;">
-        <i data-lucide="send" class="fh-icon-lg" style="color:var(--text-muted); margin-bottom:10px;"></i>
-        <div style="font-weight:700; font-size:0.95rem;">No active bids yet</div>
+      <div style="text-align:center; padding:36px 16px; border:1px dashed var(--border-default); border-radius:var(--r-sm);">
+        <i data-lucide="send" style="width:36px;height:36px; color:var(--text-muted); margin-bottom:10px;"></i>
+        <div style="font-family:var(--font-heading); font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:4px;">No active bids yet</div>
         <div style="font-size:0.8rem; color:var(--text-muted);">Submit proposals to client briefs to start collaborating.</div>
       </div>
     {% endif %}

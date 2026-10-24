@@ -1,23 +1,27 @@
 /* ==========================================================================
-   FREELANCEHUB CLIENT WORKSPACE THEME v3.0
-   Role Identity: Deep Sapphire + Forest Trust — Premium Client Experience
+   FREELANCEHUB CLIENT WORKSPACE THEME — UNIFIED DESIGN SYSTEM
+   Brand Identity: Unified Muted Deep Petrol Teal (#356B68 / #8AB8AE)
+   Consistent surfaces, typography, elevation, and controls across all roles
    ========================================================================== */
 
 body.client-workspace {
-  /* Client-specific brand overrides */
-  --client-accent:        #38BDF8;   /* Sky Blue — Client Identity */
-  --client-accent-hover:  #7DD3FC;
-  --client-accent-soft:   rgba(56, 189, 248, 0.10);
-  --client-accent-glow:   rgba(56, 189, 248, 0.28);
-  --client-deep:          #0C4A6E;   /* Deep Navy */
-  --brand-primary:        #38BDF8;
-  --brand-primary-hover:  #7DD3FC;
-  --sidebar-active-bg:    rgba(56, 189, 248, 0.12);
-  --border-focused:       #38BDF8;
-  --ring-focus:           rgba(56, 189, 248, 0.28);
+  --client-accent:        var(--primary);
+  --client-accent-hover:  var(--primary-hover);
+  --client-accent-soft:   var(--primary-subtle);
+  --client-deep:          var(--text-primary);
+  --brand-primary:        var(--primary);
+  --brand-primary-hover:  var(--primary-hover);
+  --sidebar-active-bg:    var(--primary-subtle);
+  --border-focused:       var(--primary);
 }
 
-/* Client sidebar specifics */
+[data-theme="dark"] body.client-workspace {
+  --client-accent:        var(--primary);
+  --client-accent-hover:  var(--primary-hover);
+  --client-accent-soft:   var(--primary-subtle);
+}
+
+/* Client sidebar & layout */
 .client-app-layout {
   display: flex;
   min-height: 100vh;
@@ -27,10 +31,8 @@ body.client-workspace {
 
 .client-sidebar {
   width: var(--sidebar-w);
-  background: var(--bg-glass);
+  background: var(--bg-surface);
   border-right: 1px solid var(--border-color);
-  backdrop-filter: blur(28px) saturate(1.5);
-  -webkit-backdrop-filter: blur(28px) saturate(1.5);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -46,44 +48,37 @@ body.client-workspace {
   height: var(--topbar-h);
   display: flex;
   align-items: center;
-  padding: 0 22px;
-  border-bottom: 1px solid var(--border-light);
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
 }
 
 .client-sidebar-user {
-  padding: 18px 22px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   border-bottom: 1px solid var(--border-light);
   flex-shrink: 0;
 }
 
 .client-user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, #38BDF8 0%, #0C4A6E 100%);
-  color: #FFFFFF;
+  background: var(--primary);
+  color: var(--primary-contrast);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.32);
-  transition: box-shadow var(--tr-norm), transform var(--tr-norm);
-}
-
-.client-user-avatar:hover {
-  box-shadow: 0 6px 22px rgba(56, 189, 248, 0.48);
-  transform: scale(1.06);
 }
 
 .client-user-name {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.25;
@@ -92,15 +87,15 @@ body.client-workspace {
 .client-user-company {
   font-size: 0.72rem;
   font-weight: 600;
-  color: #38BDF8;
+  color: var(--client-accent);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.05em;
   margin-top: 2px;
 }
 
 .client-sidebar-nav {
   flex: 1;
-  padding: 18px 12px;
+  padding: 16px 12px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -113,12 +108,12 @@ body.client-workspace {
 .client-sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
 .client-nav-group-title {
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.10em;
   color: var(--text-muted);
-  padding: 18px 14px 8px;
+  padding: 16px 12px 6px;
   margin: 0;
 }
 
@@ -126,17 +121,15 @@ body.client-workspace {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 16px;
+  padding: 10px 14px;
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.88rem;
+  font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: all var(--tr-norm);
+  transition: all var(--tr-fast);
   border: 1px solid transparent;
-  min-height: 44px;
-  position: relative;
-  overflow: hidden;
+  min-height: 40px;
 }
 
 .client-nav-item i,
@@ -144,48 +137,46 @@ body.client-workspace {
   width: 17px;
   height: 17px;
   flex-shrink: 0;
-  opacity: 0.60;
-  transition: all var(--tr-norm);
+  opacity: 0.75;
+  transition: all var(--tr-fast);
 }
 
 .client-nav-item:hover {
-  background: rgba(56, 189, 248, 0.08);
-  color: #38BDF8;
-  border-color: rgba(56, 189, 248, 0.20);
-  transform: translateX(2px);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-light);
 }
 
 .client-nav-item:hover i,
 .client-nav-item:hover svg {
   opacity: 1;
-  color: #38BDF8;
 }
 
 .client-nav-item.active {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(12, 74, 110, 0.10) 100%);
-  color: #38BDF8;
-  border-color: rgba(56, 189, 248, 0.30);
-  box-shadow: inset 3px 0 0 #38BDF8, 0 2px 12px rgba(56, 189, 248, 0.12);
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary-border);
+  border-left: 3px solid var(--primary);
+  padding-left: 12px;
   font-weight: 700;
 }
 
 .client-nav-item.active i,
 .client-nav-item.active svg {
   opacity: 1;
-  color: #38BDF8;
+  color: var(--primary);
 }
 
 .client-nav-badge {
   margin-left: auto;
-  background: #38BDF8;
-  color: #0A0F0A;
+  background: var(--primary);
+  color: var(--primary-contrast);
   font-size: 0.68rem;
-  font-weight: 800;
-  padding: 2px 8px;
+  font-weight: 700;
+  padding: 2px 7px;
   border-radius: var(--radius-full);
-  min-width: 20px;
+  min-width: 18px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.36);
 }
 
 .client-main {
@@ -202,17 +193,16 @@ body.client-workspace {
   height: var(--topbar-h);
   background: var(--bg-glass);
   border-bottom: 1px solid var(--border-color);
-  backdrop-filter: blur(28px) saturate(1.6);
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 36px;
+  padding: 0 32px;
   position: sticky;
   top: 0;
   z-index: 40;
   gap: 16px;
-  transition: box-shadow var(--tr-norm);
 }
 
 .client-topbar-left {
@@ -239,28 +229,12 @@ body.client-workspace {
   padding: var(--content-padding);
   flex: 1;
   max-width: 100%;
-  animation: fh-slide-in-up 0.4s ease both;
-}
-
-/* Client button overrides */
-body.client-workspace .btn-fh-client,
-body.client-workspace .btn-primary {
-  background: linear-gradient(135deg, #38BDF8 0%, #0C4A6E 100%);
-  color: #FFFFFF !important;
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.36);
-}
-
-body.client-workspace .btn-fh-client:hover,
-body.client-workspace .btn-primary:hover {
-  background: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 100%);
-  box-shadow: 0 8px 28px rgba(56, 189, 248, 0.50);
-  transform: translateY(-2px);
 }
 
 @media (max-width: 991px) {
   .client-sidebar { transform: translateX(-100%); }
   .client-sidebar.open { transform: translateX(0); }
   .client-main { margin-left: 0; }
+  .client-topbar { padding: 0 16px; }
   .client-content-body { padding: 20px 16px; }
 }

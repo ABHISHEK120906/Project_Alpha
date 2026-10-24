@@ -13,12 +13,12 @@
   <div style="display:flex; flex-direction:column; gap:24px;">
 
     <!-- Project Overview Card -->
-    <div class="fh-card">
+    <div class="fh-card card-fh-elevated">
       <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:16px;">
         <div>
-          <h2 style="font-size:1.45rem; font-weight:800; margin-bottom:8px;">{{ project.title }}</h2>
+          <h2 style="font-size:1.45rem; font-weight:800; margin-bottom:8px; color:var(--text-primary);">{{ project.title }}</h2>
           <div style="display:flex; flex-wrap:wrap; gap:16px; font-size:0.82rem; color:var(--text-muted);">
-            <span><i data-lucide="tag" style="width:14px; height:14px; vertical-align:middle; color:#7d3cff;"></i> {{ project.get_category_display }}</span>
+            <span><i data-lucide="tag" style="width:14px; height:14px; vertical-align:middle; color:var(--primary);"></i> {{ project.get_category_display }}</span>
             <span><i data-lucide="clock" style="width:14px; height:14px; vertical-align:middle;"></i> Posted {{ project.created_at|date:"M d, Y" }}</span>
             {% if project.deadline %}
               <span {% if project.is_overdue %}style="color:var(--danger); font-weight:700;"{% endif %}>
@@ -35,7 +35,7 @@
         </span>
       </div>
 
-      <div style="color:var(--text-secondary); line-height:1.75; white-space:pre-line; padding:16px 0; border-top:1px solid var(--border-subtle); border-bottom:1px solid var(--border-subtle);">
+      <div style="color:var(--text-secondary); line-height:1.75; white-space:pre-line; padding:16px 0; border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color);">
         {{ project.description }}
       </div>
 
@@ -44,17 +44,17 @@
           <div style="font-size:0.76rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:8px;">Required Skills</div>
           <div style="display:flex; flex-wrap:wrap; gap:6px;">
             {% for skill in project.skills_list %}
-              <span class="fl-skill-chip">{{ skill }}</span>
+              <span class="badge" style="background:var(--primary-subtle); color:var(--primary); border:1px solid var(--border-color); font-size:0.8rem; padding:4px 10px; border-radius:var(--r-sm);">{{ skill }}</span>
             {% endfor %}
           </div>
         </div>
       {% endif %}
 
       {% if project.attachment %}
-        <div style="margin-top:20px; padding:12px 16px; background:var(--bg-surface-elevated); border:1px solid var(--border-subtle); border-radius:var(--r-md); display:flex; align-items:center; justify-content:space-between;">
+        <div style="margin-top:20px; padding:12px 16px; background:var(--bg-surface-elevated); border:1px solid var(--border-color); border-radius:var(--r-md); display:flex; align-items:center; justify-content:space-between;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <i data-lucide="paperclip" style="width:18px; height:18px; color:#7d3cff;"></i>
-            <span style="font-size:0.88rem; font-weight:600;">Project Specification Attachment</span>
+            <i data-lucide="paperclip" style="width:18px; height:18px; color:var(--primary);"></i>
+            <span style="font-size:0.88rem; font-weight:600; color:var(--text-primary);">Project Specification Attachment</span>
           </div>
           <a href="{{ project.attachment.url }}" download class="btn-fh btn-fh-secondary btn-fh-sm">
             <i data-lucide="download"></i>
@@ -66,11 +66,11 @@
 
     <!-- Assigned Specialist Card -->
     {% if project.assigned_freelancer %}
-      <div class="fh-card">
+      <div class="fh-card card-fh-elevated">
         <h3 class="fh-card-title" style="margin-bottom:14px;"><i data-lucide="user-check"></i> Assigned Specialist</h3>
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
           <div style="display:flex; align-items:center; gap:14px;">
-            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--role-fl-primary), #feb300); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.15rem;">
+            <div style="width:48px; height:48px; border-radius:50%; background:var(--primary); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.15rem;">
               {{ project.assigned_freelancer.get_full_name|default:project.assigned_freelancer.username|slice:":1"|upper }}
             </div>
             <div>
@@ -84,7 +84,7 @@
           </div>
 
           <div style="display:flex; gap:10px;">
-            <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-fh btn-fh-client btn-fh-sm">
+            <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-fh btn-fh-primary btn-fh-sm">
               <i data-lucide="play"></i>
               <span>Active Workspace</span>
             </a>
@@ -102,38 +102,38 @@
   <!-- Right Column: Project Meta & Quick Actions -->
   <div style="display:flex; flex-direction:column; gap:24px;">
 
-    <div class="fh-card">
+    <div class="fh-card card-fh-elevated">
       <h3 class="fh-card-title" style="margin-bottom:16px;"><i data-lucide="layers"></i> Contract Parameters</h3>
 
       <div style="display:flex; flex-direction:column; gap:14px; font-size:0.88rem;">
-        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-subtle);">
+        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-color);">
           <span style="color:var(--text-muted);">Budget</span>
           <strong style="color:var(--text-primary); font-size:1.1rem;">${{ project.budget|floatformat:0|default:"Negotiable" }}</strong>
         </div>
 
-        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-subtle);">
+        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-color);">
           <span style="color:var(--text-muted);">Rate Type</span>
-          <span style="font-weight:600;">{{ project.get_budget_type_display|default:"Fixed Price" }}</span>
+          <span style="font-weight:600; color:var(--text-primary);">{{ project.get_budget_type_display|default:"Fixed Price" }}</span>
         </div>
 
-        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-subtle);">
+        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-color);">
           <span style="color:var(--text-muted);">Expected Scope</span>
-          <span style="font-weight:600;">{{ project.get_expected_duration_display|default:"Flexible" }}</span>
+          <span style="font-weight:600; color:var(--text-primary);">{{ project.get_expected_duration_display|default:"Flexible" }}</span>
         </div>
 
-        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-subtle);">
+        <div style="display:flex; justify-content:space-between; padding-bottom:8px; border-bottom:1px solid var(--border-color);">
           <span style="color:var(--text-muted);">Experience Level</span>
-          <span style="font-weight:600;">{{ project.get_experience_level_display|default:"Intermediate" }}</span>
+          <span style="font-weight:600; color:var(--text-primary);">{{ project.get_experience_level_display|default:"Intermediate" }}</span>
         </div>
 
         <div style="display:flex; justify-content:space-between;">
           <span style="color:var(--text-muted);">Proposals Received</span>
-          <strong style="color:#7d3cff;">{{ project.application_count }} candidate{{ project.application_count|pluralize }}</strong>
+          <strong style="color:var(--primary);">{{ project.application_count }} candidate{{ project.application_count|pluralize }}</strong>
         </div>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid var(--border-subtle);">
-        <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn-fh btn-fh-client">
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid var(--border-color);">
+        <a href="{% url 'marketplace:project_applications' pk=project.pk %}" class="btn-fh btn-fh-primary">
           <i data-lucide="clipboard-check"></i>
           <span>View Proposals ({{ project.application_count }})</span>
         </a>

@@ -1,5 +1,5 @@
 {% load static %}
-<!-- FreelanceHub Brand Logo Component: Electric Lime + Emerald + Forest Green + Crisp Mint -->
+<!-- FreelanceHub Brand Logo Component: Muted Deep Petrol Teal + Warm Sand + Muted Sage -->
 {% if href %}
 <a href="{{ href }}" class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}" aria-label="FreelanceHub">
 {% else %}
@@ -10,22 +10,22 @@
   <div class="fh-logo-mark-wrap" aria-hidden="true">
     <svg class="fh-logo-symbol-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Electric Lime to Neon Mint Gradient (Freelancer / Growth Arch) -->
-        <linearGradient id="fhRoseGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#84CC16" />
-          <stop offset="100%" stop-color="#A3E635" />
+        <!-- Muted Petrol Teal to Soft Mineral Teal Gradient -->
+        <linearGradient id="fhTealGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#356B68" />
+          <stop offset="100%" stop-color="#8AB8AE" />
         </linearGradient>
 
-        <!-- Emerald to Deep Forest Gradient (Client / Anchor Pillar) -->
-        <linearGradient id="fhPlumGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#4ADE80" />
-          <stop offset="100%" stop-color="#14532D" />
+        <!-- Muted Sage to Deep Stone Teal Gradient -->
+        <linearGradient id="fhSageGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#A5B9A5" />
+          <stop offset="100%" stop-color="#252E2C" />
         </linearGradient>
 
-        <!-- Central Connection & Beacon Node (White Mint to Lime Glow) -->
-        <linearGradient id="fhNodeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FFFFFF" />
-          <stop offset="100%" stop-color="#BEF264" />
+        <!-- Central Warm Sand Node -->
+        <linearGradient id="fhSandGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F6F5F0" />
+          <stop offset="100%" stop-color="#D9C9AE" />
         </linearGradient>
       </defs>
 
@@ -41,7 +41,7 @@
                C 7 73 7 66 7 58
                L 7 28
                C 7 18 13 14 22 14 Z" 
-            fill="url(#fhPlumGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
+            fill="url(#fhSageGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
       <!-- Freelancer Ascending Wing & Project Arch ('H' Uplink) -->
       <path d="M 42 84
@@ -52,13 +52,13 @@
                C 77 69 76 54 70 51
                C 64 49 56 54 55 67
                L 55 84 Z" 
-            fill="url(#fhRoseGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
+            fill="url(#fhTealGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
       <!-- Connection Bridge -->
-      <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#A3E635" opacity="0.6" />
+      <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#356B68" opacity="0.4" />
 
       <!-- Growth Beacon / Milestone Apex Node -->
-      <circle cx="74" cy="20" r="11" fill="url(#fhNodeGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
+      <circle cx="74" cy="20" r="11" fill="url(#fhSandGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" stroke="#356B68" stroke-width="1.5" />
     </svg>
   </div>
 

@@ -108,21 +108,21 @@
             <div class="fhp-chart-mini-header" style="display:flex; justify-content:space-between; align-items:center;">
               <div>
                 <div style="display:flex; align-items:center; gap:6px;">
-                  <span class="fhp-live-dot" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#A3E635; box-shadow:0 0 8px rgba(163,230,53,0.6);"></span>
+                  <span class="fhp-live-dot" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--primary);"></span>
                   <span style="font-weight:800; font-size:0.84rem; color:var(--text-primary);">Completed Projects</span>
                 </div>
                 <div style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">Work finished on time each month</div>
               </div>
-              <button type="button" class="fhp-chart-mini-badge" id="heroTrendToggleBtn" title="Click to switch view" style="border:none; cursor:pointer; background:rgba(163,230,53,0.15); color:var(--text-brand, #A3E635); font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:12px;">
+              <button type="button" class="fhp-chart-mini-badge" id="heroTrendToggleBtn" title="Click to switch view" style="border:1px solid var(--border-default); cursor:pointer; background:var(--primary-subtle); color:var(--primary); font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:12px;">
                 94% Done on Time
               </button>
             </div>
             <div style="position:relative; width:100%; height:86px; margin:6px 0;">
               <canvas id="heroVelocityChart" role="img" aria-label="Completed Projects Over Time" style="width:100%; height:100%; display:block;"></canvas>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-muted); border-top:1px dashed var(--border-light); padding-top:4px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-muted); border-top:1px dashed var(--border-default); padding-top:4px;">
               <span>High Quality Work</span>
-              <span style="color:#A3E635; font-weight:700;">Delivered on Schedule • 0 Delays</span>
+              <span style="color:var(--primary); font-weight:700;">Delivered on Schedule • 0 Delays</span>
             </div>
           </div>
           
@@ -580,7 +580,7 @@
         <div class="fhp-brand-chart-header">
           <div class="fhp-brand-chart-title-area">
             <div class="fhp-brand-chart-title">
-              <i data-lucide="shield-check" style="color:#A3E635;width:22px;height:22px;"></i>
+              <i data-lucide="shield-check" style="color:var(--primary);width:22px;height:22px;"></i>
               <span>Safe Payments Over Time</span>
             </div>
             <div class="fhp-brand-chart-sub">
@@ -605,13 +605,13 @@
         <div style="position:relative; width:100%; min-height:330px; height:350px;">
           <canvas id="brandEscrowChart" role="img" aria-label="Safe Payments Over Time Graph" style="width:100%; height:100%; display:block;"></canvas>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-light); font-size:0.8rem; color:var(--text-muted); flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-default); font-size:0.8rem; color:var(--text-muted); flex-wrap:wrap; gap:10px;">
           <div style="display:flex; gap:16px; flex-wrap:wrap;">
             <span><strong style="color:var(--text-primary);">₹48.5 Lakhs</strong> Total Safe Payments Handled</span>
             <span>•</span>
-            <span><strong style="color:#A3E635;">₹41.2 Lakhs</strong> Paid for Finished Work</span>
+            <span><strong style="color:var(--primary);">₹41.2 Lakhs</strong> Paid for Finished Work</span>
           </div>
-          <span style="display:inline-flex; align-items:center; gap:5px; color:#A3E635; font-weight:800;">
+          <span style="display:inline-flex; align-items:center; gap:5px; color:var(--primary); font-weight:800;">
             <i data-lucide="check-circle" style="width:15px;height:15px;"></i> 100% Payment Protection Guaranteed
           </span>
         </div>
@@ -625,14 +625,14 @@
           <div class="fhp-brand-chart-header">
             <div class="fhp-brand-chart-title-area">
               <div class="fhp-brand-chart-title">
-                <i data-lucide="pie-chart" style="color:#A3E635;width:20px;height:20px;"></i>
+                <i data-lucide="pie-chart" style="color:var(--primary);width:20px;height:20px;"></i>
                 <span>Project Work Status</span>
               </div>
               <div class="fhp-brand-chart-sub">
                 See how all projects are currently moving forward on FreelanceHub.
               </div>
             </div>
-            <span class="fhp-chart-mini-badge" id="donutTotalBadge" style="background:rgba(163,230,53,0.15);color:var(--text-brand, #A3E635);font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:12px;">142 Projects</span>
+            <span class="fhp-chart-mini-badge" id="donutTotalBadge" style="background:var(--primary-subtle);color:var(--primary);border:1px solid var(--border-default);font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:12px;">142 Projects</span>
           </div>
           <div style="position:relative; width:100%; min-height:280px; height:290px; display:flex; align-items:center; justify-content:center;">
             <canvas id="brandMilestoneDonutChart" role="img" aria-label="Project Work Status Donut Graph" style="max-height:280px; width:100%; display:block;"></canvas>
@@ -643,19 +643,19 @@
           </div>
           <div class="fhp-interactive-legend-row" id="donutLegendRow">
             <div class="fhp-legend-chip" data-index="0">
-              <span style="width:10px;height:10px;border-radius:50%;background:#A3E635;"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--primary);"></span>
               <span>Finished &amp; Paid (58%)</span>
             </div>
             <div class="fhp-legend-chip" data-index="1">
-              <span style="width:10px;height:10px;border-radius:50%;background:#4ADE80;"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#A5B9A5;"></span>
               <span>Work in Progress (24%)</span>
             </div>
             <div class="fhp-legend-chip" data-index="2">
-              <span style="width:10px;height:10px;border-radius:50%;background:#38BDF8;"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#829DB5;"></span>
               <span>Under Final Review (12%)</span>
             </div>
             <div class="fhp-legend-chip" data-index="3">
-              <span style="width:10px;height:10px;border-radius:50%;background:#FBBF24;"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#D9C9AE;"></span>
               <span>New Projects (6%)</span>
             </div>
           </div>
@@ -666,14 +666,14 @@
           <div class="fhp-brand-chart-header">
             <div class="fhp-brand-chart-title-area">
               <div class="fhp-brand-chart-title">
-                <i data-lucide="layers" style="color:#38BDF8;width:20px;height:20px;"></i>
+                <i data-lucide="layers" style="color:var(--primary);width:20px;height:20px;"></i>
                 <span>Most In-Demand Skills</span>
               </div>
               <div class="fhp-brand-chart-sub">
                 The most popular skills and work requested by clients right now.
               </div>
             </div>
-            <button type="button" class="fhp-chart-btn" id="btnToggleSkillSort" style="background:var(--bg-surface);border:1px solid var(--border-light);">
+            <button type="button" class="fhp-chart-btn" id="btnToggleSkillSort" style="background:var(--bg-surface);border:1px solid var(--border-default);">
               <i data-lucide="arrow-up-down" style="width:13px;height:13px;"></i>
               <span id="skillSortLabel">Show by Growth</span>
             </button>
@@ -681,9 +681,9 @@
           <div style="position:relative; width:100%; min-height:280px; height:290px;">
             <canvas id="brandSkillsBarChart" role="img" aria-label="Most In-Demand Skills Bar Graph" style="width:100%; height:100%; display:block;"></canvas>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-light); font-size:0.78rem; color:var(--text-muted); flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:1px dashed var(--border-default); font-size:0.78rem; color:var(--text-muted); flex-wrap:wrap; gap:8px;">
             <span>Top Skill: <strong style="color:var(--text-primary);">Web Development (38%)</strong></span>
-            <span style="color:#A3E635; font-weight:800;">Fastest Growing: AI &amp; Data (+42%)</span>
+            <span style="color:var(--primary); font-weight:800;">Fastest Growing: AI &amp; Data (+42%)</span>
           </div>
         </div>
 
@@ -949,14 +949,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
     return {
       isDark: isDark,
-      textColor: isDark ? '#F0FDF4' : '#111827',
-      textMuted: isDark ? '#6EE7A8' : '#6B7280',
-      gridColor: isDark ? 'rgba(163, 230, 53, 0.08)' : 'rgba(0, 0, 0, 0.06)',
-      cardBg: isDark ? '#0D1F0D' : '#FFFFFF',
-      tooltipBg: isDark ? '#060D06' : '#FFFFFF',
-      tooltipTitle: isDark ? '#F0FDF4' : '#111827',
-      tooltipBody: isDark ? '#BBF7D0' : '#374151',
-      tooltipBorder: isDark ? 'rgba(163, 230, 53, 0.35)' : 'rgba(16, 185, 129, 0.35)'
+      primary: isDark ? '#8AB8AE' : '#356B68',
+      primarySubtle: isDark ? 'rgba(138, 184, 174, 0.2)' : 'rgba(53, 107, 104, 0.12)',
+      textColor: isDark ? '#F0F2EC' : '#252E2C',
+      textMuted: isDark ? '#B5C0B9' : '#626C68',
+      gridColor: isDark ? 'rgba(57, 69, 65, 0.35)' : 'rgba(226, 227, 220, 0.6)',
+      cardBg: isDark ? '#202927' : '#FFFFFF',
+      tooltipBg: isDark ? '#202927' : '#FFFFFF',
+      tooltipTitle: isDark ? '#F0F2EC' : '#252E2C',
+      tooltipBody: isDark ? '#B5C0B9' : '#626C68',
+      tooltipBorder: isDark ? '#394541' : '#E2E3DC',
+      sage: '#A5B9A5',
+      clay: '#C58F78',
+      blue: '#829DB5',
+      sand: '#D9C9AE',
+      stone: '#777B78'
     };
   }
 
@@ -983,8 +990,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const colors = getThemeColors();
 
     const grad = ctx.createLinearGradient(0, 0, 0, 80);
-    grad.addColorStop(0, 'rgba(163, 230, 53, 0.40)');
-    grad.addColorStop(1, 'rgba(163, 230, 53, 0.0)');
+    grad.addColorStop(0, colors.isDark ? 'rgba(138, 184, 174, 0.35)' : 'rgba(53, 107, 104, 0.25)');
+    grad.addColorStop(1, colors.isDark ? 'rgba(138, 184, 174, 0.0)' : 'rgba(53, 107, 104, 0.0)');
 
     const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     let currentMode = 'pct';
@@ -998,13 +1005,13 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           label: 'Completed on Time (%)',
           data: [...dataPct],
-          borderColor: '#A3E635',
+          borderColor: colors.primary,
           borderWidth: 2.6,
           backgroundColor: grad,
           fill: true,
           tension: 0.38,
-          pointBackgroundColor: '#A3E635',
-          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
+          pointBackgroundColor: colors.primary,
+          pointBorderColor: colors.cardBg,
           pointBorderWidth: 1.5,
           pointRadius: 3,
           pointHoverRadius: 6
@@ -1095,13 +1102,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const monthlyPayouts = [3.8, 2.6, 3.4, 4.4, 4.7, 4.7, 4.9, 4.6, 4.7, 3.7, 3.7, 3.3];
     const disputeIntegrity = [100, 100, 100, 100, 100, 99.8, 100, 100, 100, 100, 99.9, 100];
 
-    const gradLime = ctx.createLinearGradient(0, 0, 0, 320);
-    gradLime.addColorStop(0, 'rgba(163, 230, 53, 0.40)');
-    gradLime.addColorStop(1, 'rgba(163, 230, 53, 0.0)');
-
-    const gradGreen = ctx.createLinearGradient(0, 0, 0, 320);
-    gradGreen.addColorStop(0, 'rgba(74, 222, 128, 0.35)');
-    gradGreen.addColorStop(1, 'rgba(74, 222, 128, 0.0)');
+    const gradTeal = ctx.createLinearGradient(0, 0, 0, 320);
+    gradTeal.addColorStop(0, colors.isDark ? 'rgba(138, 184, 174, 0.35)' : 'rgba(53, 107, 104, 0.25)');
+    gradTeal.addColorStop(1, colors.isDark ? 'rgba(138, 184, 174, 0.0)' : 'rgba(53, 107, 104, 0.0)');
 
     let datasetsConfig = [];
     let yAxisConfig = {
@@ -1119,13 +1122,13 @@ document.addEventListener('DOMContentLoaded', function () {
         {
           label: 'Total Money Held in Escrow (₹ Lakhs)',
           data: cumulativeEscrow,
-          borderColor: '#A3E635',
+          borderColor: colors.primary,
           borderWidth: 3,
-          backgroundColor: gradLime,
+          backgroundColor: gradTeal,
           fill: true,
           tension: 0.35,
-          pointBackgroundColor: '#A3E635',
-          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
+          pointBackgroundColor: colors.primary,
+          pointBorderColor: colors.cardBg,
           pointBorderWidth: 2,
           pointRadius: 4,
           pointHoverRadius: 7
@@ -1133,13 +1136,13 @@ document.addEventListener('DOMContentLoaded', function () {
         {
           label: 'Money Paid to Freelancers (₹ Lakhs)',
           data: releasedDisbursed,
-          borderColor: '#38BDF8',
+          borderColor: colors.blue,
           borderWidth: 2.5,
           backgroundColor: 'transparent',
           fill: false,
           tension: 0.35,
-          pointBackgroundColor: '#38BDF8',
-          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
+          pointBackgroundColor: colors.blue,
+          pointBorderColor: colors.cardBg,
           pointBorderWidth: 2,
           pointRadius: 3.5,
           pointHoverRadius: 6.5
@@ -1151,8 +1154,8 @@ document.addEventListener('DOMContentLoaded', function () {
           type: 'bar',
           label: 'Monthly Payouts for Finished Work (₹ Lakhs)',
           data: monthlyPayouts,
-          backgroundColor: '#A3E635',
-          hoverBackgroundColor: '#BEF264',
+          backgroundColor: colors.primary,
+          hoverBackgroundColor: colors.sage,
           borderRadius: 6,
           barPercentage: 0.55
         }
@@ -1162,13 +1165,13 @@ document.addEventListener('DOMContentLoaded', function () {
         {
           label: 'Payment Safety Rate (%)',
           data: disputeIntegrity,
-          borderColor: '#A3E635',
+          borderColor: colors.primary,
           borderWidth: 3,
-          backgroundColor: gradLime,
+          backgroundColor: gradTeal,
           fill: true,
           tension: 0.25,
-          pointBackgroundColor: '#A3E635',
-          pointBorderColor: colors.isDark ? '#0D1F0D' : '#ffffff',
+          pointBackgroundColor: colors.primary,
+          pointBorderColor: colors.cardBg,
           pointBorderWidth: 2,
           pointRadius: 4.5,
           pointHoverRadius: 7
@@ -1304,7 +1307,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
     const dataValues = [82, 34, 17, 9];
     const totalCount = dataValues.reduce((a, b) => a + b, 0);
-    const bgColors = ['#A3E635', '#4ADE80', '#38BDF8', '#FBBF24'];
+    const bgColors = [colors.primary, colors.sage, colors.blue, colors.sand];
 
     const centerVal = document.getElementById('donutCenterVal');
     const centerLbl = document.getElementById('donutCenterLbl');
@@ -1316,7 +1319,7 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           data: [...dataValues],
           backgroundColor: bgColors,
-          borderColor: colors.isDark ? '#0D1F0D' : '#FFFFFF',
+          borderColor: colors.cardBg,
           borderWidth: 3,
           hoverOffset: 12
         }]
@@ -1415,13 +1418,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const labels = displayData.map(d => d.name);
     const demandValues = displayData.map(d => isSortedByGrowth ? d.growth : d.demand);
 
-    const gradLime = ctx.createLinearGradient(0, 0, 300, 0);
-    gradLime.addColorStop(0, '#A3E635');
-    gradLime.addColorStop(1, '#BEF264');
+    const gradTeal = ctx.createLinearGradient(0, 0, 300, 0);
+    gradTeal.addColorStop(0, colors.primary);
+    gradTeal.addColorStop(1, colors.sage);
 
     const gradBlue = ctx.createLinearGradient(0, 0, 300, 0);
-    gradBlue.addColorStop(0, '#38BDF8');
-    gradBlue.addColorStop(1, '#7DD3FC');
+    gradBlue.addColorStop(0, colors.blue);
+    gradBlue.addColorStop(1, colors.sand);
 
     const chart = new Chart(ctx, {
       type: 'bar',
@@ -1430,8 +1433,8 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           label: isSortedByGrowth ? 'Yearly Growth Rate (%)' : 'Popularity Share (%)',
           data: demandValues,
-          backgroundColor: isSortedByGrowth ? gradBlue : gradLime,
-          hoverBackgroundColor: isSortedByGrowth ? '#38BDF8' : '#A3E635',
+          backgroundColor: isSortedByGrowth ? gradBlue : gradTeal,
+          hoverBackgroundColor: isSortedByGrowth ? colors.blue : colors.primary,
           borderRadius: 6,
           barPercentage: 0.65,
           categoryPercentage: 0.8

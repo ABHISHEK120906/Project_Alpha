@@ -139,7 +139,7 @@
                 Posted {{ proj.created_at|date:"d M Y" }}
               </span>
 
-              <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #10b981; background: rgba(16, 185, 129, 0.12); padding: 2px 7px; border-radius: var(--r-sm);">
+              <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--primary); background: var(--primary-subtle); border: 1px solid var(--border-color); padding: 2px 7px; border-radius: var(--r-sm);">
                 <i data-lucide="shield-check" style="width:12px; height:12px;"></i> Client Verified
               </span>
             </div>
@@ -165,7 +165,7 @@
 
             <!-- Meta Strip -->
             <div style="display: flex; gap: 18px; font-size: 12.5px; color: var(--fl-text-muted); flex-wrap: wrap;">
-              <span><i data-lucide="wallet" style="color:var(--fl-yellow); width:14px; height:14px;"></i> Budget: <strong style="color:var(--fl-text-primary);">₹{{ proj.budget|floatformat:0|default:"TBD" }}</strong></span>
+              <span><i data-lucide="wallet" style="color:var(--primary); width:14px; height:14px;"></i> Budget: <strong style="color:var(--fl-text-primary);">₹{{ proj.budget|floatformat:0|default:"TBD" }}</strong></span>
               <span><i data-lucide="clock" style="width:14px; height:14px;"></i> Duration: <strong>{{ proj.get_expected_duration_display|default:"1 to 4 weeks" }}</strong></span>
               {% if proj.deadline %}
                 <span><i data-lucide="calendar" style="width:14px; height:14px;"></i> Due: <strong>{{ proj.deadline|date:"d M Y" }}</strong></span>
@@ -189,7 +189,7 @@
 {% else %}
   <!-- Empty State -->
   <div class="fl-card" style="text-align: center; padding: 60px 24px;">
-    <div style="width: 64px; height: 64px; border-radius: var(--r-lg); background: rgba(255, 94, 108, 0.12); color: var(--fl-coral); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+    <div style="width: 64px; height: 64px; border-radius: var(--r-lg); background: var(--primary-subtle); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
       <i data-lucide="search" style="width: 32px; height: 32px;"></i>
     </div>
     <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">No matching projects found</h3>

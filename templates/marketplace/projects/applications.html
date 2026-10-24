@@ -8,12 +8,12 @@
 
 {% block content %}
 <!-- Context Banner -->
-<div class="fh-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+<div class="fh-card card-fh-elevated" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
   <div>
-    <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:4px;">{{ project.title }}</h3>
+    <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:4px; color:var(--text-primary);">{{ project.title }}</h3>
     <div style="font-size:0.82rem; color:var(--text-muted); display:flex; gap:16px; flex-wrap:wrap;">
-      <span><i data-lucide="wallet" style="width:14px; height:14px; vertical-align:middle; color:#7d3cff;"></i> Budget: <strong>${{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
-      <span><i data-lucide="users" style="width:14px; height:14px; vertical-align:middle;"></i> <strong>{{ applications.count }}</strong> proposal{{ applications.count|pluralize }}</span>
+      <span><i data-lucide="wallet" style="width:14px; height:14px; vertical-align:middle; color:var(--primary);"></i> Budget: <strong>${{ project.budget|floatformat:0|default:"TBD" }}</strong></span>
+      <span><i data-lucide="users" style="width:14px; height:14px; vertical-align:middle; color:var(--primary);"></i> <strong>{{ applications.count }}</strong> proposal{{ applications.count|pluralize }}</span>
       <span class="fh-badge {% if project.status == 'open' %}fh-badge-primary{% elif project.status == 'in_progress' %}fh-badge-warning{% elif project.status == 'completed' %}fh-badge-success{% else %}fh-badge-neutral{% endif %}">
         {{ project.get_status_display }}
       </span>
@@ -25,7 +25,7 @@
       <i data-lucide="eye"></i>
       <span>Project Specs</span>
     </a>
-    <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-fh btn-fh-client btn-fh-sm">
+    <a href="{% url 'marketplace:project_workspace' pk=project.pk %}" class="btn-fh btn-fh-primary btn-fh-sm">
       <i data-lucide="play"></i>
       <span>Workspace</span>
     </a>
@@ -36,18 +36,18 @@
 {% if applications %}
   <div style="display:flex; flex-direction:column; gap:18px;">
     {% for app in applications %}
-      <div class="fh-card" style="margin-bottom:0;">
+      <div class="fh-card card-fh-elevated" style="margin-bottom:0;">
         <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px;">
 
           <!-- Freelancer Profile & Proposal Excerpt -->
           <div style="display:flex; gap:16px; flex:1; min-width:280px;">
-            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--role-fl-primary), #feb300); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.15rem; flex-shrink:0;">
+            <div style="width:48px; height:48px; border-radius:50%; background:var(--primary); color:#ffffff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.15rem; flex-shrink:0;">
               {{ app.freelancer.username|slice:":1"|upper|default:"F" }}
             </div>
 
             <div style="flex:1;">
               <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
-                <h4 style="font-size:1.05rem; font-weight:700; margin:0;">
+                <h4 style="font-size:1.05rem; font-weight:700; margin:0; color:var(--text-primary);">
                   {{ app.freelancer.get_full_name|default:app.freelancer.username }}
                 </h4>
                 <span class="fh-badge {% if app.status == 'accepted' %}fh-badge-success{% elif app.status == 'rejected' %}fh-badge-danger{% elif app.status == 'pending' %}fh-badge-warning{% else %}fh-badge-neutral{% endif %}">
@@ -59,7 +59,7 @@
                 Submitted on {{ app.created_at|date:"M d, Y" }}
               </div>
 
-              <div class="proposal-cover-text">
+              <div class="proposal-cover-text" style="color:var(--text-secondary); line-height:1.6; font-size:0.9rem;">
                 {{ app.proposal|linebreaksbr }}
               </div>
             </div>
@@ -110,9 +110,9 @@
     {% endfor %}
   </div>
 {% else %}
-  <div class="fh-card">
+  <div class="fh-card card-fh-elevated">
     <div class="fh-empty-state">
-      <div class="fh-empty-icon"><i data-lucide="clipboard-list"></i></div>
+      <div class="fh-empty-icon" style="color:var(--primary);"><i data-lucide="clipboard-list"></i></div>
       <div class="fh-empty-title">No proposals received yet</div>
       <div class="fh-empty-desc">Your project is active on the marketplace. Verified specialists will submit proposals shortly.</div>
       <a href="{% url 'marketplace:project_list' %}" class="btn-fh btn-fh-secondary">Back to My Projects</a>

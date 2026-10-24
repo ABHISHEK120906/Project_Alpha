@@ -1,7 +1,7 @@
 /**
- * FreelanceHub Dashboard Analytics Engine
- * State-of-the-art Chart.js 4 visualizer supporting live theme updates,
- * Baby Pink + Deep Plum gradient curves, custom tooltips, and client/freelancer/admin analytics.
+ * FreelanceHub Dashboard Analytics Engine v4.0
+ * Chart.js 4 visualizer supporting live theme updates,
+ * Muted Petrol Teal & Botanical/Mineral tones, custom tooltips, and analytics.
  */
 
 'use strict';
@@ -16,22 +16,22 @@
   function getChartTheme() {
     const dark = isDark();
     return {
-      primary: '#DE5B88',               // Soft Rose Accent
-      primaryGlow: 'rgba(222, 91, 136, 0.28)',
-      primaryLight: '#F7B5CD',          // Soft Baby Pink
-      secondary: '#3B142B',             // Deep Plum
-      secondaryGlow: 'rgba(59, 20, 43, 0.22)',
-      blush: '#FDEBF2',                 // Blush Pink
-      lavender: '#ECE8F7',              // Light Lavender
-      lavenderAccent: '#9884CE',
-      success: '#10B981',
-      warning: '#F59E0B',
-      info: '#9884CE',
-      grid: dark ? 'rgba(247, 181, 205, 0.08)' : 'rgba(59, 20, 43, 0.06)',
-      text: dark ? '#BFAEB9' : '#756A73',
-      tooltipBg: dark ? 'rgba(25, 21, 29, 0.96)' : 'rgba(255, 255, 255, 0.98)',
-      tooltipBorder: dark ? 'rgba(247, 181, 205, 0.2)' : 'rgba(222, 91, 136, 0.25)',
-      tooltipText: dark ? '#FDF2F6' : '#19151D'
+      primary: dark ? '#8AB8AE' : '#356B68',               // Signature Muted Teal
+      primaryGlow: dark ? 'rgba(138, 184, 174, 0.25)' : 'rgba(53, 107, 104, 0.20)',
+      secondary: dark ? '#D6A38E' : '#C58F78',             // Soft Clay
+      secondaryGlow: dark ? 'rgba(214, 163, 142, 0.20)' : 'rgba(197, 143, 120, 0.16)',
+      sage: dark ? '#B4C7B4' : '#A5B9A5',                  // Muted Sage
+      blue: dark ? '#96B2C8' : '#829DB5',                  // Dusty Blue
+      sand: dark ? '#E2D5BE' : '#D9C9AE',                  // Warm Sand
+      stone: dark ? '#929693' : '#777B78',                // Neutral Stone
+      success: dark ? '#6BB892' : '#3D7D62',
+      warning: dark ? '#DEAB6A' : '#B07534',
+      info: dark ? '#82AEC4' : '#4A7490',
+      grid: dark ? 'rgba(240, 242, 236, 0.06)' : 'rgba(37, 46, 44, 0.06)',
+      text: dark ? '#B5C0B9' : '#626C68',
+      tooltipBg: dark ? '#202927' : '#FFFFFF',
+      tooltipBorder: dark ? '#394541' : '#E2E3DC',
+      tooltipText: dark ? '#F0F2EC' : '#252E2C'
     };
   }
 
@@ -53,15 +53,16 @@
 
     safeDestroy(canvasId);
     const theme = getChartTheme();
+    const dark = isDark();
 
     const chartCtx = ctx.getContext('2d');
     const incomeGrad = chartCtx.createLinearGradient(0, 0, 0, 320);
-    incomeGrad.addColorStop(0, 'rgba(222, 91, 136, 0.35)');
-    incomeGrad.addColorStop(1, 'rgba(247, 181, 205, 0.02)');
+    incomeGrad.addColorStop(0, dark ? 'rgba(138, 184, 174, 0.28)' : 'rgba(53, 107, 104, 0.20)');
+    incomeGrad.addColorStop(1, 'rgba(53, 107, 104, 0.01)');
 
     const expenseGrad = chartCtx.createLinearGradient(0, 0, 0, 320);
-    expenseGrad.addColorStop(0, 'rgba(59, 20, 43, 0.25)');
-    expenseGrad.addColorStop(1, 'rgba(59, 20, 43, 0.01)');
+    expenseGrad.addColorStop(0, dark ? 'rgba(214, 163, 142, 0.24)' : 'rgba(197, 143, 120, 0.18)');
+    expenseGrad.addColorStop(1, 'rgba(197, 143, 120, 0.01)');
 
     window._dashCharts[canvasId] = new Chart(ctx, {
       type: 'line',
@@ -74,12 +75,12 @@
             borderColor: theme.primary,
             backgroundColor: incomeGrad,
             fill: true,
-            tension: 0.4,
-            borderWidth: 2.5,
+            tension: 0.35,
+            borderWidth: 2.2,
             pointRadius: 4,
-            pointHoverRadius: 7,
+            pointHoverRadius: 6,
             pointBackgroundColor: theme.primary,
-            pointBorderColor: '#FFFFFF',
+            pointBorderColor: dark ? '#202927' : '#FFFFFF',
             pointBorderWidth: 2
           },
           {
@@ -88,11 +89,13 @@
             borderColor: theme.secondary,
             backgroundColor: expenseGrad,
             fill: true,
-            tension: 0.4,
+            tension: 0.35,
             borderWidth: 2,
             pointRadius: 3.5,
             pointHoverRadius: 6,
-            pointBackgroundColor: theme.secondary
+            pointBackgroundColor: theme.secondary,
+            pointBorderColor: dark ? '#202927' : '#FFFFFF',
+            pointBorderWidth: 2
           }
         ]
       },
@@ -112,12 +115,12 @@
             position: 'top',
             labels: {
               color: theme.text,
-              font: { family: "'Plus Jakarta Sans', sans-serif", weight: '600', size: 12.5 },
+              font: { family: "'Plus Jakarta Sans', sans-serif", weight: '600', size: 12 },
               usePointStyle: true,
               pointStyle: 'circle',
-              boxWidth: 9,
-              boxHeight: 9,
-              padding: 24
+              boxWidth: 8,
+              boxHeight: 8,
+              padding: 20
             }
           },
           tooltip: {
@@ -126,9 +129,9 @@
             borderWidth: 1,
             titleColor: theme.tooltipText,
             bodyColor: theme.tooltipText,
-            padding: 14,
-            boxPadding: 8,
-            cornerRadius: 10,
+            padding: 12,
+            boxPadding: 6,
+            cornerRadius: 8,
             usePointStyle: true,
             bodyFont: { family: "'Inter', sans-serif", size: 12 },
             titleFont: { family: "'Plus Jakarta Sans', sans-serif", weight: '700', size: 13 }
@@ -151,7 +154,7 @@
               font: { family: "'Inter', sans-serif", size: 11.5 },
               padding: 12,
               callback: function (val) {
-                return '$' + Number(val).toLocaleString();
+                return '₹' + Number(val).toLocaleString();
               }
             }
           }
@@ -167,6 +170,7 @@
 
     safeDestroy(canvasId);
     const theme = getChartTheme();
+    const dark = isDark();
 
     window._dashCharts[canvasId] = new Chart(ctx, {
       type: 'doughnut',
@@ -175,28 +179,23 @@
         datasets: [{
           data: data || [45, 30, 15, 10],
           backgroundColor: [
-            theme.success,
             theme.primary,
-            theme.blush,
+            theme.sage,
             theme.secondary,
-            theme.lavenderAccent
+            theme.blue,
+            theme.sand
           ],
-          borderColor: isDark() ? '#251C2C' : '#FFFFFF',
-          borderWidth: 3,
-          hoverOffset: 8
+          borderColor: dark ? '#202927' : '#FFFFFF',
+          borderWidth: 2.5,
+          hoverOffset: 6
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '66%',
+        cutout: '68%',
         layout: {
-          padding: {
-            top: 16,
-            bottom: 16,
-            left: 16,
-            right: 16
-          }
+          padding: 16
         },
         plugins: {
           legend: {
@@ -206,9 +205,9 @@
               font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '600' },
               usePointStyle: true,
               pointStyle: 'circle',
-              boxWidth: 9,
-              boxHeight: 9,
-              padding: 22
+              boxWidth: 8,
+              boxHeight: 8,
+              padding: 18
             }
           },
           tooltip: {
@@ -218,7 +217,7 @@
             titleColor: theme.tooltipText,
             bodyColor: theme.tooltipText,
             padding: 12,
-            cornerRadius: 10,
+            cornerRadius: 8,
             boxPadding: 6
           }
         }
@@ -242,11 +241,11 @@
           label: 'Net Volume',
           data: data || [25, 40, 32, 55, 62, 75],
           backgroundColor: theme.primary,
-          borderRadius: 8,
+          borderRadius: 6,
           borderSkipped: false,
-          hoverBackgroundColor: '#E078A7',
-          barPercentage: 0.62,
-          categoryPercentage: 0.72
+          hoverBackgroundColor: theme.primaryGlow,
+          barPercentage: 0.60,
+          categoryPercentage: 0.70
         }]
       },
       options: {
@@ -269,7 +268,7 @@
             titleColor: theme.tooltipText,
             bodyColor: theme.tooltipText,
             padding: 12,
-            cornerRadius: 10
+            cornerRadius: 8
           }
         },
         scales: {
@@ -284,7 +283,7 @@
               color: theme.text,
               padding: 12,
               font: { size: 11.5 },
-              callback: function(v) { return '$' + Number(v).toLocaleString(); }
+              callback: function(v) { return '₹' + Number(v).toLocaleString(); }
             }
           }
         }
@@ -300,30 +299,29 @@
     }
     const chart = window._dashCharts['financialTrendChart'];
     if (!chart) return;
-    const theme = getChartTheme();
     const datasets = chart.data.datasets;
 
     if (type === 'area') {
       chart.config.type = 'line';
       datasets.forEach((ds) => {
         ds.fill = true;
-        ds.tension = 0.4;
+        ds.tension = 0.35;
         ds.borderRadius = 0;
       });
     } else if (type === 'line') {
       chart.config.type = 'line';
       datasets.forEach((ds, idx) => {
         ds.fill = (idx === 0);
-        ds.tension = 0.4;
+        ds.tension = 0.35;
         ds.borderRadius = 0;
       });
     } else if (type === 'bar') {
       chart.config.type = 'bar';
       datasets.forEach((ds) => {
         ds.fill = false;
-        ds.borderRadius = 8;
-        ds.barPercentage = 0.65;
-        ds.categoryPercentage = 0.72;
+        ds.borderRadius = 6;
+        ds.barPercentage = 0.60;
+        ds.categoryPercentage = 0.70;
       });
     }
     chart.update();

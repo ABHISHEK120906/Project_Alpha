@@ -9,25 +9,26 @@
   position: fixed;
   bottom: 96px; /* sits above existing FAB */
   right: 24px;
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--amber-dark, #B8791F));
-  color: #fff;
+  background: var(--primary);
+  color: var(--primary-contrast);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  box-shadow: 0 4px 20px rgba(219, 153, 65, 0.45), 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-md);
   text-decoration: none;
   z-index: 1040;
-  transition: var(--transition);
-  border: 2px solid rgba(255,255,255,0.15);
+  transition: var(--tr-fast);
+  border: 1px solid var(--border-color);
 }
 .chatbot-fab:hover {
-  transform: translateY(-3px) scale(1.06);
-  box-shadow: 0 8px 28px rgba(219, 153, 65, 0.6), 0 4px 12px rgba(0,0,0,0.25);
-  color: #fff;
+  transform: translateY(-2px);
+  background: var(--primary-hover);
+  box-shadow: var(--shadow-lg);
+  color: var(--primary-contrast);
 }
 .chatbot-fab i {
   transition: transform 0.3s ease;
@@ -35,16 +36,15 @@
 .chatbot-fab:hover i {
   transform: rotate(-10deg) scale(1.1);
 }
-/* Pulse indicator */
 .chatbot-fab-pulse {
   position: absolute;
   top: 4px;
   right: 4px;
   width: 10px;
   height: 10px;
-  background: #4caf50;
+  background: var(--success);
   border-radius: 50%;
-  border: 2px solid var(--bg-canvas, #E6E2D8);
+  border: 2px solid var(--bg-app);
   animation: tb-pulse 2s ease-in-out infinite;
 }
 @keyframes tb-pulse {
@@ -99,11 +99,11 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary), var(--amber-dark, #B8791F));
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--primary-contrast);
   font-size: 15px;
   flex-shrink: 0;
 }
@@ -125,23 +125,22 @@
   align-items: center;
   gap: 8px;
   padding: 9px 14px;
-  background: linear-gradient(135deg, var(--primary), var(--amber-dark, #B8791F));
-  color: #fff;
+  background: var(--primary);
+  color: var(--primary-contrast);
   border: none;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: var(--transition-fast);
+  transition: var(--tr-fast);
   width: 100%;
   justify-content: center;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 .tb-new-chat-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  color: #fff;
+  background: var(--primary-hover);
+  color: var(--primary-contrast);
 }
 
 /* Search */
@@ -212,11 +211,11 @@
   background: var(--bg-secondary);
 }
 .tb-conv-item.active {
-  background: var(--primary-soft, #F5E8C8);
+  background: var(--primary-soft);
   border-left: 3px solid var(--primary);
 }
 [data-theme="dark"] .tb-conv-item.active {
-  background: rgba(219, 153, 65, 0.12);
+  background: var(--primary-soft);
 }
 .tb-conv-item-icon {
   width: 28px;
@@ -233,7 +232,7 @@
 }
 .tb-conv-item.active .tb-conv-item-icon {
   background: var(--primary);
-  color: #fff;
+  color: var(--primary-contrast);
 }
 .tb-conv-item-title {
   flex: 1;
@@ -378,17 +377,17 @@
   animation: tb-fadein 0.5s ease;
 }
 .tb-welcome-icon {
-  width: 76px;
-  height: 76px;
-  border-radius: 22px;
-  background: linear-gradient(135deg, var(--primary), var(--amber-dark, #B8791F));
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  color: #fff;
+  font-size: 30px;
+  color: var(--primary-contrast);
   margin-bottom: 20px;
-  box-shadow: 0 8px 28px rgba(219, 153, 65, 0.35);
+  box-shadow: var(--shadow-sm);
 }
 .tb-welcome h2 {
   font-size: 22px;
@@ -428,18 +427,18 @@
 }
 .tb-suggestion-card:hover {
   border-color: var(--primary);
-  background: var(--primary-soft, #F5E8C8);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(219, 153, 65, 0.18);
+  background: var(--primary-subtle);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-xs);
 }
 [data-theme="dark"] .tb-suggestion-card:hover {
-  background: rgba(219, 153, 65, 0.1);
+  background: var(--primary-subtle);
 }
 .tb-suggestion-icon {
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  background: var(--primary-soft, #F5E8C8);
+  background: var(--primary-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -487,13 +486,13 @@
   margin-top: 2px;
 }
 .tb-message.user .tb-message-avatar {
-  background: linear-gradient(135deg, var(--primary), var(--amber-dark, #B8791F));
-  color: #fff;
+  background: var(--primary);
+  color: var(--primary-contrast);
 }
 .tb-message.assistant .tb-message-avatar {
-  background: linear-gradient(135deg, var(--midnight, #07111D), var(--slate-dark, #39444D));
+  background: var(--bg-surface);
   color: var(--primary);
-  border: 2px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
 }
 
 .tb-message-body {
@@ -507,23 +506,23 @@
 
 .tb-message-bubble {
   padding: 12px 16px;
-  border-radius: 16px;
+  border-radius: 14px;
   font-size: 14px;
-  line-height: 1.65;
+  line-height: 1.6;
   word-break: break-word;
   position: relative;
 }
 .tb-message.user .tb-message-bubble {
-  background: linear-gradient(135deg, var(--primary), var(--amber-dark, #B8791F));
-  color: #fff;
+  background: var(--primary);
+  color: var(--primary-contrast);
   border-bottom-right-radius: 4px;
 }
 .tb-message.assistant .tb-message-bubble {
-  background: var(--bg-card);
+  background: var(--bg-surface);
   color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-color);
   border-bottom-left-radius: 4px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-xs);
 }
 
 /* Markdown-like formatting in assistant messages */
@@ -655,19 +654,19 @@
   height: 38px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, var(--primary), var(--amber-dark, #B8791F));
-  color: #fff;
+  background: var(--primary);
+  color: var(--primary-contrast);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   flex-shrink: 0;
-  transition: var(--transition-fast);
+  transition: var(--tr-fast);
 }
 .tb-send-btn:hover:not(:disabled) {
-  transform: scale(1.08);
-  opacity: 0.9;
+  background: var(--primary-hover);
+  color: var(--primary-contrast);
 }
 .tb-send-btn:disabled {
   opacity: 0.35;

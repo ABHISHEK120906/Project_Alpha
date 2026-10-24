@@ -1,19 +1,24 @@
 /* ==========================================================================
-   FREELANCEHUB FREELANCER WORKSPACE THEME v3.0
-   Role Identity: Electric Lime + Emerald — Growth, Energy, Opportunity
+   FREELANCEHUB FREELANCER WORKSPACE THEME — UNIFIED DESIGN SYSTEM
+   Brand Identity: Unified Muted Deep Petrol Teal (#356B68 / #8AB8AE)
+   Consistent surfaces, typography, elevation, and controls across all roles
    ========================================================================== */
 
 body.freelancer-portal {
-  /* Freelancer-specific brand overrides */
-  --fl-accent:          #A3E635;   /* Electric Lime — Freelancer Identity */
-  --fl-accent-hover:    #BEF264;
-  --fl-accent-deep:     #65A30D;
-  --fl-accent-soft:     rgba(163, 230, 53, 0.10);
-  --fl-accent-glow:     rgba(163, 230, 53, 0.32);
-  --brand-primary:      #A3E635;
-  --brand-primary-hover:#BEF264;
-  --sidebar-active-bg:  rgba(163, 230, 53, 0.14);
-  --border-focused:     #A3E635;
+  --fl-accent:          var(--primary);
+  --fl-accent-hover:    var(--primary-hover);
+  --fl-accent-deep:     var(--primary);
+  --fl-accent-soft:     var(--primary-subtle);
+  --brand-primary:      var(--primary);
+  --brand-primary-hover:var(--primary-hover);
+  --sidebar-active-bg:  var(--primary-subtle);
+  --border-focused:     var(--primary);
+}
+
+[data-theme="dark"] body.freelancer-portal {
+  --fl-accent:          var(--primary);
+  --fl-accent-hover:    var(--primary-hover);
+  --fl-accent-soft:     var(--primary-subtle);
 }
 
 /* ── Freelancer App Layout ── */
@@ -26,10 +31,8 @@ body.freelancer-portal {
 
 .fl-sidebar {
   width: var(--sidebar-w);
-  background: var(--bg-glass);
+  background: var(--bg-surface);
   border-right: 1px solid var(--border-color);
-  backdrop-filter: blur(28px) saturate(1.5);
-  -webkit-backdrop-filter: blur(28px) saturate(1.5);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -45,44 +48,37 @@ body.freelancer-portal {
   height: var(--topbar-h);
   display: flex;
   align-items: center;
-  padding: 0 22px;
-  border-bottom: 1px solid var(--border-light);
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
 }
 
 .fl-sidebar-user {
-  padding: 18px 22px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   border-bottom: 1px solid var(--border-light);
   flex-shrink: 0;
 }
 
 .fl-user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, #A3E635 0%, #14532D 100%);
-  color: #0A0F0A;
+  background: var(--primary);
+  color: var(--primary-contrast);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(163, 230, 53, 0.35);
-  transition: box-shadow var(--tr-norm), transform var(--tr-norm);
-}
-
-.fl-user-avatar:hover {
-  box-shadow: 0 6px 22px rgba(163, 230, 53, 0.52);
-  transform: scale(1.06);
 }
 
 .fl-user-name {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.25;
@@ -93,22 +89,16 @@ body.freelancer-portal {
   align-items: center;
   gap: 5px;
   font-size: 0.72rem;
-  font-weight: 700;
-  color: #A3E635;
+  font-weight: 600;
+  color: var(--primary);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.05em;
   margin-top: 2px;
-}
-
-.fl-user-badge-row svg,
-.fl-user-badge-row i {
-  width: 13px;
-  height: 13px;
 }
 
 .fl-sidebar-nav {
   flex: 1;
-  padding: 18px 12px;
+  padding: 16px 12px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -121,12 +111,12 @@ body.freelancer-portal {
 .fl-sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
 .fl-nav-group-title {
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.10em;
   color: var(--text-muted);
-  padding: 18px 14px 8px;
+  padding: 16px 12px 6px;
   margin: 0;
 }
 
@@ -134,17 +124,15 @@ body.freelancer-portal {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 16px;
+  padding: 10px 14px;
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.88rem;
+  font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: all var(--tr-norm);
+  transition: all var(--tr-fast);
   border: 1px solid transparent;
-  min-height: 44px;
-  position: relative;
-  overflow: hidden;
+  min-height: 40px;
 }
 
 .fl-nav-item i,
@@ -152,52 +140,48 @@ body.freelancer-portal {
   width: 17px;
   height: 17px;
   flex-shrink: 0;
-  opacity: 0.60;
-  transition: all var(--tr-norm);
+  opacity: 0.75;
+  transition: all var(--tr-fast);
 }
 
 .fl-nav-item:hover {
-  background: rgba(163, 230, 53, 0.09);
-  color: #A3E635;
-  border-color: rgba(163, 230, 53, 0.20);
-  transform: translateX(2px);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-light);
 }
 
 .fl-nav-item:hover i,
 .fl-nav-item:hover svg {
   opacity: 1;
-  color: #A3E635;
 }
 
 .fl-nav-item.active {
-  background: linear-gradient(135deg, rgba(163, 230, 53, 0.18) 0%, rgba(20, 83, 45, 0.12) 100%);
-  color: #A3E635;
-  border-color: rgba(163, 230, 53, 0.30);
-  box-shadow: inset 3px 0 0 #A3E635, 0 2px 14px rgba(163, 230, 53, 0.14);
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary-border);
+  border-left: 3px solid var(--primary);
+  padding-left: 12px;
   font-weight: 700;
 }
 
 .fl-nav-item.active i,
 .fl-nav-item.active svg {
   opacity: 1;
-  color: #A3E635;
+  color: var(--primary);
 }
 
 .fl-nav-badge {
   margin-left: auto;
-  background: linear-gradient(135deg, #A3E635 0%, #84CC16 100%);
-  color: #0A0F0A;
+  background: var(--primary);
+  color: var(--primary-contrast);
   font-size: 0.68rem;
-  font-weight: 800;
-  padding: 2px 8px;
+  font-weight: 700;
+  padding: 2px 7px;
   border-radius: var(--radius-full);
-  min-width: 20px;
+  min-width: 18px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(163, 230, 53, 0.40);
-  animation: fh-pulse-glow 2.5s ease-in-out infinite;
 }
 
-/* ── Freelancer Main Layout ── */
 .fl-main {
   flex: 1;
   margin-left: var(--sidebar-w);
@@ -212,17 +196,16 @@ body.freelancer-portal {
   height: var(--topbar-h);
   background: var(--bg-glass);
   border-bottom: 1px solid var(--border-color);
-  backdrop-filter: blur(28px) saturate(1.6);
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 36px;
+  padding: 0 32px;
   position: sticky;
   top: 0;
   z-index: 40;
   gap: 16px;
-  transition: box-shadow var(--tr-norm);
 }
 
 .fl-topbar-left {
@@ -249,29 +232,12 @@ body.freelancer-portal {
   padding: var(--content-padding);
   flex: 1;
   max-width: 100%;
-  animation: fh-slide-in-up 0.4s ease both;
-}
-
-/* Freelancer specific button */
-body.freelancer-portal .btn-fh-freelancer,
-body.freelancer-portal .btn-primary {
-  background: linear-gradient(135deg, #A3E635 0%, #65A30D 100%);
-  color: #0A0F0A !important;
-  border-color: rgba(163, 230, 53, 0.48);
-  box-shadow: 0 4px 18px rgba(163, 230, 53, 0.38);
-  font-weight: 700;
-}
-
-body.freelancer-portal .btn-fh-freelancer:hover,
-body.freelancer-portal .btn-primary:hover {
-  background: linear-gradient(135deg, #BEF264 0%, #A3E635 100%);
-  box-shadow: 0 8px 30px rgba(163, 230, 53, 0.55);
-  transform: translateY(-2px);
 }
 
 @media (max-width: 991px) {
   .fl-sidebar { transform: translateX(-100%); }
   .fl-sidebar.open { transform: translateX(0); }
   .fl-main { margin-left: 0; }
+  .fl-topbar { padding: 0 16px; }
   .fl-content-body { padding: 20px 16px; }
 }
