@@ -1,5 +1,5 @@
 {% load static %}
-<!-- FreelanceHub Brand Logo Component: Muted Deep Petrol Teal + Warm Sand + Muted Sage -->
+<!-- FreelanceHub Brand Logo Component: Katie Lemon Editorial (#3c3736, #eaaa64, #f9d5d5, #f4f0ed) -->
 {% if href %}
 <a href="{{ href }}" class="fh-brand-logo {% if variant %}fh-brand-logo--{{ variant }}{% endif %} {% if role %}fh-brand-logo--with-role{% endif %} {{ extra_class|default:'' }}" aria-label="FreelanceHub">
 {% else %}
@@ -10,22 +10,22 @@
   <div class="fh-logo-mark-wrap" aria-hidden="true">
     <svg class="fh-logo-symbol-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Muted Petrol Teal to Soft Mineral Teal Gradient -->
+        <!-- Dark Charcoal to Warm Golden Orange Gradient -->
         <linearGradient id="fhTealGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#356B68" />
-          <stop offset="100%" stop-color="#8AB8AE" />
+          <stop offset="0%" stop-color="#3c3736" />
+          <stop offset="100%" stop-color="#eaaa64" />
         </linearGradient>
 
-        <!-- Muted Sage to Deep Stone Teal Gradient -->
+        <!-- Warm Golden Orange to Soft Blush Pink Gradient -->
         <linearGradient id="fhSageGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#A5B9A5" />
-          <stop offset="100%" stop-color="#252E2C" />
+          <stop offset="0%" stop-color="#eaaa64" />
+          <stop offset="100%" stop-color="#f9d5d5" />
         </linearGradient>
 
-        <!-- Central Warm Sand Node -->
+        <!-- Warm Off-White to Warm Golden Orange Node Gradient -->
         <linearGradient id="fhSandGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#F6F5F0" />
-          <stop offset="100%" stop-color="#D9C9AE" />
+          <stop offset="0%" stop-color="#f4f0ed" />
+          <stop offset="100%" stop-color="#eaaa64" />
         </linearGradient>
       </defs>
 
@@ -55,10 +55,10 @@
             fill="url(#fhTealGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" />
 
       <!-- Connection Bridge -->
-      <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#356B68" opacity="0.4" />
+      <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#3c3736" opacity="0.3" />
 
       <!-- Growth Beacon / Milestone Apex Node -->
-      <circle cx="74" cy="20" r="11" fill="url(#fhSandGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" stroke="#356B68" stroke-width="1.5" />
+      <circle cx="74" cy="20" r="11" fill="url(#fhSandGrad_{{ variant|default:'d' }}_{{ role|default:'m'|slugify }})" stroke="#3c3736" stroke-width="1.5" />
     </svg>
   </div>
 

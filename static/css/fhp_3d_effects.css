@@ -1,0 +1,532 @@
+/* ==========================================================================
+   FREELANCEHUB — 3D INTERACTIVE EFFECTS & DESIGN ECOSYSTEM STYLESHEET
+   Features:
+     - 3D Perspective Hero Stage & Interactive Canvas
+     - GPU-Accelerated 3D Card Tilt with Specular Glare Physics
+     - 3D Floating Orbital Status Badges (Multi-Layer Depth)
+     - Design & Creative Disciplines 3D Showcase Grid
+     - Iridescent Borders, Glassmorphism & Ambient Light
+   ========================================================================== */
+
+/* ── 1. 3D HERO STAGE & CANVAS ─────────────────────────────────────────── */
+.fhp-hero {
+  position: relative;
+  perspective: 1400px;
+}
+
+.fhp-hero-3d-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+.fhp-hero-visual-stage {
+  position: relative;
+  perspective: 1300px;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 14px;
+}
+
+/* ── 2. 3D TILT ENGINE & PRESERVE-3D DEPTH ──────────────────────────────── */
+.fhp-3d-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.16s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+  will-change: transform;
+}
+
+.fhp-3d-card:hover {
+  box-shadow: 0 34px 70px -15px rgba(0, 0, 0, 0.5), 0 0 38px rgba(234, 170, 100, 0.25);
+  border-color: rgba(234, 170, 100, 0.5);
+}
+
+.fhp-3d-card [data-tilt-depth] {
+  transform: translateZ(var(--tilt-z, 28px));
+  transition: transform 0.16s cubic-bezier(0.2, 0, 0, 1);
+  transform-style: preserve-3d;
+}
+
+.fhp-3d-card [data-tilt-depth="50"] { transform: translateZ(50px); }
+.fhp-3d-card [data-tilt-depth="40"] { transform: translateZ(40px); }
+.fhp-3d-card [data-tilt-depth="30"] { transform: translateZ(30px); }
+.fhp-3d-card [data-tilt-depth="20"] { transform: translateZ(20px); }
+.fhp-3d-card [data-tilt-depth="15"] { transform: translateZ(15px); }
+
+/* 3D Dynamic Specular Sheen / Glare */
+.fhp-card-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle 380px at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.2), transparent 75%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  mix-blend-mode: overlay;
+}
+
+.fhp-3d-card:hover .fhp-card-glare {
+  opacity: 1;
+}
+
+/* ── 3. FLOATING 3D ORBITAL CHIPS ───────────────────────────────────────── */
+.fhp-3d-orbital-chip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1.5px solid rgba(234, 170, 100, 0.4);
+  border-radius: var(--radius-full);
+  box-shadow: 0 18px 38px -8px rgba(0, 0, 0, 0.28), 0 0 24px rgba(234, 170, 100, 0.22);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 6;
+  transform-style: preserve-3d;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .fhp-3d-orbital-chip {
+  background: rgba(36, 31, 29, 0.94);
+  border-color: rgba(234, 170, 100, 0.45);
+  box-shadow: 0 22px 45px -10px rgba(0, 0, 0, 0.65), 0 0 30px rgba(234, 170, 100, 0.3);
+}
+
+.fhp-3d-orbital-chip:hover {
+  transform: translateZ(75px) scale(1.07);
+  box-shadow: 0 28px 56px -10px rgba(0, 0, 0, 0.45), 0 0 42px rgba(234, 170, 100, 0.45);
+  border-color: var(--warm-orange);
+}
+
+.fhp-3d-orbital-chip.chip-top-left {
+  top: -16px;
+  left: -24px;
+  animation: floatOrbital1 5.4s ease-in-out infinite;
+}
+
+.fhp-3d-orbital-chip.chip-right-mid {
+  top: 45%;
+  right: -36px;
+  animation: floatOrbital2 6.2s ease-in-out infinite 0.8s;
+}
+
+.fhp-3d-orbital-chip.chip-bottom-left {
+  bottom: -18px;
+  left: 20px;
+  animation: floatOrbital3 5.8s ease-in-out infinite 1.6s;
+}
+
+.fhp-chip-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.fhp-chip-icon.star-icon {
+  background: rgba(234, 170, 100, 0.2);
+  color: #df984d;
+}
+
+.fhp-chip-icon.shield-icon {
+  background: rgba(46, 125, 91, 0.18);
+  color: #2E7D5B;
+}
+
+.fhp-chip-icon.design-icon {
+  background: rgba(249, 213, 213, 0.4);
+  color: #c95d5d;
+}
+
+[data-theme="dark"] .fhp-chip-icon.star-icon {
+  color: #f5be7e;
+  background: rgba(234, 170, 100, 0.25);
+}
+
+[data-theme="dark"] .fhp-chip-icon.shield-icon {
+  color: #48bb78;
+  background: rgba(46, 125, 91, 0.25);
+}
+
+[data-theme="dark"] .fhp-chip-icon.design-icon {
+  color: #f9d5d5;
+  background: rgba(249, 213, 213, 0.25);
+}
+
+.fhp-chip-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.fhp-chip-text strong {
+  font-family: var(--font-heading);
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.fhp-chip-text span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+@keyframes floatOrbital1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-1.5deg); }
+}
+
+@keyframes floatOrbital2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+@keyframes floatOrbital3 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-1deg); }
+}
+
+@media (max-width: 900px) {
+  .fhp-3d-orbital-chip.chip-right-mid {
+    display: none;
+  }
+}
+
+/* ── 4. DESIGN & CREATIVE DISCIPLINES 3D SHOWCASE SECTION ────────────────── */
+.fhp-design-section {
+  position: relative;
+  padding: 104px 0 112px;
+  background: var(--bg-app);
+  overflow: hidden;
+}
+
+.fhp-design-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1100px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(234, 170, 100, 0.15) 0%, rgba(249, 213, 213, 0.08) 45%, transparent 75%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="dark"] .fhp-design-section::before {
+  background: radial-gradient(ellipse, rgba(234, 170, 100, 0.18) 0%, rgba(96, 212, 230, 0.08) 50%, transparent 75%);
+}
+
+.fhp-design-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+  perspective: 1400px;
+}
+
+@media (max-width: 1024px) {
+  .fhp-design-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .fhp-design-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fhp-design-card {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.fhp-design-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--card-accent, var(--warm-orange)), transparent);
+  opacity: 0.65;
+  transition: opacity 0.3s ease;
+}
+
+.fhp-design-card:hover {
+  border-color: var(--card-accent, var(--warm-orange));
+  box-shadow: 0 30px 65px -12px rgba(0, 0, 0, 0.45), 0 0 36px var(--card-glow, rgba(234, 170, 100, 0.25));
+}
+
+.fhp-design-card:hover::before {
+  opacity: 1;
+}
+
+.fhp-design-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  transform: translateZ(28px);
+}
+
+.fhp-design-icon-box {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: var(--icon-bg, var(--orange-soft));
+  color: var(--icon-color, var(--orange-text));
+  border: 1.5px solid var(--icon-border, var(--orange-border));
+  box-shadow: 0 10px 24px -4px var(--icon-shadow, rgba(234, 170, 100, 0.28));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fhp-design-card:hover .fhp-design-icon-box {
+  transform: scale(1.14) rotate(-6deg);
+}
+
+.fhp-design-badge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background: var(--primary-subtle);
+  color: var(--primary);
+  border: 1px solid var(--border-light);
+}
+
+.fhp-design-title {
+  font-family: var(--font-heading);
+  font-size: 1.38rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.3;
+  transform: translateZ(30px);
+}
+
+.fhp-design-tagline {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--warm-orange);
+  margin-bottom: 12px;
+  transform: translateZ(26px);
+}
+
+.fhp-design-desc {
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 22px;
+  transform: translateZ(22px);
+}
+
+/* 3D Visual Micro-Preview inside Card */
+.fhp-design-visual-preview {
+  background: var(--bg-app);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  transform: translateZ(26px);
+  position: relative;
+  overflow: hidden;
+}
+
+.fhp-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.78rem;
+}
+
+.fhp-preview-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fhp-preview-chip {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--primary-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.fhp-design-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+  transform: translateZ(24px);
+}
+
+.fhp-design-skill-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  transition: all var(--tr-fast);
+}
+
+.fhp-design-card:hover .fhp-design-skill-tag {
+  border-color: var(--card-accent, var(--warm-orange));
+  color: var(--text-primary);
+}
+
+.fhp-design-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border-color);
+  transform: translateZ(28px);
+}
+
+.fhp-design-stat {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.fhp-design-stat strong {
+  display: block;
+  font-size: 0.90rem;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.fhp-design-explore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--warm-orange);
+  text-decoration: none;
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  background: var(--orange-soft);
+  border: 1px solid var(--orange-border);
+  transition: all var(--tr-fast);
+}
+
+.fhp-design-explore-btn:hover {
+  background: var(--warm-orange);
+  color: #242020 !important;
+  transform: translateX(4px);
+}
+
+/* Domain Specific Color Accents */
+.fhp-design-card.card-uiux {
+  --card-accent: #eaaa64;
+  --card-glow: rgba(234, 170, 100, 0.28);
+  --icon-bg: rgba(234, 170, 100, 0.18);
+  --icon-color: #df984d;
+  --icon-border: rgba(234, 170, 100, 0.45);
+}
+
+.fhp-design-card.card-3d {
+  --card-accent: #60d4e6;
+  --card-glow: rgba(96, 212, 230, 0.28);
+  --icon-bg: rgba(96, 212, 230, 0.16);
+  --icon-color: #38b2ac;
+  --icon-border: rgba(96, 212, 230, 0.45);
+}
+
+.fhp-design-card.card-branding {
+  --card-accent: #f9d5d5;
+  --card-glow: rgba(249, 213, 213, 0.32);
+  --icon-bg: rgba(249, 213, 213, 0.25);
+  --icon-color: #c95d5d;
+  --icon-border: rgba(249, 213, 213, 0.65);
+}
+
+.fhp-design-card.card-dev {
+  --card-accent: #48bb78;
+  --card-glow: rgba(72, 187, 120, 0.28);
+  --icon-bg: rgba(72, 187, 120, 0.16);
+  --icon-color: #2E7D5B;
+  --icon-border: rgba(72, 187, 120, 0.45);
+}
+
+.fhp-design-card.card-ai {
+  --card-accent: #a78bfa;
+  --card-glow: rgba(167, 139, 250, 0.28);
+  --icon-bg: rgba(167, 139, 250, 0.16);
+  --icon-color: #8b5cf6;
+  --icon-border: rgba(167, 139, 250, 0.45);
+}
+
+.fhp-design-card.card-data {
+  --card-accent: #38bdf8;
+  --card-glow: rgba(56, 189, 248, 0.28);
+  --icon-bg: rgba(56, 189, 248, 0.16);
+  --icon-color: #0284c7;
+  --icon-border: rgba(56, 189, 248, 0.45);
+}
+
+[data-theme="dark"] .fhp-design-card.card-uiux { --icon-color: #f5be7e; }
+[data-theme="dark"] .fhp-design-card.card-3d { --icon-color: #60d4e6; }
+[data-theme="dark"] .fhp-design-card.card-branding { --icon-color: #f9d5d5; }
+[data-theme="dark"] .fhp-design-card.card-dev { --icon-color: #68d391; }
+[data-theme="dark"] .fhp-design-card.card-ai { --icon-color: #c4b5fd; }
+[data-theme="dark"] .fhp-design-card.card-data { --icon-color: #7dd3fc; }
+
+/* ── 5. PERSPECTIVE TILT PREVIEWS FOR OTHER SECTIONS ─────────────────────── */
+.fhp-pillar-card,
+.fhp-dash-mockup,
+.fhp-tracking-board,
+.fhp-brand-chart-card,
+.fhp-role-card {
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.fhp-pillar-card:hover,
+.fhp-dash-mockup:hover,
+.fhp-tracking-board:hover,
+.fhp-role-card:hover {
+  box-shadow: 0 24px 54px -10px rgba(0, 0, 0, 0.35), 0 0 28px rgba(234, 170, 100, 0.18);
+}

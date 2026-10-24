@@ -1,16 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" fill="none">
   <defs>
+    <!-- Dark Charcoal to Warm Golden Orange -->
     <linearGradient id="mainPlum" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f03737" />
-      <stop offset="100%" stop-color="#eb7b5c" />
+      <stop offset="0%" stop-color="#3c3736" />
+      <stop offset="100%" stop-color="#eaaa64" />
     </linearGradient>
+    <!-- Warm Golden Orange to Soft Blush Pink -->
     <linearGradient id="mainRose" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#eb7b5c" />
-      <stop offset="100%" stop-color="#bb8dc1" />
+      <stop offset="0%" stop-color="#eaaa64" />
+      <stop offset="100%" stop-color="#f9d5d5" />
     </linearGradient>
+    <!-- Warm Off-White to Warm Golden Orange Node -->
     <linearGradient id="mainNode" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ece5eb" />
-      <stop offset="100%" stop-color="#bb8dc1" />
+      <stop offset="0%" stop-color="#f4f0ed" />
+      <stop offset="100%" stop-color="#eaaa64" />
     </linearGradient>
   </defs>
 
@@ -42,18 +45,18 @@
           fill="url(#mainRose)" />
 
     <!-- Connection Bridge -->
-    <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#eb7b5c" opacity="0.6" />
+    <path d="M 32 46 C 38 46 44 46 48 47 C 52 48 54 51 54 55 C 54 59 50 62 44 62 L 32 62 Z" fill="#3c3736" opacity="0.4" />
 
     <!-- Growth Node -->
-    <circle cx="74" cy="20" r="11" fill="url(#mainNode)" />
+    <circle cx="74" cy="20" r="11" fill="url(#mainNode)" stroke="#3c3736" stroke-width="1.5" />
   </g>
 
   <!-- Wordmark Typography -->
   <g transform="translate(60, 36)">
     <text font-family="'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="800" letter-spacing="-0.03em">
-      <tspan fill="#1e1820" class="fh-text-base">Freelance</tspan><tspan fill="#f03737" class="fh-text-accent">Hub</tspan>
+      <tspan fill="#3c3736" class="fh-text-base">Freelance</tspan><tspan fill="#eaaa64" class="fh-text-accent">Hub</tspan>
     </text>
-    <text y="16" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="8.5" font-weight="600" letter-spacing="0.08em" fill="#7f7481" text-transform="uppercase">
+    <text y="16" font-family="'Outfit', -apple-system, BlinkMacSystemFont, sans-serif" font-size="8.5" font-weight="600" letter-spacing="0.08em" fill="#675f5d" text-transform="uppercase">
       Where Great Projects Meet Great Talent
     </text>
   </g>

@@ -1,16 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
   <defs>
-    <linearGradient id="favBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f03737" />
-      <stop offset="100%" stop-color="#eb7b5c" />
+    <!-- Background Squircle Gradient (Dark Charcoal #3c3736) -->
+    <linearGradient id="fhSquircleBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3c3736" />
+      <stop offset="100%" stop-color="#242020" />
     </linearGradient>
-    <linearGradient id="favRose" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#eb7b5c" />
-      <stop offset="100%" stop-color="#bb8dc1" />
+
+    <!-- Client Wing Gradient (Warm Golden Orange #eaaa64 to Soft Blush #f9d5d5) -->
+    <linearGradient id="fhClientGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eaaa64" />
+      <stop offset="100%" stop-color="#f9d5d5" />
+    </linearGradient>
+
+    <!-- Freelancer Wing Gradient (Warm Golden Orange #eaaa64) -->
+    <linearGradient id="fhFreelancerGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#df984d" />
+      <stop offset="100%" stop-color="#eaaa64" />
+    </linearGradient>
+
+    <!-- Connection & Growth Apex Node (Warm Off-White to Orange) -->
+    <linearGradient id="fhGrowthNode" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f4f0ed" />
+      <stop offset="100%" stop-color="#eaaa64" />
     </linearGradient>
   </defs>
-  <rect width="32" height="32" rx="8" fill="url(#favBg)"/>
-  <path d="M 8 7 C 13 7 17 7 19 8 C 22 9 23 11 23 14 C 23 16 21 18 18 19 C 15 19 13 20 13 22 L 13 25 C 13 26 11 26 9 25 L 9 11 C 9 8 10 7 8 7 Z" fill="#FFFFFF" />
-  <path d="M 16 25 C 16 20 18 15 22 13 C 25 11 28 12 29 15 L 29 25 L 25 25 L 25 17 C 24 16 21 17 21 21 L 21 25 Z" fill="url(#favRose)" />
-  <circle cx="24.5" cy="8.5" r="3.2" fill="#ece5eb" />
+
+  <!-- Squircle Tile Container with Warm Border -->
+  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#fhSquircleBg)" stroke="rgba(234, 170, 100, 0.45)" stroke-width="2"/>
+
+  <!-- Master Collaboration & Growth Emblem -->
+  <g transform="translate(10, 10) scale(0.8)">
+    <!-- Client Initiating Pillar & Arch ('F' Flow) -->
+    <path d="M 22 14
+             C 34 14 44 14 50 16
+             C 58 18 62 23 62 29
+             C 62 35 56 40 48 42
+             C 42 43 36 43 34 47
+             C 32 50 32 54 32 62
+             C 32 72 28 80 22 84
+             C 17 86 11 84 9 78
+             C 7 73 7 66 7 58
+             L 7 28
+             C 7 18 13 14 22 14 Z" 
+          fill="url(#fhClientGrad)" />
+
+    <!-- Freelancer Ascending Wing & Project Arch ('H' Uplink) -->
+    <path d="M 42 84
+             C 41 68 46 50 58 40
+             C 66 34 78 34 86 41
+             C 93 48 93 66 93 84
+             L 77 84
+             C 77 69 76 54 70 51
+             C 64 49 56 54 55 67
+             L 55 84 Z" 
+          fill="url(#fhFreelancerGrad)" />
+
+    <!-- Central Connection Bridge -->
+    <path d="M 32 46
+             C 38 46 44 46 48 47
+             C 52 48 54 51 54 55
+             C 54 59 50 62 44 62
+             L 32 62 Z" 
+          fill="#eaaa64" 
+          opacity="0.5" />
+
+    <!-- Growth Apex Node -->
+    <circle cx="74" cy="20" r="11" fill="url(#fhGrowthNode)" stroke="#3c3736" stroke-width="1.5" />
+  </g>
 </svg>

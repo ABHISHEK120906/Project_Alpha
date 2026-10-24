@@ -23,8 +23,7 @@
 
   <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
@@ -287,17 +286,15 @@
     document.addEventListener('DOMContentLoaded', function () {
       try {
         const canvas = document.getElementById('authTrustChart');
-        if (!canvas || typeof Chart === 'undefined') return;
-
-        const ctx = canvas.getContext('2d');
+        if (!canvas || typeof Chart === 'undefined') retur        const ctx = canvas.getContext('2d');
         const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-        const primaryColor = isDark ? '#8AB8AE' : '#356B68';
-        const surfaceBg = isDark ? '#202927' : '#FFFFFF';
-        const textCol = isDark ? '#F0F2EC' : '#252E2C';
+        const primaryColor = isDark ? '#eaaa64' : '#3c3736';
+        const surfaceBg = isDark ? '#2c2726' : '#ffffff';
+        const textCol = isDark ? '#f4f0ed' : '#3c3736';
 
         const grad = ctx.createLinearGradient(0, 0, 0, 90);
-        grad.addColorStop(0, isDark ? 'rgba(138, 184, 174, 0.35)' : 'rgba(53, 107, 104, 0.25)');
-        grad.addColorStop(1, isDark ? 'rgba(138, 184, 174, 0.0)' : 'rgba(53, 107, 104, 0.0)');
+        grad.addColorStop(0, isDark ? 'rgba(234, 170, 100, 0.35)' : 'rgba(60, 55, 54, 0.20)');
+        grad.addColorStop(1, isDark ? 'rgba(234, 170, 100, 0.0)' : 'rgba(60, 55, 54, 0.0)');
 
         const labels = ['Day 1', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30'];
         const values = [98.6, 99.1, 99.3, 99.5, 99.7, 99.8, 99.9];
@@ -331,7 +328,7 @@
                 backgroundColor: surfaceBg,
                 titleColor: textCol,
                 bodyColor: primaryColor,
-                borderColor: isDark ? '#394541' : '#E2E3DC',
+                borderColor: isDark ? 'rgba(244, 240, 237, 0.15)' : 'rgba(60, 55, 54, 0.15)',
                 borderWidth: 1,
                 padding: 8,
                 displayColors: false,
@@ -356,20 +353,20 @@
         window.addEventListener('freelancehub:themechange', function (e) {
           try {
             const nextDark = e.detail && e.detail.theme !== 'light';
-            const nextPrimary = nextDark ? '#8AB8AE' : '#356B68';
-            const nextSurface = nextDark ? '#202927' : '#FFFFFF';
-            const nextText = nextDark ? '#F0F2EC' : '#252E2C';
+            const nextPrimary = nextDark ? '#eaaa64' : '#3c3736';
+            const nextSurface = nextDark ? '#2c2726' : '#ffffff';
+            const nextText = nextDark ? '#f4f0ed' : '#3c3736';
 
             chart.options.plugins.tooltip.backgroundColor = nextSurface;
             chart.options.plugins.tooltip.titleColor = nextText;
             chart.options.plugins.tooltip.bodyColor = nextPrimary;
-            chart.options.plugins.tooltip.borderColor = nextDark ? '#394541' : '#E2E3DC';
+            chart.options.plugins.tooltip.borderColor = nextDark ? 'rgba(244, 240, 237, 0.15)' : 'rgba(60, 55, 54, 0.15)';
             chart.data.datasets[0].borderColor = nextPrimary;
             chart.data.datasets[0].pointBackgroundColor = nextPrimary;
             chart.data.datasets[0].pointBorderColor = nextSurface;
             chart.update('none');
           } catch (err) {}
-        });
+        });   });
       } catch (e) {
         console.warn('Auth trust chart init skipped:', e);
       }
