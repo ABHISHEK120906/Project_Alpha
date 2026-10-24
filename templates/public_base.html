@@ -27,7 +27,8 @@
 
   <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
@@ -35,7 +36,6 @@
   <!-- Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <link rel="stylesheet" href="{% static 'css/public_landing.css' %}">
-  <link rel="stylesheet" href="{% static 'css/fhp_3d_effects.css' %}">
 
   {% block extra_head %}{% endblock %}
 </head>
@@ -56,7 +56,6 @@
       <!-- Desktop Nav Links -->
       <nav class="hub-nav-menu" role="navigation" aria-label="Main Navigation">
         <a href="{% url 'core:home' %}" class="hub-nav-link">Home</a>
-        <a href="#design-disciplines" class="hub-nav-link"><i data-lucide="palette" style="width:14px;height:14px;"></i> Design &amp; Craft</a>
         <a href="#what-is-freelancehub" class="hub-nav-link">About</a>
         <a href="#how-it-works" class="hub-nav-link">How It Works</a>
         <a href="#for-clients" class="hub-nav-link">For Clients</a>
@@ -100,7 +99,6 @@
     </div>
 
     <a href="{% url 'core:home' %}" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="home"></i> Home</a>
-    <a href="#design-disciplines" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="palette"></i> Design &amp; Craft</a>
     <a href="#what-is-freelancehub" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="info"></i> About</a>
     <a href="#how-it-works" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="git-merge"></i> How It Works</a>
     <a href="#for-clients" class="hub-nav-link" style="padding:10px 0;"><i data-lucide="briefcase"></i> For Clients</a>
@@ -207,8 +205,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <!-- Unified JS -->
   <script src="{% static 'js/main.js' %}"></script>
-  <!-- 3D Interactive Engine -->
-  <script src="{% static 'js/fhp_3d_engine.js' %}"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

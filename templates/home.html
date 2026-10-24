@@ -8,9 +8,6 @@
 
 <!-- ══ 1. HERO ══════════════════════════════════════════════════ -->
 <section class="fhp-hero" id="top">
-  <!-- Interactive 3D Wireframe & Particle Canvas -->
-  <canvas id="hero3dCanvas" class="fhp-hero-3d-canvas" aria-hidden="true"></canvas>
-
   <div class="fhp-container">
     <div class="fhp-hero-grid">
 
@@ -60,389 +57,90 @@
         </div>
       </div>
 
-      <!-- Right: Interactive 3D Perspective Stage -->
+      <!-- Right: Dashboard Visual -->
       <div class="fhp-hero-visual">
-        <div class="fhp-hero-visual-stage">
+        <div class="fhp-dashboard-card">
+          <div class="fhp-dash-header">
+            <div class="fhp-dash-dots">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            </div>
+            <div class="fhp-dash-title-tag">
+              <i data-lucide="bar-chart-3" style="width:13px;height:13px;color:var(--pink-accent);"></i>
+              <span>FreelanceHub Dashboard</span>
+            </div>
+            <div class="fhp-live-tag"><span class="fhp-live-dot"></span><span>Live</span></div>
+          </div>
 
-          <!-- 3D Orbital Floating Status Badges -->
-          <div class="fhp-3d-orbital-chip chip-top-left" data-tilt-depth="45">
-            <div class="fhp-chip-icon star-icon"><i data-lucide="star"></i></div>
-            <div class="fhp-chip-text">
-              <strong>4.9 / 5.0 Rating</strong>
-              <span>Verified Top Talent</span>
+          <div class="fhp-kpi-row">
+            <div class="fhp-kpi-card">
+              <div class="fhp-kpi-icon"><i data-lucide="folder-open"></i></div>
+              <div>
+                <div class="fhp-kpi-val">{{ open_projects|length|default:"12" }}</div>
+                <div class="fhp-kpi-label">Open Projects</div>
+              </div>
+            </div>
+            <div class="fhp-kpi-card">
+              <div class="fhp-kpi-icon"><i data-lucide="users"></i></div>
+              <div>
+                <div class="fhp-kpi-val">{{ freelancers|length|default:"8" }}</div>
+                <div class="fhp-kpi-label">Freelancers</div>
+              </div>
+            </div>
+            <div class="fhp-kpi-card">
+              <div class="fhp-kpi-icon"><i data-lucide="check-circle-2"></i></div>
+              <div>
+                <div class="fhp-kpi-val">Verified</div>
+                <div class="fhp-kpi-label">Identity Check</div>
+              </div>
             </div>
           </div>
 
-          <div class="fhp-3d-orbital-chip chip-right-mid" data-tilt-depth="55">
-            <div class="fhp-chip-icon shield-icon"><i data-lucide="shield-check"></i></div>
-            <div class="fhp-chip-text">
-              <strong>₹48.5 Lakhs</strong>
-              <span>Safe Escrow Handled</span>
+          <div class="fhp-progress-block">
+            <div class="fhp-progress-header">
+              <span class="fhp-progress-title">Project Progress</span>
+              <span class="fhp-progress-pct">68%</span>
             </div>
+            <div class="fhp-progress-bar-track"><div class="fhp-progress-bar-fill" style="width:68%;"></div></div>
+            <div class="fhp-progress-labels"><span>Work in Progress</span><span>Almost Done</span></div>
           </div>
 
-          <div class="fhp-3d-orbital-chip chip-bottom-left" data-tilt-depth="45">
-            <div class="fhp-chip-icon design-icon"><i data-lucide="palette"></i></div>
-            <div class="fhp-chip-text">
-              <strong>UI/UX &amp; 3D Creators</strong>
-              <span>Active &amp; Ready to Hire</span>
+          <div class="fhp-chart-mini-box" id="heroChartMiniBox">
+            <div class="fhp-chart-mini-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span class="fhp-live-dot" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--primary);"></span>
+                  <span style="font-weight:800; font-size:0.84rem; color:var(--text-primary);">Completed Projects</span>
+                </div>
+                <div style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">Work finished on time each month</div>
+              </div>
+              <button type="button" class="fhp-chart-mini-badge" id="heroTrendToggleBtn" title="Click to switch view" style="border:1px solid var(--border-default); cursor:pointer; background:var(--primary-subtle); color:var(--primary); font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:12px;">
+                94% Done on Time
+              </button>
+            </div>
+            <div style="position:relative; width:100%; height:86px; margin:6px 0;">
+              <canvas id="heroVelocityChart" role="img" aria-label="Completed Projects Over Time" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-muted); border-top:1px dashed var(--border-default); padding-top:4px;">
+              <span>High Quality Work</span>
+              <span style="color:var(--primary); font-weight:700;">Delivered on Schedule • 0 Delays</span>
             </div>
           </div>
-
-          <!-- 3D Tilted Dashboard Card -->
-          <div class="fhp-dashboard-card fhp-3d-card" data-tilt-3d data-max-tilt="12">
-            <div class="fhp-card-glare"></div>
-
-            <div class="fhp-dash-header" data-tilt-depth="30">
-              <div class="fhp-dash-dots">
-                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-              </div>
-              <div class="fhp-dash-title-tag">
-                <i data-lucide="bar-chart-3" style="width:13px;height:13px;color:var(--pink-accent);"></i>
-                <span>FreelanceHub Dashboard</span>
-              </div>
-              <div class="fhp-live-tag"><span class="fhp-live-dot"></span><span>Live</span></div>
-            </div>
-
-            <div class="fhp-kpi-row" data-tilt-depth="35">
-              <div class="fhp-kpi-card">
-                <div class="fhp-kpi-icon"><i data-lucide="folder-open"></i></div>
-                <div>
-                  <div class="fhp-kpi-val">{{ open_projects|length|default:"12" }}</div>
-                  <div class="fhp-kpi-label">Open Projects</div>
-                </div>
-              </div>
-              <div class="fhp-kpi-card">
-                <div class="fhp-kpi-icon"><i data-lucide="users"></i></div>
-                <div>
-                  <div class="fhp-kpi-val">{{ freelancers|length|default:"8" }}</div>
-                  <div class="fhp-kpi-label">Freelancers</div>
-                </div>
-              </div>
-              <div class="fhp-kpi-card">
-                <div class="fhp-kpi-icon"><i data-lucide="check-circle-2"></i></div>
-                <div>
-                  <div class="fhp-kpi-val">Verified</div>
-                  <div class="fhp-kpi-label">Identity Check</div>
-                </div>
+          
+          <div class="fhp-project-pill">
+            <div class="fhp-pill-left">
+              <div class="fhp-pill-icon"><i data-lucide="folder-kanban"></i></div>
+              <div>
+                <div class="fhp-pill-title">Web Development Project</div>
+                <div class="fhp-pill-sub">Client posted · Freelancer applied</div>
               </div>
             </div>
-
-            <div class="fhp-progress-block" data-tilt-depth="25">
-              <div class="fhp-progress-header">
-                <span class="fhp-progress-title">Project Progress</span>
-                <span class="fhp-progress-pct">68%</span>
-              </div>
-              <div class="fhp-progress-bar-track"><div class="fhp-progress-bar-fill" style="width:68%;"></div></div>
-              <div class="fhp-progress-labels"><span>Work in Progress</span><span>Almost Done</span></div>
-            </div>
-
-            <div class="fhp-chart-mini-box" id="heroChartMiniBox" data-tilt-depth="25">
-              <div class="fhp-chart-mini-header" style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                  <div style="display:flex; align-items:center; gap:6px;">
-                    <span class="fhp-live-dot" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--primary);"></span>
-                    <span style="font-weight:800; font-size:0.84rem; color:var(--text-primary);">Completed Projects</span>
-                  </div>
-                  <div style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">Work finished on time each month</div>
-                </div>
-                <button type="button" class="fhp-chart-mini-badge" id="heroTrendToggleBtn" title="Click to switch view" style="border:1px solid var(--border-default); cursor:pointer; background:var(--primary-subtle); color:var(--primary); font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:12px;">
-                  94% Done on Time
-                </button>
-              </div>
-              <div style="position:relative; width:100%; height:86px; margin:6px 0;">
-                <canvas id="heroVelocityChart" role="img" aria-label="Completed Projects Over Time" style="width:100%; height:100%; display:block;"></canvas>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-muted); border-top:1px dashed var(--border-default); padding-top:4px;">
-                <span>High Quality Work</span>
-                <span style="color:var(--primary); font-weight:700;">Delivered on Schedule • 0 Delays</span>
-              </div>
-            </div>
-            
-            <div class="fhp-project-pill" data-tilt-depth="20">
-              <div class="fhp-pill-left">
-                <div class="fhp-pill-icon"><i data-lucide="folder-kanban"></i></div>
-                <div>
-                  <div class="fhp-pill-title">Web Development Project</div>
-                  <div class="fhp-pill-sub">Client posted · Freelancer applied</div>
-                </div>
-              </div>
-              <span class="fhp-pill-status">In Progress</span>
-            </div>
+            <span class="fhp-pill-status">In Progress</span>
           </div>
-
         </div>
       </div>
     </div>
   </div>
 </section>
-
-
-<!-- ══ 2. DESIGN & CREATIVE DISCIPLINES 3D SHOWCASE ══════════════ -->
-<section class="fhp-design-section" id="design-disciplines">
-  <div class="fhp-container">
-    <div class="fhp-section-header">
-      <span class="fhp-badge">
-        <i data-lucide="palette"></i> Design &amp; Creative Showcase
-      </span>
-      <h2 class="fhp-section-title">World-Class Design. Cutting-Edge Craft.</h2>
-      <p class="fhp-section-sub">
-        Explore high-demand creative disciplines. From bespoke UI/UX and spatial 3D environments to identity branding and generative AI design — connect with verified creative talent.
-      </p>
-    </div>
-
-    <div class="fhp-design-grid">
-
-      <!-- Card 1: UI/UX & Product Design -->
-      <div class="fhp-design-card card-uiux fhp-3d-card" data-tilt-3d data-max-tilt="14">
-        <div>
-          <div class="fhp-design-card-top">
-            <div class="fhp-design-icon-box" data-tilt-depth="40">
-              <i data-lucide="layout"></i>
-            </div>
-            <span class="fhp-design-badge" data-tilt-depth="25">Popular</span>
-          </div>
-          <h3 class="fhp-design-title" data-tilt-depth="30">UI/UX &amp; Product Design</h3>
-          <div class="fhp-design-tagline" data-tilt-depth="25">Mobile Apps, Design Systems &amp; Web UX</div>
-          <p class="fhp-design-desc" data-tilt-depth="20">
-            High-converting landing pages, intuitive mobile app flows, and accessible design systems crafted in Figma.
-          </p>
-          <div class="fhp-design-visual-preview" data-tilt-depth="25">
-            <div class="fhp-preview-row">
-              <span style="font-weight:700;color:var(--text-primary);"><i data-lucide="layers" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i> Design System v3</span>
-              <div class="fhp-preview-badge-group">
-                <span class="fhp-preview-chip">Figma</span>
-                <span class="fhp-preview-chip">Auto-Layout</span>
-              </div>
-            </div>
-          </div>
-          <div class="fhp-design-skills" data-tilt-depth="22">
-            <span class="fhp-design-skill-tag">Figma</span>
-            <span class="fhp-design-skill-tag">Mobile UI</span>
-            <span class="fhp-design-skill-tag">Wireframing</span>
-            <span class="fhp-design-skill-tag">Design Systems</span>
-          </div>
-        </div>
-        <div class="fhp-design-footer" data-tilt-depth="28">
-          <div class="fhp-design-stat">
-            <span>Avg Budget: <strong>₹25,000</strong></span>
-            <span>38 Projects Open</span>
-          </div>
-          <a href="{% url 'freelancer:register' %}" class="fhp-design-explore-btn">
-            <span>Explore</span><i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 2: 3D Modeling & Motion Graphics -->
-      <div class="fhp-design-card card-3d fhp-3d-card" data-tilt-3d data-max-tilt="14">
-        <div>
-          <div class="fhp-design-card-top">
-            <div class="fhp-design-icon-box" data-tilt-depth="40">
-              <i data-lucide="box"></i>
-            </div>
-            <span class="fhp-design-badge" data-tilt-depth="25">3D Tech</span>
-          </div>
-          <h3 class="fhp-design-title" data-tilt-depth="30">3D Modeling &amp; Motion</h3>
-          <div class="fhp-design-tagline" data-tilt-depth="25">Spline, Three.js &amp; Product Animation</div>
-          <p class="fhp-design-desc" data-tilt-depth="20">
-            Immersive 3D web assets, cinematic product animations, and interactive WebGL experiences that captivate users.
-          </p>
-          <div class="fhp-design-visual-preview" data-tilt-depth="25">
-            <div class="fhp-preview-row">
-              <span style="font-weight:700;color:var(--text-primary);"><i data-lucide="box" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i> Spatial 3D Render</span>
-              <div class="fhp-preview-badge-group">
-                <span class="fhp-preview-chip">Three.js</span>
-                <span class="fhp-preview-chip">Blender</span>
-              </div>
-            </div>
-          </div>
-          <div class="fhp-design-skills" data-tilt-depth="22">
-            <span class="fhp-design-skill-tag">Blender</span>
-            <span class="fhp-design-skill-tag">Spline 3D</span>
-            <span class="fhp-design-skill-tag">Three.js</span>
-            <span class="fhp-design-skill-tag">Motion Graphics</span>
-          </div>
-        </div>
-        <div class="fhp-design-footer" data-tilt-depth="28">
-          <div class="fhp-design-stat">
-            <span>Avg Budget: <strong>₹35,000</strong></span>
-            <span>22 Projects Open</span>
-          </div>
-          <a href="{% url 'freelancer:register' %}" class="fhp-design-explore-btn">
-            <span>Explore</span><i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 3: Brand Identity & Typography -->
-      <div class="fhp-design-card card-branding fhp-3d-card" data-tilt-3d data-max-tilt="14">
-        <div>
-          <div class="fhp-design-card-top">
-            <div class="fhp-design-icon-box" data-tilt-depth="40">
-              <i data-lucide="sparkles"></i>
-            </div>
-            <span class="fhp-design-badge" data-tilt-depth="25">Creative</span>
-          </div>
-          <h3 class="fhp-design-title" data-tilt-depth="30">Brand Identity &amp; Visuals</h3>
-          <div class="fhp-design-tagline" data-tilt-depth="25">Distinctive Logos, Guidelines &amp; Typography</div>
-          <p class="fhp-design-desc" data-tilt-depth="20">
-            Unforgettable brand identities, vector illustrations, logo packages, and complete brand guideline systems.
-          </p>
-          <div class="fhp-design-visual-preview" data-tilt-depth="25">
-            <div class="fhp-preview-row">
-              <span style="font-weight:700;color:var(--text-primary);"><i data-lucide="pen-tool" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i> Brand Guidelines</span>
-              <div class="fhp-preview-badge-group">
-                <span class="fhp-preview-chip">Vector</span>
-                <span class="fhp-preview-chip">Typography</span>
-              </div>
-            </div>
-          </div>
-          <div class="fhp-design-skills" data-tilt-depth="22">
-            <span class="fhp-design-skill-tag">Logo Design</span>
-            <span class="fhp-design-skill-tag">Typography</span>
-            <span class="fhp-design-skill-tag">Illustrator</span>
-            <span class="fhp-design-skill-tag">Brand Book</span>
-          </div>
-        </div>
-        <div class="fhp-design-footer" data-tilt-depth="28">
-          <div class="fhp-design-stat">
-            <span>Avg Budget: <strong>₹20,000</strong></span>
-            <span>29 Projects Open</span>
-          </div>
-          <a href="{% url 'freelancer:register' %}" class="fhp-design-explore-btn">
-            <span>Explore</span><i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 4: Full-Stack Web & Mobile Apps -->
-      <div class="fhp-design-card card-dev fhp-3d-card" data-tilt-3d data-max-tilt="14">
-        <div>
-          <div class="fhp-design-card-top">
-            <div class="fhp-design-icon-box" data-tilt-depth="40">
-              <i data-lucide="code-2"></i>
-            </div>
-            <span class="fhp-design-badge" data-tilt-depth="25">High Demand</span>
-          </div>
-          <h3 class="fhp-design-title" data-tilt-depth="30">Full-Stack Web &amp; Mobile</h3>
-          <div class="fhp-design-tagline" data-tilt-depth="25">Django, React, Next.js &amp; Cloud Systems</div>
-          <p class="fhp-design-desc" data-tilt-depth="20">
-            Robust web apps, REST APIs, and native mobile applications with clean architecture and blazing performance.
-          </p>
-          <div class="fhp-design-visual-preview" data-tilt-depth="25">
-            <div class="fhp-preview-row">
-              <span style="font-weight:700;color:var(--text-primary);"><i data-lucide="terminal" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i> REST API Live</span>
-              <div class="fhp-preview-badge-group">
-                <span class="fhp-preview-chip">Django</span>
-                <span class="fhp-preview-chip">PostgreSQL</span>
-              </div>
-            </div>
-          </div>
-          <div class="fhp-design-skills" data-tilt-depth="22">
-            <span class="fhp-design-skill-tag">Python</span>
-            <span class="fhp-design-skill-tag">Django</span>
-            <span class="fhp-design-skill-tag">React</span>
-            <span class="fhp-design-skill-tag">REST APIs</span>
-          </div>
-        </div>
-        <div class="fhp-design-footer" data-tilt-depth="28">
-          <div class="fhp-design-stat">
-            <span>Avg Budget: <strong>₹45,000</strong></span>
-            <span>54 Projects Open</span>
-          </div>
-          <a href="{% url 'freelancer:register' %}" class="fhp-design-explore-btn">
-            <span>Explore</span><i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 5: AI Creative & Generative Systems -->
-      <div class="fhp-design-card card-ai fhp-3d-card" data-tilt-3d data-max-tilt="14">
-        <div>
-          <div class="fhp-design-card-top">
-            <div class="fhp-design-icon-box" data-tilt-depth="40">
-              <i data-lucide="cpu"></i>
-            </div>
-            <span class="fhp-design-badge" data-tilt-depth="25">Next-Gen</span>
-          </div>
-          <h3 class="fhp-design-title" data-tilt-depth="30">AI Creative &amp; GenAI</h3>
-          <div class="fhp-design-tagline" data-tilt-depth="25">Neural Design, Workflows &amp; Automation</div>
-          <p class="fhp-design-desc" data-tilt-depth="20">
-            Harness generative AI models, custom LoRA training, and automated creative production pipelines.
-          </p>
-          <div class="fhp-design-visual-preview" data-tilt-depth="25">
-            <div class="fhp-preview-row">
-              <span style="font-weight:700;color:var(--text-primary);"><i data-lucide="bot" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i> AI Pipeline Flow</span>
-              <div class="fhp-preview-badge-group">
-                <span class="fhp-preview-chip">ComfyUI</span>
-                <span class="fhp-preview-chip">PyTorch</span>
-              </div>
-            </div>
-          </div>
-          <div class="fhp-design-skills" data-tilt-depth="22">
-            <span class="fhp-design-skill-tag">Generative AI</span>
-            <span class="fhp-design-skill-tag">Diffusion</span>
-            <span class="fhp-design-skill-tag">LLM Prompts</span>
-            <span class="fhp-design-skill-tag">Python</span>
-          </div>
-        </div>
-        <div class="fhp-design-footer" data-tilt-depth="28">
-          <div class="fhp-design-stat">
-            <span>Avg Budget: <strong>₹32,000</strong></span>
-            <span>19 Projects Open</span>
-          </div>
-          <a href="{% url 'freelancer:register' %}" class="fhp-design-explore-btn">
-            <span>Explore</span><i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 6: Data Science & Analytics Dashboards -->
-      <div class="fhp-design-card card-data fhp-3d-card" data-tilt-3d data-max-tilt="14">
-        <div>
-          <div class="fhp-design-card-top">
-            <div class="fhp-design-icon-box" data-tilt-depth="40">
-              <i data-lucide="bar-chart-2"></i>
-            </div>
-            <span class="fhp-design-badge" data-tilt-depth="25">Insights</span>
-          </div>
-          <h3 class="fhp-design-title" data-tilt-depth="30">Data Science &amp; Dashboards</h3>
-          <div class="fhp-design-tagline" data-tilt-depth="25">Chart.js, Pandas &amp; PDF/Excel Reports</div>
-          <p class="fhp-design-desc" data-tilt-depth="20">
-            Interactive visualization dashboards, statistical modeling, and automated executive PDF and Excel export reporting.
-          </p>
-          <div class="fhp-design-visual-preview" data-tilt-depth="25">
-            <div class="fhp-preview-row">
-              <span style="font-weight:700;color:var(--text-primary);"><i data-lucide="activity" style="width:13px;height:13px;display:inline-block;vertical-align:middle;"></i> Realtime Metrics</span>
-              <div class="fhp-preview-badge-group">
-                <span class="fhp-preview-chip">Chart.js</span>
-                <span class="fhp-preview-chip">Pandas</span>
-              </div>
-            </div>
-          </div>
-          <div class="fhp-design-skills" data-tilt-depth="22">
-            <span class="fhp-design-skill-tag">Chart.js</span>
-            <span class="fhp-design-skill-tag">Pandas</span>
-            <span class="fhp-design-skill-tag">PDF Reports</span>
-            <span class="fhp-design-skill-tag">Analytics</span>
-          </div>
-        </div>
-        <div class="fhp-design-footer" data-tilt-depth="28">
-          <div class="fhp-design-stat">
-            <span>Avg Budget: <strong>₹28,000</strong></span>
-            <span>26 Projects Open</span>
-          </div>
-          <a href="{% url 'freelancer:register' %}" class="fhp-design-explore-btn">
-            <span>Explore</span><i data-lucide="arrow-right" style="width:13px;height:13px;"></i>
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
 
 
 <!-- ══ 2. WHAT IS FREELANCEHUB ═══════════════════════════════════ -->
@@ -454,7 +152,7 @@
       <p class="fhp-section-sub">FreelanceHub makes it easy for Clients to find Freelancers, for Freelancers to find work, and for Admin to keep the platform running well.</p>
     </div>
     <div class="fhp-pillars-grid">
-      <div class="fhp-pillar-card fhp-3d-card" data-tilt-3d data-max-tilt="8">
+      <div class="fhp-pillar-card">
         <div class="fhp-pillar-icon client-color"><i data-lucide="briefcase"></i></div>
         <h3 class="fhp-pillar-title">For Clients</h3>
         <p class="fhp-pillar-desc">Post your project, set a budget and required skills, receive offers from Freelancers, and track the project as work happens.</p>
@@ -462,7 +160,7 @@
           <span>Post Projects</span><span>Review Freelancers</span><span>Track Progress</span>
         </div>
       </div>
-      <div class="fhp-pillar-card fhp-3d-card" data-tilt-3d data-max-tilt="8">
+      <div class="fhp-pillar-card">
         <div class="fhp-pillar-icon freelancer-color"><i data-lucide="sparkles"></i></div>
         <h3 class="fhp-pillar-title">For Freelancers</h3>
         <p class="fhp-pillar-desc">Search for projects that match your skills, apply by sending an offer, get verified, and work on projects with full progress tracking.</p>
@@ -470,7 +168,7 @@
           <span>Find Projects</span><span>Send Offers</span><span>Work &amp; Track</span>
         </div>
       </div>
-      <div class="fhp-pillar-card fhp-3d-card" data-tilt-3d data-max-tilt="8">
+      <div class="fhp-pillar-card">
         <div class="fhp-pillar-icon admin-color"><i data-lucide="shield-check"></i></div>
         <h3 class="fhp-pillar-title">For Admin</h3>
         <p class="fhp-pillar-desc">Manage all users and projects, check freelancer verification, handle any issues between users, and keep the platform running smoothly.</p>
@@ -514,7 +212,7 @@
         </a>
       </div>
       <div class="fhp-col-visual">
-        <div class="fhp-dash-mockup fhp-3d-card" data-tilt-3d data-max-tilt="10">
+        <div class="fhp-dash-mockup">
           <div class="fhp-mockup-header">
             <div class="fhp-mockup-title">
               <i data-lucide="briefcase" style="width:14px;height:14px;color:var(--pink-accent);"></i> Client Dashboard
@@ -579,7 +277,7 @@
   <div class="fhp-container">
     <div class="fhp-two-col fhp-two-col-reverse">
       <div class="fhp-col-visual">
-        <div class="fhp-dash-mockup fhp-3d-card" data-tilt-3d data-max-tilt="10">
+        <div class="fhp-dash-mockup">
           <div class="fhp-mockup-header">
             <div class="fhp-mockup-title">
               <i data-lucide="sparkles" style="width:14px;height:14px;color:var(--pink-accent);"></i> Freelancer Dashboard
@@ -730,7 +428,7 @@
         </div>
       </div>
       <div class="fhp-col-visual">
-        <div class="fhp-tracking-board fhp-3d-card" data-tilt-3d data-max-tilt="10">
+        <div class="fhp-tracking-board">
           <div class="fhp-tracking-board-header">
             <span style="font-weight:700;font-size:0.95rem;">Project Tracking</span>
             <span class="fhp-live-tag"><span class="fhp-live-dot"></span> Live</span>
@@ -1161,7 +859,7 @@
       <p class="fhp-section-sub">Are you a Client looking for talent, or a Freelancer looking for work? Choose your role below to get started.</p>
     </div>
     <div class="fhp-dual-cards">
-      <div class="fhp-role-card client-role-card fhp-3d-card" data-tilt-3d data-max-tilt="10">
+      <div class="fhp-role-card client-role-card">
         <div class="fhp-role-card-icon client-role-icon"><i data-lucide="briefcase"></i></div>
         <div class="fhp-role-tag-pill client-pill">For Clients</div>
         <h3 class="fhp-role-card-title">I Want to Post a Project</h3>
@@ -1179,7 +877,7 @@
           <a href="{% url 'core:login' %}" class="fhp-btn fhp-btn-outline" style="width:100%;justify-content:center;">Client Sign In</a>
         </div>
       </div>
-      <div class="fhp-role-card freelancer-role-card fhp-3d-card" data-tilt-3d data-max-tilt="10">
+      <div class="fhp-role-card freelancer-role-card">
         <div class="fhp-role-card-icon freelancer-role-icon"><i data-lucide="sparkles"></i></div>
         <div class="fhp-role-tag-pill freelancer-pill">For Freelancers</div>
         <h3 class="fhp-role-card-title">I Want to Find Work</h3>
@@ -1251,24 +949,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
     return {
       isDark: isDark,
-      primary: isDark ? '#eaaa64' : '#3c3736',
-      primarySubtle: isDark ? 'rgba(234, 170, 100, 0.22)' : 'rgba(60, 55, 54, 0.12)',
-      textColor: isDark ? '#f4f0ed' : '#3c3736',
-      textMuted: isDark ? '#cfc7c4' : '#675f5d',
-      gridColor: isDark ? 'rgba(244, 240, 237, 0.1)' : 'rgba(60, 55, 54, 0.08)',
-      cardBg: isDark ? '#2c2726' : '#ffffff',
-      tooltipBg: isDark ? '#221e1d' : '#3c3736',
-      tooltipTitle: '#f4f0ed',
-      tooltipBody: isDark ? '#cfc7c4' : '#f4f0ed',
-      tooltipBorder: isDark ? 'rgba(244, 240, 237, 0.18)' : 'rgba(60, 55, 54, 0.15)',
-      sage: '#2E7D5B',
-      clay: '#eaaa64',
-      blue: '#3c3736',
-      sand: '#f4f0ed',
-      stone: '#675f5d',
-      orange: '#eaaa64',
-      blush: '#f9d5d5',
-      charcoal: '#3c3736'
+      primary: isDark ? '#8AB8AE' : '#356B68',
+      primarySubtle: isDark ? 'rgba(138, 184, 174, 0.2)' : 'rgba(53, 107, 104, 0.12)',
+      textColor: isDark ? '#F0F2EC' : '#252E2C',
+      textMuted: isDark ? '#B5C0B9' : '#626C68',
+      gridColor: isDark ? 'rgba(57, 69, 65, 0.35)' : 'rgba(226, 227, 220, 0.6)',
+      cardBg: isDark ? '#202927' : '#FFFFFF',
+      tooltipBg: isDark ? '#202927' : '#FFFFFF',
+      tooltipTitle: isDark ? '#F0F2EC' : '#252E2C',
+      tooltipBody: isDark ? '#B5C0B9' : '#626C68',
+      tooltipBorder: isDark ? '#394541' : '#E2E3DC',
+      sage: '#A5B9A5',
+      clay: '#C58F78',
+      blue: '#829DB5',
+      sand: '#D9C9AE',
+      stone: '#777B78'
     };
   }
 
